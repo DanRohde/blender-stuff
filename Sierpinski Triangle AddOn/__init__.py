@@ -126,6 +126,10 @@ def create_pyramid(mesh, location, size):
     return mesh
 
 
+def mult_dist_factor(f,t):
+    newlist=[f*i for i in t]
+    return tuple(newlist)
+
 def create_sierpinski_pyramid(self):
     orig_obj = bpy.context.active_object
     if self.useselection and orig_obj and orig_obj.type == 'MESH':
@@ -146,11 +150,11 @@ def create_sierpinski_pyramid(self):
     for i in range(self.iterations):
         hx=obj_size[0]/2
         hy=obj_size[1]/2
-        obj.location=(0,0,obj_size[2])
-        clone_obj(obj,orig_data,(-hx, hy, 0))
-        clone_obj(obj,orig_data,(hx,hy,0))
-        clone_obj(obj,orig_data,(-hx,-hy,0))
-        clone_obj(obj,orig_data,(hx,-hy,0))
+        obj.location=mult_dist_factor(self.distfactor,(0,0,obj_size[2]))
+        clone_obj(obj,orig_data,mult_dist_factor(self.distfactor,(-hx, hy, 0)))
+        clone_obj(obj,orig_data,mult_dist_factor(self.distfactor,(hx,hy,0)))
+        clone_obj(obj,orig_data,mult_dist_factor(self.distfactor,(-hx,-hy,0)))
+        clone_obj(obj,orig_data,mult_dist_factor(self.distfactor,(hx,-hy,0)))
         
         obj_size=tuple([2*i for i in obj_size])
         orig_data = obj.data.copy()
@@ -186,9 +190,7 @@ class OBJECT_OT_add_sierpinski_pyramid(bpy.types.Operator):
         name="Use selection",
         description="Use selection to create a Sierpinski pyramid",
         default=True,
-    )
-
-  
+    ) 
     def execute(self, context):
         create_sierpinski_pyramid(self)
         return {'FINISHED'}
