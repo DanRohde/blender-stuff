@@ -1,0 +1,3 @@
+blender --command extension build
+
+
