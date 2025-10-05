@@ -73,15 +73,11 @@ class OBJECT_OT_add_sierpinski_triangle(Operator):
 
 def move_vert_to_location(vert,l):
     v=list(vert)
-    v[0]=v[0]+l[0]
-    v[1]=v[1]+l[1]
-    v[2]=v[2]+l[2]
-    return tuple(v)
+    return (v[0]+l[0],v[1]+l[1],v[2]+l[2])
 
 def get_obj_size(obj):
     bbox_corners = [obj.matrix_world @ Vector(corner) for corner in obj.bound_box]
 
-    # Bestimmen Sie die Größe des Objekts
     min_x = min(v.x for v in bbox_corners)
     max_x = max(v.x for v in bbox_corners)
     min_y = min(v.y for v in bbox_corners)
@@ -140,8 +136,9 @@ def create_sierpinski_pyramid(self):
         create_pyramid(mesh, Vector((0, 0, 0)), self.size)
         orig_data=mesh.copy()
         
-    if orig_obj: 
-            orig_obj.select_set(False)
+    # deselect all
+    for obj in bpy.context.selected_objects:
+        obj.select_set(False)
     
     obj = bpy.data.objects.new("Sierpinski Pyramid", mesh)
     bpy.context.collection.objects.link(obj)

@@ -3,7 +3,7 @@ schema_version = "1.0.0"
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "sierpinski_triangle"
-version = "1.0.1"
+version = "1.0.2"
 name = "Sierpinski Triangle"
 tagline = "This add-on creates Sierpinski triangles"
 maintainer = "Dan Rohde <d.rohde@web.de>"
