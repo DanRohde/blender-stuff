@@ -226,7 +226,7 @@ def register():
 
 def unregister():
     bpy.utils.unregister_class(OBJECT_OT_add_sierpinski_triangle)
-    bpy.utils.register_class(OBJECT_OT_add_sierpinski_pyramid)
+    bpy.utils.unregister_class(OBJECT_OT_add_sierpinski_pyramid)
     bpy.types.VIEW3D_MT_mesh_add.remove(add_triangle_button)
     bpy.types.VIEW3D_MT_mesh_add.remove(add_pyramid_button)
 
