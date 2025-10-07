@@ -48,7 +48,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
         default=False,
     )
     overwrite_constraints: bpy.props.BoolProperty(
-        name="Overwrite Existing constraint Properties",
+        name="Overwrite Existing Constraint Properties",
         description="Overwrite existing object constraints in Custom Properties",
         default=False,
     )
@@ -275,7 +275,7 @@ class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
 class OBJECT_OT_WFC3DCollectionInit(bpy.types.Operator):
     """Initialize object constraints"""
     bl_idname="object.wfc_3d_init_collection"
-    bl_label = "Initialize constraint properties"
+    bl_label = "Initialize Constraint Properties"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
@@ -298,7 +298,6 @@ class OBJECT_OT_WFC3DCollectionInit(bpy.types.Operator):
                     if not props.overwrite_constraints and prop_name in obj:
                         self.report({'INFO'}, f"Property {prop_name} of {obj.name} already initialized.")
                     else:
-                        # Standard: Alle Objekte erlaubt
                         obj[prop_name]=all_object_names 
             
             self.report({'INFO'}, "Collection objects initialized.")
