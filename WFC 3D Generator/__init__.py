@@ -10,8 +10,8 @@ import random
 DIRECTIONS = {
     'TOP': (0, 0, 1),
     'BOTTOM': (0, 0, -1),
-    'FRONT': (0, 1, 0),
-    'BACK': (0, -1, 0),
+    'FRONT': (0, -1, 0),
+    'BACK': (0, 1, 0),
     'LEFT': (-1, 0, 0),
     'RIGHT': (1, 0, 0)
 }
@@ -128,9 +128,9 @@ class WFC3DGenerator:
         min_entropy = float('inf')
         min_cell = None
         
-        for z in range(self.grid_size[2]):
-            for x in range(self.grid_size[0]):
-                for y in range(self.grid_size[1]):
+        for x in range(self.grid_size[0]):
+            for y in range(self.grid_size[1]):
+                for z in range(self.grid_size[2]):
                     if self.get_entropy(x, y, z) > 1:
                         entropy = self.get_entropy(x, y, z)
                         if entropy < min_entropy:
@@ -163,8 +163,8 @@ class WFC3DGenerator:
                     neighbor_options = self.grid[nx, ny, nz]
                     if len(neighbor_options) > 1:
                         # Find permitted neighbors for this direction
-                        opposite_dir = self.get_opposite_direction(direction)
-                        allowed = self.constraints[current_obj].get(opposite_dir, [])
+                        #opposite_dir = self.get_opposite_direction(direction)
+                        allowed = self.constraints[current_obj].get(direction, [])
                         
                         # Filter disallowed options
                         new_options = [obj for obj in neighbor_options if obj in allowed]
