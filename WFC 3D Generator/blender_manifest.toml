@@ -3,7 +3,7 @@ schema_version = "1.0.0"
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "wfc_3d_generator"
-version = "1.0.0"
+version = "1.0.2"
 name = "WFC 3D Generator"
 tagline = "Simple WFC 3D Generator for object creation"
 maintainer = "Dan Rohde <d.rohde@web.de>"

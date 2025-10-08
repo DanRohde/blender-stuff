@@ -93,20 +93,25 @@ class WFC3DGenerator:
     def load_objects(self):
         """Loads objects from the collection"""
         self.objects = list(self.collection.objects)
+        self.objects.extend(self.collection.children)
         if not self.objects:
             raise ValueError("Collection is empty!")
 
     def load_constraints(self):
         """Loads neighbor relations from custom properties"""
         for obj in self.objects:
-            self.constraints[obj.name] = {}
+            obj_name = obj.name
+            self.constraints[obj_name] = {}
             for direction in DIRECTIONS:
                 prop_name = f"wfc_{direction.lower()}"
+                # take first element from collection to get constraints
+                if obj.name in bpy.data.collections:
+                    obj = bpy.data.collections[obj.name].objects[0]
                 if prop_name in obj:
                     if obj[prop_name] == "":
-                        self.constraints[obj.name][direction] = [o.name for o in self.objects]
+                        self.constraints[obj_name][direction] = [o.name for o in self.objects]
                     else:
-                        self.constraints[obj.name][direction] = obj[prop_name].split(',')
+                        self.constraints[obj_name][direction] = obj[prop_name].split(',')
                 else:
                     # Standard: Alle Objekte erlaubt
                     self.constraints[obj.name][direction] = [o.name for o in self.objects]
@@ -220,8 +225,12 @@ class WFC3DGenerator:
                         obj_name = self.grid[x, y, z][0]
                     else:
                         continue
-                    original_obj = next((obj for obj in self.objects if obj.name == obj_name), None)
-                    
+                    # pick random  objects from a collection
+                    if obj_name in bpy.data.collections:
+                        c = bpy.data.collections[obj_name]
+                        original_obj =random.choice(c.objects)
+                    else:
+                        original_obj = next((obj for obj in self.objects if obj.name == obj_name), None)
                     
                     if original_obj:
                         if self.link_objects:
@@ -325,7 +334,6 @@ class WFC3DPanel(bpy.types.Panel):
         layout.prop(props, "grid_size")
         layout.prop(props, "spacing")
         
-        layout.prop(context.scene,"use_constraints")
         layout.prop(props, "use_constraints") 
         box = layout.box()
         box.enabled = context.scene.wfc_props.use_constraints
