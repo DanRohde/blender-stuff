@@ -281,6 +281,8 @@ class OBJECT_OT_WFC3DCollectionInit(bpy.types.Operator):
             if not collection:
                 raise ValueError(f"Collection '{props.collection_obj}' not found!")
             objects = list(collection.objects)
+            objects.extend(collection.children)
+
             if not objects:
                 raise ValueError("Collection is empty!")
             
@@ -288,10 +290,14 @@ class OBJECT_OT_WFC3DCollectionInit(bpy.types.Operator):
                 all_object_names = ""
             else:
                 all_object_names = ",".join([obj.name for obj in collection.objects])
+                if len(collection.children)>0:
+                    all_object_names = all_object_names + "," + ",".join([obj.name for obj in collection.children])
                 
             for obj in objects:
                 for direction in DIRECTIONS:
                     prop_name = f"wfc_{direction.lower()}"
+                    if obj.name in bpy.data.collections and len(bpy.data.collections[obj.name].objects)>0:
+                         obj = bpy.data.collections[obj.name].objects[0]
                     if not props.overwrite_constraints and prop_name in obj:
                         self.report({'INFO'}, f"Property {prop_name} of {obj.name} already initialized.")
                     else:
@@ -323,6 +329,7 @@ class WFC3DPanel(bpy.types.Panel):
         layout.prop(props, "spacing")
         
         layout.prop(props, "use_constraints") 
+
         box = layout.box()
         box.enabled = context.scene.wfc_props.use_constraints
         box.prop(props, "empty_constraints")
@@ -339,14 +346,19 @@ class WFC3DPanel(bpy.types.Panel):
 
         layout.separator(type="LINE", factor=0.2)
 
-        if props.remove_target_collection:
+        if props.remove_target_collection and props.target_collection != "" and props.target_collection in bpy.data.collections:
             layout.label(text="Target collection will be removed!", icon="WARNING_LARGE")
 
         row = layout.row();
-        row.enabled = props.collection_obj!=None
+        row.enabled = props.collection_obj!=None and ( (len(props.collection_obj.objects)>0)or(len(props.collection_obj.children)>0) ) and props.collection_obj.name != props.target_collection
         row.operator("object.wfc_3d_generate")
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon="INFO_LARGE")
+        if props.collection_obj is not None and props.collection_obj.name == props.target_collection:
+            layout.label(text="Source and target collection should not be the same.", icon="WARNING_LARGE")
+        if props.collection_obj and len(props.collection_obj.objects)==0 and len(props.collection_obj.children)==0:
+            layout.label(text="Please select a non-empty source collection.", icon="INFO_LARGE")
+
 
 classes = (
     WFC3DProperties,
