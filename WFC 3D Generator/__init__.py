@@ -17,10 +17,10 @@ DIRECTIONS = {
 }
 
 class WFC3DProperties(bpy.types.PropertyGroup):
-    collection_name: bpy.props.StringProperty(
+    collection_obj: bpy.props.PointerProperty(
         name="",
-        description="Object collection",
-        default="WFC_Objects",
+        description="Select a collection",
+        type=bpy.types.Collection,
     )
     grid_size: bpy.props.IntVectorProperty(
         name="",
@@ -228,7 +228,7 @@ class WFC3DGenerator:
                     # pick random  objects from a collection
                     if obj_name in bpy.data.collections:
                         c = bpy.data.collections[obj_name]
-                        original_obj =random.choice(c.objects)
+                        original_obj = random.choice(c.objects)
                     else:
                         original_obj = next((obj for obj in self.objects if obj.name == obj_name), None)
                     
@@ -251,13 +251,13 @@ class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
     bl_label = "Generate WFC 3D Model"
     bl_options = {'REGISTER', 'UNDO'}
 
-    def execute_prod(self, context):
+    def execute(self, context):
         props = context.scene.wfc_props
         
         try:
-            collection = bpy.data.collections.get(props.collection_name)
+            collection = props.collection_obj
             if not collection:
-                raise ValueError(f"Collection '{props.collection_name}' not found!")
+                raise ValueError(f"Source collection '{props.collection_obj}' not found!")
                 
             generator = WFC3DGenerator(collection, props)
             generator.generate_model()
@@ -268,18 +268,6 @@ class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
         except Exception as e:
             self.report({'ERROR'}, f"Error: {str(e)}",)
             return {'CANCELLED'}
-    def execute(self, context):
-        props = context.scene.wfc_props
-        
-        collection = bpy.data.collections.get(props.collection_name)
-        if not collection:
-            raise ValueError(f"Collection '{props.collection_name}' not found!")
-                
-        generator = WFC3DGenerator(collection, props)
-        generator.generate_model()
-            
-        self.report({'INFO'}, "WFC model successfully generated!")
-        return {'FINISHED'}
         
 class OBJECT_OT_WFC3DCollectionInit(bpy.types.Operator):
     """Initialize object constraints"""
@@ -289,9 +277,9 @@ class OBJECT_OT_WFC3DCollectionInit(bpy.types.Operator):
     def execute(self, context):
         props = context.scene.wfc_props
         try:
-            collection = bpy.data.collections.get(props.collection_name)
+            collection = props.collection_obj
             if not collection:
-                raise ValueError(f"Collection '{props.collection_name}' not found!")
+                raise ValueError(f"Collection '{props.collection_obj}' not found!")
             objects = list(collection.objects)
             if not objects:
                 raise ValueError("Collection is empty!")
@@ -329,7 +317,7 @@ class WFC3DPanel(bpy.types.Panel):
         props = context.scene.wfc_props
         
         layout.label(text="Source Collection")
-        layout.prop(props, "collection_name")
+        layout.prop(props, "collection_obj")
         layout.label(text="Grid Size (width/depth/height)")
         layout.prop(props, "grid_size")
         layout.prop(props, "spacing")
@@ -348,27 +336,36 @@ class WFC3DPanel(bpy.types.Panel):
         layout.prop(props, "link_objects")
         layout.prop(props, "remove_target_collection")
         layout.prop(props, "seed")
-       
-        layout.separator(type="LINE", factor=0.2)
-        
-        if context.scene.wfc_props.remove_target_collection:
-            layout.label(text="Target collection will be removed!", icon="WARNING_LARGE")
-        layout.operator("object.wfc_3d_generate")
 
+        layout.separator(type="LINE", factor=0.2)
+
+        if props.remove_target_collection:
+            layout.label(text="Target collection will be removed!", icon="WARNING_LARGE")
+
+        row = layout.row();
+        row.enabled = props.collection_obj!=None
+        row.operator("object.wfc_3d_generate")
+        if props.collection_obj is None:
+            layout.label(text="Please select a source collection.", icon="INFO_LARGE")
+
+classes = (
+    WFC3DProperties,
+    OBJECT_OT_WFC3DGenerate,
+    OBJECT_OT_WFC3DCollectionInit,
+    WFC3DPanel
+)
 def register():
-    bpy.utils.register_class(WFC3DProperties)
-    bpy.utils.register_class(OBJECT_OT_WFC3DGenerate)
-    bpy.utils.register_class(OBJECT_OT_WFC3DCollectionInit)
-    bpy.utils.register_class(WFC3DPanel)
+    for cls in classes:
+        bpy.utils.register_class(cls)
     
     bpy.types.Scene.wfc_props = bpy.props.PointerProperty(type=WFC3DProperties)
 
 def unregister():
-    bpy.utils.unregister_class(WFC3DProperties)
-    bpy.utils.unregister_class(OBJECT_OT_WFC3DGenerate)
-    bpy.utils.unregister_class(OBJECT_OT_WFC3DCollectionInit)
-    bpy.utils.unregister_class(WFC3DPanel)
+    for cls in reversed(classes):
+        bpy.utils.unregister_class(cls)
+
     del bpy.types.Scene.wfc_props
+    del bpy.types.Scene.wfc_picker
 
 if __name__ == "__main__":
     register()
