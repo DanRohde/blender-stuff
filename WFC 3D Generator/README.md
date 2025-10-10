@@ -63,7 +63,6 @@ Each object in the source collection can use custom properties to define the per
 
 
 ## Upcoming Features
-* grid sizes for all three dimensions
 * more constraints: count constraints ...
 * an easy to use constraint editor
 * a constraint validator to check for unknown objects ...

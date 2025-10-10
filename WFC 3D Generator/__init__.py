@@ -31,13 +31,14 @@ class WFC3DProperties(bpy.types.PropertyGroup):
         min=1,
         max=100,
     )
-    spacing: bpy.props.FloatProperty(
-        name="Grid Space",
-        description="Size of a Grid element",
-        subtype="DISTANCE",
-        default=2.0,
+    spacing: bpy.props.FloatVectorProperty(
+        name="",
+        description="Size of a Grid Cell",
+        subtype="TRANSLATION",
+        default=(2.0,2.0,2.0),
         min=0.1,
-    )
+        
+    ) 
     use_constraints: bpy.props.BoolProperty(
         name="Use Constraints",
         description="Use constraints",
@@ -96,7 +97,6 @@ class WFC3DGrid:
                     
                     self.grid[x, y, z] = cell
     
-        print(f"Grid: {self.grid}")
     def is_corner(self, pos):
         x, y, z = pos
         l, w, h = self.grid_size
@@ -133,12 +133,14 @@ class WFC3DGrid:
             return False    
         t = t_values[0]
         return 0 <= t <= 1
+
     def is_face(self, pos):
         x, y, z = pos
         l, w, h = self.grid_size
         if self.is_corner(pos) or self.is_edge(pos) or self.is_inside(pos):
             return False
         return (x in {0, l-1} or y in {0, w-1} or z in {0, h-1})
+
     def is_on_specific_face(self, pos, face):
         x, y, z = pos
         l, w, h = self.grid_size
@@ -194,6 +196,28 @@ class WFC3DGrid:
                 return False
         return True
 
+    def count_obj(self, obj_name, pos, dir):
+        count = 0
+        x, y, z = pos
+        dx, dy, dz = dir
+        gx, gy, gz = self.grid_size
+        while (0 <= x+dx < gx and 0 <= y+dy < gy and 0<= z+dz < gz):
+            if obj_name in self.grid[x+dx,y+dy,z+dz] and len(self.grid[x+dx,y+dy,z+dz])>1:
+                count+=1
+            x,y,z = x+dx, y+dy, z+dz
+        return count
+    def remove_obj(self, obj_name, pos, dir, count):
+        x,y,z = pos
+        dx, dy, dz = dir    
+        gx, gy, gz = self.grid_size
+        deleted = 0
+        while (0 <= x+dx < gx and 0 <= y+dy < gy and 0 <= z+dz < gz and deleted < count):
+            obj_list = self.grid[x+dx,y+dy,z+dz]
+            if obj_name in obj_list and len(obj_list)>1:
+                self.grid[x+dx,y+dy,z+dz] = [n for n in obj_list if n !=obj_name]
+                deleted+=1
+        return deleted
+
     def _mult_vector(self, v1, v2):
         return tuple(a * b for a, b in zip(v1,v2))
     
@@ -209,6 +233,7 @@ class WFC3DGrid:
             'btl' : self._mult_vector((0,1,1), gs),
             'btr' : self._mult_vector((1,1,1), gs),
         }
+
     def _init_edges(self):
         c = self.corners
         self.edges = {
@@ -226,7 +251,6 @@ class WFC3DGrid:
             'rt' : (c['ftr'],c['btr']),
         }
 
-        
 class WFC3DGenerator:
     def __init__(self, collection, props):
         self.collection = collection
@@ -240,6 +264,8 @@ class WFC3DGenerator:
         self.remove_target_collection = props.remove_target_collection
         self.objects = []
         self.constraints = {}
+        
+        self.count_constraints = { "cx" : [ (-1,0,0),(1,0,0)], "cy" : [(0,-1,0),(0,1,0)], "cz" : [(0,0,-1),(0,0,1)] }
         
         self.load_objects()
         self.load_constraints()
@@ -262,6 +288,7 @@ class WFC3DGenerator:
             if obj.name in bpy.data.collections:
                     obj = bpy.data.collections[obj.name].objects[0]
                 
+            # load weight constraints
             if "wfc_weight" in obj and obj["wfc_weight"] != "":
                 self.constraints[obj_name]["weight"] = int(obj["wfc_weight"])
             else:
@@ -273,10 +300,10 @@ class WFC3DGenerator:
                 if gc in obj and obj[gc] != "":
                     self.constraints[obj_name][grid_constraints[gc]] = obj[gc].split(",")
 
-            count_constraints = { 'wfc_cx':'cx', 'wfc_cy':'cy', 'wfc_cz':'cz'}
+            count_constraints = { 'wfc_cx':'cx', 'wfc_cy':'cy', 'wfc_cz':'cz', 'wfc_cg' : 'cg' }
             for cc in count_constraints:
-                if cc in obj and obj[gc] != "":
-                    self.constriants[obj_name][count_constraints[cc]] = int(obj[gc])
+                if cc in obj and obj[cc] != "":
+                    self.constraints[obj_name][count_constraints[cc]] = int(obj[cc])
             
             # load neighbor constraints
             for direction in DIRECTIONS:
@@ -334,9 +361,21 @@ class WFC3DGenerator:
                 current_obj = self.grid.grid[cx, cy, cz][0]
             else:
                 continue
+            
+            
+#            for cc in self.count_constraints:
+#                if cc in self.constraints[current_obj]:
+#                    count = 0;
+#                    for dir in self.count_constraints[cc]:
+#                        count += self.grid.count_obj(current_obj, (x,y,z), dir)
+#                    if (count > self.constraints[current_obj][cc]):
+#                        diff = count - self.constraints[current_obj][cc]
+#                        diff -= self.grid.remove_obj(current_obj, (x,y,z), self.count_constraints[cc][0], diff)
+#                        if diff > 0:
+#                            self.grid.remove_obj(current_obj, (x,y,z),self.count_constraints[cc][1], diff)
+            
             for direction, (dx, dy, dz) in DIRECTIONS.items():
-                nx, ny, nz = cx + dx, cy + dy, cz + dz
-                
+                nx, ny, nz = cx + dx, cy + dy, cz + dz             
                 if 0 <= nx < self.grid_size[0] and \
                    0 <= ny < self.grid_size[1] and \
                    0 <= nz < self.grid_size[2]:
@@ -344,10 +383,8 @@ class WFC3DGenerator:
                     if len(neighbor_options) > 1:
                         # Find permitted neighbors for this direction
                         allowed = self.constraints[current_obj].get(direction, [])
-                        
                         # Filter disallowed options
                         new_options = [obj for obj in neighbor_options if obj in allowed]
-                        
                         if len(new_options) < len(neighbor_options):
                             self.grid.grid[nx, ny, nz] = new_options
                             queue.append((nx, ny, nz))
@@ -402,9 +439,9 @@ class WFC3DGenerator:
                             new_obj = original_obj.copy()
                             new_obj.data = original_obj.data.copy()
                         new_obj.location = (
-                            x * self.spacing,
-                            y * self.spacing,
-                            z * self.spacing,
+                            x * self.spacing[0],
+                            y * self.spacing[1],
+                            z * self.spacing[2],
                         )
                         new_collection.objects.link(new_obj)
 
@@ -458,7 +495,7 @@ class OBJECT_OT_WFC3DCollectionInit(bpy.types.Operator):
                     all_object_names = all_object_names + "," + ",".join([obj.name for obj in collection.children])
                 
             for obj in objects:
-                for constraint in ['corners','edges','faces','inside','weight']:
+                for constraint in ['corners','edges','faces','inside','weight']: # ,'cx','cy','cz','cg']:
                     prop_name = f"wfc_{constraint}"
                     if obj.name in bpy.data.collections and len(bpy.data.collections[obj.name].objects)>0:
                         obj = bpy.data.collections[obj.name].objects[0]
@@ -498,6 +535,7 @@ class WFC3DPanel(bpy.types.Panel):
         layout.prop(props, "collection_obj")
         layout.label(text="Grid Size (width/depth/height)")
         layout.prop(props, "grid_size")
+        layout.label(text="Grid Cell Space")
         layout.prop(props, "spacing")
         
         layout.prop(props, "use_constraints") 
@@ -549,7 +587,6 @@ def unregister():
         bpy.utils.unregister_class(cls)
 
     del bpy.types.Scene.wfc_props
-    del bpy.types.Scene.wfc_picker
 
 if __name__ == "__main__":
     register()
