@@ -3,9 +3,9 @@
 # https://docs.blender.org/manual/en/latest/advanced/extensions/getting_started.html
 
 import bpy
-import numpy as np
 from collections import deque
 import random
+import numpy as np
 
 DIRECTIONS = {
     'TOP': (0, 0, 1),
@@ -15,6 +15,7 @@ DIRECTIONS = {
     'LEFT': (-1, 0, 0),
     'RIGHT': (1, 0, 0)
 }
+
 
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(
@@ -38,10 +39,11 @@ class WFC3DProperties(bpy.types.PropertyGroup):
         min=0.1,
     )
     use_constraints: bpy.props.BoolProperty(
-        name="Use Neighbor Constraints",
+        name="Use Constraints",
         description="Use constraints",
         default=True,
     )
+    
     empty_constraints: bpy.props.BoolProperty(
         name="Create Empty Constraint Properties",
         description="Default: a comma separated list of all object names in the collection",
@@ -72,7 +74,159 @@ class WFC3DProperties(bpy.types.PropertyGroup):
         description="Remove existing target collection",
         default=False,
     )
+    
+    
+class WFC3DGrid:
+    def __init__(self, grid_size):
+        self.grid_size = grid_size;        
+        self.grid = None
+        self._init_corners()
+        self._init_edges()
+        
+    def initialize_grid(self, objects, constraints):
+        """Initializes the 3D grid"""
+        self.grid = np.empty(self.grid_size, dtype=object)
+        for x in range(self.grid_size[0]):
+            for y in range(self.grid_size[1]):
+                for z in range(self.grid_size[2]):
+                    cell = []
+                    for obj in objects:
+                        if self.are_grid_constraints_satisfied(obj.name, constraints, (x, y, z)):
+                            cell.append(obj.name)
+                    
+                    self.grid[x, y, z] = cell
+    
+        print(f"Grid: {self.grid}")
+    def is_corner(self, pos):
+        x, y, z = pos
+        l, w, h = self.grid_size
+        return (x in {0, l-1} and y in {0, w-1} and z in {0, h-1})
+    
+    def is_edge(self, pos):
+        x, y, z = pos
+        l, w, h = self.grid_size
+        if self.is_corner(pos):
+            return False
+        return (x in {0, l-1} and (y in {0, w-1} or z in {0, h-1})) or \
+               (y in {0, w-1} and (x in {0, l-1} or z in {0, h-1})) or \
+               (z in {0, h-1} and (x in {0, l-1} or y in {0, w-1}))
+    
+    def is_inside(self, pos):
+        x, y, z = pos
+        l, w, h = self.grid_size
+        return 0 < x < l-1 and 0 < y < w-1 and 0 < z < h-1
+    
+    def is_on_given_edge(self, p, edge):
+        a,b = edge
+        dx, dy, dz = b[0] - a[0], b[1] - a[1], b[2] - a[2]
+        px, py, pz = p[0] - a[0], p[1] - a[1], p[2] - a[2]
+        t_values = []
+        for dp, d in zip((px, py, pz), (dx, dy, dz)):
+            if d != 0:
+                t_values.append(dp / d)
+            else:
+                if dp != 0:
+                    return False    
+        if not t_values:
+            return False  
+        if not all(abs(t - t_values[0]) < 1e-9 for t in t_values):
+            return False    
+        t = t_values[0]
+        return 0 <= t <= 1
+    def is_face(self, pos):
+        x, y, z = pos
+        l, w, h = self.grid_size
+        if self.is_corner(pos) or self.is_edge(pos) or self.is_inside(pos):
+            return False
+        return (x in {0, l-1} or y in {0, w-1} or z in {0, h-1})
+    def is_on_specific_face(self, pos, face):
+        x, y, z = pos
+        l, w, h = self.grid_size
+        if face == "top":
+            return z == h-1 and 0 < x < l-1 and 0 < y < w-1
+        elif face == "bottom":
+            return z == 0 and 0 < x < l-1 and 0 < y < w-1
+        elif face == "left":
+            return x == 0 and 0 < y < w-1 and 0 < z < h-1
+        elif face == "right":
+            return x == l-1 and 0 < y < w-1 and 0 < z < h-1
+        elif face == "front":
+            return y == 0 and 0 < x < l-1 and 0 < z < h-1
+        elif face == "back":
+            return y == w-1 and 0 < x < l-1 and 0 < z < h-1
+        else:
+            return False
 
+    def are_grid_constraints_satisfied(self, name, constraints, pos):
+        if 'corners' in constraints[name] and self.is_corner(pos):
+            for c in constraints[name]['corners']:
+                if c == '' and len(constraints[name]['corners'])==1:
+                    return True
+                if c == '-' or c == 'None' or c == 'False':
+                    return False
+                if c in self.corners and pos == self.corners[c]:
+                    return True
+            return False
+        if 'edges' in constraints[name] and self.is_edge(pos):
+            for c in constraints[name]['edges']:
+                if c == '' and len(constraints[name]['edges'])==1:
+                    return True
+                if c == '-' or c == 'None':
+                    return False
+                if c in self.edges and self.is_on_given_edge(pos, self.edges[c]):
+                    return True
+            return False
+        if 'inside' in constraints[name] and self.is_inside(pos):
+            inside = constraints[name]['inside']
+            if inside == '' or inside == 'True':
+                return True
+            if inside == '-' or inside == 'None' or inside == 'False':
+                return False
+            return False
+        if 'faces' in constraints[name] and self.is_face(pos):
+            for f in constraints[name]['faces']:
+                if f == '' and len(constraints[name]['faces'])==1:
+                    return True
+                if f == '-' or f == 'None' or f == 'False':
+                    return False
+                if self.is_on_specific_face(pos,f):
+                    return True
+                return False
+        return True
+
+    def _mult_vector(self, v1, v2):
+        return tuple(a * b for a, b in zip(v1,v2))
+    
+    def _init_corners(self):
+        gs = (self.grid_size[0]-1, self.grid_size[1]-1, self.grid_size[2]-1)
+        self.corners = {
+            'fbl' : (0,0,0),
+            'fbr' : self._mult_vector((1,0,0), gs),
+            'ftl' : self._mult_vector((0,0,1), gs),
+            'ftr' : self._mult_vector((1,0,1), gs),
+            'bbl' : self._mult_vector((0,1,0), gs),
+            'bbr' : self._mult_vector((1,1,0), gs),
+            'btl' : self._mult_vector((0,1,1), gs),
+            'btr' : self._mult_vector((1,1,1), gs),
+        }
+    def _init_edges(self):
+        c = self.corners
+        self.edges = {
+            'fb' : (c['fbl'],c['fbr']),
+            'fl' : (c['fbl'],c['ftl']),
+            'ft' : (c['ftl'],c['ftr']),
+            'fr' : (c['fbr'],c['ftr']),
+            'bb' : (c['bbl'],c['bbr']),
+            'bl' : (c['bbl'],c['btl']),
+            'bt' : (c['btl'],c['btr']),
+            'br' : (c['bbr'],c['btr']),
+            'lb' : (c['fbl'],c['bbl']),
+            'lt' : (c['ftl'],c['btl']),
+            'rb' : (c['fbr'],c['bbr']),
+            'rt' : (c['ftr'],c['btr']),
+        }
+
+        
 class WFC3DGenerator:
     def __init__(self, collection, props):
         self.collection = collection
@@ -81,14 +235,16 @@ class WFC3DGenerator:
         self.use_constraints = props.use_constraints
         self.target_collection = props.target_collection
         self.link_objects = props.link_objects
+        
         random.seed(props.seed)
         self.remove_target_collection = props.remove_target_collection
-        self.grid = None
         self.objects = []
         self.constraints = {}
+        
         self.load_objects()
         self.load_constraints()
-
+        
+        self.grid = WFC3DGrid(self.grid_size)
 
     def load_objects(self):
         """Loads objects from the collection"""
@@ -98,15 +254,34 @@ class WFC3DGenerator:
             raise ValueError("Collection is empty!")
 
     def load_constraints(self):
-        """Loads neighbor relations from custom properties"""
+        """Loads constraints from custom properties"""
         for obj in self.objects:
             obj_name = obj.name
             self.constraints[obj_name] = {}
+            
+            if obj.name in bpy.data.collections:
+                    obj = bpy.data.collections[obj.name].objects[0]
+                
+            if "wfc_weight" in obj and obj["wfc_weight"] != "":
+                self.constraints[obj_name]["weight"] = int(obj["wfc_weight"])
+            else:
+                self.constraints[obj_name]["weight"] = 1
+
+            # load grid constraints
+            grid_constraints = { 'wfc_corners':'corners', 'wfc_edges':'edges', 'wfc_inside':'inside','wfc_faces' :'faces' }
+            for gc in grid_constraints:
+                if gc in obj and obj[gc] != "":
+                    self.constraints[obj_name][grid_constraints[gc]] = obj[gc].split(",")
+
+            count_constraints = { 'wfc_cx':'cx', 'wfc_cy':'cy', 'wfc_cz':'cz'}
+            for cc in count_constraints:
+                if cc in obj and obj[gc] != "":
+                    self.constriants[obj_name][count_constraints[cc]] = int(obj[gc])
+            
+            # load neighbor constraints
             for direction in DIRECTIONS:
                 prop_name = f"wfc_{direction.lower()}"
                 # take first element from collection to get constraints
-                if obj.name in bpy.data.collections:
-                    obj = bpy.data.collections[obj.name].objects[0]
                 if prop_name in obj:
                     if obj[prop_name] == "":
                         self.constraints[obj_name][direction] = [o.name for o in self.objects]
@@ -116,17 +291,9 @@ class WFC3DGenerator:
                     # Standard: Alle Objekte erlaubt
                     self.constraints[obj.name][direction] = [o.name for o in self.objects]
 
-    def initialize_grid(self):
-        """Initializes the 3D grid with superpositions"""
-        self.grid = np.empty(self.grid_size, dtype=object)
-        for x in range(self.grid_size[0]):
-            for y in range(self.grid_size[1]):
-                for z in range(self.grid_size[2]):
-                    self.grid[x, y, z] = [obj.name for obj in self.objects]
-
     def get_entropy(self, x, y, z):
         """Calculates the entropy (number of possible states) of a cell"""
-        return len(self.grid[x, y, z])
+        return len(self.grid.grid[x, y, z])
 
     def get_lowest_entropy_cell(self):
         """Finds the cell with the lowest entropy"""
@@ -143,11 +310,19 @@ class WFC3DGenerator:
                             min_cell = (x, y, z)
         return min_cell
 
+    def get_weighted_options(self, obj_names):
+        options = []
+        for name in obj_names:
+            weight = self.constraints[name]['weight']
+            option = [name for _ in range(weight)]
+            options.extend(option)
+        return options
+        
     def collapse(self, x, y, z):
         """Collapses a cell into a single state"""
-        options = self.grid[x, y, z]
+        options = self.get_weighted_options(self.grid.grid[x, y, z])
         chosen = random.choice(options)
-        self.grid[x, y, z] = [chosen]
+        self.grid.grid[x, y, z] = [chosen]
 
     def propagate(self, x, y, z):
         """Propagate constraints to neighbors"""
@@ -155,8 +330,8 @@ class WFC3DGenerator:
         
         while queue:
             cx, cy, cz = queue.popleft()
-            if len(self.grid[cx,cy,cz])>0:
-                current_obj = self.grid[cx, cy, cz][0]
+            if len(self.grid.grid[cx,cy,cz])>0:
+                current_obj = self.grid.grid[cx, cy, cz][0]
             else:
                 continue
             for direction, (dx, dy, dz) in DIRECTIONS.items():
@@ -165,34 +340,22 @@ class WFC3DGenerator:
                 if 0 <= nx < self.grid_size[0] and \
                    0 <= ny < self.grid_size[1] and \
                    0 <= nz < self.grid_size[2]:
-                    neighbor_options = self.grid[nx, ny, nz]
+                    neighbor_options = self.grid.grid[nx, ny, nz]
                     if len(neighbor_options) > 1:
                         # Find permitted neighbors for this direction
-                        #opposite_dir = self.get_opposite_direction(direction)
                         allowed = self.constraints[current_obj].get(direction, [])
                         
                         # Filter disallowed options
                         new_options = [obj for obj in neighbor_options if obj in allowed]
                         
                         if len(new_options) < len(neighbor_options):
-                            self.grid[nx, ny, nz] = new_options
+                            self.grid.grid[nx, ny, nz] = new_options
                             queue.append((nx, ny, nz))
 
-    def get_opposite_direction(self, direction):
-        """Returns oposite direction"""
-        opposites = {
-            'TOP': 'BOTTOM',
-            'BOTTOM': 'TOP',
-            'FRONT': 'BACK',
-            'BACK': 'FRONT',
-            'LEFT': 'RIGHT',
-            'RIGHT': 'LEFT'
-        }
-        return opposites[direction]
 
     def generate_model(self):
         """Excecute WFC algorithm and generate the model"""
-        self.initialize_grid()
+        self.grid.initialize_grid(self.objects, self.constraints)
         
         while True:
             cell = self.get_lowest_entropy_cell()
@@ -221,8 +384,8 @@ class WFC3DGenerator:
         for x in range(self.grid_size[0]):
             for y in range(self.grid_size[1]):
                 for z in range(self.grid_size[2]):
-                    if len(self.grid[x,y,z]) > 0:
-                        obj_name = self.grid[x, y, z][0]
+                    if len(self.grid.grid[x,y,z]) > 0:
+                        obj_name = self.grid.grid[x, y, z][0]
                     else:
                         continue
                     # pick random  objects from a collection
@@ -269,6 +432,7 @@ class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
             self.report({'ERROR'}, f"Error: {str(e)}",)
             return {'CANCELLED'}
         
+        
 class OBJECT_OT_WFC3DCollectionInit(bpy.types.Operator):
     """Initialize object constraints"""
     bl_idname="object.wfc_3d_init_collection"
@@ -294,6 +458,14 @@ class OBJECT_OT_WFC3DCollectionInit(bpy.types.Operator):
                     all_object_names = all_object_names + "," + ",".join([obj.name for obj in collection.children])
                 
             for obj in objects:
+                for constraint in ['corners','edges','faces','inside','weight']:
+                    prop_name = f"wfc_{constraint}"
+                    if obj.name in bpy.data.collections and len(bpy.data.collections[obj.name].objects)>0:
+                        obj = bpy.data.collections[obj.name].objects[0]
+                    if not props.overwrite_constraints and prop_name in obj:
+                        self.report({'INFO'}, f"Property {prop_name} of {obj.name} already initialized.")
+                    else:
+                        obj[prop_name]=""
                 for direction in DIRECTIONS:
                     prop_name = f"wfc_{direction.lower()}"
                     if obj.name in bpy.data.collections and len(bpy.data.collections[obj.name].objects)>0:
@@ -364,7 +536,7 @@ classes = (
     WFC3DProperties,
     OBJECT_OT_WFC3DGenerate,
     OBJECT_OT_WFC3DCollectionInit,
-    WFC3DPanel
+    WFC3DPanel,
 )
 def register():
     for cls in classes:
