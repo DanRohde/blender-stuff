@@ -5,7 +5,7 @@ Each object in the source collection can use custom properties to define the per
 ## Quick Start Guide
 1. Install and enable the WFC 3D Generator add-on
 2. Create a source collection with some objects
-3. Define neighbor constraints: 
+3. Define constraints: 
     1. open 3D Viewport: Press 'N' > Create > WFC 3D Generator
     2. enter the name of the source collection name in the "Source Collection" field
     3. click on "Initialize constraint properties" button
@@ -20,6 +20,7 @@ Each object in the source collection can use custom properties to define the per
 	* comma separated list of object names - permitted neighbor(s)
 	* "None" - disallows all neighbors
 
+
 ## Grid Constraints
 
 **Corner constraints:**
@@ -29,25 +30,29 @@ Each object in the source collection can use custom properties to define the per
 	* "-" - forbids all corners
 	* comma separated list of allowed corners: ``fbl,fbr,ftl,ftr,bbl,bbr,btl,btr`` ("f" - front, "b" - back or bottom in second position, "t" - top, "l" - left, "r" - right) 
 
-** Edge constraints:**
+
+**Edge constraints:**
 * Used custom property: ``wfc_edges``
 * Allowed property values:
 	* empty string - allows all edges
 	* "-" - forbids all edges
 	* comma separated list of permitted edges: ``fb,fl,ft,fr,bb,bl,bt,br,lb,lt,rb,rt`` ("f" - front, "b" - back or bottom in second position, "t" - top, "l" - left, "r" - right)
+
 	
-** Face constraints:**
+**Face constraints:**
 * Used custom property: ``wfc_faces``
 * Allowed property values:
 	* empty string - allows all faces
 	* "-" - forbids all faces
 	* comma separated list of permitted faces: ``front,back,top,bottom,left,right``
 
-** Inside constraints:**
+
+**Inside constraints:**
 * Use custom property:	``wfc_inside``
 * Allowed property values:
 	* empty string - allows the object to stay inside the grid
 	* "-" - forbids to stay inside
+
 	
 ## Weight Constraint
 * Used custom property: ``wfc_weight``
