@@ -633,15 +633,15 @@ class WFC3DGenerator:
                             if self.constraints[obj_name]["translation_min"] and self.constraints[obj_name]["translation_max"]:
                                 tmin = self.constraints[obj_name]["translation_min"]
                                 tmax = self.constraints[obj_name]["translation_max"]
-                                nx+= tmin[0] + random.random()*tmax[0]
-                                ny+= tmin[1] + random.random()*tmax[1]
-                                nz+= tmin[2] + random.random()*tmax[2]
+                                nx+= tmin[0] + random.random()*(tmax[0]-tmin[0])
+                                ny+= tmin[1] + random.random()*(tmax[1]-tmin[1])
+                                nz+= tmin[2] + random.random()*(tmax[2]-tmin[2])
                             if self.constraints[obj_name]["scale_min"] and self.constraints[obj_name]["scale_max"]:
                                 smin = self.constraints[obj_name]["scale_min"]
                                 smax = self.constraints[obj_name]["scale_max"]
-                                new_obj.scale.x = smin[0] + random.random()*smax[0]
-                                new_obj.scale.y = smin[1] + random.random()*smax[1]
-                                new_obj.scale.z = smin[2] + random.random()*smax[2]
+                                new_obj.scale.x = smin[0] + random.random()*(smax[0]-smin[0])
+                                new_obj.scale.y = smin[1] + random.random()*(smax[1]-smin[1])
+                                new_obj.scale.z = smin[2] + random.random()*(smax[2]-smin[2])
                             if self.constraints[obj_name]["rotation"]:
                                 a = self.constraints[obj_name]["rotation"]
                                 d = self.constraints[obj_name]["rotation_d"]
