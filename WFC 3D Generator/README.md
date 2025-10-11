@@ -6,58 +6,69 @@ Each object in the source collection can use custom properties to define the per
 1. Install and enable the WFC 3D Generator add-on
 2. Create a source collection with some objects
 3. Define constraints: 
-    1. open 3D Viewport: Press 'N' > WFC 3D > WFC 3D Constraints Editor
+    1. open 3D Viewport: Press 'N' > WFC 3D Edit > WFC 3D Constraints Editor
     2. select a source collection
     3. add some constraints to objects 
+4. Create a new object:
+    1. open 3D Viewport: WFC 3D Gen > WFC 3D Generator
+    2. Press "Generate WFC 3D Model"
 
 
 ## Neighbor Constraints
-* Used custom properties: ``wfc_left``, ``wfc_right`` ,``wfc_front``, ``wfc_back``, ``wfc_top``, ``wfc_bottom``
+* Used custom properties: `wfc_left`, `wfc_right` ,`wfc_front`, `wfc_back`, `wfc_top`, `wfc_bottom`
 * Allowed property values:
-	* empty string - allows all neighbors
-	* comma separated list of object names - permitted neighbor(s)
-	* "None" - disallows all neighbors
+    * empty string - allows all neighbors
+    * comma separated list of object names - permitted neighbor(s)
+    * "None" - disallows all neighbors
 
 
 ## Grid Constraints
 
 **Corner constraints:**
-* Used custom property: ``wfc_corners``
+* Used custom property: `wfc_corners`
 * Allowed property values:
-	* empty string - allows all corners
-	* "-" - forbids all corners
-	* comma separated list of allowed corners: ``fbl,fbr,ftl,ftr,bbl,bbr,btl,btr`` ("f" - front, "b" - back or bottom in second position, "t" - top, "l" - left, "r" - right) 
+    * empty string - allows all corners
+    * "-" - forbids all corners
+    * comma separated list of allowed corners: `fbl,fbr,ftl,ftr,bbl,bbr,btl,btr` ("f" - front, "b" - back or bottom in second position, "t" - top, "l" - left, "r" - right) 
 
 
 **Edge constraints:**
-* Used custom property: ``wfc_edges``
+* Used custom property: `wfc_edges`
 * Allowed property values:
-	* empty string - allows all edges
-	* "-" - forbids all edges
-	* comma separated list of permitted edges: ``fb,fl,ft,fr,bb,bl,bt,br,lb,lt,rb,rt`` ("f" - front, "b" - back or bottom in second position, "t" - top, "l" - left, "r" - right)
+    * empty string - allows all edges
+    * "-" - forbids all edges
+    * comma separated list of permitted edges: `fb,fl,ft,fr,bb,bl,bt,br,lb,lt,rb,rt` ("f" - front, "b" - back or bottom in second position, "t" - top, "l" - left, "r" - right)
 
 	
 **Face constraints:**
-* Used custom property: ``wfc_faces``
+* Used custom property: `wfc_faces`
 * Allowed property values:
-	* empty string - allows all faces
-	* "-" - forbids all faces
-	* comma separated list of permitted faces: ``front,back,top,bottom,left,right``
+    * empty string - allows all faces
+    * "-" - forbids all faces
+    * comma separated list of permitted faces: ``front,back,top,bottom,left,right``
 
 
 **Inside constraints:**
-* Use custom property:	``wfc_inside``
+* Use custom property:	`wfc_inside`
 * Allowed property values:
-	* empty string - allows the object to stay inside the grid
-	* "-" - forbids to stay inside
+    * empty string - allows the object to stay inside the grid
+    * "-" - forbids to stay inside
 
 	
 ## Weight Constraint
-* Used custom property: ``wfc_weight``
+* Used custom property: `wfc_weight`
 * Allowed property values:
-	* empty string - weight of 1
-	* 0 - object will not be used
-	* 1..n - increases the chance of being chosen by a factor of n 
+    * empty string - weight of 1
+    * 0 - object will not be used
+    * 1..n - increases the chance of being chosen by a factor of n
+ 
+
+## Rotation Constraints
+* Used custom properties: `wfc_rotation,wfc_rotation_d,wfc_rotation_s`
+* Allowed property values:
+    * wfc_rotation: comma separated list of `x,y,z` to allow rotation on this axis
+    * wfc_rotation_d: allowed rotation degrees 
+    * wfc_rotation_s: allowed rotation steps
 
 
 ## Upcoming Features
