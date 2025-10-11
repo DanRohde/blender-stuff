@@ -47,7 +47,7 @@ def get_object_edit_enum_items(self, context):
         
     return items
 
-def update_grid_constraint_properties(self, context):
+def update_constraint_properties(self, context):
     collection = self.collection_obj
     obj_name = self.edit_object
     
@@ -113,7 +113,15 @@ def update_grid_constraint_properties(self, context):
     if "wfc_rotation_d" in obj:
         self["rotation_d"] = obj["wfc_rotation_d"]
     if "wfc_rotation_s" in obj:
-        self["rotation_s"] = obj["wfc_rotation_s"]     
+        self["rotation_s"] = obj["wfc_rotation_s"]
+    
+    prop_defaults = {"scale_min":(1,1,1), "scale_max":(1,1,1), "translation_min":(0,0,0),"translation_max":(0,0,0)}
+    for p in ["scale_min","scale_max","translation_min","translation_max"]:
+        if "wfc_"+p in obj:
+            self[p]=obj["wfc_"+p]
+        else:
+            self[p]=prop_defaults[p]
+
     
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(
@@ -178,7 +186,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
         name="",
         description="Select an object",
         items=get_object_enum_items,
-        update=update_grid_constraint_properties
+        update=update_constraint_properties
     )
     
     edit_constraints: bpy.props.EnumProperty(
@@ -186,8 +194,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
         description = "Select constraint type",
         items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),\
                ("grid","Grid Constraints","Grid constraints"),("weight","Weight Constraints", "Weight constraints"),\
-               ("rotation","Rotation Constraints","Rotation constraints")],
-        update=update_grid_constraint_properties
+               ("rotation","Rotation Constraints", "Rotation constraints"), ("geometry","Geometry Constraints", "Geometry constraints")],
+        update=update_constraint_properties
     )
     edit_neighbor_constraint: bpy.props.EnumProperty(
         name="",
@@ -234,8 +242,12 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     rotation_x: bpy.props.BoolProperty(name="x", default=False, description="allow X rotation")
     rotation_y: bpy.props.BoolProperty(name="y", default=False, description="allow Y rotation")
     rotation_z: bpy.props.BoolProperty(name="z", default=False, description="allow Y rotation")
-    rotation_d : bpy.props.FloatVectorProperty(name="d", description="Degrees max", default=(0,0,0), subtype="EULER")
-    rotation_s : bpy.props.FloatVectorProperty(name="s", description="Degree Steps", default=(0,0,0), subtype="EULER")
+    rotation_d : bpy.props.FloatVectorProperty(name="Degrees max", description="Degrees max", default=(0,0,0), subtype="EULER")
+    rotation_s : bpy.props.FloatVectorProperty(name="Degrees steps", description="Degree Steps", default=(0,0,0), subtype="EULER")
+    scale_min : bpy.props.FloatVectorProperty(name="Scale min", description="Scale minimum", default=(1,1,1))
+    scale_max : bpy.props.FloatVectorProperty(name="Scale max", description="Scale maximum", default=(1,1,1))
+    translation_min : bpy.props.FloatVectorProperty(name="Translation min", description="Translation minimum", default=(0,0,0), subtype="TRANSLATION")
+    translation_max : bpy.props.FloatVectorProperty(name="Translation max", description="Translation maximum", default=(0,0,0), subtype="TRANSLATION")
     
 class WFC3DGrid:
     def __init__(self, grid_size):
@@ -474,6 +486,13 @@ class WFC3DGenerator:
                 self.constraints[obj_name]["rotation_s"] = obj["wfc_rotation_s"]
             else:
                 self.constraints[obj_name]["rotation_s"] = None
+            
+            
+            for c in ["scale_min","scale_max","translation_min","translation_max"]:
+                if "wfc_"+c in obj:
+                    self.constraints[obj_name][c] = obj["wfc_"+c]
+                else:
+                    self.constraints[obj_name][c] = None
                 
             count_constraints = { 'wfc_cx':'cx', 'wfc_cy':'cy', 'wfc_cz':'cz', 'wfc_cg' : 'cg' }
             for cc in count_constraints:
@@ -605,25 +624,39 @@ class WFC3DGenerator:
                         else:
                             new_obj = original_obj.copy()
                             new_obj.data = original_obj.data.copy()
-                        new_obj.location = (
-                            x * self.spacing[0],
-                            y * self.spacing[1],
-                            z * self.spacing[2],
-                        )
-                        if self.use_constraints and self.constraints[obj_name]["rotation"]:
-                            a = self.constraints[obj_name]["rotation"]
-                            d = self.constraints[obj_name]["rotation_d"]
-                            s = self.constraints[obj_name]["rotation_s"]
-                            if d and s and a!="":
-                                axisparam=["X","Y","Z"]
-                                for i in range(len(axisparam)):
-                                    if axisparam[i].lower() in a:
-                                        if s[i]!=0 and d[i]!=0:
-                                            v = [ m for m in np.arange(0,d[i],s[i]) ]
-                                            angleidx = random.randrange(0,len(v)) 
-                                            if v[angleidx]!=0:
-                                                new_obj.rotation_euler.rotate_axis(axisparam[i], v[angleidx])
-                                
+                        
+                        nx = x * self.spacing[0]
+                        ny = y * self.spacing[1]
+                        nz = z * self.spacing[2]
+                        
+                        if self.use_constraints:
+                            if self.constraints[obj_name]["translation_min"] and self.constraints[obj_name]["translation_max"]:
+                                tmin = self.constraints[obj_name]["translation_min"]
+                                tmax = self.constraints[obj_name]["translation_max"]
+                                nx+= tmin[0] + random.random()*tmax[0]
+                                ny+= tmin[1] + random.random()*tmax[1]
+                                nz+= tmin[2] + random.random()*tmax[2]
+                            if self.constraints[obj_name]["scale_min"] and self.constraints[obj_name]["scale_max"]:
+                                smin = self.constraints[obj_name]["scale_min"]
+                                smax = self.constraints[obj_name]["scale_max"]
+                                new_obj.scale.x = smin[0] + random.random()*smax[0]
+                                new_obj.scale.y = smin[1] + random.random()*smax[1]
+                                new_obj.scale.z = smin[2] + random.random()*smax[2]
+                            if self.constraints[obj_name]["rotation"]:
+                                a = self.constraints[obj_name]["rotation"]
+                                d = self.constraints[obj_name]["rotation_d"]
+                                s = self.constraints[obj_name]["rotation_s"]
+                                if d and s and a!="":
+                                    axisparam=["X","Y","Z"]
+                                    for i in range(len(axisparam)):
+                                        if axisparam[i].lower() in a:
+                                            if s[i]!=0 and d[i]!=0:
+                                                v = [ m for m in np.arange(0,d[i],s[i]) ]
+                                                angleidx = random.randrange(0,len(v)) 
+                                                if v[angleidx]!=0:
+                                                    new_obj.rotation_euler.rotate_axis(axisparam[i], v[angleidx])
+                        
+                        new_obj.location = (nx, ny, nz)        
                         new_collection.objects.link(new_obj)
 
 class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
@@ -854,10 +887,18 @@ class WFC3DEditPanel(bpy.types.Panel):
                     newrow.prop(props, "rotation_x")
                     newrow.prop(props, "rotation_y")
                     newrow.prop(props, "rotation_z")
-                    box.prop(props,"rotation_d")
-                    box.prop(props,"rotation_s")
+                    box.row().prop(props,"rotation_d")
+                    box.row().prop(props,"rotation_s")
                     
                     box.operator('object.wfc_update_rotation_constraints',icon='FILE_REFRESH')
+                if (props.edit_constraints == "geometry"):
+                    box=col.box()
+                    box.label(text="Geometry Constraints")
+                    box.row().prop(props,"scale_min")
+                    box.row().prop(props,"scale_max")
+                    box.row().prop(props,"translation_min")
+                    box.row().prop(props,"translation_max")
+                    box.operator('object.wfc_update_geometry_constraints',icon='FILE_REFRESH')
         else:
             layout.label(text="Choose a Source Collection", icon='INFO')
 
@@ -1001,8 +1042,6 @@ class COLLECTION_OT_WFC3DUpdate_Rotation_Constraints(bpy.types.Operator):
         else:
             obj = bpy.data.objects[obj_name]
         
-        #obj["wfc_weight"] = props.weight;
-        
         newval=[]
         for n in ["x","y","z"]:
             if props["rotation_"+n]:
@@ -1015,6 +1054,30 @@ class COLLECTION_OT_WFC3DUpdate_Rotation_Constraints(bpy.types.Operator):
         self.report({'INFO'}, f"Rotation constraints of object {obj_name} updated.")  
 
         return {'FINISHED'}
+
+class COLLECTION_OT_WFC3DUpdate_Geometry_Constraints(bpy.types.Operator):
+    bl_idname = "object.wfc_update_geometry_constraints"
+    bl_label = "Update Geometry Constraints"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        obj_name = props.edit_object
+        
+        if obj_name in bpy.data.collections:
+            obj = bpy.data.collections[obj_name].objects[0]
+        else:
+            obj = bpy.data.objects[obj_name]
+        
+        prop_defaults = {"scale_min" : (1.0,1.0,1.0), "scale_max" : (1.0,1.0,1.0), "translation_min" : (0.0,0.0,0.0), "translation_max" :(0.0,0.0,0.0)}
+        for c in prop_defaults:
+            if c in props:
+                obj["wfc_"+c] = props[c]
+            else:
+                obj["wfc" +c] = prop_defaults[c]
+         
+        self.report({'INFO'}, f"Geometry constraints of object {obj_name} updated.")  
+
+        return {'FINISHED'}
 classes = (
     WFC3DProperties,
     OBJECT_OT_WFC3DGenerate,
@@ -1025,6 +1088,7 @@ classes = (
     COLLECTION_OT_WFC3DUpdate_Grid_Constraints,
     COLLECTION_OT_WFC3DUpdate_Weight_Constraints,
     COLLECTION_OT_WFC3DUpdate_Rotation_Constraints,
+    COLLECTION_OT_WFC3DUpdate_Geometry_Constraints,
     WFC3DEditPanel,
     WFC3DGeneratePanel,
 )

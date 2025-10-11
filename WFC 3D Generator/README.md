@@ -70,6 +70,11 @@ Each object in the source collection can use custom properties to define the per
     * wfc_rotation_d: allowed rotation degrees 
     * wfc_rotation_s: allowed rotation steps
 
+## Geometry Constraints
+* Used custom properties: `wfc_scale_min,wfc_scale_max,wfc_translation_min,wfc_translation_max`
+* Allowed property_values:
+    * wfc_scale_min,wfc_scale_max: a float vector
+    * wfc_translation_min,wfc_translation_max: a float vector
 
 ## Upcoming Features
 * more constraints: count constraints ...
