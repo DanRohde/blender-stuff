@@ -91,7 +91,13 @@ def update_grid_constraint_properties(self, context):
          
     if "wfc_inside" in obj:
         self["inside_none"] = obj["wfc_inside"] == "-"
-           
+         
+         
+    if "wfc_weight" in obj and obj["wfc_weight"]!="":
+        self["weight"] = int(obj["wfc_weight"])
+    else:
+        self["weight"] = 1
+        
     
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(
@@ -162,7 +168,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     edit_constraints: bpy.props.EnumProperty(
         name="Constraints",
         description = "Select constraint type",
-        items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),("grid","Grid Constraints","Grid Constraints")],
+        items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),\
+               ("grid","Grid Constraints","Grid constraints"),("weight","Weight Constraints", "Weight constraints")],
         update=update_grid_constraint_properties
     )
     edit_neighbor_constraint: bpy.props.EnumProperty(
@@ -206,6 +213,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     face_bottom: bpy.props.BoolProperty(name="bottom", description="Bottom")
     face_none: bpy.props.BoolProperty(name="-", description="Faces Forbidden")
     inside_none: bpy.props.BoolProperty(name="-", description="Inside Forbidden")
+    weight: bpy.props.IntProperty(name="Weight", description="Weight Property", default=1, min=0)
     
 class WFC3DGrid:
     def __init__(self, grid_size):
@@ -837,7 +845,13 @@ class WFC3DEditPanel(bpy.types.Panel):
                     
                     
                     box.operator("object.wfc_update_grid_constraints",icon='FILE_REFRESH')
-                
+                if (props.edit_constraints == "weight"):
+                    box=col.box()
+                    box.label(text="Weight Constraints")
+                    newbox = box.box()
+                    newbox.prop(props, "weight")
+                    
+                    box.operator("object.wfc_update_weight_constraints", icon='FILE_REFRESH')    
             
         else:
             layout.label(text="Choose a Source Collection", icon='INFO')
@@ -952,7 +966,23 @@ class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
         self.report({'INFO'}, f"Grid constraints of object {obj_name} updated.")  
 
         return {'FINISHED'}
+class COLLECTION_OT_WFC3DUpdate_Weight_Constraints(bpy.types.Operator):
+    bl_idname = "object.wfc_update_weight_constraints"
+    bl_label = "Update Weight Constraints"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        obj_name = props.edit_object
+        
+        if obj_name in bpy.data.collections:
+            obj = bpy.data.collections[obj_name].objects[0]
+        else:
+            obj = bpy.data.objects[obj_name]
+        
+        obj["wfc_weight"] = props.weight;
+        self.report({'INFO'}, f"Weight constraints of object {obj_name} updated to {props.weight}.")  
 
+        return {'FINISHED'}
 classes = (
     WFC3DProperties,
     OBJECT_OT_WFC3DGenerate,
@@ -963,6 +993,7 @@ classes = (
     COLLECTION_OT_WFC3DRemove_Neighbor_Constraint,
     COLLECTION_OT_WFC3DClear_Neighbor_Constraint,
     COLLECTION_OT_WFC3DUpdate_Grid_Constraints,
+    COLLECTION_OT_WFC3DUpdate_Weight_Constraints,
     WFC3DEditPanel,
 )
 def register():
