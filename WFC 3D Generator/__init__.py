@@ -15,8 +15,84 @@ DIRECTIONS = {
     'LEFT': (-1, 0, 0),
     'RIGHT': (1, 0, 0)
 }
+def get_object_enum_items(self, context):
+    items = [('_none_','Select an object','Select an object'),None]
+    collection = self.collection_obj
+    if collection and (len(collection.objects)>0 or len(collection.children)>0):
+        for obj in collection.objects:
+            items.append((obj.name, obj.name, f"Objekt: {obj.name}" ))
+        if len(collection.children)>0:
+            items.append(None)
+        for obj in collection.children:
+            items.append((obj.name, obj.name, f"Collection: {obj.name}"))
+    else:
+        items.append(("NONE", "No Objects", ""))
+        
+    return items
 
+def get_object_edit_enum_items(self, context):
+    items = [('_none_','Select an object','Select an object'),None]
+    collection = self.collection_obj
+    if collection and (len(collection.objects)>0 or len(collection.children)>0):
+        for obj in collection.objects:
+            items.append((obj.name, obj.name, f"Objekt: {obj.name}" ))
+        if len(collection.children)>0:
+            items.append(None)
+        for obj in collection.children:
+            items.append((obj.name, obj.name, f"Collection: {obj.name}"))
+        items.append(None)
+        items.append(('-','No Neighbor allowed','No neighbor allowed'))
+    else:
+        items.append(("NONE", "No Objects", ""))
+        
+    return items
 
+def update_grid_constraint_properties(self, context):
+    collection = self.collection_obj
+    obj_name = self.edit_object
+    
+    if obj_name in collection.children:
+        obj = collection.children[obj_name].objects[0]
+    else:
+        obj = collection.objects[obj_name]
+    
+    
+    # reset corner properties to False
+    for c in ["f","b"]:
+        for nc in ["bl","br","tl","tr"]:
+            self["corner_"+c+nc] = False
+    # reset edge properties to False
+    for e in ['fb','fl','fr','ft','bb','bl','br','bt','lt','lb','rt','rb']:
+        self["edge_"+e] = False
+    
+    # reset face properties to False
+    for f in ["front","back","left","right","top","bottom"]:
+        self["face_"+f] = False
+        
+    self["inside_none"] = False
+    
+    if "wfc_corners" in obj:
+        for c in obj["wfc_corners"].split(","):
+            self["corner_"+c] = True
+        if obj["wfc_corners"] == "-":
+            self["corner_none"] = True
+    
+    if "wfc_edges" in obj:
+        for c in obj["wfc_edges"].split(","):
+            self["edge_"+c] = True
+        if obj["wfc_edges"] == "-":
+            self["edge_none"] = True
+                    
+    if "wfc_faces" in obj:
+        for c in obj["wfc_faces"].split(","):
+            self["face_"+c] = True
+        if obj["wfc_faces"] == "-":
+            self["face_none"] = True
+         
+    if "wfc_inside" in obj:
+        self["inside_none"] = obj["wfc_inside"] == "-"
+           
+    
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(
         name="",
@@ -76,6 +152,60 @@ class WFC3DProperties(bpy.types.PropertyGroup):
         default=False,
     )
     
+    edit_object: bpy.props.EnumProperty(
+        name="",
+        description="Select an object",
+        items=get_object_enum_items,
+        update=update_grid_constraint_properties
+    )
+    
+    edit_constraints: bpy.props.EnumProperty(
+        name="Constraints",
+        description = "Select constraint type",
+        items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),("grid","Grid Constraints","Grid Constraints")],
+        update=update_grid_constraint_properties
+    )
+    edit_neighbor_constraint: bpy.props.EnumProperty(
+        name="",
+        description="Select a Neighbor Constraint",
+        items=[("_none_","Select a Constraint","Please select a neighbor constraint"),('wfc_left','Left','Left Neighbor'),('wfc_right','Right','Right Neighbor'),\
+               ('wfc_top','Top','Top Neighbor'),('wfc_bottom','Bottom','Bottom Neighbor'),('wfc_front','Front','Front Neighbor'),('wfc_back','Back','Back Neighbor'),],
+    )
+    select_neighbor: bpy.props.EnumProperty(
+        name="Select neighbor",
+        description="Select a Neighbor",
+        items=get_object_edit_enum_items,
+    )
+    corner_fbl: bpy.props.BoolProperty( name="fbl", description="Front Bottom Left")
+    corner_fbr: bpy.props.BoolProperty( name="fbr", description="Front Bottom Right")
+    corner_ftl: bpy.props.BoolProperty( name="ftl", description="Front Top Left")
+    corner_ftr: bpy.props.BoolProperty( name="ftr", description="Front Top Right")
+    corner_bbl: bpy.props.BoolProperty( name="bbl", description="Back Bottom Left")
+    corner_bbr: bpy.props.BoolProperty( name="bbr", description="Back Bottom Right")
+    corner_btl: bpy.props.BoolProperty( name="btl", description="Back Top Left")
+    corner_btr: bpy.props.BoolProperty( name="btr", description="Back Top Right")
+    corner_none: bpy.props.BoolProperty(name="-", description="Forbidden")
+    edge_fb: bpy.props.BoolProperty(name="fb", description="Front Buttom")
+    edge_fl: bpy.props.BoolProperty(name="fl", description="Front Left")
+    edge_fr: bpy.props.BoolProperty(name="fr", description="Front Right")
+    edge_ft: bpy.props.BoolProperty(name="ft", description="Front Top")
+    edge_bb: bpy.props.BoolProperty(name="bb", description="Back Bottom")
+    edge_bl: bpy.props.BoolProperty(name="bl", description="Back Left")
+    edge_br: bpy.props.BoolProperty(name="br", description="Back Right")
+    edge_bt: bpy.props.BoolProperty(name="bt", description="Back Top")
+    edge_lt: bpy.props.BoolProperty(name="lt", description="Left Top")
+    edge_lb: bpy.props.BoolProperty(name="lb", description="Left Buttom")
+    edge_rt: bpy.props.BoolProperty(name="rt", description="Right Top")
+    edge_rb: bpy.props.BoolProperty(name="rb", description="Right Buttom")
+    edge_none:bpy.props.BoolProperty(name="-", description="Edge Forbidden")
+    face_front: bpy.props.BoolProperty(name="front", description="Front")
+    face_back: bpy.props.BoolProperty(name="back", description="Back")
+    face_left: bpy.props.BoolProperty(name="left", description="Left")
+    face_right: bpy.props.BoolProperty(name="right", description="Right")
+    face_top: bpy.props.BoolProperty(name="top", description="Top")
+    face_bottom: bpy.props.BoolProperty(name="bottom", description="Bottom")
+    face_none: bpy.props.BoolProperty(name="-", description="Faces Forbidden")
+    inside_none: bpy.props.BoolProperty(name="-", description="Inside Forbidden")
     
 class WFC3DGrid:
     def __init__(self, grid_size):
@@ -519,13 +649,13 @@ class OBJECT_OT_WFC3DCollectionInit(bpy.types.Operator):
             self.report({'ERROR'}, f"Error: {str(e)}")
             return {'CANCELLED'}
     
-class WFC3DPanel(bpy.types.Panel):
+class WFC3DGeneratePanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Generator"
     bl_idname = "VIEW3D_PT_wfc_3d"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'Create'
+    bl_category = 'WFC 3D'
 
     def draw(self, context):
         layout = self.layout
@@ -540,12 +670,12 @@ class WFC3DPanel(bpy.types.Panel):
         
         layout.prop(props, "use_constraints") 
 
-        box = layout.box()
-        box.enabled = context.scene.wfc_props.use_constraints
-        box.prop(props, "empty_constraints")
-        box.prop(props, "overwrite_constraints")
-        box.operator("object.wfc_3d_init_collection")
-        box.label(text="All source objects will get custom properties.", icon="INFO_LARGE")
+       # box = layout.box()
+       # box.enabled = context.scene.wfc_props.use_constraints
+       # box.prop(props, "empty_constraints")
+       # box.prop(props, "overwrite_constraints")
+       # box.operator("object.wfc_3d_init_collection")
+       # box.label(text="All source objects will get custom properties.", icon="INFO_LARGE")
         
         layout.separator()
         layout.label(text="Target Collection")
@@ -570,11 +700,270 @@ class WFC3DPanel(bpy.types.Panel):
             layout.label(text="Please select a non-empty source collection.", icon="INFO_LARGE")
 
 
+
+
+class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
+    """Activates Object"""
+    bl_idname = "collection.wfc_select_dropdown_object"
+    bl_label = "Activate Object"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        scene = context.scene
+        props = scene.wfc_props
+        collection = props.collection_obj
+        obj_name = props.edit_object
+
+        if not collection or obj_name == "NONE":
+            self.report({'WARNING'}, "Empty Collection")
+            return {'CANCELLED'}
+
+        if obj_name in collection.children and len(collection.children[obj_name].objects)>0:
+            obj = collection.children[obj_name].objects[0]
+        else:
+            obj = collection.objects[obj_name]
+        
+        if not obj:
+            self.report({'WARNING'}, "Object not found")
+            return {'CANCELLED'}
+
+    
+        bpy.ops.object.select_all(action='DESELECT')
+        context.view_layer.objects.active = obj
+        obj.select_set(True)
+        
+        for area in context.window.screen.areas:
+            if area.type == 'PROPERTIES':
+                for space in area.spaces:
+                    if space.type == 'PROPERTIES':
+                        space.context = 'OBJECT'
+                        break
+
+        self.report({'INFO'}, f"Activated Objekt: {obj.name}")
+        return {'FINISHED'}
+
+class WFC3DEditPanel(bpy.types.Panel):
+    """User interface for WFC 3D Add-On"""
+    bl_label = "WFC 3D Constraint Editor"
+    bl_idname = "VIEW3D_PT_wfc_3d_edit"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = 'WFC 3D'
+
+    def draw(self, context):
+        layout = self.layout
+        props = context.scene.wfc_props
+        layout.label(text="Source Collection")
+        layout.prop(props, "collection_obj")
+        col = layout.column(align=True)
+        if props.collection_obj:
+            row = col.row()
+            row.label(text="Select an Object")
+            row.prop(props, "edit_object")
+            newrow = row.row()
+            newrow.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
+            newrow.enabled = False
+            if props.edit_object and props.edit_object != '_none_':
+                newrow.enabled = True
+
+                if props.edit_object in props.collection_obj.children:
+                    obj=props.collection_obj.children[props.edit_object].objects[0]
+                else:
+                    obj=props.collection_obj.objects[props.edit_object]
+                    
+                row=col.row();
+                row.prop(props,"edit_constraints")
+                if (props.edit_constraints == "neighbor"):
+                    box=col.box()
+                    box.label(text="Neighbor Constraints")
+                    row = box.row()
+                    row.prop(props,"edit_neighbor_constraint")
+                    newrow = row.row()
+                    newrow.operator("object.wfc_clear_constraint")
+                    newrow.enabled = props.edit_neighbor_constraint in obj;
+                    
+                    if (props.edit_neighbor_constraint and props.edit_neighbor_constraint !="_none_"):
+                        if props.edit_neighbor_constraint in obj:  
+                            box.label(text="Neighbors: "+obj[props.edit_neighbor_constraint])
+                        else:
+                            box.label(text="Neighbors:")
+                        box.prop(props,"select_neighbor")
+                        row=box.row()
+                        if (props.select_neighbor and props.select_neighbor != '_none_'):
+                            row.operator("object.wfc_add_constraint", icon='ADD')
+                            row.operator("object.wfc_remove_constraint", icon='REMOVE')
+                if (props.edit_constraints == "grid"):    
+                    box=col.box()
+                    box.label(text="Grid Constraints")
+                    newbox = box.box()
+                    newbox.label(text="Corners")
+                    newbox.prop(props, "corner_none")    
+                    if not props.corner_none:
+                        row = newbox.row()
+                        for c in ['fbl','fbr','ftl','ftr']:
+                            row.prop(props,"corner_"+c)
+                            
+                        row = newbox.row()
+                        for c in ['bbl','bbr','btl','btr']:
+                            row.prop(props,"corner_"+c)
+                    
+                    newbox = box.box()
+                    newbox.label(text="Edges")
+                    newbox.prop(props,"edge_none")
+                    if not props.edge_none:
+                        for p in ['f','b']:
+                            row = newbox.row()
+                            for c in ['b','l','t','r']:
+                                row.prop(props,"edge_"+p+c)
+                        row = newbox.row()
+                        for p in ['lb','lt','rb','rt']:
+                            row.prop(props,"edge_"+p)
+                    
+                    newbox = box.box()
+                    newbox.label(text="Faces")
+                    newbox.prop(props, "face_none")
+                    if not props.face_none:
+                        row = newbox.row()
+                        for f in ['front','left','top']:
+                            row.prop(props, "face_"+f)
+                        row = newbox.row()
+                        for f in ['back','right','bottom']:
+                            row.prop(props,"face_"+f)
+                        
+                    
+                    newbox = box.box()
+                    newbox.label(text="Inside")
+                    newbox.prop(props,"inside_none")
+                    
+                    
+                    box.operator("object.wfc_update_grid_constraints",icon='FILE_REFRESH')
+                
+            
+        else:
+            layout.label(text="Choose a Source Collection", icon='INFO')
+
+        
+class COLLECTION_OT_WFC3DAdd_Neighbor_Constraint(bpy.types.Operator):
+    bl_idname = "object.wfc_add_constraint"
+    bl_label = "Add Neighbor"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props= context.scene.wfc_props
+        obj_name = props.edit_object
+        prop_name = props.edit_neighbor_constraint
+        neighbor = props.select_neighbor
+        if obj_name in bpy.data.collections:
+            obj = bpy.data.collections[obj_name][0]
+        else:
+            obj = bpy.data.objects[obj_name]
+        if prop_name in obj:
+            if obj[prop_name] == "":
+                l = []
+            else:
+                if obj[prop_name] == "-":
+                    l = []
+                else: 
+                    l = obj[prop_name].split(",")
+            if neighbor not in l:
+                if neighbor == '-':
+                    l = []
+                l.append(neighbor)
+                obj[prop_name]=",".join(l)
+                self.report({'INFO'}, f"Neighbor {neighbor} added to {prop_name} of object {obj_name}")  
+            else:
+                self.report({'WARNING'}, f"Neighbor {neighbor} is already in {prop_name} of object {obj_name}")
+        else:
+            obj[prop_name] = neighbor
+        return {'FINISHED'}
+
+        
+class COLLECTION_OT_WFC3DRemove_Neighbor_Constraint(bpy.types.Operator):
+    bl_idname = "object.wfc_remove_constraint"
+    bl_label = "Remove Neighbor"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props= context.scene.wfc_props
+        obj_name = props.edit_object
+        prop_name = props.edit_neighbor_constraint
+        neighbor = props.select_neighbor
+        if obj_name in bpy.data.collections:
+            obj = bpy.data.collections[obj_name][0]
+        else:
+            obj = bpy.data.objects[obj_name]
+        
+        if prop_name in obj:
+            if obj[prop_name] == "" or obj[prop_name] == neighbor:
+                obj[prop_name] = ""
+            else:
+                l = [n for n in obj[prop_name].split(",") if n != neighbor ]
+                obj[prop_name] = ",".join(l)
+            self.report({'INFO'}, f"Neighbor {neighbor} removed from {prop_name} of object {obj_name}")  
+
+        return {'FINISHED'}
+class COLLECTION_OT_WFC3DClear_Neighbor_Constraint(bpy.types.Operator):
+    bl_idname = "object.wfc_clear_constraint"
+    bl_label = "Clear"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props= context.scene.wfc_props
+        obj_name = props.edit_object
+        
+        if obj_name in bpy.data.collections:
+            obj = bpy.data.collections[obj_name][0]
+        else:
+            obj = bpy.data.objects[obj_name]
+        
+        if props.edit_neighbor_constraint and props.edit_neighbor_constraint in obj:
+            obj[props.edit_neighbor_constraint]=""
+            self.report({'INFO'}, f"{props.edit_neighbor_constraint} cleared for object: {obj_name}")
+
+        return {'FINISHED'}
+class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
+    bl_idname = "object.wfc_update_grid_constraints"
+    bl_label = "Update Grid Constraints"
+    bl_options = {'REGISTER', 'UNDO'}
+    def _get_new_prop_val(self, props, prop_name, values):
+        newval = []
+        if props[prop_name+"_none"]:
+            newval.append("-")
+        else:
+            for v in values:
+                if props[prop_name+"_"+v]:
+                    newval.append(v)
+        return ",".join(newval)
+        
+    def execute(self, context):
+        props = context.scene.wfc_props
+        obj_name = props.edit_object
+        
+        if obj_name in bpy.data.collections:
+            obj = bpy.data.collections[obj_name].objects[0]
+        else:
+            obj = bpy.data.objects[obj_name]
+        
+        obj["wfc_corners"]= self._get_new_prop_val(props, "corner",['fbl','fbr','ftl','ftr','bbl','bbr','btl','btr'])
+        obj["wfc_edges"] = self._get_new_prop_val(props, "edge",['fb','fl','fr','ft','bb','bl','br','bt','lb','lt','rb','rt'])
+        obj["wfc_faces"] = self._get_new_prop_val(props, "face",['front','back','top','bottom','left','right'])
+        if props["inside_none"]:
+            obj["wfc_inside"] = "-"
+        else:
+            obj["wfc_inside"] = ""
+        
+        self.report({'INFO'}, f"Grid constraints of object {obj_name} updated.")  
+
+        return {'FINISHED'}
+
 classes = (
     WFC3DProperties,
     OBJECT_OT_WFC3DGenerate,
     OBJECT_OT_WFC3DCollectionInit,
-    WFC3DPanel,
+    WFC3DGeneratePanel,
+    COLLECTION_OT_WFC3DSelectDropdownObject,
+    COLLECTION_OT_WFC3DAdd_Neighbor_Constraint,
+    COLLECTION_OT_WFC3DRemove_Neighbor_Constraint,
+    COLLECTION_OT_WFC3DClear_Neighbor_Constraint,
+    COLLECTION_OT_WFC3DUpdate_Grid_Constraints,
+    WFC3DEditPanel,
 )
 def register():
     for cls in classes:

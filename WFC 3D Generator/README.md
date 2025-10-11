@@ -6,11 +6,9 @@ Each object in the source collection can use custom properties to define the per
 1. Install and enable the WFC 3D Generator add-on
 2. Create a source collection with some objects
 3. Define constraints: 
-    1. open 3D Viewport: Press 'N' > Create > WFC 3D Generator
-    2. enter the name of the source collection name in the "Source Collection" field
-    3. click on "Initialize constraint properties" button
-    4. click on an object in the source collection and open Object properties > Custom Properties in the Properties window
-    5. define some constraints for the selected object
+    1. open 3D Viewport: Press 'N' > WFC 3D > WFC 3D Constraints Editor
+    2. select a source collection
+    3. add some constraints to objects 
 
 
 ## Neighbor Constraints
@@ -64,6 +62,5 @@ Each object in the source collection can use custom properties to define the per
 
 ## Upcoming Features
 * more constraints: count constraints ...
-* an easy to use constraint editor
 * a constraint validator to check for unknown objects ...
 * a different kind of constraints based on connector types instead of object lists
