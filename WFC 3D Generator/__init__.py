@@ -15,12 +15,24 @@ DIRECTIONS = {
     'LEFT': (-1, 0, 0),
     'RIGHT': (1, 0, 0)
 }
+PROP_DEFAULTS = {
+    # neighbor constraints
+    'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '', 
+    # weight constraints:
+    'weight' : 1, 
+    # grid constraints:
+    'corners' : '', 'edges' : '', 'faces' : '','inside' : '',
+    #transformation constraints:
+    'translation_min' : (0,0,0), 'translation_max' : (0,0,0), 'translation_steps' : (0,0,0),
+    'rotation_min' : (0,0,0), 'rotation_max': (0,0,0), 'rotation_steps' : (0,0,0),
+    'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0)
+}
 def get_object_enum_items(self, context):
     items = [('_none_','Select an object','Select an object'),None]
     collection = self.collection_obj
     if collection and (len(collection.objects)>0 or len(collection.children)>0):
         for obj in collection.objects:
-            items.append((obj.name, obj.name, f"Objekt: {obj.name}" ))
+            items.append((obj.name, obj.name, f"Object: {obj.name}" ))
         if len(collection.children)>0:
             items.append(None)
         for obj in collection.children:
@@ -35,7 +47,7 @@ def get_object_edit_enum_items(self, context):
     collection = self.collection_obj
     if collection and (len(collection.objects)>0 or len(collection.children)>0):
         for obj in collection.objects:
-            items.append((obj.name, obj.name, f"Objekt: {obj.name}" ))
+            items.append((obj.name, obj.name, f"Object: {obj.name}" ))
         if len(collection.children)>0:
             items.append(None)
         for obj in collection.children:
@@ -56,7 +68,6 @@ def update_constraint_properties(self, context):
     else:
         obj = collection.objects[obj_name]
     
-    
     # reset corner properties to False
     for c in ["f","b"]:
         for nc in ["bl","br","tl","tr"]:
@@ -68,14 +79,10 @@ def update_constraint_properties(self, context):
     # reset face properties to False
     for f in ["front","back","left","right","top","bottom"]:
         self["face_"+f] = False
-    
-    # reset rotation properties
-    for i in ["x","y","z"]:
-        self["rotation_"+i] = False
-    
-    self["rotation_d"] = (0,0,0)
-    self["rotation_s"] = (0,0,0)
-        
+            
+    self["corner_none"] = False
+    self["edges_none"] = False
+    self["faces_none"] = False
     self["inside_none"] = False
     
     if "wfc_corners" in obj:
@@ -105,109 +112,37 @@ def update_constraint_properties(self, context):
     else:
         self["weight"] = 1
     
-    if "wfc_rotation" in obj and obj["wfc_rotation"] != "":
-        r= obj["wfc_rotation"].split(",")
-        self["rotation_x"]="x" in r
-        self["rotation_y"]="y" in r
-        self["rotation_z"]="z" in r
-    if "wfc_rotation_d" in obj:
-        self["rotation_d"] = obj["wfc_rotation_d"]
-    if "wfc_rotation_s" in obj:
-        self["rotation_s"] = obj["wfc_rotation_s"]
-    
-    prop_defaults = {"scale_min":(1,1,1), "scale_max":(1,1,1), "translation_min":(0,0,0),"translation_max":(0,0,0)}
-    for p in ["scale_min","scale_max","translation_min","translation_max"]:
+    for p in ["scale_min","scale_max","scale_steps","translation_min","translation_max","translation_steps","rotation_min","rotation_max","rotation_steps"]:
         if "wfc_"+p in obj:
             self[p]=obj["wfc_"+p]
         else:
-            self[p]=prop_defaults[p]
+            self[p]=PROP_DEFAULTS[p]
 
     
 class WFC3DProperties(bpy.types.PropertyGroup):
-    collection_obj: bpy.props.PointerProperty(
-        name="",
-        description="Select a collection",
-        type=bpy.types.Collection,
-    )
-    grid_size: bpy.props.IntVectorProperty(
-        name="",
-        description="Size of the 3D grid",
-        size=3,
-        default=(5, 5, 5),
-        min=1,
-        max=100,
-    )
-    spacing: bpy.props.FloatVectorProperty(
-        name="",
-        description="Size of a Grid Cell",
-        subtype="TRANSLATION",
-        default=(2.0,2.0,2.0),
-        min=0.1,
-        
-    ) 
-    use_constraints: bpy.props.BoolProperty(
-        name="Use Constraints",
-        description="Use constraints",
-        default=True,
-    )
+    collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection,)
+    grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, max=100,)
+    spacing: bpy.props.FloatVectorProperty(name="", description="Size of a Grid Cell", subtype="TRANSLATION", default=(2.0,2.0,2.0), min=0.1,) 
+    use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)
+    target_collection: bpy.props.StringProperty(name="", description="Target collection for 3D grid", default="WFC_Generated",)
+    seed: bpy.props.IntProperty(name="Random Seed", description="Random seed", default=0,)
+    link_objects: bpy.props.BoolProperty(name="Link New Objects (recommended)", description="Link new objects instead of copying them.", default=True,)
+    remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove existing target collection", default=False,)
     
-    empty_constraints: bpy.props.BoolProperty(
-        name="Create Empty Constraint Properties",
-        description="Default: a comma separated list of all object names in the collection",
-        default=False,
-    )
-    overwrite_constraints: bpy.props.BoolProperty(
-        name="Overwrite Existing Constraint Properties",
-        description="Overwrite existing object constraints in Custom Properties",
-        default=False,
-    )
-    target_collection: bpy.props.StringProperty(
-        name="",
-        description="Target collection for 3D grid",
-        default="WFC_Generated",
-    )
-    seed: bpy.props.IntProperty(
-        name="Random Seed",
-        description="Random seed",
-        default=0,
-    )
-    link_objects: bpy.props.BoolProperty(
-        name="Link New Objects (recommended)",
-        description="Link new objects instead of copying them.",
-        default=True,
-    )
-    remove_target_collection: bpy.props.BoolProperty(
-        name="Remove Target Collection",
-        description="Remove existing target collection",
-        default=False,
-    )
-    
-    edit_object: bpy.props.EnumProperty(
-        name="",
-        description="Select an object",
-        items=get_object_enum_items,
-        update=update_constraint_properties
-    )
-    
+    edit_object: bpy.props.EnumProperty(name="", description="Select an object", items=get_object_enum_items, update=update_constraint_properties,)
     edit_constraints: bpy.props.EnumProperty(
-        name="",
-        description = "Select constraint type",
+        name="", description = "Select constraint type",
         items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),\
                ("grid","Grid Constraints","Grid constraints"),("weight","Weight Constraints", "Weight constraints"),\
-               ("rotation","Rotation Constraints", "Rotation constraints"), ("geometry","Geometry Constraints", "Geometry constraints")],
+               ("transformation","Transformation Constraints", "Transformation constraints")],
         update=update_constraint_properties
     )
     edit_neighbor_constraint: bpy.props.EnumProperty(
-        name="",
-        description="Select a Neighbor Constraint",
+        name="", description="Select a Neighbor Constraint",
         items=[("_none_","Select a Constraint","Please select a neighbor constraint"),('wfc_left','Left','Left Neighbor'),('wfc_right','Right','Right Neighbor'),\
                ('wfc_top','Top','Top Neighbor'),('wfc_bottom','Bottom','Bottom Neighbor'),('wfc_front','Front','Front Neighbor'),('wfc_back','Back','Back Neighbor'),],
     )
-    select_neighbor: bpy.props.EnumProperty(
-        name="Select neighbor",
-        description="Select a Neighbor",
-        items=get_object_edit_enum_items,
-    )
+    select_neighbor: bpy.props.EnumProperty(name="Select neighbor", description="Select a Neighbor", items=get_object_edit_enum_items,)
     corner_fbl: bpy.props.BoolProperty( name="fbl", description="Front Bottom Left")
     corner_fbr: bpy.props.BoolProperty( name="fbr", description="Front Bottom Right")
     corner_ftl: bpy.props.BoolProperty( name="ftl", description="Front Top Left")
@@ -217,7 +152,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     corner_btl: bpy.props.BoolProperty( name="btl", description="Back Top Left")
     corner_btr: bpy.props.BoolProperty( name="btr", description="Back Top Right")
     corner_none: bpy.props.BoolProperty(name="-", description="Forbidden")
-    edge_fb: bpy.props.BoolProperty(name="fb", description="Front Buttom")
+    edge_fb: bpy.props.BoolProperty(name="fb", description="Front Bottom")
     edge_fl: bpy.props.BoolProperty(name="fl", description="Front Left")
     edge_fr: bpy.props.BoolProperty(name="fr", description="Front Right")
     edge_ft: bpy.props.BoolProperty(name="ft", description="Front Top")
@@ -226,9 +161,9 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     edge_br: bpy.props.BoolProperty(name="br", description="Back Right")
     edge_bt: bpy.props.BoolProperty(name="bt", description="Back Top")
     edge_lt: bpy.props.BoolProperty(name="lt", description="Left Top")
-    edge_lb: bpy.props.BoolProperty(name="lb", description="Left Buttom")
+    edge_lb: bpy.props.BoolProperty(name="lb", description="Left Bottom")
     edge_rt: bpy.props.BoolProperty(name="rt", description="Right Top")
-    edge_rb: bpy.props.BoolProperty(name="rb", description="Right Buttom")
+    edge_rb: bpy.props.BoolProperty(name="rb", description="Right Bottom")
     edge_none:bpy.props.BoolProperty(name="-", description="Edge Forbidden")
     face_front: bpy.props.BoolProperty(name="front", description="Front")
     face_back: bpy.props.BoolProperty(name="back", description="Back")
@@ -238,16 +173,16 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     face_bottom: bpy.props.BoolProperty(name="bottom", description="Bottom")
     face_none: bpy.props.BoolProperty(name="-", description="Faces Forbidden")
     inside_none: bpy.props.BoolProperty(name="-", description="Inside Forbidden")
-    weight: bpy.props.IntProperty(name="Weight", description="Weight Property", default=1, min=0)
-    rotation_x: bpy.props.BoolProperty(name="x", default=False, description="allow X rotation")
-    rotation_y: bpy.props.BoolProperty(name="y", default=False, description="allow Y rotation")
-    rotation_z: bpy.props.BoolProperty(name="z", default=False, description="allow Y rotation")
-    rotation_d : bpy.props.FloatVectorProperty(name="Degrees max", description="Degrees max", default=(0,0,0), subtype="EULER")
-    rotation_s : bpy.props.FloatVectorProperty(name="Degrees steps", description="Degree Steps", default=(0,0,0), subtype="EULER")
-    scale_min : bpy.props.FloatVectorProperty(name="Scale min", description="Scale minimum", default=(1,1,1))
-    scale_max : bpy.props.FloatVectorProperty(name="Scale max", description="Scale maximum", default=(1,1,1))
-    translation_min : bpy.props.FloatVectorProperty(name="Translation min", description="Translation minimum", default=(0,0,0), subtype="TRANSLATION")
-    translation_max : bpy.props.FloatVectorProperty(name="Translation max", description="Translation maximum", default=(0,0,0), subtype="TRANSLATION")
+    weight: bpy.props.IntProperty(name="Weight", description="Weight Property", default=PROP_DEFAULTS["weight"], min=0)
+    rotation_min : bpy.props.FloatVectorProperty(name="Min", description="Degrees min", default=PROP_DEFAULTS["rotation_min"], subtype="EULER")
+    rotation_max : bpy.props.FloatVectorProperty(name="Max", description="Degrees max", default=PROP_DEFAULTS["rotation_max"], subtype="EULER")
+    rotation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Degree Steps", default=PROP_DEFAULTS["rotation_steps"], subtype="EULER")
+    scale_min : bpy.props.FloatVectorProperty(name="Min", description="Scale minimum", default=PROP_DEFAULTS["scale_min"])
+    scale_max : bpy.props.FloatVectorProperty(name="Max", description="Scale maximum", default=PROP_DEFAULTS["scale_max"])
+    scale_steps : bpy.props.FloatVectorProperty(name="Steps", description="Scale steps", default=PROP_DEFAULTS["scale_steps"])
+    translation_min : bpy.props.FloatVectorProperty(name="Min", description="Translation minimum", default=PROP_DEFAULTS["translation_min"], subtype="TRANSLATION")
+    translation_max : bpy.props.FloatVectorProperty(name="Max", description="Translation maximum", default=PROP_DEFAULTS["translation_max"], subtype="TRANSLATION")
+    translation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Translation steps", default=PROP_DEFAULTS["translation_steps"], subtype="TRANSLATION")
     
 class WFC3DGrid:
     def __init__(self, grid_size):
@@ -440,7 +375,6 @@ class WFC3DGenerator:
 
         if self.use_constraints:
             self.constraints = {}
-            self.count_constraints = { "cx" : [ (-1,0,0),(1,0,0)], "cy" : [(0,-1,0),(0,1,0)], "cz" : [(0,0,-1),(0,0,1)] }
             self.load_constraints()
                 
         self.grid = WFC3DGrid(self.grid_size)
@@ -454,6 +388,7 @@ class WFC3DGenerator:
 
     def load_constraints(self):
         """Loads constraints from custom properties"""
+        allobjects = [o.name for o in self.objects]
         for obj in self.objects:
             obj_name = obj.name
             self.constraints[obj_name] = {}
@@ -473,44 +408,24 @@ class WFC3DGenerator:
                 if gc in obj and obj[gc] != "":
                     self.constraints[obj_name][grid_constraints[gc]] = obj[gc].split(",")
             
-            # load rotation constraints
-            if "wfc_rotation" in obj:
-                self.constraints[obj_name]["rotation"] = obj["wfc_rotation"].split(",")
-            else:
-                self.constraints[obj_name]["rotation"] = None
-            if "wfc_rotation_d" in obj:
-                self.constraints[obj_name]["rotation_d"] = obj["wfc_rotation_d"]
-            else:
-                self.constraints[obj_name]["rotation_d"] = None
-            if "wfc_rotation_s" in obj:
-                self.constraints[obj_name]["rotation_s"] = obj["wfc_rotation_s"]
-            else:
-                self.constraints[obj_name]["rotation_s"] = None
-            
-            
-            for c in ["scale_min","scale_max","translation_min","translation_max"]:
-                if "wfc_"+c in obj:
-                    self.constraints[obj_name][c] = obj["wfc_"+c]
+            # load transformation constraints
+            for r in ["rotation_min","rotation_max","rotation_steps","scale_min","scale_max","scale_steps","translation_min","translation_max","translation_steps"]:
+                if "wfc_"+r in obj:
+                    self.constraints[obj_name][r] = obj["wfc_"+r]
                 else:
-                    self.constraints[obj_name][c] = None
+                    self.constraints[obj_name][r] = None
                 
-            count_constraints = { 'wfc_cx':'cx', 'wfc_cy':'cy', 'wfc_cz':'cz', 'wfc_cg' : 'cg' }
-            for cc in count_constraints:
-                if cc in obj and obj[cc] != "":
-                    self.constraints[obj_name][count_constraints[cc]] = int(obj[cc])
-            
             # load neighbor constraints
             for direction in DIRECTIONS:
                 prop_name = f"wfc_{direction.lower()}"
                 # take first element from collection to get constraints
                 if prop_name in obj:
                     if obj[prop_name] == "":
-                        self.constraints[obj_name][direction] = [o.name for o in self.objects]
+                        self.constraints[obj_name][direction] = allobjects
                     else:
                         self.constraints[obj_name][direction] = obj[prop_name].split(',')
                 else:
-                    # Standard: Alle Objekte erlaubt
-                    self.constraints[obj.name][direction] = [o.name for o in self.objects]
+                    self.constraints[obj.name][direction] = allobjects
 
     def get_entropy(self, x, y, z):
         """Calculates the entropy (number of possible states) of a cell"""
@@ -532,6 +447,7 @@ class WFC3DGenerator:
         return min_cell
 
     def get_weighted_options(self, obj_names):
+        """ Increase object count in object list depending on it's weight """
         options = []
         for name in obj_names:
             weight = self.constraints[name]['weight']
@@ -625,38 +541,40 @@ class WFC3DGenerator:
                             new_obj = original_obj.copy()
                             new_obj.data = original_obj.data.copy()
                         
-                        nx = x * self.spacing[0]
-                        ny = y * self.spacing[1]
-                        nz = z * self.spacing[2]
-                        
+                        newloc = [ x * self.spacing[0],  y * self.spacing[1], z * self.spacing[2] ]
                         if self.use_constraints:
-                            if self.constraints[obj_name]["translation_min"] and self.constraints[obj_name]["translation_max"]:
-                                tmin = self.constraints[obj_name]["translation_min"]
-                                tmax = self.constraints[obj_name]["translation_max"]
-                                nx+= tmin[0] + random.random()*(tmax[0]-tmin[0])
-                                ny+= tmin[1] + random.random()*(tmax[1]-tmin[1])
-                                nz+= tmin[2] + random.random()*(tmax[2]-tmin[2])
-                            if self.constraints[obj_name]["scale_min"] and self.constraints[obj_name]["scale_max"]:
-                                smin = self.constraints[obj_name]["scale_min"]
-                                smax = self.constraints[obj_name]["scale_max"]
-                                new_obj.scale.x = smin[0] + random.random()*(smax[0]-smin[0])
-                                new_obj.scale.y = smin[1] + random.random()*(smax[1]-smin[1])
-                                new_obj.scale.z = smin[2] + random.random()*(smax[2]-smin[2])
-                            if self.constraints[obj_name]["rotation"]:
-                                a = self.constraints[obj_name]["rotation"]
-                                d = self.constraints[obj_name]["rotation_d"]
-                                s = self.constraints[obj_name]["rotation_s"]
-                                if d and s and a!="":
-                                    axisparam=["X","Y","Z"]
-                                    for i in range(len(axisparam)):
-                                        if axisparam[i].lower() in a:
-                                            if s[i]!=0 and d[i]!=0:
-                                                v = [ m for m in np.arange(0,d[i],s[i]) ]
-                                                angleidx = random.randrange(0,len(v)) 
-                                                if v[angleidx]!=0:
-                                                    new_obj.rotation_euler.rotate_axis(axisparam[i], v[angleidx])
+                            constraints = self.constraints[obj_name]
+                            def _get_mapped_random_values(min, max, steps):
+                                if steps !=0 and (max-min >= steps):
+                                    v = [ m for m in np.linspace(min,max,int((max-min/steps))+1) ]
+                                    return v[random.randrange(0,len(v))]
+                                else:
+                                    return min + (max-min) * random.random()
+                                
+                            if constraints["translation_min"] is not None and constraints["translation_max"] is not None and constraints["translation_steps"] is not None:
+                                tmin = constraints["translation_min"]
+                                tmax = constraints["translation_max"]
+                                ts = constraints["translation_steps"]
+                                for i in range(3):
+                                    newloc[i] += _get_mapped_random_values(tmin[i], tmax[i], ts[i])
+                            if constraints["scale_min"] is not None and constraints["scale_max"] is not None and constraints["scale_steps"] is not None:
+                                smin = constraints["scale_min"]
+                                smax = constraints["scale_max"]
+                                ss = constraints["scale_steps"]
+                                new_obj.scale.x = _get_mapped_random_values(smin[0], smax[0], ss[0])
+                                new_obj.scale.y = _get_mapped_random_values(smin[1], smax[1], ss[1])
+                                new_obj.scale.z = _get_mapped_random_values(smin[2], smax[2], ss[2])                                
+                            if constraints["rotation_min"] is not None and constraints["rotation_max"] is not None and constraints["rotation_steps"] is not None:
+                                rmin = constraints["rotation_min"]
+                                rmax = constraints["rotation_max"]
+                                rs = constraints["rotation_steps"]
+                                axisparam=["X","Y","Z"]
+                                for i in range(len(axisparam)):
+                                    a = _get_mapped_random_values(rmin[i], rmax[i], rs[i])
+                                    if a!=0:
+                                        new_obj.rotation_euler.rotate_axis(axisparam[i], a)
                         
-                        new_obj.location = (nx, ny, nz)        
+                        new_obj.location = tuple(newloc)        
                         new_collection.objects.link(new_obj)
 
 class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
@@ -682,7 +600,20 @@ class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
         except Exception as e:
             self.report({'ERROR'}, f"Error: {str(e)}",)
             return {'CANCELLED'}
-
+        
+    def execute(self, context):
+        props = context.scene.wfc_props
+        
+        collection = props.collection_obj
+        if not collection:
+            raise ValueError(f"Source collection '{props.collection_obj}' not found!")
+            
+        generator = WFC3DGenerator(collection, props)
+        generator.generate_model()
+        
+        self.report({'INFO'}, "WFC model successfully generated!")
+        return {'FINISHED'}
+            
     
 class WFC3DGeneratePanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
@@ -732,9 +663,9 @@ class WFC3DGeneratePanel(bpy.types.Panel):
 
 
 class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
-    """Activates Object"""
+    """ Select object """
     bl_idname = "collection.wfc_select_dropdown_object"
-    bl_label = "Select"
+    bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -770,9 +701,30 @@ class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
         except Exception as e:
             self.report({'WARNING'}, f"Error: {str(e)}")
 
-        self.report({'INFO'}, f"Activated Objekt: {obj.name}")
+        self.report({'INFO'}, f"Activated Object: {obj.name}")
         return {'FINISHED'}
 
+class COLLECTION_OT_WFC3DGetSelectedObject(bpy.types.Operator):
+    """Get selected object"""
+    bl_idname = "collection.wfc_get_selected_object"
+    bl_label = ""
+    bl_options = {'REGISTER','UNDO'}
+    def execute(self, context):
+        scene = context.scene
+        props = scene.wfc_props
+        if context.view_layer.objects.active:
+            active_object_name = context.view_layer.objects.active.name
+            if active_object_name in props.collection_obj.objects or active_object_name in props.collection_obj.children:
+                try:
+                    props.edit_object = active_object_name
+                    self.report({'INFO'}, f"Active Object set to: {active_object_name}")
+                except Exception as e:
+                    self.report({'WARNING'}, f"Error: {str(e)}")
+
+        else:
+            self.report({'WARNING'}, "No active object found")
+        return {'FINISHED'}
+    
 class WFC3DEditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Constraint Editor"
@@ -789,13 +741,19 @@ class WFC3DEditPanel(bpy.types.Panel):
         col = layout.column(align=True)
         if props.collection_obj:
             row = col.row()
-            row.label(text="Select an Object")
+            box = row.box()
+            box.label(text="Object")
+            row = box.row()
+            row.operator("collection.wfc_get_selected_object", icon="SELECT_SET")
             row.prop(props, "edit_object")
-            newrow = row.row()
-            newrow.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
-            newrow.enabled = False
+            box = row.column()
+            box.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
+            box.enabled = props.edit_object and props.edit_object != '_none_'
+            
+            row = col.row()
+            row.enabled = False
             if props.edit_object and props.edit_object != '_none_':
-                newrow.enabled = True
+                row.enabled = True
 
                 if props.edit_object in props.collection_obj.children:
                     obj=props.collection_obj.children[props.edit_object].objects[0]
@@ -810,7 +768,7 @@ class WFC3DEditPanel(bpy.types.Panel):
                     row = box.row()
                     row.prop(props,"edit_neighbor_constraint")
                     newrow = row.row()
-                    newrow.operator("object.wfc_clear_constraint")
+                    newrow.operator("object.wfc_reset_constraint")
                     newrow.enabled = props.edit_neighbor_constraint in obj;
                     
                     if (props.edit_neighbor_constraint and props.edit_neighbor_constraint !="_none_"):
@@ -825,7 +783,9 @@ class WFC3DEditPanel(bpy.types.Panel):
                             row.operator("object.wfc_remove_constraint", icon='REMOVE')
                 if (props.edit_constraints == "grid"):    
                     box=col.box()
-                    box.label(text="Grid Constraints")
+                    row = box.row()
+                    row.label(text="Grid Constraints")
+                    row.operator("object.wfc_reset_grid_constraints")
                     newbox = box.box()
                     newrow = newbox.row()
                     newrow.label(text="Corners")
@@ -879,31 +839,36 @@ class WFC3DEditPanel(bpy.types.Panel):
                     newbox.prop(props, "weight")
                     
                     box.operator("object.wfc_update_weight_constraints", icon='FILE_REFRESH')    
-                if (props.edit_constraints == "rotation"):
+                if (props.edit_constraints == "transformation"):
                     box=col.box()
-                    box.label(text="Rotation Constraints")
-                    newrow=box.row()
-                    newrow.label(text="Allow:")
-                    newrow.prop(props, "rotation_x")
-                    newrow.prop(props, "rotation_y")
-                    newrow.prop(props, "rotation_z")
-                    box.row().prop(props,"rotation_d")
-                    box.row().prop(props,"rotation_s")
-                    
-                    box.operator('object.wfc_update_rotation_constraints',icon='FILE_REFRESH')
-                if (props.edit_constraints == "geometry"):
-                    box=col.box()
-                    box.label(text="Geometry Constraints")
-                    box.row().prop(props,"scale_min")
-                    box.row().prop(props,"scale_max")
-                    box.row().prop(props,"translation_min")
-                    box.row().prop(props,"translation_max")
-                    box.operator('object.wfc_update_geometry_constraints',icon='FILE_REFRESH')
+                    row = box.row()
+                    row.label(text="Transformations")
+                    row.operator("object.wfc_reset_transformation_constraints")
+                    newbox = box.box()
+                    newbox.label(text="Translation")
+                    newbox.row().prop(props,"translation_min")
+                    newbox.row().prop(props,"translation_max")
+                    newbox.row().prop(props,"translation_steps")
+
+                    newbox = box.box()
+                    newbox.label(text="Rotation")
+                    newbox.row().prop(props,"rotation_min")
+                    newbox.row().prop(props,"rotation_max")
+                    newbox.row().prop(props,"rotation_steps")
+
+                    newbox = box.box()
+                    newbox.label(text="Scale")
+                    newbox.row().prop(props,"scale_min")
+                    newbox.row().prop(props,"scale_max")
+                    newbox.row().prop(props,"scale_steps")
+
+                    box.operator('object.wfc_update_transformation_constraints',icon='FILE_REFRESH')
         else:
             layout.label(text="Choose a Source Collection", icon='INFO')
 
         
 class COLLECTION_OT_WFC3DAdd_Neighbor_Constraint(bpy.types.Operator):
+    """ Add neighbor constraints """
     bl_idname = "object.wfc_add_constraint"
     bl_label = "Add Neighbor"
     bl_options = {'REGISTER', 'UNDO'}
@@ -929,7 +894,7 @@ class COLLECTION_OT_WFC3DAdd_Neighbor_Constraint(bpy.types.Operator):
                     l = []
                 l.append(neighbor)
                 obj[prop_name]=",".join(l)
-                self.report({'INFO'}, f"Neighbor {neighbor} added to {prop_name} of object {obj_name}")  
+                self.report({'INFO'}, f"Neighbor {neighbor} has been added to {prop_name} of object {obj_name}")  
             else:
                 self.report({'WARNING'}, f"Neighbor {neighbor} is already in {prop_name} of object {obj_name}")
         else:
@@ -938,6 +903,7 @@ class COLLECTION_OT_WFC3DAdd_Neighbor_Constraint(bpy.types.Operator):
 
         
 class COLLECTION_OT_WFC3DRemove_Neighbor_Constraint(bpy.types.Operator):
+    """ Remove neighbor constraints """
     bl_idname = "object.wfc_remove_constraint"
     bl_label = "Remove Neighbor"
     bl_options = {'REGISTER', 'UNDO'}
@@ -957,12 +923,13 @@ class COLLECTION_OT_WFC3DRemove_Neighbor_Constraint(bpy.types.Operator):
             else:
                 l = [n for n in obj[prop_name].split(",") if n != neighbor ]
                 obj[prop_name] = ",".join(l)
-            self.report({'INFO'}, f"Neighbor {neighbor} removed from {prop_name} of object {obj_name}")  
+            self.report({'INFO'}, f"Neighbor {neighbor} has been removed from {prop_name} of object {obj_name}")  
 
         return {'FINISHED'}
-class COLLECTION_OT_WFC3DClear_Neighbor_Constraint(bpy.types.Operator):
-    bl_idname = "object.wfc_clear_constraint"
-    bl_label = "Clear"
+class COLLECTION_OT_WFC3DReset_Neighbor_Constraint(bpy.types.Operator):
+    """ Reset selected neighbor constraints """
+    bl_idname = "object.wfc_reset_constraint"
+    bl_label = "Reset"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props= context.scene.wfc_props
@@ -974,11 +941,12 @@ class COLLECTION_OT_WFC3DClear_Neighbor_Constraint(bpy.types.Operator):
             obj = bpy.data.objects[obj_name]
         
         if props.edit_neighbor_constraint and props.edit_neighbor_constraint in obj:
-            obj[props.edit_neighbor_constraint]=""
-            self.report({'INFO'}, f"{props.edit_neighbor_constraint} cleared for object: {obj_name}")
+            obj[props.edit_neighbor_constraint]=''
+            self.report({'INFO'}, f"{props.edit_neighbor_constraint} have been reset for object: {obj_name}")
 
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
+    """ Update grid constraints"""
     bl_idname = "object.wfc_update_grid_constraints"
     bl_label = "Update Grid Constraints"
     bl_options = {'REGISTER', 'UNDO'}
@@ -1009,10 +977,32 @@ class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
         else:
             obj["wfc_inside"] = ""
         
-        self.report({'INFO'}, f"Grid constraints of object {obj_name} updated.")  
+        self.report({'INFO'}, f"Grid constraints of object {obj_name} have been updated.")  
+
+        return {'FINISHED'}
+class COLLECTION_OT_WFC3DReset_Grid_Constraints(bpy.types.Operator):
+    """ Reset grid constraints"""
+    bl_idname = "object.wfc_reset_grid_constraints"
+    bl_label = "Reset"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        obj_name = props.edit_object
+        
+        if obj_name in bpy.data.collections:
+            obj = bpy.data.collections[obj_name].objects[0]
+        else:
+            obj = bpy.data.objects[obj_name]
+        for c in ["corners","edges","faces","inside"]:
+            obj["wfc_"+c] = PROP_DEFAULTS[c]
+            
+        update_constraint_properties(props, context)
+        
+        self.report({'INFO'}, f"Grid constraints of object {obj_name} have been updated.")  
 
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DUpdate_Weight_Constraints(bpy.types.Operator):
+    """ Update weight constraints """
     bl_idname = "object.wfc_update_weight_constraints"
     bl_label = "Update Weight Constraints"
     bl_options = {'REGISTER', 'UNDO'}
@@ -1026,12 +1016,13 @@ class COLLECTION_OT_WFC3DUpdate_Weight_Constraints(bpy.types.Operator):
             obj = bpy.data.objects[obj_name]
         
         obj["wfc_weight"] = props.weight;
-        self.report({'INFO'}, f"Weight constraints of object {obj_name} updated to {props.weight}.")  
+        self.report({'INFO'}, f"Weight constraints of object {obj_name} have been updated to {props.weight}.")  
 
         return {'FINISHED'}
-class COLLECTION_OT_WFC3DUpdate_Rotation_Constraints(bpy.types.Operator):
-    bl_idname = "object.wfc_update_rotation_constraints"
-    bl_label = "Update Rotation Constraints"
+class COLLECTION_OT_WFC3DUpdate_Transformation_Constraints(bpy.types.Operator):
+    """ Update transformation constraints """
+    bl_idname = "object.wfc_update_transformation_constraints"
+    bl_label = "Update Transformation Constraints"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
@@ -1041,54 +1032,52 @@ class COLLECTION_OT_WFC3DUpdate_Rotation_Constraints(bpy.types.Operator):
             obj = bpy.data.collections[obj_name].objects[0]
         else:
             obj = bpy.data.objects[obj_name]
-        
-        newval=[]
-        for n in ["x","y","z"]:
-            if props["rotation_"+n]:
-                newval.append(n)
-        obj["wfc_rotation"] = ",".join(newval)
-        
-        obj["wfc_rotation_d"] = props["rotation_d"]
-        obj["wfc_rotation_s"] = props["rotation_s"]
-        
-        self.report({'INFO'}, f"Rotation constraints of object {obj_name} updated.")  
-
-        return {'FINISHED'}
-
-class COLLECTION_OT_WFC3DUpdate_Geometry_Constraints(bpy.types.Operator):
-    bl_idname = "object.wfc_update_geometry_constraints"
-    bl_label = "Update Geometry Constraints"
-    bl_options = {'REGISTER', 'UNDO'}
-    def execute(self, context):
-        props = context.scene.wfc_props
-        obj_name = props.edit_object
-        
-        if obj_name in bpy.data.collections:
-            obj = bpy.data.collections[obj_name].objects[0]
-        else:
-            obj = bpy.data.objects[obj_name]
-        
-        prop_defaults = {"scale_min" : (1.0,1.0,1.0), "scale_max" : (1.0,1.0,1.0), "translation_min" : (0.0,0.0,0.0), "translation_max" :(0.0,0.0,0.0)}
-        for c in prop_defaults:
+         
+        for c in ["scale_min","scale_max","scale_steps","rotation_min","rotation_max","rotation_steps","translation_min","translation_max","translation_steps"]:
             if c in props:
                 obj["wfc_"+c] = props[c]
             else:
-                obj["wfc" +c] = prop_defaults[c]
+                obj["wfc_"+c] = PROP_DEFAULTS[c]
          
-        self.report({'INFO'}, f"Geometry constraints of object {obj_name} updated.")  
+        self.report({'INFO'}, f"Transformation constraints of object {obj_name} have been updated.")  
 
         return {'FINISHED'}
+class COLLECTION_OT_WFC3DReset_Transformation_Constraints(bpy.types.Operator):
+    """ Reset transformation constraints. """
+    bl_idname = "object.wfc_reset_transformation_constraints"
+    bl_label = "Reset"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        obj_name = props.edit_object
+        
+        if obj_name in bpy.data.collections:
+            obj = bpy.data.collections[obj_name].objects[0]
+        else:
+            obj = bpy.data.objects[obj_name]
+         
+        for c in ["scale_min","scale_max","scale_steps","rotation_min","rotation_max","rotation_steps","translation_min","translation_max","translation_steps"]:
+            print(f"Reset {c}")
+            obj["wfc_" +c] = PROP_DEFAULTS[c]
+            props[c] = PROP_DEFAULTS[c]
+         
+        self.report({'INFO'}, f"Transformation constraints of object {obj_name} have been reset.")  
+
+        return {'FINISHED'}
+
 classes = (
     WFC3DProperties,
     OBJECT_OT_WFC3DGenerate,
     COLLECTION_OT_WFC3DSelectDropdownObject,
     COLLECTION_OT_WFC3DAdd_Neighbor_Constraint,
     COLLECTION_OT_WFC3DRemove_Neighbor_Constraint,
-    COLLECTION_OT_WFC3DClear_Neighbor_Constraint,
+    COLLECTION_OT_WFC3DReset_Neighbor_Constraint,
     COLLECTION_OT_WFC3DUpdate_Grid_Constraints,
+    COLLECTION_OT_WFC3DReset_Grid_Constraints,
     COLLECTION_OT_WFC3DUpdate_Weight_Constraints,
-    COLLECTION_OT_WFC3DUpdate_Rotation_Constraints,
-    COLLECTION_OT_WFC3DUpdate_Geometry_Constraints,
+    COLLECTION_OT_WFC3DUpdate_Transformation_Constraints,
+    COLLECTION_OT_WFC3DReset_Transformation_Constraints,
+    COLLECTION_OT_WFC3DGetSelectedObject,
     WFC3DEditPanel,
     WFC3DGeneratePanel,
 )

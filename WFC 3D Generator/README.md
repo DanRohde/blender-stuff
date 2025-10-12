@@ -61,20 +61,16 @@ Each object in the source collection can use custom properties to define the per
     * empty string - weight of 1
     * 0 - object will not be used
     * 1..n - increases the chance of being chosen by a factor of n
- 
 
-## Rotation Constraints
-* Used custom properties: `wfc_rotation,wfc_rotation_d,wfc_rotation_s`
+
+## Transformation Constraints
+* Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_rotation_d,wfc_rotation_s,wfc_scale_min,wfc_scale_max,`
 * Allowed property values:
-    * wfc_rotation: comma separated list of `x,y,z` to allow rotation on this axis
+    * wfc_translation_min,wfc_translation_max: a float vector
     * wfc_rotation_d: allowed rotation degrees 
     * wfc_rotation_s: allowed rotation steps
-
-## Geometry Constraints
-* Used custom properties: `wfc_scale_min,wfc_scale_max,wfc_translation_min,wfc_translation_max`
-* Allowed property_values:
     * wfc_scale_min,wfc_scale_max: a float vector
-    * wfc_translation_min,wfc_translation_max: a float vector
+
 
 ## Upcoming Features
 * more constraints: count constraints ...
