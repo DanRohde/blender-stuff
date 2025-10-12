@@ -127,6 +127,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     target_collection: bpy.props.StringProperty(name="", description="Target collection for 3D grid", default="WFC_Generated",)
     seed: bpy.props.IntProperty(name="Random Seed", description="Random seed", default=0,)
     link_objects: bpy.props.BoolProperty(name="Link New Objects (recommended)", description="Link new objects instead of copying them.", default=True,)
+    copy_modifiers: bpy.props.BoolProperty(name="Copy Modifiers", description="Copy modifiers to linked objects.", default=False,)
     remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove existing target collection", default=False,)
     
     edit_object: bpy.props.EnumProperty(name="", description="Select an object", items=get_object_enum_items, update=update_constraint_properties,)
@@ -183,7 +184,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     translation_min : bpy.props.FloatVectorProperty(name="Min", description="Translation minimum", default=PROP_DEFAULTS["translation_min"], subtype="TRANSLATION")
     translation_max : bpy.props.FloatVectorProperty(name="Max", description="Translation maximum", default=PROP_DEFAULTS["translation_max"], subtype="TRANSLATION")
     translation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Translation steps", default=PROP_DEFAULTS["translation_steps"], subtype="TRANSLATION")
-    
+
+
 class WFC3DGrid:
     def __init__(self, grid_size):
         self.grid_size = grid_size;        
@@ -366,6 +368,7 @@ class WFC3DGenerator:
         self.use_constraints = props.use_constraints
         self.target_collection = props.target_collection
         self.link_objects = props.link_objects
+        self.copy_modifiers = props.copy_modifiers
         
         random.seed(props.seed)
         self.remove_target_collection = props.remove_target_collection
@@ -537,10 +540,20 @@ class WFC3DGenerator:
                     if original_obj:
                         if self.link_objects:
                             new_obj = bpy.data.objects.new(name=original_obj.name, object_data = original_obj.data)
+                            if self.copy_modifiers:
+                                for mod in original_obj.modifiers:
+                                    new_mod = new_obj.modifiers.new(name=mod.name, type=mod.type)
+                                    for attr in dir(mod):
+                                        if attr.startswith("_"):
+                                            continue
+                                        try:
+                                            setattr(new_mod, attr, getattr(mod, attr))
+                                        except Exception:
+                                            pass
                         else:
                             new_obj = original_obj.copy()
                             new_obj.data = original_obj.data.copy()
-                        
+                            
                         newloc = [ x * self.spacing[0],  y * self.spacing[1], z * self.spacing[2] ]
                         if self.use_constraints:
                             constraints = self.constraints[obj_name]
@@ -576,6 +589,7 @@ class WFC3DGenerator:
                         
                         new_obj.location = tuple(newloc)        
                         new_collection.objects.link(new_obj)
+
 
 class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
     """Generates a 3D model with Wave Function Collapse"""
@@ -640,6 +654,9 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         layout.label(text="Target Collection")
         layout.prop(props, "target_collection")
         layout.prop(props, "link_objects")
+        row=layout.row()
+        row.prop(props, "copy_modifiers")
+        row.enabled = props.link_objects
         layout.prop(props, "remove_target_collection")
         layout.prop(props, "seed")
 
@@ -658,8 +675,6 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             layout.label(text="Source and target collection should not be the same.", icon="WARNING_LARGE")
         if props.collection_obj and len(props.collection_obj.objects)==0 and len(props.collection_obj.children)==0:
             layout.label(text="Please select a non-empty source collection.", icon="INFO_LARGE")
-
-
 
 
 class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
@@ -687,7 +702,6 @@ class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
             self.report({'WARNING'}, "Object not found")
             return {'CANCELLED'}
 
-    
         bpy.ops.object.select_all(action='DESELECT')
         context.view_layer.objects.active = obj
         obj.select_set(True)
