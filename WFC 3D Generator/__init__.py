@@ -81,8 +81,8 @@ def update_constraint_properties(self, context):
         self["face_"+f] = False
             
     self["corner_none"] = False
-    self["edges_none"] = False
-    self["faces_none"] = False
+    self["edge_none"] = False
+    self["face_none"] = False
     self["inside_none"] = False
     
     if "wfc_corners" in obj:
@@ -642,22 +642,27 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         props = context.scene.wfc_props
         
         layout.label(text="Source Collection")
+        
         layout.prop(props, "collection_obj")
-        layout.label(text="Grid Size (width/depth/height)")
-        layout.prop(props, "grid_size")
-        layout.label(text="Grid Cell Space")
-        layout.prop(props, "spacing")
+       
+        box = layout.box()
+       
+        box.label(text="Grid Size (width/depth/height)")
+        box.row().prop(props, "grid_size")
+        box.label(text="Grid Cell Space")
+        box.row().prop(props, "spacing")
         
-        layout.prop(props, "use_constraints")
+        box.prop(props, "use_constraints")
         
-        layout.separator()
         layout.label(text="Target Collection")
-        layout.prop(props, "target_collection")
-        layout.prop(props, "link_objects")
-        row=layout.row()
+        box = layout.box()
+        box.prop(props, "target_collection")
+        box.prop(props, "link_objects")
+        row=box.row()
         row.prop(props, "copy_modifiers")
         row.enabled = props.link_objects
-        layout.prop(props, "remove_target_collection")
+        box.prop(props, "remove_target_collection")
+        
         layout.prop(props, "seed")
 
         layout.separator(type="LINE", factor=0.2)
