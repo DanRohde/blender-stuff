@@ -64,12 +64,11 @@ Each object in the source collection can use custom properties to define the per
 
 
 ## Transformation Constraints
-* Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_rotation_d,wfc_rotation_s,wfc_scale_min,wfc_scale_max,`
+* Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_translation_steps,wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps,wfc_scale_min,wfc_scale_max,wfc_scale_steps`
 * Allowed property values:
-    * wfc_translation_min,wfc_translation_max: a float vector
-    * wfc_rotation_d: allowed rotation degrees 
-    * wfc_rotation_s: allowed rotation steps
-    * wfc_scale_min,wfc_scale_max: a float vector
+    * wfc_translation_min,wfc_translation_max,wfc_translation_steps: a float vector
+    * wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps: a float vector 
+    * wfc_scale_min,wfc_scale_max,wfc_scale_steps: a float vector
 
 
 ## Upcoming Features
