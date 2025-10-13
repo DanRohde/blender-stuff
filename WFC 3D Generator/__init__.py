@@ -26,6 +26,7 @@ PROP_DEFAULTS = {
     #transformation constraints:
     'translation_min' : (0,0,0), 'translation_max' : (0,0,0), 'translation_steps' : (0,0,0),
     'rotation_min' : (0,0,0), 'rotation_max': (0,0,0), 'rotation_steps' : (0,0,0),
+    'rotation_grid' : (False,False,False), 'rotation_neighbor' : (False,False, False),
     'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0)
 }
 def get_object_enum_items(self, context):
@@ -192,6 +193,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     rotation_min : bpy.props.FloatVectorProperty(name="Min", description="Degrees min", default=PROP_DEFAULTS["rotation_min"], subtype="EULER")
     rotation_max : bpy.props.FloatVectorProperty(name="Max", description="Degrees max", default=PROP_DEFAULTS["rotation_max"], subtype="EULER")
     rotation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Degree Steps", default=PROP_DEFAULTS["rotation_steps"], subtype="EULER")
+    rotation_neighbor : bpy.props.BoolVectorProperty(name="Neighbor", description="Rotate Neighbor Constraints", default=PROP_DEFAULTS["rotation_neighbor"])
+    rotation_grid : bpy.props.BoolVectorProperty(name="Grid", description="Rotate Grid Constraints", default=PROP_DEFAULTS["rotation_grid"])
     scale_min : bpy.props.FloatVectorProperty(name="Min", description="Scale minimum", default=PROP_DEFAULTS["scale_min"])
     scale_max : bpy.props.FloatVectorProperty(name="Max", description="Scale maximum", default=PROP_DEFAULTS["scale_max"])
     scale_steps : bpy.props.FloatVectorProperty(name="Steps", description="Scale steps", default=PROP_DEFAULTS["scale_steps"])
@@ -960,6 +963,8 @@ class WFC3DEditPanel(bpy.types.Panel):
                     newbox.row().prop(props,"rotation_min")
                     newbox.row().prop(props,"rotation_max")
                     newbox.row().prop(props,"rotation_steps")
+                    newbox.row().prop(props,"rotation_neighbor")
+                    newbox.row().prop(props,"rotation_grid")
 
                     newbox = box.box()
                     newbox.label(text="Scale")
@@ -1138,7 +1143,9 @@ class COLLECTION_OT_WFC3DUpdate_Transformation_Constraints(bpy.types.Operator):
         else:
             obj = bpy.data.objects[obj_name]
          
-        for c in ["scale_min","scale_max","scale_steps","rotation_min","rotation_max","rotation_steps","translation_min","translation_max","translation_steps"]:
+        for c in ["scale_min","scale_max","scale_steps","rotation_min","rotation_max","rotation_steps",\
+                  "translation_min","translation_max","translation_steps",\
+                  "rotation_neighbor", "rotation_grid"]:
             if c in props:
                 obj["wfc_"+c] = props[c]
             else:
@@ -1161,7 +1168,9 @@ class COLLECTION_OT_WFC3DReset_Transformation_Constraints(bpy.types.Operator):
         else:
             obj = bpy.data.objects[obj_name]
          
-        for c in ["scale_min","scale_max","scale_steps","rotation_min","rotation_max","rotation_steps","translation_min","translation_max","translation_steps"]:
+        for c in ["scale_min","scale_max","scale_steps","rotation_min","rotation_max","rotation_steps",\
+                  "translation_min","translation_max","translation_steps",\
+                  "rotation_neighbor","rotation_grid"]:
             print(f"Reset {c}")
             obj["wfc_" +c] = PROP_DEFAULTS[c]
             props[c] = PROP_DEFAULTS[c]
