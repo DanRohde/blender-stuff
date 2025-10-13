@@ -10,12 +10,14 @@ from _curses import OK
 from audioop import minmax
 
 DIRECTIONS = {
-    'TOP': (0, 0, 1),
-    'BOTTOM': (0, 0, -1),
-    'FRONT': (0, -1, 0),
-    'BACK': (0, 1, 0),
-    'LEFT': (-1, 0, 0),
-    'RIGHT': (1, 0, 0)
+    'TOP': (0, 0, 1), 'BOTTOM': (0, 0, -1),
+    'FRONT': (0, -1, 0), 'BACK': (0, 1, 0),
+    'LEFT': (-1, 0, 0), 'RIGHT': (1, 0, 0),
+    'CN_FBL' : (-1,-1,-1), 'CN_FBR' : (1,-1,-1), 'CN_FTL' : (-1,-1,1), 'CN_FTR' : (1,-1,1),
+    'CN_BBL' : (-1,1,-1), 'CN_BBR' : (1,1,-1), 'CN_BTR' : (-1,1,1), 'CN_BTL' : (1,1,1),
+    'EN_FL' : (-1,-1,0), 'EN_FR' : (1,-1,0), 'EN_FB' : (0,-1,-1), 'EN_FT' : (0,-1,1),
+    'EN_BL' : (-1,1,0), 'EN_BR' : (1,1,0), 'EN_BB' : (0,1,-1), 'EN_BT' : (0,1,1),
+    'EN_LB' : (-1,0,-1), 'EN_LT' : (-1,0,1), 'EN_RB' : (1,0,-1), 'EN_TB' : (1,0,1),
 }
 PROP_DEFAULTS = {
     # neighbor constraints
@@ -241,7 +243,6 @@ class WFC3DConstraints:
                 else:
                     self.constraints[obj_name][r] = None
                     
-            self._init_transformation_constraints(self.constraints[obj_name])
             
             # load neighbor constraints
             for direction in DIRECTIONS:
@@ -254,7 +255,7 @@ class WFC3DConstraints:
                         self.constraints[obj_name][direction] = obj[prop_name].split(',')
                 else:
                     self.constraints[obj.name][direction] = allobjects 
-    def _init_transformation_constraints(self, constraints):
+    def apply_transformation_constraints(self, src_obj, target_obj):
         def _get_mapped_random_values(min, max, steps):
             if (steps < 0 and min > max):
                 steps=-steps
@@ -267,38 +268,42 @@ class WFC3DConstraints:
                 i=min
                 while i<=max:
                     v.append(i)
-                    i+=steps       
+                    i+=steps
+                if (i-steps < max):
+                     v.append(max)   
                 return v[random.randrange(0,len(v))]
             else:
                 return min + (max-min) * random.random()
-            
+        constraints = self.constraints[src_obj.name]    
         if constraints["translation_min"] is not None and constraints["translation_max"] is not None and constraints["translation_steps"] is not None:
             tmin = constraints["translation_min"]
             tmax = constraints["translation_max"]
             ts = constraints["translation_steps"]
-            loc = []
+            loc = target_obj.location
             for i in range(3):
-                loc.append(_get_mapped_random_values(tmin[i], tmax[i], ts[i]) )
-            constraints["translation"] = loc
-        else:
-            constraints["translation"] = None
+                loc[i]+=_get_mapped_random_values(tmin[i], tmax[i], ts[i])
+            target_obj.location = loc
+            
         if constraints["scale_min"] is not None and constraints["scale_max"] is not None and constraints["scale_steps"] is not None:
             smin = constraints["scale_min"]
             smax = constraints["scale_max"]
             ss = constraints["scale_steps"]
-            constraints["scale"] = (_get_mapped_random_values(smin[0], smax[0], ss[0]),
-                                    _get_mapped_random_values(smin[1], smax[1], ss[1]),
-                                    _get_mapped_random_values(smin[2], smax[2], ss[2]))
-        else:
-            constraints["scale"] = None
-
+            
+            target_obj.scale.x = _get_mapped_random_values(smin[0], smax[0], ss[0])
+            target_obj.scale.y = _get_mapped_random_values(smin[1], smax[1], ss[1])
+            target_obj.scale.z = _get_mapped_random_values(smin[2], smax[2], ss[2])
+        
         if constraints["rotation_min"] is not None and constraints["rotation_max"] is not None and constraints["rotation_steps"] is not None:
             rmin = constraints["rotation_min"]
             rmax = constraints["rotation_max"]
             rs = constraints["rotation_steps"]
-            constraints["rotation"]=[_get_mapped_random_values(rmin[0], rmax[0], rs[0]),_get_mapped_random_values(rmin[1], rmax[1], rs[1]),_get_mapped_random_values(rmin[2], rmax[2], rs[2])]
-        else:
-            constraints["rotation"] = None
+            
+            axis=['X','Y','Z']
+            for i in range(3):
+                a = _get_mapped_random_values(rmin[i], rmax[i], rs[i])
+                if a!=0:
+                    target_obj.rotation_euler.rotate_axis(axis[i], a)
+        
             
 class WFC3DGrid:
     def __init__(self, grid_size):
@@ -491,9 +496,9 @@ class WFC3DGenerator:
         self.load_objects()
 
         if self.use_constraints:
-            self.constraints_cls = WFC3DConstraints()
-            self.constraints_cls.initialize_constraints(self.objects)
-            self.constraints = self.constraints_cls.constraints
+            self.constraints_obj = WFC3DConstraints()
+            self.constraints_obj.initialize_constraints(self.objects)
+            self.constraints = self.constraints_obj.constraints
             
         
         self.grid = WFC3DGrid(self.grid_size)
@@ -630,25 +635,12 @@ class WFC3DGenerator:
                             new_obj = original_obj.copy()
                             new_obj.data = original_obj.data.copy()
                             
-                        newloc = [ x * self.spacing[0],  y * self.spacing[1], z * self.spacing[2] ]
-                        if self.use_constraints:
-                            constraints = self.constraints[obj_name]
-                                
-                            if constraints["translation"] is not None:
-                                for i in range(3):
-                                    newloc[i] += constraints["translation"][i]
-                            if constraints["scale"] is not None:
-                                new_obj.scale.x = constraints["scale"][0]
-                                new_obj.scale.y = constraints["scale"][1]
-                                new_obj.scale.z = constraints["scale"][2]                                
-                            if constraints["rotation"] is not None:
-                                axisparam=["X","Y","Z"]
-                                for i in range(len(axisparam)):
-                                    a = constraints["rotation"][i]
-                                    if a!=0:
-                                        new_obj.rotation_euler.rotate_axis(axisparam[i], a)
-                        
+                        newloc = [ x * self.spacing[0],  y * self.spacing[1], z * self.spacing[2] ]                        
                         new_obj.location = tuple(newloc)        
+
+                        if self.use_constraints:
+                            self.constraints_obj.apply_transformation_constraints(original_obj, new_obj)
+                            
                         new_collection.objects.link(new_obj)
 
 
