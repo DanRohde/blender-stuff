@@ -838,10 +838,12 @@ class WFC3DEditPanel(bpy.types.Panel):
             row = box.row()
             row.operator("collection.wfc_get_selected_object", icon="SELECT_SET")
             row.prop(props,"auto_active_object")
-            row.prop(props, "edit_object")
+            newcol = row.column()
+            newcol.prop(props, "edit_object")
+            newcol.enabled = not props.auto_active_object
             box = row.column()
             box.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
-            box.enabled = props.edit_object and props.edit_object != '_none_'
+            box.enabled = props.edit_object and props.edit_object != '_none_' and not props.auto_active_object
             
             row = col.row()
             row.enabled = False
@@ -874,9 +876,11 @@ class WFC3DEditPanel(bpy.types.Panel):
                         newcol = row.column()
                         newcol.enabled = not props.auto_active_object
                         newcol.prop(props,"auto_neighbor_object")
-                        row.prop(props,"select_neighbor")
                         newcol = row.column()
-                        newcol.enabled = not props.auto_active_object
+                        newcol.prop(props,"select_neighbor")
+                        newcol.enabled = not props.auto_neighbor_object or props.auto_active_object
+                        newcol = row.column()
+                        newcol.enabled = not props.auto_active_object and not props.auto_neighbor_object and props.select_neighbor != '_none_'
                         newcol.operator("collection.wfc_select_neighbor_object", icon='RESTRICT_SELECT_OFF')
                         row=box.row()
                         if (props.select_neighbor and props.select_neighbor != '_none_'):
