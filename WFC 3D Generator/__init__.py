@@ -7,6 +7,7 @@ from collections import deque
 import random
 import numpy as np
 from _curses import OK
+from audioop import minmax
 
 DIRECTIONS = {
     'TOP': (0, 0, 1),
@@ -124,7 +125,8 @@ def on_object_activated(scene, depsgraph):
     if bpy.context.view_layer.objects.active:
         active_object = bpy.context.view_layer.objects.active
         props = bpy.context.scene.wfc_props
-        
+        if not props.collection_obj:
+            return
         if active_object.name in props.collection_obj.objects or active_object.name in props.collection_obj.children:
             if props.auto_active_object:
                 props.edit_object = active_object.name
@@ -203,6 +205,10 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     translation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Translation steps", default=PROP_DEFAULTS["translation_steps"], subtype="TRANSLATION")
 
 class WFC3DConstraints:
+    TRANSFORMATION_CONSTRAINTS = ('scale_min','scale_max','scale_steps',
+                                  'rotation_min','rotation_max','rotation_steps',
+                                  'rotation_neighbor','rotation_grid',
+                                  'translation_min','translation_max','translation_steps')
     def __init__(self):
         self.constraints = {}
     
@@ -229,7 +235,7 @@ class WFC3DConstraints:
                     self.constraints[obj_name][grid_constraints[gc]] = obj[gc].split(",")
             
             # load transformation constraints
-            for r in ["rotation_min","rotation_max","rotation_steps","scale_min","scale_max","scale_steps","translation_min","translation_max","translation_steps"]:
+            for r in self.TRANSFORMATION_CONSTRAINTS:
                 if "wfc_"+r in obj:
                     self.constraints[obj_name][r] = obj["wfc_"+r]
                 else:
@@ -250,10 +256,16 @@ class WFC3DConstraints:
                     self.constraints[obj.name][direction] = allobjects 
     def _init_transformation_constraints(self, constraints):
         def _get_mapped_random_values(min, max, steps):
-            if steps !=0 and (max-min >= steps):
+            if (steps < 0 and min > max):
+                steps=-steps
+                s= max
+                max= min 
+                min= s
+                
+            if (steps > 0 and max-min >= 0):
                 v = []
                 i=min
-                while i<max:
+                while i<=max:
                     v.append(i)
                     i+=steps       
                 return v[random.randrange(0,len(v))]
@@ -274,8 +286,8 @@ class WFC3DConstraints:
             smin = constraints["scale_min"]
             smax = constraints["scale_max"]
             ss = constraints["scale_steps"]
-            constraints["scale"] = (_get_mapped_random_values(smin[0], smax[0], ss[0]), \
-                                    _get_mapped_random_values(smin[1], smax[1], ss[1]), \
+            constraints["scale"] = (_get_mapped_random_values(smin[0], smax[0], ss[0]),
+                                    _get_mapped_random_values(smin[1], smax[1], ss[1]),
                                     _get_mapped_random_values(smin[2], smax[2], ss[2]))
         else:
             constraints["scale"] = None
@@ -784,6 +796,7 @@ class COLLECTION_OT_WFC3DSelectNeighborObject(bpy.types.Operator):
             obj = collection.objects[obj_name]
         bpy.ops.object.select_all(action='DESELECT')
         context.view_layer.objects.active = obj
+        obj.select_set(True)
         return {'FINISHED'}
 
 
