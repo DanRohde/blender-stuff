@@ -13,6 +13,8 @@ Each object in the source collection can use custom properties to define the per
     1. open 3D Viewport: WFC 3D Gen > WFC 3D Generator
     2. Press "Generate WFC 3D Model"
 
+## Limitations and Known Issues
+* For neighbor restrictions to be effective, there must be more than one object in the source collection.
 
 ## Neighbor Constraints
 * Used custom properties: `wfc_left`, `wfc_right` ,`wfc_front`, `wfc_back`, `wfc_top`, `wfc_bottom`
