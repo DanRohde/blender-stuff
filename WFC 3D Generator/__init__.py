@@ -6,18 +6,15 @@ import bpy
 from collections import deque
 import random
 import numpy as np
-from _curses import OK
-from audioop import minmax
+
 
 DIRECTIONS = {
-    'TOP': (0, 0, 1), 'BOTTOM': (0, 0, -1),
-    'FRONT': (0, -1, 0), 'BACK': (0, 1, 0),
-    'LEFT': (-1, 0, 0), 'RIGHT': (1, 0, 0),
+    'TOP': (0, 0, 1), 'BOTTOM': (0, 0, -1), 'FRONT': (0, -1, 0), 'BACK': (0, 1, 0), 'LEFT': (-1, 0, 0), 'RIGHT': (1, 0, 0),
     'CN_FBL' : (-1,-1,-1), 'CN_FBR' : (1,-1,-1), 'CN_FTL' : (-1,-1,1), 'CN_FTR' : (1,-1,1),
-    'CN_BBL' : (-1,1,-1), 'CN_BBR' : (1,1,-1), 'CN_BTR' : (-1,1,1), 'CN_BTL' : (1,1,1),
+    'CN_BBL' : (-1,1,-1), 'CN_BBR' : (1,1,-1), 'CN_BTL' : (-1,1,1), 'CN_BTR' : (1,1,1),
     'EN_FL' : (-1,-1,0), 'EN_FR' : (1,-1,0), 'EN_FB' : (0,-1,-1), 'EN_FT' : (0,-1,1),
     'EN_BL' : (-1,1,0), 'EN_BR' : (1,1,0), 'EN_BB' : (0,1,-1), 'EN_BT' : (0,1,1),
-    'EN_LB' : (-1,0,-1), 'EN_LT' : (-1,0,1), 'EN_RB' : (1,0,-1), 'EN_TB' : (1,0,1),
+    'EN_LB' : (-1,0,-1), 'EN_LT' : (-1,0,1), 'EN_RB' : (1,0,-1), 'EN_RT' : (1,0,1),
 }
 PROP_DEFAULTS = {
     # neighbor constraints
@@ -130,11 +127,33 @@ def on_object_activated(scene, depsgraph):
         if not props.collection_obj:
             return
         if active_object.name in props.collection_obj.objects or active_object.name in props.collection_obj.children:
-            if props.auto_active_object:
+            if props.auto_active_object and props.edit_object != active_object.name:
                 props.edit_object = active_object.name
-            elif props.auto_neighbor_object:
+            elif props.auto_neighbor_object and props.selected_neighbor != active_object.name:
                 props.select_neighbor = active_object.name
 
+def get_neighbor_constraint_items(_self, _context):
+    
+    items = [("_none_","Select a Neighbor Constraint","Please select a neighbor constraint")]
+    translate = { 'TOP': 'top face', 'BOTTOM' : 'bottom face', 'LEFT' : 'left face', 'RIGHT': 'right face', 'FRONT' : 'front face', 'BACK' : 'back face',
+                 'FBL':'front bottom left corner', 'FBR' : 'front bottom right corner', 'FTL' : 'front top left corner', 'FTR' : 'front top right corner',
+                 'BBL':'back bottom left corner', 'BBR' : 'back bottom right corner', 'BTL' : 'back top left corner', 'BTR' : 'back top right corner', 
+                 'FL':'front left edge', 'FR': 'front right edge', 'FB' : 'front bottom edge', 'FT' : 'front top edge',
+                 'BL':'back left edge', 'BR': 'back right edge', 'BB' : 'back bottom edge', 'BT' : 'back top edge',
+                 'LT':'left top edge', 'LB' : 'left bottom edge', 'RT' : 'right top edge', 'RB' : 'right bottom edge',
+                 }
+    for d in DIRECTIONS:
+        label = d.lower()
+        if d.find("_")>-1:
+            _, n = d.split("_",1)
+            if n in translate:
+                label = translate[n]
+        else:
+            if d in translate:
+                label = translate[d] 
+            
+        items.append(('wfc_'+d.lower(),label,label+" neighbor"))
+    return items
     
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection,)
@@ -157,8 +176,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     )
     edit_neighbor_constraint: bpy.props.EnumProperty(
         name="", description="Select a Neighbor Constraint",
-        items=[("_none_","Select a Constraint","Please select a neighbor constraint"),('wfc_left','Left','Left Neighbor'),('wfc_right','Right','Right Neighbor'),\
-               ('wfc_top','Top','Top Neighbor'),('wfc_bottom','Bottom','Bottom Neighbor'),('wfc_front','Front','Front Neighbor'),('wfc_back','Back','Back Neighbor'),],
+        items=get_neighbor_constraint_items,
     )
     auto_active_object: bpy.props.BoolProperty(name="", description="Automatically select the active object.", default=False,)
     auto_neighbor_object: bpy.props.BoolProperty(name="", description="Automatically select the active object.", default=False,)
@@ -258,17 +276,17 @@ class WFC3DConstraints:
     def apply_transformation_constraints(self, src_obj, target_obj):
         def _get_mapped_random_values(min, max, steps):
             if (steps < 0 and min > max):
-                steps=-steps
-                s= max
-                max= min 
-                min= s
+                steps =- steps
+                s = max
+                max = min 
+                min = s
                 
             if (steps > 0 and max-min >= 0):
                 v = []
-                i=min
+                i = min
                 while i<=max:
                     v.append(i)
-                    i+=steps
+                    i += steps
                 if (i-steps < max):
                      v.append(max)   
                 return v[random.randrange(0,len(v))]
@@ -846,9 +864,9 @@ class WFC3DEditPanel(bpy.types.Panel):
             row = box.row()
             row.operator("collection.wfc_get_selected_object", icon="SELECT_SET")
             row.prop(props,"auto_active_object")
-            newcol = row.column()
-            newcol.prop(props, "edit_object")
-            newcol.enabled = not props.auto_active_object
+            newbox = row.box()
+            newbox.prop(props, "edit_object")
+            newbox.enabled = not props.auto_active_object
             box = row.column()
             box.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
             box.enabled = props.edit_object and props.edit_object != '_none_' and not props.auto_active_object
@@ -944,14 +962,14 @@ class WFC3DEditPanel(bpy.types.Panel):
                     newrow.prop(props,"inside_none")
                     
                     
-                    box.operator("object.wfc_update_grid_constraints",icon='FILE_REFRESH')
+                    box.operator("object.wfc_update_grid_constraints")
                 if (props.edit_constraints == "weight"):
                     box=col.box()
                     box.label(text="Weight Constraints")
                     newbox = box.box()
                     newbox.prop(props, "weight")
                     
-                    box.operator("object.wfc_update_weight_constraints", icon='FILE_REFRESH')    
+                    box.operator("object.wfc_update_weight_constraints")    
                 if (props.edit_constraints == "transformation"):
                     box=col.box()
                     row = box.row()
@@ -968,8 +986,8 @@ class WFC3DEditPanel(bpy.types.Panel):
                     newbox.row().prop(props,"rotation_min")
                     newbox.row().prop(props,"rotation_max")
                     newbox.row().prop(props,"rotation_steps")
-                    newbox.row().prop(props,"rotation_neighbor")
-                    newbox.row().prop(props,"rotation_grid")
+                    #newbox.row().prop(props,"rotation_neighbor")
+                    #newbox.row().prop(props,"rotation_grid")
 
                     newbox = box.box()
                     newbox.label(text="Scale")
@@ -977,7 +995,7 @@ class WFC3DEditPanel(bpy.types.Panel):
                     newbox.row().prop(props,"scale_max")
                     newbox.row().prop(props,"scale_steps")
 
-                    box.operator('object.wfc_update_transformation_constraints',icon='FILE_REFRESH')
+                    box.operator('object.wfc_update_transformation_constraints')
         else:
             layout.label(text="Choose a Source Collection", icon='INFO')
 
@@ -1061,9 +1079,9 @@ class COLLECTION_OT_WFC3DReset_Neighbor_Constraint(bpy.types.Operator):
 
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
-    """ Update grid constraints"""
+    """Save grid constraints"""
     bl_idname = "object.wfc_update_grid_constraints"
-    bl_label = "Update Grid Constraints"
+    bl_label = "Save Grid Constraints"
     bl_options = {'REGISTER', 'UNDO'}
     def _get_new_prop_val(self, props, prop_name, values):
         newval = []
@@ -1092,11 +1110,10 @@ class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
         else:
             obj["wfc_inside"] = ""
         
-        self.report({'INFO'}, f"Grid constraints of object {obj_name} have been updated.")  
-
+        self.report({'INFO'}, f"Grid constraints of object {obj_name} have been saved.")
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DReset_Grid_Constraints(bpy.types.Operator):
-    """ Reset grid constraints"""
+    """Reset grid constraints"""
     bl_idname = "object.wfc_reset_grid_constraints"
     bl_label = "Reset"
     bl_options = {'REGISTER', 'UNDO'}
@@ -1113,13 +1130,13 @@ class COLLECTION_OT_WFC3DReset_Grid_Constraints(bpy.types.Operator):
             
         update_constraint_properties(props, context)
         
-        self.report({'INFO'}, f"Grid constraints of object {obj_name} have been updated.")  
+        self.report({'INFO'}, f"Grid constraints of object {obj_name} have been saved.")  
 
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DUpdate_Weight_Constraints(bpy.types.Operator):
-    """ Update weight constraints """
+    """Save weight constraints"""
     bl_idname = "object.wfc_update_weight_constraints"
-    bl_label = "Update Weight Constraints"
+    bl_label = "Save Weight Constraints"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
@@ -1131,13 +1148,13 @@ class COLLECTION_OT_WFC3DUpdate_Weight_Constraints(bpy.types.Operator):
             obj = bpy.data.objects[obj_name]
         
         obj["wfc_weight"] = props.weight;
-        self.report({'INFO'}, f"Weight constraints of object {obj_name} have been updated to {props.weight}.")  
+        self.report({'INFO'}, f"Weight constraints of object {obj_name} have been saved to {props.weight}.")  
 
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DUpdate_Transformation_Constraints(bpy.types.Operator):
-    """ Update transformation constraints """
+    """Save transformation constraints"""
     bl_idname = "object.wfc_update_transformation_constraints"
-    bl_label = "Update Transformation Constraints"
+    bl_label = "Save Transformation Constraints"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
@@ -1156,7 +1173,7 @@ class COLLECTION_OT_WFC3DUpdate_Transformation_Constraints(bpy.types.Operator):
             else:
                 obj["wfc_"+c] = PROP_DEFAULTS[c]
          
-        self.report({'INFO'}, f"Transformation constraints of object {obj_name} have been updated.")  
+        self.report({'INFO'}, f"Transformation constraints of object {obj_name} have been saved.")  
 
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DReset_Transformation_Constraints(bpy.types.Operator):
