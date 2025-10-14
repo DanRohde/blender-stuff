@@ -134,7 +134,7 @@ def on_object_activated(scene, depsgraph):
 
 def get_neighbor_constraint_items(_self, _context):
     
-    items = [("_none_","Select a Neighbor Constraint","Please select a neighbor constraint")]
+    items = [("_none_","Select a Neighbor Constraint","Please select a neighbor constraint"),None]
     translate = { 'TOP': 'top face', 'BOTTOM' : 'bottom face', 'LEFT' : 'left face', 'RIGHT': 'right face', 'FRONT' : 'front face', 'BACK' : 'back face',
                  'FBL':'front bottom left corner', 'FBR' : 'front bottom right corner', 'FTL' : 'front top left corner', 'FTR' : 'front top right corner',
                  'BBL':'back bottom left corner', 'BBR' : 'back bottom right corner', 'BTL' : 'back top left corner', 'BTR' : 'back top right corner', 
@@ -142,10 +142,14 @@ def get_neighbor_constraint_items(_self, _context):
                  'BL':'back left edge', 'BR': 'back right edge', 'BB' : 'back bottom edge', 'BT' : 'back top edge',
                  'LT':'left top edge', 'LB' : 'left bottom edge', 'RT' : 'right top edge', 'RB' : 'right bottom edge',
                  }
+    ls = ""
     for d in DIRECTIONS:
         label = d.lower()
         if d.find("_")>-1:
-            _, n = d.split("_",1)
+            s, n = d.split("_",1)
+            if ls != s :
+                ls = s 
+                items.append(None)
             if n in translate:
                 label = translate[n]
         else:
