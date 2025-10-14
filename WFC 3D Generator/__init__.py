@@ -1197,7 +1197,6 @@ class COLLECTION_OT_WFC3DReset_Transformation_Constraints(bpy.types.Operator):
         for c in ["scale_min","scale_max","scale_steps","rotation_min","rotation_max","rotation_steps",\
                   "translation_min","translation_max","translation_steps",\
                   "rotation_neighbor","rotation_grid"]:
-            print(f"Reset {c}")
             obj["wfc_" +c] = PROP_DEFAULTS[c]
             props[c] = PROP_DEFAULTS[c]
          
