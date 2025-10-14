@@ -29,7 +29,8 @@ PROP_DEFAULTS = {
     'translation_min' : (0,0,0), 'translation_max' : (0,0,0), 'translation_steps' : (0,0,0),
     'rotation_min' : (0,0,0), 'rotation_max': (0,0,0), 'rotation_steps' : (0,0,0),
     'rotation_grid' : (False,False,False), 'rotation_neighbor' : (False,False, False),
-    'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0)
+    'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0), 
+    'scale_type' : 0, 'scale_uni': (0,0,0),
 }
 def get_object_enum_items(self, context):
     items = [('_none_','Select an object','Select an object'),None]
@@ -116,7 +117,7 @@ def update_constraint_properties(self, context):
     else:
         self["weight"] = 1
     
-    for p in ["scale_min","scale_max","scale_steps","translation_min","translation_max","translation_steps","rotation_min","rotation_max","rotation_steps"]:
+    for p in ["scale_min","scale_max","scale_steps","scale_type","scale_uni","translation_min","translation_max","translation_steps","rotation_min","rotation_max","rotation_steps"]:
         if "wfc_"+p in obj:
             self[p]=obj["wfc_"+p]
         else:
@@ -225,15 +226,17 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     rotation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Degree Steps", default=PROP_DEFAULTS["rotation_steps"], subtype="EULER")
     rotation_neighbor : bpy.props.BoolVectorProperty(name="Neighbor", description="Rotate Neighbor Constraints", default=PROP_DEFAULTS["rotation_neighbor"])
     rotation_grid : bpy.props.BoolVectorProperty(name="Grid", description="Rotate Grid Constraints", default=PROP_DEFAULTS["rotation_grid"])
+    scale_type: bpy.props.EnumProperty(name="",description="",items=[('_none_','No Scaling','Please select a scaling type'),('uniform','Uniform Scaling','Uniform scaling'),('non-uniform','Non-Uniform Scaling','Non-uniform scaling')])
     scale_min : bpy.props.FloatVectorProperty(name="Min", description="Scale minimum", default=PROP_DEFAULTS["scale_min"])
     scale_max : bpy.props.FloatVectorProperty(name="Max", description="Scale maximum", default=PROP_DEFAULTS["scale_max"])
     scale_steps : bpy.props.FloatVectorProperty(name="Steps", description="Scale steps", default=PROP_DEFAULTS["scale_steps"])
+    scale_uni : bpy.props.FloatVectorProperty(name="Scale min/max/steps", description="Uniform scaling", default=PROP_DEFAULTS["scale_uni"])
     translation_min : bpy.props.FloatVectorProperty(name="Min", description="Translation minimum", default=PROP_DEFAULTS["translation_min"], subtype="TRANSLATION")
     translation_max : bpy.props.FloatVectorProperty(name="Max", description="Translation maximum", default=PROP_DEFAULTS["translation_max"], subtype="TRANSLATION")
     translation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Translation steps", default=PROP_DEFAULTS["translation_steps"], subtype="TRANSLATION")
 
 class WFC3DConstraints:
-    TRANSFORMATION_CONSTRAINTS = ('scale_min','scale_max','scale_steps',
+    TRANSFORMATION_CONSTRAINTS = ('scale_min','scale_max','scale_steps','scale_type', 'scale_uni',
                                   'rotation_min','rotation_max','rotation_steps',
                                   'rotation_neighbor','rotation_grid',
                                   'translation_min','translation_max','translation_steps')
@@ -309,15 +312,22 @@ class WFC3DConstraints:
             for i in range(3):
                 loc[i]+=_get_mapped_random_values(tmin[i], tmax[i], ts[i])
             target_obj.location = loc
+        
+        if constraints["scale_type"] is not None and constraints["scale_type"] > 0:
             
-        if constraints["scale_min"] is not None and constraints["scale_max"] is not None and constraints["scale_steps"] is not None:
-            smin = constraints["scale_min"]
-            smax = constraints["scale_max"]
-            ss = constraints["scale_steps"]
-            
-            target_obj.scale.x = _get_mapped_random_values(smin[0], smax[0], ss[0])
-            target_obj.scale.y = _get_mapped_random_values(smin[1], smax[1], ss[1])
-            target_obj.scale.z = _get_mapped_random_values(smin[2], smax[2], ss[2])
+            if constraints["scale_type"] == 1 and constraints["scale_uni"] is not None:
+                s = _get_mapped_random_values(constraints["scale_uni"][0], constraints["scale_uni"][1], constraints["scale_uni"][2])
+                target_obj.scale.x = s 
+                target_obj.scale.y = s
+                target_obj.scale.z = s
+            if constraints["scale_type"] == 2 and constraints["scale_min"] is not None and constraints["scale_max"] is not None and constraints["scale_steps"] is not None:
+                smin = constraints["scale_min"]
+                smax = constraints["scale_max"]
+                ss = constraints["scale_steps"]
+                
+                target_obj.scale.x = _get_mapped_random_values(smin[0], smax[0], ss[0])
+                target_obj.scale.y = _get_mapped_random_values(smin[1], smax[1], ss[1])
+                target_obj.scale.z = _get_mapped_random_values(smin[2], smax[2], ss[2])
         
         if constraints["rotation_min"] is not None and constraints["rotation_max"] is not None and constraints["rotation_steps"] is not None:
             rmin = constraints["rotation_min"]
@@ -996,10 +1006,15 @@ class WFC3DEditPanel(bpy.types.Panel):
                     #newbox.row().prop(props,"rotation_grid")
 
                     newbox = box.box()
-                    newbox.label(text="Scale")
-                    newbox.row().prop(props,"scale_min")
-                    newbox.row().prop(props,"scale_max")
-                    newbox.row().prop(props,"scale_steps")
+                    newrow = newbox.row()
+                    newrow.label(text="Scale")
+                    newrow.prop(props,"scale_type")
+                    if props.scale_type == 'uniform':
+                        newbox.prop(props,"scale_uni")
+                    elif props.scale_type == 'non-uniform':
+                        newbox.row().prop(props,"scale_min")
+                        newbox.row().prop(props,"scale_max")
+                        newbox.row().prop(props,"scale_steps")
 
                     box.operator('object.wfc_update_transformation_constraints')
         else:
@@ -1171,7 +1186,7 @@ class COLLECTION_OT_WFC3DUpdate_Transformation_Constraints(bpy.types.Operator):
         else:
             obj = bpy.data.objects[obj_name]
          
-        for c in ["scale_min","scale_max","scale_steps","rotation_min","rotation_max","rotation_steps",\
+        for c in ["scale_min","scale_max","scale_steps","scale_type","scale_uni","rotation_min","rotation_max","rotation_steps",\
                   "translation_min","translation_max","translation_steps",\
                   "rotation_neighbor", "rotation_grid"]:
             if c in props:
@@ -1196,7 +1211,7 @@ class COLLECTION_OT_WFC3DReset_Transformation_Constraints(bpy.types.Operator):
         else:
             obj = bpy.data.objects[obj_name]
          
-        for c in ["scale_min","scale_max","scale_steps","rotation_min","rotation_max","rotation_steps",\
+        for c in ["scale_min","scale_max","scale_steps","scale_type","scale_uni","rotation_min","rotation_max","rotation_steps",\
                   "translation_min","translation_max","translation_steps",\
                   "rotation_neighbor","rotation_grid"]:
             obj["wfc_" +c] = PROP_DEFAULTS[c]

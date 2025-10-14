@@ -70,10 +70,11 @@ Each object in the source collection can use custom properties to define the per
 ## Transformation Constraints
 * Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_translation_steps,wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps,wfc_scale_min,wfc_scale_max,wfc_scale_steps`
 * Allowed property values:
-    * wfc_translation_min,wfc_translation_max,wfc_translation_steps: a float vector
-    * wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps: a float vector 
-    * wfc_scale_min,wfc_scale_max,wfc_scale_steps: a float vector
-
+    * wfc_translation_min,wfc_translation_max,wfc_translation_steps: a float vector (x,y,z)
+    * wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps: a float vector  (x,y,z)
+    * wfc_scale_type: integer value: 0 - no scaling, 1 - uniform scaling, 2 - non-uniform scaling
+    * wfc_scale_uni: a float vector (min,max,steps) for uniform scaling
+    * wfc_scale_min,wfc_scale_max,wfc_scale_steps: a float vector (x,y,z) for non-uniform scaling
 
 ## Upcoming Features
 * more constraints: count constraints ...
