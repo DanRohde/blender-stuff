@@ -19,6 +19,8 @@ DIRECTIONS = {
 PROP_DEFAULTS = {
     # neighbor constraints
     'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '', 
+    'en_fl':'','en_fr':'','en_ft':'','en_fb':'','en_bl':'','en_br':'','en_bt':'','en_bb':'','en_lt':'','en_lb':'','en_rt':'','en_rb':'',
+    'cn_fbl':'','cn_fbr':'','cn_ftl':'','cn_ftr':'','cn_bbl':'','cn_bbr':'','cn_btl':'','cn_btr':'',
     # weight constraints:
     'weight' : 1, 
     # grid constraints:
@@ -129,7 +131,7 @@ def on_object_activated(scene, depsgraph):
         if active_object.name in props.collection_obj.objects or active_object.name in props.collection_obj.children:
             if props.auto_active_object and props.edit_object != active_object.name:
                 props.edit_object = active_object.name
-            elif props.auto_neighbor_object and props.selected_neighbor != active_object.name:
+            elif props.auto_neighbor_object and props.select_neighbor != active_object.name:
                 props.select_neighbor = active_object.name
 
 def get_neighbor_constraint_items(_self, _context):
