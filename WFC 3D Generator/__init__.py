@@ -387,10 +387,8 @@ class WFC3DGrid:
     def is_face(self, pos):
         x, y, z = pos
         l, w, h = self.grid_size
-        if self.is_corner(pos) or self.is_edge(pos) or self.is_inside(pos):
-            return False
-        return (x in {0, l-1} or y in {0, w-1} or z in {0, h-1})
-
+        return not self.is_corner(pos) and not self.is_edge(pos) and not self.is_inside(pos)
+    
     def is_on_specific_face(self, pos, face):
         x, y, z = pos
         l, w, h = self.grid_size
@@ -443,7 +441,7 @@ class WFC3DGrid:
                     return False
                 if self.is_on_specific_face(pos,f):
                     return True
-                return False
+            return False
         return True
 
     def count_obj(self, obj_name, pos, dir):
