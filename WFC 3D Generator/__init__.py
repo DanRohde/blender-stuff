@@ -129,10 +129,12 @@ def on_object_activated(scene, depsgraph):
         if not props.collection_obj:
             return
         if active_object.name in props.collection_obj.objects or active_object.name in props.collection_obj.children:
-            if props.auto_active_object and props.edit_object != active_object.name:
-                props.edit_object = active_object.name
-            elif props.auto_neighbor_object and props.select_neighbor != active_object.name:
-                props.select_neighbor = active_object.name
+            if props.auto_active_object:
+                if props.edit_object != active_object.name:
+                    props.edit_object = active_object.name
+            elif props.auto_neighbor_object:
+                if props.select_neighbor != active_object.name:
+                    props.select_neighbor = active_object.name
 
 def get_neighbor_constraint_items(_self, _context):
     
@@ -868,12 +870,12 @@ class WFC3DEditPanel(bpy.types.Panel):
             row = box.row()
             row.operator("collection.wfc_get_selected_object", icon="SELECT_SET")
             row.prop(props,"auto_active_object")
-            newbox = row.box()
-            newbox.prop(props, "edit_object")
-            newbox.enabled = not props.auto_active_object
-            box = row.column()
-            box.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
-            box.enabled = props.edit_object and props.edit_object != '_none_' and not props.auto_active_object
+            newcol = row.column()
+            newcol.prop(props, "edit_object")
+            newcol.enabled = not props.auto_active_object
+            newcol = row.column()
+            newcol.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
+            newcol.enabled = props.edit_object and props.edit_object != '_none_' and not props.auto_active_object
             
             row = col.row()
             row.enabled = False
