@@ -59,7 +59,7 @@ Each object in the source collection can use custom properties to define the per
     * "-" - forbids to stay inside
 
 	
-## Weight Constraint
+## Probability Constraints
 * Used custom property: `wfc_weight`
 * Allowed property values:
     * empty string - weight of 1
@@ -77,6 +77,6 @@ Each object in the source collection can use custom properties to define the per
     * wfc_scale_min,wfc_scale_max,wfc_scale_steps: a float vector (x,y,z) for non-uniform scaling
 
 ## Upcoming Features
-* more constraints: count constraints ...
+* more constraints: symmetry, frequency, probability, pattern, local/region, ...
 * a constraint validator to check for unknown objects ...
 * a different kind of constraints based on connector types instead of object lists

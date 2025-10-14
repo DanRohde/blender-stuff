@@ -178,10 +178,11 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     edit_object: bpy.props.EnumProperty(name="", description="Select an object", items=get_object_enum_items, update=update_constraint_properties,)
     edit_constraints: bpy.props.EnumProperty(
         name="", description = "Select constraint type",
-        items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),\
-               ("grid","Grid Constraints","Grid constraints"),("weight","Weight Constraints", "Weight constraints"),\
-               ("transformation","Transformation Constraints", "Transformation constraints")],
-        update=update_constraint_properties
+        items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),
+               ("grid","Grid Constraints","Grid constraints"),("probability","Probability Constraints", "Probability constraints"),
+               ("transformation","Transformation Constraints", "Transformation constraints"), 
+               ("symmetry","Symmetry Constraints","Symmetry constraints"),('frequency',"Frequency Constraints","Frequency constraints")],
+        update=update_constraint_properties,
     )
     edit_neighbor_constraint: bpy.props.EnumProperty(
         name="", description="Select a Neighbor Constraint",
@@ -979,13 +980,13 @@ class WFC3DEditPanel(bpy.types.Panel):
                     
                     
                     box.operator("object.wfc_update_grid_constraints")
-                if (props.edit_constraints == "weight"):
+                if (props.edit_constraints == "probability"):
                     box=col.box()
                     box.label(text="Weight Constraints")
                     newbox = box.box()
                     newbox.prop(props, "weight")
                     
-                    box.operator("object.wfc_update_weight_constraints")    
+                    box.operator("object.wfc_update_probability_constraints")    
                 if (props.edit_constraints == "transformation"):
                     box=col.box()
                     row = box.row()
@@ -1017,6 +1018,15 @@ class WFC3DEditPanel(bpy.types.Panel):
                         newbox.row().prop(props,"scale_steps")
 
                     box.operator('object.wfc_update_transformation_constraints')
+                if (props.edit_constraints=="symmetry"):
+                    box = col.box()
+                    box.label(text="Symmetry Constraints")
+                    
+                    box.label(text="Mirror Symmetry")
+                    box.label(text="Rotational Symmetry")
+                    box.label(text="Translational Symmetry")
+                    box.label(text="Point Reflection Symmetry")
+                    box.label(text="Glide Reflection Symmetry")
         else:
             layout.label(text="Choose a Source Collection", icon='INFO')
 
@@ -1154,10 +1164,10 @@ class COLLECTION_OT_WFC3DReset_Grid_Constraints(bpy.types.Operator):
         self.report({'INFO'}, f"Grid constraints of object {obj_name} have been saved.")  
 
         return {'FINISHED'}
-class COLLECTION_OT_WFC3DUpdate_Weight_Constraints(bpy.types.Operator):
+class COLLECTION_OT_WFC3DUpdate_Probability_Constraints(bpy.types.Operator):
     """Save weight constraints"""
-    bl_idname = "object.wfc_update_weight_constraints"
-    bl_label = "Save Weight Constraints"
+    bl_idname = "object.wfc_update_probability_constraints"
+    bl_label = "Save Probability Constraints"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
@@ -1169,7 +1179,7 @@ class COLLECTION_OT_WFC3DUpdate_Weight_Constraints(bpy.types.Operator):
             obj = bpy.data.objects[obj_name]
         
         obj["wfc_weight"] = props.weight;
-        self.report({'INFO'}, f"Weight constraints of object {obj_name} have been saved to {props.weight}.")  
+        self.report({'INFO'}, f"Probability constraints of object {obj_name} have been saved to {props.weight}.")  
 
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DUpdate_Transformation_Constraints(bpy.types.Operator):
@@ -1230,7 +1240,7 @@ classes = (
     COLLECTION_OT_WFC3DReset_Neighbor_Constraint,
     COLLECTION_OT_WFC3DUpdate_Grid_Constraints,
     COLLECTION_OT_WFC3DReset_Grid_Constraints,
-    COLLECTION_OT_WFC3DUpdate_Weight_Constraints,
+    COLLECTION_OT_WFC3DUpdate_Probability_Constraints,
     COLLECTION_OT_WFC3DUpdate_Transformation_Constraints,
     COLLECTION_OT_WFC3DReset_Transformation_Constraints,
     COLLECTION_OT_WFC3DGetSelectedObject,
