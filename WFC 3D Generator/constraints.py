@@ -176,8 +176,14 @@ class WFC3DConstraints:
                         grid.remove_neighbors(x, y, z, current_obj, dir)
         
         # axles
+        axis={ 0: [1,0,0], 1: [0,1,0], 2 : [0,0,1]}
         if self.constraints[current_obj]["freq_axles"] is not None:
-            pass
+            max_count = self.constraints[current_obj]["freq_axles"]
+            for i in range(3):
+                if max_count[i]<0:
+                    continue
+                if grid.count_axis_neighbors(x,y,z,current_obj,axis[i])[i] >= max_count[i]:
+                    grid.remove_axis_neighbors(x,y,z,current_obj,axis[i])
         
         nf = [ { "freq_any_neighbor_face" : FACE_DIRECTIONS}, {"freq_any_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_any_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_any_neighbor" : DIRECTIONS}]
         # any neighbor frequency
@@ -187,7 +193,15 @@ class WFC3DConstraints:
                     diff = self.constraints[current_obj][p] - grid.count_neighbors(x, y, z, None, dir)
                     if diff < 0:
                         grid.remove_max_neighbors(x, y, z, abs(diff), dir)
-                
+        
+        if self.constraints[current_obj]["freq_any_axles"] is not None:
+            max_count = self.constraints[current_obj]["freq_any_axles"]
+            for i in range(3):
+                if max_count[i]<0:
+                    continue
+                diff = max_count[i] - grid.count_axis_neighbors(x, y, z, None, axis[i])[i]
+                if diff < 0:
+                    grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i])
                 
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
