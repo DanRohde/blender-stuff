@@ -51,21 +51,21 @@ class WFC3DConstraints:
                 else:
                     self.constraints[obj.name][direction] = allobjects 
     def apply_transformation_constraints(self, src_obj, target_obj):
-        def _get_mapped_random_values(min, max, steps):
-            if (steps < 0 and min > max):
+        def _get_mapped_random_values(minv, maxv, steps):
+            if (steps < 0 and minv > maxv):
                 steps =- steps
-                s = max
-                max = min 
-                min = s
+                s = maxv
+                maxv = minv 
+                minv = s
                 
             if (steps > 0 and max-min >= 0):
                 v = []
                 i = min
-                while i<=max:
+                while i<=maxv:
                     v.append(i)
                     i += steps
-                if (i-steps < max):
-                     v.append(max)   
+                if (i-steps < maxv):
+                    v.append(maxv)   
                 return v[random.randrange(0,len(v))]
             else:
                 return min + (max-min) * random.random()

@@ -120,7 +120,8 @@ def get_neighbor_constraint_items(_self, _context):
             
         items.append(('wfc_'+d.lower(),label,label+" neighbor"))
     return items
-    
+
+
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection,)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, max=100,)

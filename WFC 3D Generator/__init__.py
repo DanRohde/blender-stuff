@@ -3,9 +3,7 @@
 # https://docs.blender.org/manual/en/latest/advanced/extensions/getting_started.html
 
 import bpy
-from collections import deque
-import random
-import numpy as np
+
 #import bl_ext.blender_org.wfc_3d_generator.test
 
 from . import properties, edit_operators, edit_panel, gen_operators, gen_panel, handler
