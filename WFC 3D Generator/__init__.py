@@ -1,13 +1,8 @@
 # Written 2025 by Dan Rohde
-# To make this add-on installable, create an extension with it:
-# https://docs.blender.org/manual/en/latest/advanced/extensions/getting_started.html
 
 import bpy
 
-#import bl_ext.blender_org.wfc_3d_generator.test
-
 from . import properties, edit_operators, edit_panel, gen_operators, gen_panel, handler
-
 
 classes = properties.properties + edit_operators.operators + edit_panel.panels + gen_operators.operators + gen_panel.panels
 
