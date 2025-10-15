@@ -152,23 +152,45 @@ class WFC3DConstraints:
                 if a!=0:
                     target_obj.rotation_euler.rotate_axis(axis[i], a)
         
-    def propagate(self, grid, x, y, z):
-        """Propagate constraints"""
+    def propagate_frequency_constraints(self, grid, x, y, z):
+        if len(grid.grid[x,y,z])==0:
+            return 
         
-        if len(grid.grid[x,y,z])>0:
-            current_obj = grid.grid[x,y,z][0]
-        else:
-            current_obj = None
-        
-        # propagate frequency constraints:
-        if current_obj and self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
-            count = grid.count_obj(current_obj, None, None)
+        current_obj = grid.grid[x,y,z][0]
+        # grid frequency
+        if self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
+            if current_obj and self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
+                count = grid.count_obj(current_obj, None, None, None)
             if self.constraints[current_obj]["freq_grid"] == 0: 
                 grid.grid[x,y,z] = []
            
             if count >= self.constraints[current_obj]["freq_grid"]:
                 grid.remove_obj(current_obj, None, None)
+        
+        # neighbor frequency
+        if self.constraints[current_obj]["freq_neighbor"] is not None and self.constraints[current_obj]["freq_neighbor"]>-1:
+            # count collapsed neighbors 
+            count = 0
+            for direction, (dx, dy, dz) in DIRECTIONS.items():
+                nx,ny,nz = x+dx, y+dy, z+dz 
+                if not grid.within_boundaries(nx,ny,nz) or not grid.collapsed[nx,ny,nz]:
+                    continue
                 
+                if current_obj in grid.grid[nx,ny,nz]:
+                    count+=1
+            # remove from not collapsed neighbors
+            if count >= self.constraints[current_obj]["freq_neighbor"]:
+                for direction, (dx, dy, dz) in DIRECTIONS.items():
+                    nx,ny,nz = x+dx, y+dy, z+dz 
+                    if not grid.within_boundaries(nx,ny,nz) or grid.collapsed[nx,ny,nz]:
+                        continue
+                    if current_obj in grid.grid[nx,ny,nz]:
+                        grid.grid[nx,ny,nz] = [ n for n in grid.grid[nx,ny,nz] if n!=current_obj]
+    
+    def propagate(self, grid, x, y, z):
+        """Propagate constraints"""
+        
+        self.propagate_frequency_constraints(grid, x, y, z)
                 
         # propagate neighbor constraints:
         queue = deque([(x, y, z)])
@@ -182,9 +204,7 @@ class WFC3DConstraints:
             
             for direction, (dx, dy, dz) in DIRECTIONS.items():
                 nx, ny, nz = cx + dx, cy + dy, cz + dz             
-                if 0 <= nx < grid.grid_size[0] and \
-                   0 <= ny < grid.grid_size[1] and \
-                   0 <= nz < grid.grid_size[2]:
+                if grid.within_boundaries(nx, ny, nz):
                     neighbor_options = grid.grid[nx, ny, nz]
                     if len(neighbor_options) > 1:
                         # Find permitted neighbors for this direction

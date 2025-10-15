@@ -81,6 +81,9 @@ class WFC3DGrid:
         else:
             return False
 
+    def within_boundaries(self, x, y, z):
+        return 0 <= x < self.grid_size[0] and 0 <= y < self.grid_size[1] and 0 <= z < self.grid_size[2]
+
     def are_grid_constraints_satisfied(self, name, constraints, pos):
         if 'corners' in constraints[name] and self.is_corner(pos):
             for c in constraints[name]['corners']:
@@ -118,13 +121,15 @@ class WFC3DGrid:
             return False
         return True
 
-    def count_obj(self, obj_name, pos, dir):
+    def count_obj(self, obj_name, pos, dir, steps):
         count = 0
         gx, gy, gz = self.grid_size
         if pos and dir:
             x, y, z = pos
             dx, dy, dz = dir
-            while (0 <= x+dx < gx and 0 <= y+dy < gy and 0<= z+dz < gz):
+            stepcounter = 0
+            while (0 <= x+dx < gx and 0 <= y+dy < gy and 0<= z+dz < gz and stepcounter < steps):
+                stepcounter+=1
                 if obj_name in self.grid[x+dx, y+dy, z+dz] and self.collapsed[x+dx, y+dy, z+dz]:
                     count+=1
                     x,y,z = x+dx, y+dy, z+dz
