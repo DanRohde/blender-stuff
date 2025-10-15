@@ -163,11 +163,29 @@ class WFC3DEditPanel(bpy.types.Panel):
                     row=box.row()
                     row.label(text=props.edit_object)
                     row.operator("object.wfc_reset_frequency_constraints")
-                    box.prop(props,"freq_grid")
-                    box.prop(props,"freq_neighbor")
-                    row = box.row()
-                    box.operator("object.wfc_update_frequency_constraints")
+                    
+                    newbox = box.box()
+                    newbox.label(text="Same Object")
+                    newbox.prop(props,"freq_grid")
+                    newbox.prop(props,"freq_neighbor")
+                    newbox.prop(props,"freq_neighbor_face")
+                    newbox.prop(props,"freq_neighbor_corner")
+                    newbox.prop(props,"freq_neighbor_edge")
+                    row = newbox.row()
                     row.prop(props,"freq_axles")
+                    
+                    newbox = box.box()
+                    newbox.label(text="Any Object")
+                    newbox.prop(props,"freq_any_neighbor")
+                    newbox.prop(props,"freq_any_neighbor_face")
+                    newbox.prop(props,"freq_any_neighbor_corner")
+                    newbox.prop(props,"freq_any_neighbor_edge")
+                    
+                    row = newbox.row()
+                    row.prop(props,"freq_any_axles")
+                    
+                    box.operator("object.wfc_update_frequency_constraints")
+                    
                 if (props.edit_constraints=="symmetry"):
                     box = col.box()
                     box.label(text=props.edit_object)

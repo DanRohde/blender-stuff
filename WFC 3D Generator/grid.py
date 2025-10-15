@@ -1,4 +1,7 @@
 import numpy as np
+from .constants import DIRECTIONS
+import random
+
 class WFC3DGrid:
     def __init__(self, grid_size):
         self.grid_size = grid_size;        
@@ -121,27 +124,60 @@ class WFC3DGrid:
             return False
         return True
 
-    def count_obj(self, obj_name, pos, dir, steps):
+    def count_obj(self, obj_name):
         count = 0
         gx, gy, gz = self.grid_size
-        if pos and dir:
-            x, y, z = pos
-            dx, dy, dz = dir
-            stepcounter = 0
-            while (0 <= x+dx < gx and 0 <= y+dy < gy and 0<= z+dz < gz and stepcounter < steps):
-                stepcounter+=1
-                if obj_name in self.grid[x+dx, y+dy, z+dz] and self.collapsed[x+dx, y+dy, z+dz]:
-                    count+=1
-                    x,y,z = x+dx, y+dy, z+dz
-        else:
-            for x in range(gx):
-                for y in range(gy):
-                    for z in range(gz):
-                        if obj_name in self.grid[x, y, z] and self.collapsed[x,y,z]:
-                            count+=1
+        for x in range(gx):
+            for y in range(gy):
+                for z in range(gz):
+                    if obj_name in self.grid[x, y, z] and self.collapsed[x,y,z]:
+                        count+=1
         
         return count
 
+    def count_neighbors(self, x, y, z, neighbor, dir):
+        """count specific non-collapsed or non-empty collapsed/non-collapsed neighbors"""
+        count = 0
+        for direction, (dx, dy, dz) in dir.items():
+            nx,ny,nz = x+dx, y+dy, z+dz 
+            if not self.within_boundaries(nx,ny,nz) or (self.collapsed[nx, ny, nz] and neighbor is not None):
+                continue
+            if (neighbor is None and len(self.grid[nx,ny,nz])>0) or neighbor in self.grid[nx,ny,nz]:
+                count+=1
+        return count
+
+    def remove_neighbors(self, x, y, z, neighbor, dir):
+        """Remove non-collapsed neighbors"""
+        for direction, (dx, dy, dz) in dir.items():
+            nx,ny,nz = x+dx, y+dy, z+dz 
+            if not self.within_boundaries(nx,ny,nz) or not self.collapsed[nx,ny,nz]:
+                continue
+            if neighbor in self.grid[nx,ny,nz]:
+                self.grid[nx,ny,nz] = [ n for n in self.grid[nx,ny,nz] if n!=neighbor]
+    
+    def remove_max_neighbors(self, x, y, z, max_count, dir):
+        """Remove max any random neighbor"""
+        neighbors_pos = []
+        ## collect neighbors
+        for direction, (dx, dy, dz) in dir.items():
+            nx,ny,nz = x+dx, y+dy, z+dz
+            if not self.within_boundaries(nx, ny, nz):
+                continue
+            if len(self.grid[nx,ny,nz])>0:
+                neighbors_pos.append([nx,ny,nz])
+        print(f"remove_max_neighbors({x},{y},{z},{max_count} len(neighbor_pos)=",len(neighbors_pos))
+        if max_count > len(neighbors_pos):
+            max_count = len(neighbors_pos)
+            
+        
+    
+        ## randomize neighbor positions and remove first max_count neighbors
+        random.shuffle(neighbors_pos)
+        for i in range(max_count):
+            dx,dy,dz = neighbors_pos[i]
+            self.grid[dx,dy,dz] = []
+    
+                
     def remove_obj(self, obj_name, pos, dir):
         gx, gy, gz = self.grid_size
         deleted = 0

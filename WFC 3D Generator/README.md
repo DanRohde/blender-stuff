@@ -16,6 +16,16 @@ Each object in the source collection can use custom properties to define the per
 ## Limitations and Known Issues
 * For neighbor restrictions to take effect, there must be more than one object in the source collection.
 
+## Statistics: Constraints per Object
+* Neighbor constraints: 26
+* Grid constraints: 30
+* Probability constraints: 2
+* Transformation constraints: 10
+* Frequency constraints: 15
+
+
+* **Sum: 83**
+
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
 * Used custom properties: face neighbors: `wfc_[left|right|front|back|top|bottom]`, edge neighbors: `wfc_en_[fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb]`,

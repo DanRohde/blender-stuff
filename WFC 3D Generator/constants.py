@@ -1,11 +1,17 @@
-DIRECTIONS = {
+FACE_DIRECTIONS = {
     'TOP': (0, 0, 1), 'BOTTOM': (0, 0, -1), 'FRONT': (0, -1, 0), 'BACK': (0, 1, 0), 'LEFT': (-1, 0, 0), 'RIGHT': (1, 0, 0),
+} 
+CORNER_DIRECTIONS = {
     'CN_FBL' : (-1,-1,-1), 'CN_FBR' : (1,-1,-1), 'CN_FTL' : (-1,-1,1), 'CN_FTR' : (1,-1,1),
-    'CN_BBL' : (-1,1,-1), 'CN_BBR' : (1,1,-1), 'CN_BTL' : (-1,1,1), 'CN_BTR' : (1,1,1),
+    'CN_BBL' : (-1,1,-1), 'CN_BBR' : (1,1,-1), 'CN_BTL' : (-1,1,1), 'CN_BTR' : (1,1,1),    
+}
+EDGE_DIRECTIONS = {
     'EN_FL' : (-1,-1,0), 'EN_FR' : (1,-1,0), 'EN_FB' : (0,-1,-1), 'EN_FT' : (0,-1,1),
     'EN_BL' : (-1,1,0), 'EN_BR' : (1,1,0), 'EN_BB' : (0,1,-1), 'EN_BT' : (0,1,1),
     'EN_LB' : (-1,0,-1), 'EN_LT' : (-1,0,1), 'EN_RB' : (1,0,-1), 'EN_RT' : (1,0,1),
 }
+DIRECTIONS = { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS }
+
 PROP_DEFAULTS = {
     # neighbor constraints
     'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '', 
@@ -21,10 +27,17 @@ PROP_DEFAULTS = {
     'rotation_grid' : (False,False,False), 'rotation_neighbor' : (False,False, False),
     'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0), 
     'scale_type' : 0, 'scale_uni': (1,1,0),
-    'freq_axles' : (-1,-1,-1), 'freq_grid' : -1, 'freq_neighbor' : -1,
+    'freq_grid' : -1, 'freq_neighbor' : -1, 'freq_axles' : (-1,-1,-1), 'freq_any_neighbor' : -1, 'freq_any_axles' : (-1,-1,-1),
+    'freq_neighbor_face': -1, 'freq_neighbor_edge' : -1, 'freq_neighbor_corner' : -1,
+    'freq_any_neighbor_face': -1, 'freq_any_neighbor_edge' : -1, 'freq_any_neighbor_corner' : -1,
 }
 
 TRANSFORMATION_CONSTRAINTS = ['scale_min','scale_max','scale_steps','scale_type', 'scale_uni',
                                   'rotation_min','rotation_max','rotation_steps',
                                   #'rotation_neighbor','rotation_grid',
                                   'translation_min','translation_max','translation_steps']
+
+FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_neighbor', 'freq_axles', 'freq_any_neighbor', 'freq_any_axles', 
+                         'freq_neighbor_face', 'freq_neighbor_edge','freq_neighbor_corner',
+                         'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner',
+]

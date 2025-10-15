@@ -13,6 +13,7 @@ class WFC3DGenerator:
         self.target_collection = props.target_collection
         self.link_objects = props.link_objects
         self.copy_modifiers = props.copy_modifiers
+        self.random_start_cell = props.random_start_cell
         
         random.seed(props.seed)
         self.remove_target_collection = props.remove_target_collection
@@ -59,7 +60,10 @@ class WFC3DGenerator:
         if len(min_cells) == 0:
             return None
         
-        return random.choice(min_cells[min_entropy])
+        if self.random_start_cell:
+            return random.choice(min_cells[min_entropy])
+        else:
+            return min_cells[min_entropy][0]
         
     def collapse(self, x, y, z):
         """Collapses a cell into a single state"""

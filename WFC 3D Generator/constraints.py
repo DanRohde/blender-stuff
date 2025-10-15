@@ -3,7 +3,7 @@ import numpy as np
 import random
 from collections import deque
 
-from .constants import DIRECTIONS, TRANSFORMATION_CONSTRAINTS
+from .constants import DIRECTIONS, TRANSFORMATION_CONSTRAINTS, FREQUENCY_CONSTRAINTS, FACE_DIRECTIONS, EDGE_DIRECTIONS, CORNER_DIRECTIONS
 
 
 class WFC3DConstraints:
@@ -22,7 +22,7 @@ class WFC3DConstraints:
                     obj = bpy.data.collections[obj.name].objects[0]
                 
             # load probability and frequency constraints
-            for p in ["weight","probability","freq_acles","freq_grid","freq_neighbor"]:
+            for p in ["weight","probability"] + FREQUENCY_CONSTRAINTS:
                 cp = "wfc_"+p
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
@@ -160,7 +160,7 @@ class WFC3DConstraints:
         # grid frequency
         if self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
             if current_obj and self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
-                count = grid.count_obj(current_obj, None, None, None)
+                count = grid.count_obj(current_obj)
             if self.constraints[current_obj]["freq_grid"] == 0: 
                 grid.grid[x,y,z] = []
            
@@ -168,25 +168,27 @@ class WFC3DConstraints:
                 grid.remove_obj(current_obj, None, None)
         
         # neighbor frequency
-        if self.constraints[current_obj]["freq_neighbor"] is not None and self.constraints[current_obj]["freq_neighbor"]>-1:
-            # count collapsed neighbors 
-            count = 0
-            for direction, (dx, dy, dz) in DIRECTIONS.items():
-                nx,ny,nz = x+dx, y+dy, z+dz 
-                if not grid.within_boundaries(nx,ny,nz) or not grid.collapsed[nx,ny,nz]:
-                    continue
+        nf = [ { "freq_neighbor_face" : FACE_DIRECTIONS}, {"freq_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_neighbor" : DIRECTIONS}]
+        for a in nf:
+            for p,dir in a.items():
+                if self.constraints[current_obj][p] is not None and self.constraints[current_obj][p]>-1:
+                    if grid.count_neighbors(x, y, z, current_obj, dir) >= self.constraints[current_obj][p]:
+                        grid.remove_neighbors(x, y, z, current_obj, dir)
+        
+        # axles
+        if self.constraints[current_obj]["freq_axles"] is not None:
+            pass
+        
+        nf = [ { "freq_any_neighbor_face" : FACE_DIRECTIONS}, {"freq_any_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_any_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_any_neighbor" : DIRECTIONS}]
+        # any neighbor frequency
+        for a in nf:
+            for p, dir in a.items():
+                if self.constraints[current_obj][p] is not None and self.constraints[current_obj][p]>-1:
+                    diff = self.constraints[current_obj][p] - grid.count_neighbors(x, y, z, None, dir)
+                    if diff < 0:
+                        grid.remove_max_neighbors(x, y, z, abs(diff), dir)
                 
-                if current_obj in grid.grid[nx,ny,nz]:
-                    count+=1
-            # remove from not collapsed neighbors
-            if count >= self.constraints[current_obj]["freq_neighbor"]:
-                for direction, (dx, dy, dz) in DIRECTIONS.items():
-                    nx,ny,nz = x+dx, y+dy, z+dz 
-                    if not grid.within_boundaries(nx,ny,nz) or grid.collapsed[nx,ny,nz]:
-                        continue
-                    if current_obj in grid.grid[nx,ny,nz]:
-                        grid.grid[nx,ny,nz] = [ n for n in grid.grid[nx,ny,nz] if n!=current_obj]
-    
+                
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
         

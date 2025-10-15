@@ -1,6 +1,6 @@
 import bpy
 
-from .constants import PROP_DEFAULTS, DIRECTIONS, TRANSFORMATION_CONSTRAINTS
+from .constants import PROP_DEFAULTS, DIRECTIONS, TRANSFORMATION_CONSTRAINTS, FREQUENCY_CONSTRAINTS
 
 def get_object_enum_items(self, context):
     items = [('_none_','Select an object','Select an object'),None]
@@ -82,7 +82,7 @@ def update_constraint_properties(self, context):
         self["inside_none"] = obj["wfc_inside"] == "-"
         
     
-    for p in ["weight","probability"] + TRANSFORMATION_CONSTRAINTS + ["freq_grid","freq_axles","freq_neighbor"]:
+    for p in ["weight","probability"] + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS:
         if "wfc_"+p in obj:
             self[p]=obj["wfc_"+p]
         else:
@@ -123,6 +123,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     spacing: bpy.props.FloatVectorProperty(name="", description="Size of a Grid Cell", subtype="TRANSLATION", default=(2.0,2.0,2.0), min=0.1,) 
     use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)
     target_collection: bpy.props.StringProperty(name="", description="Target collection for 3D grid", default="WFC_Generated",)
+    random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=True,)
     seed: bpy.props.IntProperty(name="Random Seed", description="Random seed", default=0,)
     link_objects: bpy.props.BoolProperty(name="Link New Objects (recommended)", description="Link new objects instead of copying them.", default=True,)
     copy_modifiers: bpy.props.BoolProperty(name="Copy Modifiers", description="Copy modifiers to linked objects.", default=False,)
@@ -191,10 +192,20 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     translation_min : bpy.props.FloatVectorProperty(name="Min", description="Translation minimum", default=PROP_DEFAULTS["translation_min"], subtype="TRANSLATION")
     translation_max : bpy.props.FloatVectorProperty(name="Max", description="Translation maximum", default=PROP_DEFAULTS["translation_max"], subtype="TRANSLATION")
     translation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Translation steps", default=PROP_DEFAULTS["translation_steps"], subtype="TRANSLATION")
-    freq_axles: bpy.props.IntVectorProperty(name="Axles",description="Axles frequency max", default=PROP_DEFAULTS["freq_axles"], size=3, min=-1)
     freq_grid: bpy.props.IntProperty(name="Grid",description="Grid frequency max", default=PROP_DEFAULTS["freq_grid"], min=-1)
-    freq_neighbor: bpy.props.IntProperty(name="Neighbor",description="Neighbor frequency max", default=PROP_DEFAULTS["freq_neighbor"], min=-1)
+    freq_neighbor: bpy.props.IntProperty(name="Neighbor",description="Neighbor frequency max", default=PROP_DEFAULTS["freq_neighbor"], min=-1,max=26)
+    freq_axles: bpy.props.IntVectorProperty(name="Axles",description="Axles frequency max", default=PROP_DEFAULTS["freq_axles"], size=3, min=-1)
+    freq_any_neighbor: bpy.props.IntProperty(name="Any Neighbor",description="Any Neighbor frequency max", default=PROP_DEFAULTS["freq_any_neighbor"], min=-1,max=26)
+    freq_any_axles: bpy.props.IntVectorProperty(name="Axles",description="Any Object in Axles frequency max", default=PROP_DEFAULTS["freq_any_axles"], size=3, min=-1)
+    freq_neighbor_face : bpy.props.IntProperty(name="Face",description="Neighbor face frequency max", default=PROP_DEFAULTS["freq_neighbor_face"], min=-1,max=6)
+    freq_neighbor_corner : bpy.props.IntProperty(name="Corner",description="Neighbor corner frequency max", default=PROP_DEFAULTS["freq_neighbor_corner"], min=-1,max=8)
+    freq_neighbor_edge : bpy.props.IntProperty(name="Edge",description="Neighbor edge frequency max", default=PROP_DEFAULTS["freq_neighbor_edge"], min=-1,max=12)
+    freq_any_neighbor_face : bpy.props.IntProperty(name="Face",description="Neighbor face frequency max", default=PROP_DEFAULTS["freq_any_neighbor_face"], min=-1,max=6)
+    freq_any_neighbor_corner : bpy.props.IntProperty(name="Corner",description="Neighbor corner frequency max", default=PROP_DEFAULTS["freq_any_neighbor_corner"], min=-1,max=8)
+    freq_any_neighbor_edge : bpy.props.IntProperty(name="Edge",description="Neighbor edge frequency max", default=PROP_DEFAULTS["freq_any_neighbor_edge"], min=-1,max=12)
 
+    
+    
 
 properties = [ WFC3DProperties ]
 

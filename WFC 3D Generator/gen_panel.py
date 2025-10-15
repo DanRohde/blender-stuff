@@ -33,7 +33,9 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row.enabled = props.link_objects
         box.prop(props, "remove_target_collection")
         
-        layout.prop(props, "seed")
+        box = layout.box()
+        box.prop(props, "random_start_cell")
+        box.prop(props, "seed")
 
         layout.separator(type="LINE", factor=0.2)
 

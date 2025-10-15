@@ -1,6 +1,6 @@
 import bpy
 
-from .constants import PROP_DEFAULTS
+from .constants import PROP_DEFAULTS, FREQUENCY_CONSTRAINTS
 
 from .properties import update_constraint_properties
 
@@ -171,10 +171,9 @@ class COLLECTION_OT_WFC3DUpdate_Frequency_Constraints(bpy.types.Operator):
         else:
             obj = bpy.data.objects[obj_name]
         
-        obj["wfc_freq_grid"] = props.freq_grid
-        obj["wfc_freq_axles"] = props.freq_axles
-        obj["wfc_freq_neighbor"] = props.freq_neighbor
-        
+        for c in FREQUENCY_CONSTRAINTS:
+            obj["wfc_"+c] = props[c]
+            
         self.report({'INFO'}, f"Frequency constraints of object {obj_name} have been saved.")  
 
         return {'FINISHED'}
@@ -192,7 +191,7 @@ class COLLECTION_OT_WFC3DReset_Frequency_Constraints(bpy.types.Operator):
         else:
             obj = bpy.data.objects[obj_name]
        
-        for c in ["freq_grid","freq_neighbor","freq_axles"]:
+        for c in FREQUENCY_CONSTRAINTS:
             obj["wfc_"+c] = PROP_DEFAULTS[c]
             
         update_constraint_properties(props, context)
