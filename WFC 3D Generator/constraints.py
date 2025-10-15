@@ -1,6 +1,7 @@
 import bpy
 import numpy as np
 import random
+from collections import deque
 
 from .constants import DIRECTIONS, TRANSFORMATION_CONSTRAINTS
 
@@ -51,6 +52,16 @@ class WFC3DConstraints:
                         self.constraints[obj_name][direction] = obj[prop_name].split(',')
                 else:
                     self.constraints[obj.name][direction] = allobjects 
+
+    def get_weighted_options(self, obj_names):
+        """ Increase object count in object list depending on it's weight """
+        options = []
+        for name in obj_names:
+            weight = self.constraints[name]['weight']
+            option = [name for _ in range(weight)]
+            options.extend(option)
+        return options
+
     def apply_transformation_constraints(self, src_obj, target_obj):
         def _get_mapped_random_values(vmin, vmax, steps):
             if (steps < 0 and vmin > vmax):
@@ -107,4 +118,29 @@ class WFC3DConstraints:
                 if a!=0:
                     target_obj.rotation_euler.rotate_axis(axis[i], a)
         
+    def propagate(self, grid, x, y, z):
+        """Propagate constraints to neighbors"""
+        queue = deque([(x, y, z)])
+        
+        while queue:
+            cx, cy, cz = queue.popleft()
+            if len(grid.grid[cx,cy,cz])>0:
+                current_obj =  grid.grid[cx, cy, cz][0]
+            else:
+                continue
             
+            for direction, (dx, dy, dz) in DIRECTIONS.items():
+                nx, ny, nz = cx + dx, cy + dy, cz + dz             
+                if 0 <= nx < grid.grid_size[0] and \
+                   0 <= ny < grid.grid_size[1] and \
+                   0 <= nz < grid.grid_size[2]:
+                    neighbor_options = grid.grid[nx, ny, nz]
+                    if len(neighbor_options) > 1:
+                        # Find permitted neighbors for this direction
+                        allowed = self.constraints[current_obj].get(direction, [])
+                        # Filter disallowed options
+                        new_options = [obj for obj in neighbor_options if obj in allowed]
+                        if len(new_options) < len(neighbor_options):
+                            grid.grid[nx, ny, nz] = new_options
+                            queue.append((nx, ny, nz))
+        

@@ -1,5 +1,4 @@
 import bpy
-from collections import deque
 import random
 from .constants import DIRECTIONS
 from .constraints import WFC3DConstraints
@@ -24,11 +23,9 @@ class WFC3DGenerator:
         self.load_objects()
 
         if self.use_constraints:
-            self.constraints_obj = WFC3DConstraints()
-            self.constraints_obj.initialize_constraints(self.objects)
-            self.constraints = self.constraints_obj.constraints
-            
-        
+            self.constraints = WFC3DConstraints()
+            self.constraints.initialize_constraints(self.objects)
+                    
         self.grid = WFC3DGrid(self.grid_size)
 
     def load_objects(self):
@@ -57,20 +54,11 @@ class WFC3DGenerator:
                             min_entropy = entropy
                             min_cell = (x, y, z)
         return min_cell
-
-    def get_weighted_options(self, obj_names):
-        """ Increase object count in object list depending on it's weight """
-        options = []
-        for name in obj_names:
-            weight = self.constraints[name]['weight']
-            option = [name for _ in range(weight)]
-            options.extend(option)
-        return options
         
     def collapse(self, x, y, z):
         """Collapses a cell into a single state"""
         if self.use_constraints:
-            options = self.get_weighted_options(self.grid.grid[x, y, z])
+            options = self.constraints.get_weighted_options(self.grid.grid[x, y, z])
         else:
             options = self.grid.grid[x,y,z]
             
@@ -78,45 +66,21 @@ class WFC3DGenerator:
         self.grid.grid[x, y, z] = [chosen]
 
     def propagate(self, x, y, z):
-        """Propagate constraints to neighbors"""
-        queue = deque([(x, y, z)])
-        
-        while queue:
-            cx, cy, cz = queue.popleft()
-            if len(self.grid.grid[cx,cy,cz])>0:
-                current_obj = self.grid.grid[cx, cy, cz][0]
-            else:
-                continue
+        if self.use_constraints:
+            self.constraints.propagate(self.grid, x, y, z)
             
-            for direction, (dx, dy, dz) in DIRECTIONS.items():
-                nx, ny, nz = cx + dx, cy + dy, cz + dz             
-                if 0 <= nx < self.grid_size[0] and \
-                   0 <= ny < self.grid_size[1] and \
-                   0 <= nz < self.grid_size[2]:
-                    neighbor_options = self.grid.grid[nx, ny, nz]
-                    if len(neighbor_options) > 1:
-                        # Find permitted neighbors for this direction
-                        allowed = self.constraints[current_obj].get(direction, [])
-                        # Filter disallowed options
-                        new_options = [obj for obj in neighbor_options if obj in allowed]
-                        if len(new_options) < len(neighbor_options):
-                            self.grid.grid[nx, ny, nz] = new_options
-                            queue.append((nx, ny, nz))
-
 
     def generate_model(self):
         """Excecute WFC algorithm and generate the model"""
-        self.grid.initialize_grid(self.objects, self.constraints)
+        self.grid.initialize_grid(self.objects, self.constraints.constraints)
         
         while True:
             cell = self.get_lowest_entropy_cell()
             if cell is None:
-                break
-                
+                break    
             x, y, z = cell
             self.collapse(x, y, z)
-            if self.use_constraints:
-                self.propagate(x, y, z)
+            self.propagate(x, y, z)
         
         self.place_objects()
 
@@ -167,7 +131,7 @@ class WFC3DGenerator:
                         new_obj.location = tuple(newloc)        
 
                         if self.use_constraints:
-                            self.constraints_obj.apply_transformation_constraints(original_obj, new_obj)
+                            self.constraints.apply_transformation_constraints(original_obj, new_obj)
                             
                         new_collection.objects.link(new_obj)
 
