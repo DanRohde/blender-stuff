@@ -21,8 +21,8 @@ class WFC3DConstraints:
             if obj.name in bpy.data.collections:
                     obj = bpy.data.collections[obj.name].objects[0]
                 
-            # load probability constraints
-            for p in ["weight","probability"]:
+            # load probability and frequency constraints
+            for p in ["weight","probability","freq_acles","freq_grid","freq_neighbor"]:
                 cp = "wfc_"+p
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
@@ -58,9 +58,12 @@ class WFC3DConstraints:
     def get_weighted_options(self, elements):
         options = []    
         for name in elements:
-            weight = self.constraints[name]['weight']
-            option = [name for _ in range(weight)]
-            options.extend(option)
+            if self.constraints[name]['weight']:
+                weight = self.constraints[name]['weight']
+                option = [name for _ in range(weight)]
+                options.extend(option)
+            else:
+                options.extend(elements)
         return options
     
     def apply_probability_constraints(self, elements):
@@ -89,6 +92,8 @@ class WFC3DConstraints:
             grid.grid[x, y, z] = [ random.choice(options) ]
         else:
             grid.grid[x, y, z] = []
+        grid.mark_collapsed(x, y, z)
+
 
     def apply_transformation_constraints(self, src_obj, target_obj):
         def _get_mapped_random_values(vmin, vmax, steps):
@@ -148,15 +153,32 @@ class WFC3DConstraints:
                     target_obj.rotation_euler.rotate_axis(axis[i], a)
         
     def propagate(self, grid, x, y, z):
-        """Propagate constraints to neighbors"""
-        queue = deque([(x, y, z)])
+        """Propagate constraints"""
         
+        if len(grid.grid[x,y,z])>0:
+            current_obj = grid.grid[x,y,z][0]
+        else:
+            current_obj = None
+        
+        # propagate frequency constraints:
+        if current_obj and self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
+            count = grid.count_obj(current_obj, None, None)
+            if self.constraints[current_obj]["freq_grid"] == 0: 
+                grid.grid[x,y,z] = []
+           
+            if count >= self.constraints[current_obj]["freq_grid"]:
+                grid.remove_obj(current_obj, None, None)
+                
+                
+        # propagate neighbor constraints:
+        queue = deque([(x, y, z)])
         while queue:
             cx, cy, cz = queue.popleft()
             if len(grid.grid[cx,cy,cz])>0:
                 current_obj =  grid.grid[cx, cy, cz][0]
             else:
                 continue
+            
             
             for direction, (dx, dy, dz) in DIRECTIONS.items():
                 nx, ny, nz = cx + dx, cy + dy, cz + dz             

@@ -21,6 +21,7 @@ PROP_DEFAULTS = {
     'rotation_grid' : (False,False,False), 'rotation_neighbor' : (False,False, False),
     'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0), 
     'scale_type' : 0, 'scale_uni': (1,1,0),
+    'freq_axles' : (-1,-1,-1), 'freq_grid' : -1, 'freq_neighbor' : -1,
 }
 
 TRANSFORMATION_CONSTRAINTS = ['scale_min','scale_max','scale_steps','scale_type', 'scale_uni',

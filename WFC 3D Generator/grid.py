@@ -9,6 +9,7 @@ class WFC3DGrid:
     def initialize_grid(self, objects, constraints):
         """Initializes the 3D grid"""
         self.grid = np.empty(self.grid_size, dtype=object)
+        self.collapsed = np.empty(self.grid_size)
         for x in range(self.grid_size[0]):
             for y in range(self.grid_size[1]):
                 for z in range(self.grid_size[2]):
@@ -18,6 +19,7 @@ class WFC3DGrid:
                             cell.append(obj.name)
                     
                     self.grid[x, y, z] = cell
+                    self.collapsed[x, y, z] = False
     
     def is_corner(self, pos):
         x, y, z = pos
@@ -118,26 +120,47 @@ class WFC3DGrid:
 
     def count_obj(self, obj_name, pos, dir):
         count = 0
-        x, y, z = pos
-        dx, dy, dz = dir
         gx, gy, gz = self.grid_size
-        while (0 <= x+dx < gx and 0 <= y+dy < gy and 0<= z+dz < gz):
-            if obj_name in self.grid[x+dx,y+dy,z+dz] and len(self.grid[x+dx,y+dy,z+dz])>1:
-                count+=1
-            x,y,z = x+dx, y+dy, z+dz
+        if pos and dir:
+            x, y, z = pos
+            dx, dy, dz = dir
+            while (0 <= x+dx < gx and 0 <= y+dy < gy and 0<= z+dz < gz):
+                if obj_name in self.grid[x+dx, y+dy, z+dz] and self.collapsed[x+dx, y+dy, z+dz]:
+                    count+=1
+                    x,y,z = x+dx, y+dy, z+dz
+        else:
+            for x in range(gx):
+                for y in range(gy):
+                    for z in range(gz):
+                        if obj_name in self.grid[x, y, z] and self.collapsed[x,y,z]:
+                            count+=1
+        
         return count
-    def remove_obj(self, obj_name, pos, dir, count):
-        x,y,z = pos
-        dx, dy, dz = dir    
+
+    def remove_obj(self, obj_name, pos, dir):
         gx, gy, gz = self.grid_size
         deleted = 0
-        while (0 <= x+dx < gx and 0 <= y+dy < gy and 0 <= z+dz < gz and deleted < count):
-            obj_list = self.grid[x+dx,y+dy,z+dz]
-            if obj_name in obj_list and len(obj_list)>1:
-                self.grid[x+dx,y+dy,z+dz] = [n for n in obj_list if n !=obj_name]
-                deleted+=1
+        if pos and dir:
+            x,y,z = pos
+            dx, dy, dz = dir
+            while (0 <= x+dx < gx and 0 <= y+dy < gy and 0 <= z+dz < gz):
+                obj_list = self.grid[x+dx,y+dy,z+dz]
+                if obj_name in obj_list and not self.collapsed[x, y, z]:
+                    self.grid[x+dx,y+dy,z+dz] = [n for n in obj_list if n != obj_name]
+                    deleted+=1
+            return deleted
+        else:
+            for x in range(gx):
+                for y in range(gy):
+                    for z in range(gz):
+                        obj_list = self.grid[x, y, z]
+                        if obj_name in obj_list and not self.collapsed[x,y,z]:
+                            self.grid[x, y, z] = [n for n in obj_list if n != obj_name]
+                            deleted=+1
         return deleted
-
+    def mark_collapsed(self, x, y, z):
+        self.collapsed[x,y,z] = True
+    
     def _mult_vector(self, v1, v2):
         return tuple(a * b for a, b in zip(v1,v2))
     

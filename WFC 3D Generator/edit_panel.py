@@ -158,6 +158,16 @@ class WFC3DEditPanel(bpy.types.Panel):
                         newbox.row().prop(props,"scale_steps")
 
                     box.operator('object.wfc_update_transformation_constraints')
+                if (props.edit_constraints=="frequency"):
+                    box = col.box()
+                    row=box.row()
+                    row.label(text=props.edit_object)
+                    row.operator("object.wfc_reset_frequency_constraints")
+                    box.prop(props,"freq_grid")
+                    box.prop(props,"freq_neighbor")
+                    row = box.row()
+                    box.operator("object.wfc_update_frequency_constraints")
+                    row.prop(props,"freq_axles")
                 if (props.edit_constraints=="symmetry"):
                     box = col.box()
                     box.label(text=props.edit_object)
