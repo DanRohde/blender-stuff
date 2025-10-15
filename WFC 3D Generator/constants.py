@@ -25,5 +25,5 @@ PROP_DEFAULTS = {
 
 TRANSFORMATION_CONSTRAINTS = ('scale_min','scale_max','scale_steps','scale_type', 'scale_uni',
                                   'rotation_min','rotation_max','rotation_steps',
-                                  'rotation_neighbor','rotation_grid',
+                                  #'rotation_neighbor','rotation_grid',
                                   'translation_min','translation_max','translation_steps')

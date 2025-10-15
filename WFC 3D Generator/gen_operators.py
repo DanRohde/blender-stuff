@@ -8,7 +8,7 @@ class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
     bl_label = "Generate WFC 3D Model"
     bl_options = {'REGISTER', 'UNDO'}
 
-    def execute(self, context):
+    def execute_prod(self, context):
         props = context.scene.wfc_props
         
         try:

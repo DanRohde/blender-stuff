@@ -286,12 +286,13 @@ class COLLECTION_OT_WFC3DGetNeighborSelectedObject(bpy.types.Operator):
         collection = props.collection_obj
         if context.view_layer.objects.active:
             active_object_name = context.view_layer.objects.active.name
-            if active_object_name in props.collection_obj.objects or active_object_name in props.collection_obj.children:
+            if active_object_name in collection.objects or active_object_name in collection.children:
                 props.select_neighbor = active_object_name
             else:
                 self.report({'WARNING'}," No active object found")
                 return {'CANCELLED'}
         return {'FINISHED'}
+
 operators = [
     COLLECTION_OT_WFC3DAdd_Neighbor_Constraint,
     COLLECTION_OT_WFC3DRemove_Neighbor_Constraint,
