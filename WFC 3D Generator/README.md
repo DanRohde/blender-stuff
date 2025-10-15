@@ -85,6 +85,14 @@ Each object in the source collection can use custom properties to define the per
     * wfc_scale_type: integer value: 0 - no scaling, 1 - uniform scaling, 2 - non-uniform scaling
     * wfc_scale_uni: a float vector (min,max,steps) for uniform scaling
     * wfc_scale_min,wfc_scale_max,wfc_scale_steps: a float vector (x,y,z) for non-uniform scaling
+    
+   
+## Frequency Constraints
+* Used custom properties: `wfc_freq_[any_]neighbor[_face|_edge|_corner],wfc_freq_grid,wfc_freq_[any_]axles`
+* Allowed property values:
+   * wfc_grid, wfc_freq_[any_]neighbor[_face|_edge|_corner]: an integer
+   * wfc_[_any]_axles: an integer vector
+
 
 ## Upcoming Features
 * more constraints: symmetry, frequency, probability, pattern, local/region, ...
