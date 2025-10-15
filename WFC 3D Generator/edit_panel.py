@@ -17,7 +17,7 @@ class WFC3DEditPanel(bpy.types.Panel):
         if props.collection_obj:
             row = col.row()
             box = row.box()
-            box.label(text="Object")
+            #box.label(text="Object")
             row = box.row()
             row.operator("collection.wfc_get_selected_object", icon="SELECT_SET")
             row.prop(props,"auto_active_object")
@@ -42,7 +42,7 @@ class WFC3DEditPanel(bpy.types.Panel):
                 row.box().prop(props,"edit_constraints")
                 if (props.edit_constraints == "neighbor"):
                     box=col.box()
-                    box.label(text="Neighbor Constraints")
+                    box.label(text=props.edit_object)
                     row = box.row()
                     row.prop(props,"edit_neighbor_constraint")
                     newrow = row.row()
@@ -72,7 +72,7 @@ class WFC3DEditPanel(bpy.types.Panel):
                 if (props.edit_constraints == "grid"):    
                     box=col.box()
                     row = box.row()
-                    row.label(text="Grid Constraints")
+                    row.label(text=props.edit_object)
                     row.operator("object.wfc_reset_grid_constraints")
                     newbox = box.box()
                     newrow = newbox.row()
@@ -122,15 +122,15 @@ class WFC3DEditPanel(bpy.types.Panel):
                     box.operator("object.wfc_update_grid_constraints")
                 if (props.edit_constraints == "probability"):
                     box=col.box()
-                    box.label(text="Weight Constraints")
-                    newbox = box.box()
-                    newbox.prop(props, "weight")
+                    box.label(text=props.edit_object)
+                    box.prop(props,"probability")
+                    box.prop(props, "weight")
                     
                     box.operator("object.wfc_update_probability_constraints")    
                 if (props.edit_constraints == "transformation"):
                     box=col.box()
                     row = box.row()
-                    row.label(text="Transformations")
+                    row.label(text=props.edit_object)
                     row.operator("object.wfc_reset_transformation_constraints")
                     newbox = box.box()
                     newbox.label(text="Translation")
@@ -160,6 +160,7 @@ class WFC3DEditPanel(bpy.types.Panel):
                     box.operator('object.wfc_update_transformation_constraints')
                 if (props.edit_constraints=="symmetry"):
                     box = col.box()
+                    box.label(text=props.edit_object)
                     box.label(text="Symmetry Constraints")
                     
                     box.label(text="Mirror Symmetry")

@@ -80,14 +80,9 @@ def update_constraint_properties(self, context):
          
     if "wfc_inside" in obj:
         self["inside_none"] = obj["wfc_inside"] == "-"
-         
-         
-    if "wfc_weight" in obj and obj["wfc_weight"]!="":
-        self["weight"] = int(obj["wfc_weight"])
-    else:
-        self["weight"] = 1
+        
     
-    for p in TRANSFORMATION_CONSTRAINTS:
+    for p in ["weight","probability"] + TRANSFORMATION_CONSTRAINTS:
         if "wfc_"+p in obj:
             self[p]=obj["wfc_"+p]
         else:
@@ -180,7 +175,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     face_bottom: bpy.props.BoolProperty(name="bottom", description="Bottom")
     face_none: bpy.props.BoolProperty(name="-", description="Faces Forbidden")
     inside_none: bpy.props.BoolProperty(name="-", description="Inside Forbidden")
-    weight: bpy.props.IntProperty(name="Weight", description="Weight Property", default=PROP_DEFAULTS["weight"], min=0)
+    weight: bpy.props.IntProperty(name="Weight", description="Weight constraint", default=PROP_DEFAULTS["weight"], min=0)
+    probability: bpy.props.FloatProperty(name="Probability", description="Probability constraint", default=PROP_DEFAULTS["probability"], min=0, max=1)
     rotation_min : bpy.props.FloatVectorProperty(name="Min", description="Degrees min", default=PROP_DEFAULTS["rotation_min"], subtype="EULER")
     rotation_max : bpy.props.FloatVectorProperty(name="Max", description="Degrees max", default=PROP_DEFAULTS["rotation_max"], subtype="EULER")
     rotation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Degree Steps", default=PROP_DEFAULTS["rotation_steps"], subtype="EULER")

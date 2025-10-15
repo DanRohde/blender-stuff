@@ -1,10 +1,8 @@
 import bpy
 import random
-from .constants import DIRECTIONS
+
 from .constraints import WFC3DConstraints
 from .grid import WFC3DGrid
-
-
 
 class WFC3DGenerator:
     def __init__(self, collection, props):
@@ -58,21 +56,13 @@ class WFC3DGenerator:
     def collapse(self, x, y, z):
         """Collapses a cell into a single state"""
         if self.use_constraints:
-            options = self.constraints.get_weighted_options(self.grid.grid[x, y, z])
+            self.constraints.collapse(self.grid, x, y, z)
         else:
-            options = self.grid.grid[x,y,z]
-            
-        chosen = random.choice(options)
-        self.grid.grid[x, y, z] = [chosen]
-
-    def propagate(self, x, y, z):
-        if self.use_constraints:
-            self.constraints.propagate(self.grid, x, y, z)
-            
+            self.grid.grid[x, y, z] = [random.choice(self.grid.grid[x,y,z])]
 
     def generate_model(self):
         """Excecute WFC algorithm and generate the model"""
-        self.grid.initialize_grid(self.objects, self.constraints.constraints)
+        self.grid.initialize_grid(self.objects, self.constraints)
         
         while True:
             cell = self.get_lowest_entropy_cell()
@@ -80,7 +70,8 @@ class WFC3DGenerator:
                 break    
             x, y, z = cell
             self.collapse(x, y, z)
-            self.propagate(x, y, z)
+            if self.use_constraints:
+                self.constraints.propagate(self.grid, x, y, z)
         
         self.place_objects()
 

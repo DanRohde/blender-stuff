@@ -14,7 +14,7 @@ class WFC3DGrid:
                 for z in range(self.grid_size[2]):
                     cell = []
                     for obj in objects:
-                        if constraints is None or self.are_grid_constraints_satisfied(obj.name, constraints, (x, y, z)):
+                        if constraints is None or self.are_grid_constraints_satisfied(obj.name, constraints.constraints, (x, y, z)):
                             cell.append(obj.name)
                     
                     self.grid[x, y, z] = cell

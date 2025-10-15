@@ -11,8 +11,8 @@ PROP_DEFAULTS = {
     'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '', 
     'en_fl':'','en_fr':'','en_ft':'','en_fb':'','en_bl':'','en_br':'','en_bt':'','en_bb':'','en_lt':'','en_lb':'','en_rt':'','en_rb':'',
     'cn_fbl':'','cn_fbr':'','cn_ftl':'','cn_ftr':'','cn_bbl':'','cn_bbr':'','cn_btl':'','cn_btr':'',
-    # weight constraints:
-    'weight' : 1, 
+    # probability constraints:
+    'weight' : 1, 'probability' : 1,
     # grid constraints:
     'corners' : '', 'edges' : '', 'faces' : '','inside' : '',
     #transformation constraints:
@@ -20,10 +20,10 @@ PROP_DEFAULTS = {
     'rotation_min' : (0,0,0), 'rotation_max': (0,0,0), 'rotation_steps' : (0,0,0),
     'rotation_grid' : (False,False,False), 'rotation_neighbor' : (False,False, False),
     'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0), 
-    'scale_type' : 0, 'scale_uni': (0,0,0),
+    'scale_type' : 0, 'scale_uni': (1,1,0),
 }
 
-TRANSFORMATION_CONSTRAINTS = ('scale_min','scale_max','scale_steps','scale_type', 'scale_uni',
+TRANSFORMATION_CONSTRAINTS = ['scale_min','scale_max','scale_steps','scale_type', 'scale_uni',
                                   'rotation_min','rotation_max','rotation_steps',
                                   #'rotation_neighbor','rotation_grid',
-                                  'translation_min','translation_max','translation_steps')
+                                  'translation_min','translation_max','translation_steps']

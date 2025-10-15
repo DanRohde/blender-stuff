@@ -151,8 +151,10 @@ class COLLECTION_OT_WFC3DUpdate_Probability_Constraints(bpy.types.Operator):
         else:
             obj = bpy.data.objects[obj_name]
         
-        obj["wfc_weight"] = props.weight;
-        self.report({'INFO'}, f"Probability constraints of object {obj_name} have been saved to {props.weight}.")  
+        obj["wfc_weight"] = props.weight
+        obj["wfc_probability"] = props.probability
+        
+        self.report({'INFO'}, f"Probability constraints of object {obj_name} have been saved.")  
 
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DUpdate_Transformation_Constraints(bpy.types.Operator):

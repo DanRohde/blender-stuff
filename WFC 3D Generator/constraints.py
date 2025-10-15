@@ -21,17 +21,19 @@ class WFC3DConstraints:
             if obj.name in bpy.data.collections:
                     obj = bpy.data.collections[obj.name].objects[0]
                 
-            # load weight constraints
-            if "wfc_weight" in obj and obj["wfc_weight"] != "":
-                self.constraints[obj_name]["weight"] = int(obj["wfc_weight"])
-            else:
-                self.constraints[obj_name]["weight"] = 1
+            # load probability constraints
+            for p in ["weight","probability"]:
+                cp = "wfc_"+p
+                if cp in obj and obj[cp] != "":
+                    self.constraints[obj_name][p] = obj[cp]
+                else:
+                    self.constraints[obj_name][p] = None
 
             # load grid constraints
             grid_constraints = { 'wfc_corners':'corners', 'wfc_edges':'edges', 'wfc_inside':'inside','wfc_faces' :'faces' }
-            for gc in grid_constraints:
-                if gc in obj and obj[gc] != "":
-                    self.constraints[obj_name][grid_constraints[gc]] = obj[gc].split(",")
+            for cp,c in grid_constraints.items():
+                if cp in obj and obj[cp] != "":
+                    self.constraints[obj_name][c] = obj[cp].split(",")
             
             # load transformation constraints
             for r in TRANSFORMATION_CONSTRAINTS:
@@ -53,14 +55,40 @@ class WFC3DConstraints:
                 else:
                     self.constraints[obj.name][direction] = allobjects 
 
-    def get_weighted_options(self, obj_names):
-        """ Increase object count in object list depending on it's weight """
-        options = []
-        for name in obj_names:
+    def get_weighted_options(self, elements):
+        options = []    
+        for name in elements:
             weight = self.constraints[name]['weight']
             option = [name for _ in range(weight)]
             options.extend(option)
         return options
+    
+    def apply_probability_constraints(self, elements):
+        options= []
+        rand = random.random()
+        random.shuffle(elements)
+        for name in elements:
+            p = self.constraints[name]['probability']
+            if p is not None and p < 1:
+                if rand < p:
+                    options = [name]
+                    break
+            else:
+                options.append(name)
+        return self.get_weighted_options(options)
+
+    def apply_frequency_constraints(self, elements):
+        # XXXX count elements if frequency options are set
+        
+        return elements
+    
+    def collapse(self, grid, x, y, z):
+        """ Collapse a grid cell with constraints """    
+        options = self.apply_probability_constraints(grid.grid[x,y,z])
+        if len(options)>0:
+            grid.grid[x, y, z] = [ random.choice(options) ]
+        else:
+            grid.grid[x, y, z] = []
 
     def apply_transformation_constraints(self, src_obj, target_obj):
         def _get_mapped_random_values(vmin, vmax, steps):
@@ -81,6 +109,7 @@ class WFC3DConstraints:
                 return v[random.randrange(0,len(v))]
             else:
                 return vmin + (vmax - vmin) * random.random()
+
         constraints = self.constraints[src_obj.name]    
         if constraints["translation_min"] is not None and constraints["translation_max"] is not None and constraints["translation_steps"] is not None:
             tmin = constraints["translation_min"]
