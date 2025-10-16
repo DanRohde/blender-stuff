@@ -12,6 +12,7 @@ def get_object_enum_items(self, context):
             items.append(None)
         for obj in collection.children:
             items.append((obj.name, obj.name, f"Collection: {obj.name}"))
+        items.append(("_ALL_","-- All Objects --","All objects"))
     else:
         items.append(("NONE", "No Objects", ""))
         
@@ -38,10 +39,14 @@ def update_constraint_properties(self, context):
     collection = self.collection_obj
     obj_name = self.edit_object
     
-    if obj_name in collection.children:
-        obj = collection.children[obj_name].objects[0]
+    
+    if obj_name == '_ALL_':
+        obj = collection.objects[0]
     else:
-        obj = collection.objects[obj_name]
+        if obj_name in collection.children:
+            obj = collection.children[obj_name].objects[0]
+        else:
+            obj = collection.objects[obj_name]
     
     # reset corner properties to False
     for c in ["f","b"]:
