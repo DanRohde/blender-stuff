@@ -13,6 +13,7 @@ def get_object_enum_items(self, context):
         for obj in collection.children:
             items.append((obj.name, obj.name, f"Collection: {obj.name}"))
         items.append(("_ALL_","-- All Objects --","All objects"))
+        items.append(("_LIST_","-- Select Object List --","Select object list"))
     else:
         items.append(("NONE", "No Objects", ""))
         
@@ -39,8 +40,17 @@ def update_constraint_properties(self, context):
     collection = self.collection_obj
     obj_name = self.edit_object
     
-    
-    if obj_name == '_ALL_':
+    if obj_name == '_LIST_':
+        props = context.scene.wfc_props
+        props.obj_list.clear()
+        for obj in props.collection_obj.objects:
+            item = props.obj_list.add()
+            item.name = obj.name
+        for obj in props.collection_obj.children:
+            item = props.obj_list.add()
+            item.name = obj.name
+            
+    elif obj_name == '_ALL_':
         obj = collection.objects[0]
     else:
         if obj_name in collection.children:
@@ -121,7 +131,10 @@ def get_neighbor_constraint_items(_self, _context):
         items.append(('wfc_'+d.lower(),label,label+" neighbor"))
     return items
 
-
+class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
+    name: bpy.props.StringProperty()
+    selected: bpy.props.BoolProperty(default=False)
+    
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection,)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, max=100,)
@@ -133,7 +146,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     link_objects: bpy.props.BoolProperty(name="Link New Objects (recommended)", description="Link new objects instead of copying them.", default=True,)
     copy_modifiers: bpy.props.BoolProperty(name="Copy Modifiers", description="Copy modifiers to linked objects.", default=False,)
     remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove existing target collection", default=False,)
-    
+    obj_list: bpy.props.CollectionProperty(type=WFC3DEditPanelMultiSelItem)
+    obj_list_idx: bpy.props.IntProperty()
     edit_object: bpy.props.EnumProperty(name="", description="Select an object", items=get_object_enum_items, update=update_constraint_properties,)
     edit_constraints: bpy.props.EnumProperty(
         name="", description = "Select constraint type",
@@ -212,6 +226,6 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     
     
 
-properties = [ WFC3DProperties ]
+properties = [ WFC3DEditPanelMultiSelItem, WFC3DProperties ]
 
     

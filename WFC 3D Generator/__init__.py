@@ -4,6 +4,7 @@ import bpy
 
 from . import properties, edit_operators, edit_panel, gen_operators, gen_panel, handler
 
+
 classes = properties.properties + edit_operators.operators + edit_panel.panels + gen_operators.operators + gen_panel.panels
 
 def register():

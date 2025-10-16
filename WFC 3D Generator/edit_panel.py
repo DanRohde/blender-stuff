@@ -1,6 +1,16 @@
 import bpy
 
-class WFC3DEditPanel(bpy.types.Panel):
+
+
+
+# UIList für Darstellung
+class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
+        row = layout.row(align=True)
+        row.prop(item, "selected", text="")
+        row.label(text=item.name)
+
+class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Constraint Editor"
     bl_idname = "VIEW3D_PT_wfc_3d_edit"
@@ -27,12 +37,16 @@ class WFC3DEditPanel(bpy.types.Panel):
             newcol = row.column()
             newcol.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
             newcol.enabled = props.edit_object and props.edit_object != '_none_' and not props.auto_active_object
-            
+            if props.edit_object == '_LIST_':
+                layout.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
+                if len(props.obj_list) == 0:
+                    return
             row = col.row()
             row.enabled = False
             if props.edit_object and props.edit_object != '_none_':
                 row.enabled = True
 
+                
                 if props.edit_object == '_ALL_':
                     obj = props.collection_obj.objects[0]
                     obj_name = "ALL OBJECTS"
@@ -204,6 +218,6 @@ class WFC3DEditPanel(bpy.types.Panel):
         else:
             layout.label(text="Choose a Source Collection", icon='INFO')
 
-panels = [ WFC3DEditPanel ]
+panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_PT_EditPanel,]
 
         
