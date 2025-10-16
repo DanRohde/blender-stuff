@@ -41,3 +41,26 @@ FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_neighbor', 'freq_axes', 'freq_any_n
                          'freq_neighbor_face', 'freq_neighbor_edge','freq_neighbor_corner',
                          'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner',
 ]
+
+PROBABILITY_CONSTRAINTS = [ 'weight', 'probability']
+
+GRID_CONSTRAINTS = [ 'faces', 'corners', 'edges', 'inside']
+
+ICON_MAP = {
+        'MESH': 'OUTLINER_OB_MESH',
+        'CURVE': 'OUTLINER_OB_CURVE',
+        'SURFACE': 'OUTLINER_OB_SURFACE',
+        'META': 'OUTLINER_OB_META',
+        'FONT': 'OUTLINER_OB_FONT',
+        'ARMATURE': 'OUTLINER_OB_ARMATURE',
+        'LATTICE': 'OUTLINER_OB_LATTICE',
+        'EMPTY': 'OUTLINER_OB_EMPTY',
+        'GPENCIL': 'OUTLINER_OB_GREASEPENCIL',
+        'CAMERA': 'OUTLINER_OB_CAMERA',
+        'LIGHT': 'OUTLINER_OB_LIGHT',
+        'SPEAKER': 'OUTLINER_OB_SPEAKER',
+        'LIGHT_PROBE': 'OUTLINER_OB_LIGHTPROBE',
+        'VOLUME': 'OUTLINER_OB_VOLUME',
+        'POINTCLOUD': 'OUTLINER_OB_POINTCLOUD',
+        'CURVES': 'OUTLINER_OB_CURVES'
+}

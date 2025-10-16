@@ -2,13 +2,13 @@ import bpy
 
 from .constants import PROP_DEFAULTS, FREQUENCY_CONSTRAINTS, TRANSFORMATION_CONSTRAINTS
 
-from .properties import update_constraint_properties
+from .properties import update_constraint_properties, handle_update_collection
 
 def _get_obj(collection, name):
     if name in collection.objects:
         return collection.objects[name]
     elif name in collection.children:
-        return collection.children[name].objectes[0]
+        return collection.children[name].objects[0]
     
 def _get_selected_items(obj_list):
     return [ item.name for item in obj_list if item.selected]
@@ -444,6 +444,16 @@ class COLLECTION_OT_WFC3DGetNeighborSelectedObject(bpy.types.Operator):
                 return {'CANCELLED'}
         return {'FINISHED'}
 
+class COLLECTOIN_OT_WFC3DUpdateCollectionList(bpy.types.Operator):
+    """Reload object list"""
+    bl_idname = "collection.wfc_update_collection_list"
+    bl_label = ""
+    bl_options = {'REGISTER','UNDO'}
+    def execute(self,context):
+        handle_update_collection(self,context)
+        return {'FINISHED'}
+
+
 operators = [
     COLLECTION_OT_WFC3DAdd_Neighbor_Constraint,
     COLLECTION_OT_WFC3DRemove_Neighbor_Constraint,
@@ -459,4 +469,5 @@ operators = [
     COLLECTION_OT_WFC3DGetSelectedObject,
     COLLECTION_OT_WFC3DGetNeighborSelectedObject,    
     COLLECTION_OT_WFC3DSelectNeighborObject,
+    COLLECTOIN_OT_WFC3DUpdateCollectionList,
 ]

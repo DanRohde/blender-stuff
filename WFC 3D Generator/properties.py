@@ -6,14 +6,15 @@ def get_object_enum_items(self, context):
     items = [('_none_','Select an object','Select an object'),None]
     collection = self.collection_obj
     if collection and (len(collection.objects)>0 or len(collection.children)>0):
+        items.append(("_ALL_","-- All Objects --","All objects"))
+        items.append(("_LIST_","-- Select Object List --","Select object list"))
         for obj in collection.objects:
             items.append((obj.name, obj.name, f"Object: {obj.name}" ))
         if len(collection.children)>0:
             items.append(None)
         for obj in collection.children:
             items.append((obj.name, obj.name, f"Collection: {obj.name}"))
-        items.append(("_ALL_","-- All Objects --","All objects"))
-        items.append(("_LIST_","-- Select Object List --","Select object list"))
+        
     else:
         items.append(("NONE", "No Objects", ""))
         

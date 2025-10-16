@@ -1,11 +1,17 @@
 import bpy
-
+from .constants import ICON_MAP
 
 # UIList für Darstellung
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
+        props = context.scene.wfc_props
+        if item.name in props.collection_obj.objects:
+            icon_name = ICON_MAP[props.collection_obj.objects[item.name].type]
+        else:
+            icon_name = "GROUP"
+            
         row = layout.row(align=True)
-        row.prop(item, "selected", text="")
+        row.prop(item, "selected", text="",icon=icon_name)
         row.label(text=item.name)
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
@@ -36,12 +42,17 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             newcol.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
             newcol.enabled = props.edit_object is not None and props.edit_object != '_none_' and not props.auto_active_object
             if props.edit_object == '_LIST_':
-                col.row().template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
+                newrow = col.box().row()
+                newrow.operator("collection.wfc_update_collection_list",icon="FILE_REFRESH")
+                newrow.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
+                
                 if len(props.obj_list) == 0:
                     return
+                
                 selected = [item.name for item in props.obj_list if item.selected]
                 if len(selected) == 0:
                     return
+                
                 
             row = col.row()
             row.enabled = False
@@ -62,10 +73,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                         obj=props.collection_obj.children[props.edit_object].objects[0]
                     else:
                         obj=props.collection_obj.objects[props.edit_object]
-                    obj_name = obj.name
+                    obj_name = props.edit_object
                     
                 row=col.row();
-                row.box().prop(props,"edit_constraints")
+                row.box().prop(props,"edit_constraints",icon="SETTINGS")
+                
                 if (props.edit_constraints == "neighbor"):
                     box=col.box()
                     box.label(text=obj_name)

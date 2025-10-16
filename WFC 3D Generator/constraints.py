@@ -3,7 +3,7 @@ import numpy as np
 import random
 from collections import deque
 
-from .constants import DIRECTIONS, TRANSFORMATION_CONSTRAINTS, FREQUENCY_CONSTRAINTS, FACE_DIRECTIONS, EDGE_DIRECTIONS, CORNER_DIRECTIONS
+from .constants import DIRECTIONS, TRANSFORMATION_CONSTRAINTS, FREQUENCY_CONSTRAINTS, GRID_CONSTRAINTS, PROBABILITY_CONSTRAINTS, FACE_DIRECTIONS, EDGE_DIRECTIONS, CORNER_DIRECTIONS
 
 
 class WFC3DConstraints:
@@ -22,7 +22,7 @@ class WFC3DConstraints:
                     obj = bpy.data.collections[obj.name].objects[0]
                 
             # load probability and frequency constraints
-            for p in ["weight","probability"] + FREQUENCY_CONSTRAINTS:
+            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS:
                 cp = "wfc_"+p
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
@@ -30,8 +30,8 @@ class WFC3DConstraints:
                     self.constraints[obj_name][p] = None
 
             # load grid constraints
-            grid_constraints = { 'wfc_corners':'corners', 'wfc_edges':'edges', 'wfc_inside':'inside','wfc_faces' :'faces' }
-            for cp,c in grid_constraints.items():
+            for c in GRID_CONSTRAINTS:
+                cp = "wfc_"+c
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][c] = obj[cp].split(",")
             
@@ -53,7 +53,7 @@ class WFC3DConstraints:
                     else:
                         self.constraints[obj_name][direction] = obj[prop_name].split(',')
                 else:
-                    self.constraints[obj.name][direction] = allobjects 
+                    self.constraints[obj_name][direction] = allobjects 
 
     def get_weighted_options(self, elements):
         options = []    
@@ -79,11 +79,6 @@ class WFC3DConstraints:
             else:
                 options.append(name)
         return self.get_weighted_options(options)
-
-    def apply_frequency_constraints(self, elements):
-        # XXXX count elements if frequency options are set
-        
-        return elements
     
     def collapse(self, grid, x, y, z):
         """ Collapse a grid cell with constraints """    
@@ -115,6 +110,8 @@ class WFC3DConstraints:
             else:
                 return vmin + (vmax - vmin) * random.random()
 
+        if src_obj.name not in self.constraints: ### collections bug!!!
+            return 
         constraints = self.constraints[src_obj.name]    
         if constraints["translation_min"] is not None and constraints["translation_max"] is not None and constraints["translation_steps"] is not None:
             tmin = constraints["translation_min"]
