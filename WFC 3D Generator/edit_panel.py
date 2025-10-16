@@ -1,8 +1,6 @@
 import bpy
 
 
-
-
 # UIList für Darstellung
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
@@ -38,16 +36,25 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             newcol.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
             newcol.enabled = props.edit_object and props.edit_object != '_none_' and not props.auto_active_object
             if props.edit_object == '_LIST_':
-                layout.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
+                col.row().template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
                 if len(props.obj_list) == 0:
                     return
+                selected = [item.name for item in props.obj_list if item.selected]
+                if len(selected) == 0:
+                    return
+                
             row = col.row()
             row.enabled = False
             if props.edit_object and props.edit_object != '_none_':
                 row.enabled = True
 
-                
-                if props.edit_object == '_ALL_':
+                if props.edit_object == '_LIST_':
+                    if selected[0] in props.collection_obj.children:
+                        obj = props.collection_obj.children[selected[0]].objects[0]
+                    else:
+                        obj = props.collection_obj.objects[selected[0]]
+                    obj_name = ",".join(selected)
+                elif props.edit_object == '_ALL_':
                     obj = props.collection_obj.objects[0]
                     obj_name = "ALL OBJECTS"
                 else:

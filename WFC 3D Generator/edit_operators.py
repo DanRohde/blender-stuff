@@ -4,6 +4,15 @@ from .constants import PROP_DEFAULTS, FREQUENCY_CONSTRAINTS, TRANSFORMATION_CONS
 
 from .properties import update_constraint_properties
 
+def _get_obj(collection, name):
+    if name in collection.objects:
+        return collection.objects[name]
+    elif name in collection.children:
+        return collection.children[name].objectes[0]
+    
+def _get_selected_items(obj_list):
+    return [ item.name for item in obj_list if item.selected]
+
 class COLLECTION_OT_WFC3DAdd_Neighbor_Constraint(bpy.types.Operator):
     """ Add neighbor constraints """
     bl_idname = "object.wfc_add_constraint"
@@ -34,18 +43,17 @@ class COLLECTION_OT_WFC3DAdd_Neighbor_Constraint(bpy.types.Operator):
         obj_name = props.edit_object
         prop_name = props.edit_neighbor_constraint
         neighbor = props.select_neighbor
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            for item in _get_selected_items(props.obj_list):
+                self._set_neighbor(_get_obj(props.collection_obj, item), prop_name, neighbor)
+        elif obj_name == '_ALL_':    
             for obj in props.collection_obj.objects:
                 self._set_neighbor(obj, prop_name, neighbor)
             for c in props.collection_obj.children:
                 for obj in c.objects:
                     self._set_neighbor(obj, prop_name, neighbor)
-        else:    
-            if obj_name in bpy.data.collections:
-                obj = bpy.data.collections[obj_name][0]
-            else:
-                obj = bpy.data.objects[obj_name]
-            self._set_neighbor(obj, prop_name, neighbor)
+        else:
+            self._set_neighbor(_get_obj(props.collection_obj, obj_name), prop_name, neighbor)
 
         return {'FINISHED'}
 
@@ -69,18 +77,17 @@ class COLLECTION_OT_WFC3DRemove_Neighbor_Constraint(bpy.types.Operator):
         obj_name = props.edit_object
         prop_name = props.edit_neighbor_constraint
         neighbor = props.select_neighbor
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            for item in _get_selected_items(props.obj_list):
+                self._remove_neighbor(_get_obj(props.collection_obj, item), prop_name, neighbor)
+        elif obj_name == '_ALL_':
             for obj in props.collection_obj.objects:
                 self._remove_neighbor(obj, prop_name, neighbor)
             for c in props.collection_obj.children:
                 for obj in c.objects:
                     self._remove_neighbor(obj, prop_name, neighbor)
         else:
-            if obj_name in bpy.data.collections:
-                obj = bpy.data.collections[obj_name][0]
-            else:
-                obj = bpy.data.objects[obj_name]
-            self._remove_neighbor(obj, prop_name, neighbor)
+            self._remove_neighbor(_get_obj(props.collection_obj, obj_name), prop_name, neighbor)
         return {'FINISHED'}
     
 class COLLECTION_OT_WFC3DReset_Neighbor_Constraint(bpy.types.Operator):
@@ -98,18 +105,17 @@ class COLLECTION_OT_WFC3DReset_Neighbor_Constraint(bpy.types.Operator):
         obj_name = props.edit_object
         prop_name = props.edit_neighbor_constraint
         
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            for item in _get_selected_items(props.obj_list):
+                self._reset_neighbor(_get_obj(props.collection_obj, item), prop_name)
+        elif obj_name == '_ALL_':
             for obj in props.collection_obj.objects:
                 self._reset_neighbor(obj, prop_name)
             for c in props.collection_obj.children:
                 for obj in c.objects:
                     self._reset_neighbor(obj, prop_name)
         else:
-            if obj_name in bpy.data.collections:
-                obj = bpy.data.collections[obj_name][0]
-            else:
-                obj = bpy.data.objects[obj_name]
-            self._reset_neighbor(obj, prop_name)
+            self._reset_neighbor(_get_obj(props.collection_obj, obj_name), prop_name)
         
         return {'FINISHED'}
 
@@ -141,18 +147,18 @@ class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
         props = context.scene.wfc_props
         obj_name = props.edit_object
         
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            obj_name = ", ".join(_get_selected_items(props.obj_list))
+            for item in _get_selected_items(props.obj_list):
+                self._set_grid_constraints(_get_obj(props.collection_obj, item), props)
+        elif obj_name == '_ALL_':
             for obj in props.collection_obj.objects:
                 self._set_grid_constraints(obj, props)
             for c in props.collection_obj.children:
                 for obj in c.objects:
                     self._set_grid_constraints(obj, props)
         else:
-            if obj_name in bpy.data.collections:
-                obj = bpy.data.collections[obj_name].objects[0]
-            else:
-                obj = bpy.data.objects[obj_name]
-            self._set_grid_constraints(obj, props)
+            self._set_grid_constraints(_get_obj(props.collection_obj, obj_name), props)
         
         self.report({'INFO'}, f"Grid constraints of object {obj_name} have been saved.")
         return {'FINISHED'}
@@ -170,18 +176,18 @@ class COLLECTION_OT_WFC3DReset_Grid_Constraints(bpy.types.Operator):
         props = context.scene.wfc_props
         obj_name = props.edit_object
         
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            obj_name = ", ".join(_get_selected_items(props.obj_list))
+            for item in _get_selected_items(props.obj_list):
+                self._reset_grid(_get_obj(props.collection_obj, item))
+        elif obj_name == '_ALL_':
             for obj in props.collection_obj.objects:
                 self._reset_grid(obj)
             for c in props.collection_obj.children:
                 for obj in c.objects:
                     self._reset_grid(obj)
         else:
-            if obj_name in bpy.data.collections:
-                obj = bpy.data.collections[obj_name].objects[0]
-            else:
-                obj = bpy.data.objects[obj_name]
-            self._reset_grid(obj)
+            self._reset_grid(_get_obj(props.collection_obj,obj_name))
             
         update_constraint_properties(props, context)
         
@@ -201,21 +207,20 @@ class COLLECTION_OT_WFC3DUpdate_Probability_Constraints(bpy.types.Operator):
         props = context.scene.wfc_props
         obj_name = props.edit_object
         
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            obj_name = ",".join(_get_selected_items(props.obj_list))
+            for item in _get_selected_items(props.obj_list):
+                self._update_prob(_get_obj(props.collection_obj, item), props)
+        elif obj_name == '_ALL_':
             for obj in props.collection_obj.objects:
                 self._update_prob(obj, props)
             for c in props.collection_obj.children:
                 for obj in c.objects:
                     self._update_prob(obj, props)
-        else:
-            if obj_name in bpy.data.collections:
-                obj = bpy.data.collections[obj_name].objects[0]
-            else:
-                obj = bpy.data.objects[obj_name]
+        else:            
+            self._update_prob(_get_obj(props.collection_obj, obj_name), props)
             
-            self._update_prob(obj, props)
-            
-        self.report({'INFO'}, f"Probability constraints of object {obj_name} have been saved.")  
+        self.report({'INFO'}, f"Probability constraints of object(s) {obj_name} have been saved.")  
 
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DUpdate_Frequency_Constraints(bpy.types.Operator):
@@ -231,19 +236,17 @@ class COLLECTION_OT_WFC3DUpdate_Frequency_Constraints(bpy.types.Operator):
         props = context.scene.wfc_props
         obj_name = props.edit_object
         
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            for item in _get_selected_items(props.obj_list):
+                self._update(_get_obj(props.collection_obj, item), props)
+        elif obj_name == '_ALL_':
             for obj in props.collection_obj.objects:
                 self._update(obj, props)
             for c in props.collection_obj.children:
                 for obj in c.objects:
                     self._update(obj, props)
         else:
-            if obj_name in bpy.data.collections:
-                obj = bpy.data.collections[obj_name].objects[0]
-            else:
-                obj = bpy.data.objects[obj_name]
-            
-            self._update(obj, props)
+            self._update(_get_obj(props.collection_obj, obj_name), props)
                 
         self.report({'INFO'}, f"Frequency constraints of object {obj_name} have been saved.")  
 
@@ -261,18 +264,17 @@ class COLLECTION_OT_WFC3DReset_Frequency_Constraints(bpy.types.Operator):
         props = context.scene.wfc_props
         obj_name = props.edit_object
         
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            for item in _get_selected_items(props.obj_list):
+                self._reset(_get_obj(props.collection_obj, item))
+        elif obj_name == '_ALL_':
             for obj in props.collection_obj.objects:
                 self._reset(obj)
             for c in props.collection_obj.children:
                 for obj in c.objects:
                     self._reset(obj)
         else:
-            if obj_name in bpy.data.collections:
-                obj = bpy.data.collections[obj_name].objects[0]
-            else:
-                obj = bpy.data.objects[obj_name]
-            self._reset(obj)
+            self._reset(_get_obj(props.collection_obj, obj_name))
             
         update_constraint_properties(props, context)
         
@@ -295,18 +297,17 @@ class COLLECTION_OT_WFC3DUpdate_Transformation_Constraints(bpy.types.Operator):
         props = context.scene.wfc_props
         obj_name = props.edit_object
         
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            for item in _get_selected_items(props.obj_list):
+                self._update(_get_obj(props.collection_obj, item), props)
+        elif obj_name == '_ALL_':
             for obj in props.collection_obj.objects:
                 self._update(obj, props)
             for c in props.collection_obj.children:
                 for obj in c.objects:
                     self._update(obj, props)
         else:
-            if obj_name in bpy.data.collections:
-                obj = bpy.data.collections[obj_name].objects[0]
-            else:
-                obj = bpy.data.objects[obj_name]
-            self._update(obj, props)
+            self._update(_get_obj(props.collection_obj, obj_name), props)
             
         self.report({'INFO'}, f"Transformation constraints of object {obj_name} have been saved.")  
 
@@ -326,19 +327,17 @@ class COLLECTION_OT_WFC3DReset_Transformation_Constraints(bpy.types.Operator):
         props = context.scene.wfc_props
         obj_name = props.edit_object
         
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            for item in _get_selected_items(props.obj_list):
+                self._reset(_get_obj(props.collection_obj, item), props)
+        elif obj_name == '_ALL_':
             for obj in props.collection_obj.objects:
                 self._reset(obj, props)
             for c in props.collection_obj.children:
                 for obj in c.objects:
                     self._reset(obj, props)
-        else:
-            if obj_name in bpy.data.collections:
-                obj = bpy.data.collections[obj_name].objects[0]
-            else:
-                obj = bpy.data.objects[obj_name]
-             
-            self._reset(obj, props)
+        else:             
+            self._reset(_get_obj(props.collection_obj, obj_name), props)
              
         self.report({'INFO'}, f"Transformation constraints of object {obj_name} have been reset.")  
 
@@ -358,7 +357,9 @@ class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
             self.report({'WARNING'}, "Empty Collection")
             return {'CANCELLED'}
 
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            obj = _get_obj(props.collection_obj, _get_selected_items(props.obj_list)[0])
+        elif obj_name == '_ALL_':
             obj = collection.objects[0]
         else:
             if obj_name in collection.children and len(collection.children[obj_name].objects)>0:

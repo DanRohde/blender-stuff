@@ -36,20 +36,29 @@ def get_object_edit_enum_items(self, context):
         
     return items
 
+def handle_update_collection(self, context):
+    props = context.scene.wfc_props
+    props.obj_list.clear()
+    for obj in props.collection_obj.objects:
+        item = props.obj_list.add()
+        item.name = obj.name
+    for obj in props.collection_obj.children:
+        item = props.obj_list.add()
+        item.name = obj.name
+
+
 def update_constraint_properties(self, context):
     collection = self.collection_obj
     obj_name = self.edit_object
     
     if obj_name == '_LIST_':
-        props = context.scene.wfc_props
-        props.obj_list.clear()
-        for obj in props.collection_obj.objects:
-            item = props.obj_list.add()
-            item.name = obj.name
-        for obj in props.collection_obj.children:
-            item = props.obj_list.add()
-            item.name = obj.name
-            
+        selected = [item.name for item in self.obj_list if item.selected]
+        if len(selected) == 0:
+            return
+        if selected[0] in collection.children:
+            obj = collection.children[selected[0]].objects[0]
+        else:
+            obj = collection.objects[selected[0]]
     elif obj_name == '_ALL_':
         obj = collection.objects[0]
     else:
@@ -136,7 +145,7 @@ class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
     selected: bpy.props.BoolProperty(default=False)
     
 class WFC3DProperties(bpy.types.PropertyGroup):
-    collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection,)
+    collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, max=100,)
     spacing: bpy.props.FloatVectorProperty(name="", description="Size of a Grid Cell", subtype="TRANSLATION", default=(2.0,2.0,2.0), min=0.1,) 
     use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)
