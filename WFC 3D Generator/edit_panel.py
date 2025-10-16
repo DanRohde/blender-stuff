@@ -34,7 +34,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             newcol.enabled = not props.auto_active_object
             newcol = row.column()
             newcol.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
-            newcol.enabled = props.edit_object and props.edit_object != '_none_' and not props.auto_active_object
+            newcol.enabled = props.edit_object is not None and props.edit_object != '_none_' and not props.auto_active_object
             if props.edit_object == '_LIST_':
                 col.row().template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
                 if len(props.obj_list) == 0:

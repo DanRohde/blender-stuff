@@ -38,6 +38,8 @@ def get_object_edit_enum_items(self, context):
 
 def handle_update_collection(self, context):
     props = context.scene.wfc_props
+    if props.collection_obj is None:
+        return
     props.obj_list.clear()
     for obj in props.collection_obj.objects:
         item = props.obj_list.add()

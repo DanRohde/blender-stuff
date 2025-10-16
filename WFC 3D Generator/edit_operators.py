@@ -362,17 +362,17 @@ class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
         elif obj_name == '_ALL_':
             obj = collection.objects[0]
         else:
-            if obj_name in collection.children and len(collection.children[obj_name].objects)>0:
-                obj = collection.children[obj_name].objects[0]
-            else:
-                obj = collection.objects[obj_name]
+            obj = _get_obj(props.collection_obj, obj_name)
         
         if not obj:
             self.report({'WARNING'}, "Object not found")
             return {'CANCELLED'}
 
         bpy.ops.object.select_all(action='DESELECT')
-        if obj_name == '_ALL_':
+        if obj_name == '_LIST_':
+            for item in _get_selected_items(props.obj_list):
+                _get_obj(props.collection_obj, item).select_set(True)
+        elif obj_name == '_ALL_':
             for obj in collection.objects:
                 obj.select_set(True)
             for c in collection.children:
