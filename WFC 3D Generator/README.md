@@ -88,10 +88,10 @@ Each object in the source collection can use custom properties to define the per
     
    
 ## Frequency Constraints
-* Used custom properties: `wfc_freq_[any_]neighbor[_face|_edge|_corner],wfc_freq_grid,wfc_freq_[any_]axles`
+* Used custom properties: `wfc_freq_[any_]neighbor[_face|_edge|_corner],wfc_freq_grid,wfc_freq_[any_]axes`
 * Allowed property values:
    * wfc_grid, wfc_freq_[any_]neighbor[_face|_edge|_corner]: an integer
-   * wfc_[_any]_axles: an integer vector
+   * wfc_[_any]_axes: an integer vector
 
 
 ## Upcoming Features

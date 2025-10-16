@@ -27,7 +27,7 @@ PROP_DEFAULTS = {
     'rotation_grid' : (False,False,False), 'rotation_neighbor' : (False,False, False),
     'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0), 
     'scale_type' : 0, 'scale_uni': (1,1,0),
-    'freq_grid' : -1, 'freq_neighbor' : -1, 'freq_axles' : (-1,-1,-1), 'freq_any_neighbor' : -1, 'freq_any_axles' : (-1,-1,-1),
+    'freq_grid' : -1, 'freq_neighbor' : -1, 'freq_axes' : (-1,-1,-1), 'freq_any_neighbor' : -1, 'freq_any_axes' : (-1,-1,-1),
     'freq_neighbor_face': -1, 'freq_neighbor_edge' : -1, 'freq_neighbor_corner' : -1,
     'freq_any_neighbor_face': -1, 'freq_any_neighbor_edge' : -1, 'freq_any_neighbor_corner' : -1,
 }
@@ -37,7 +37,7 @@ TRANSFORMATION_CONSTRAINTS = ['scale_min','scale_max','scale_steps','scale_type'
                                   #'rotation_neighbor','rotation_grid',
                                   'translation_min','translation_max','translation_steps']
 
-FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_neighbor', 'freq_axles', 'freq_any_neighbor', 'freq_any_axles', 
+FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_neighbor', 'freq_axes', 'freq_any_neighbor', 'freq_any_axes', 
                          'freq_neighbor_face', 'freq_neighbor_edge','freq_neighbor_corner',
                          'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner',
 ]

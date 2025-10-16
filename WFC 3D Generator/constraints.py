@@ -175,10 +175,10 @@ class WFC3DConstraints:
                     if grid.count_neighbors(x, y, z, current_obj, dir) >= self.constraints[current_obj][p]:
                         grid.remove_neighbors(x, y, z, current_obj, dir)
         
-        # axles
+        # axes
         axis={ 0: [1,0,0], 1: [0,1,0], 2 : [0,0,1]}
-        if self.constraints[current_obj]["freq_axles"] is not None:
-            max_count = self.constraints[current_obj]["freq_axles"]
+        if self.constraints[current_obj]["freq_axes"] is not None:
+            max_count = self.constraints[current_obj]["freq_axes"]
             for i in range(3):
                 if max_count[i]<0:
                     continue
@@ -194,8 +194,8 @@ class WFC3DConstraints:
                     if diff < 0:
                         grid.remove_max_neighbors(x, y, z, abs(diff), dir)
         
-        if self.constraints[current_obj]["freq_any_axles"] is not None:
-            max_count = self.constraints[current_obj]["freq_any_axles"]
+        if self.constraints[current_obj]["freq_any_axes"] is not None:
+            max_count = self.constraints[current_obj]["freq_any_axes"]
             for i in range(3):
                 if max_count[i]<0:
                     continue

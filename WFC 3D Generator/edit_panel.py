@@ -198,7 +198,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                     newbox.prop(props,"freq_neighbor_corner")
                     newbox.prop(props,"freq_neighbor_edge")
                     row = newbox.row()
-                    row.prop(props,"freq_axles")
+                    row.prop(props,"freq_axes")
                     
                     newbox = box.box()
                     newbox.label(text="Any Object")
@@ -208,7 +208,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                     newbox.prop(props,"freq_any_neighbor_edge")
                     
                     row = newbox.row()
-                    row.prop(props,"freq_any_axles")
+                    row.prop(props,"freq_any_axes")
                     
                     box.operator("object.wfc_update_frequency_constraints")
                     
