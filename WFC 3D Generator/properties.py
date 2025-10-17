@@ -2,123 +2,113 @@ import bpy
 
 from .constants import PROP_DEFAULTS, DIRECTIONS, TRANSFORMATION_CONSTRAINTS, FREQUENCY_CONSTRAINTS
 
-def get_object_enum_items(self, context):
-    items = [('_none_','Select an object','Select an object'),None]
-    collection = self.collection_obj
-    if collection and (len(collection.objects)>0 or len(collection.children)>0):
-        items.append(("_ALL_","-- All Objects --","All objects"))
-        items.append(("_LIST_","-- Select Object List --","Select object list"))
-        for obj in collection.objects:
-            items.append((obj.name, obj.name, f"Object: {obj.name}" ))
-        if len(collection.children)>0:
-            items.append(None)
-        for obj in collection.children:
-            items.append((obj.name, obj.name, f"Collection: {obj.name}"))
-        
-    else:
-        items.append(("NONE", "No Objects", ""))
-        
-    return items
-
-def get_object_edit_enum_items(self, context):
-    items = [('_none_','Select a Neighbor','Select an object'),None]
-    collection = self.collection_obj
-    if collection and (len(collection.objects)>0 or len(collection.children)>0):
-        for obj in collection.objects:
-            items.append((obj.name, obj.name, f"Object: {obj.name}" ))
-        if len(collection.children)>0:
-            items.append(None)
-        for obj in collection.children:
-            items.append((obj.name, obj.name, f"Collection: {obj.name}"))
-        items.append(None)
-        items.append(('-','No Neighbor allowed','No neighbor allowed'))
-    else:
-        items.append(("NONE", "No Objects", ""))
-        
-    return items
 
 def handle_update_collection(self, context):
     props = context.scene.wfc_props
     if props.collection_obj is None:
         return
     props.obj_list.clear()
+    props.neighbor_list.clear()
     for obj in props.collection_obj.objects:
         item = props.obj_list.add()
         item.name = obj.name
+        item = props.neighbor_list.add()
+        item.name = obj.name
+        item.value = obj.name
     for obj in props.collection_obj.children:
         item = props.obj_list.add()
         item.name = obj.name
+        item = props.neighbor_list.add()
+        item.name = obj.name 
+        item.value = obj.name
 
-
-def update_constraint_properties(self, context):
-    collection = self.collection_obj
-    obj_name = self.edit_object
+def handle_edit_neighbor_constraint_update(self, context):
+    props = context.scene.wfc_props
+    if props.edit_neighbor_constraint == "_NONE_":
+        return
+    sel_obj_list = [ item.name for item in props.obj_list if item.selected ]
+    if len(sel_obj_list) == 0:
+        return
+    obj_name = sel_obj_list[0]
+    if obj_name in props.collection_obj.objects:
+        obj = props.collection_obj.objects[obj_name]
+    elif obj_name in props.collection_obj.children:
+        obj = props.collection_obj.children[obj_name].objects[0]
     
-    if obj_name == '_LIST_':
-        selected = [item.name for item in self.obj_list if item.selected]
-        if len(selected) == 0:
-            return
-        if selected[0] in collection.children:
-            obj = collection.children[selected[0]].objects[0]
-        else:
-            obj = collection.objects[selected[0]]
-    elif obj_name == '_ALL_':
-        obj = collection.objects[0]
+    
+    if props.edit_neighbor_constraint in obj:
+        vals = obj[props.edit_neighbor_constraint].split(",")
+        props.no_neighbor_allowed = '-' in vals
+        
+        for item in props.neighbor_list:
+            item.selected = item.value in vals
     else:
-        if obj_name in collection.children:
-            obj = collection.children[obj_name].objects[0]
-        else:
-            obj = collection.objects[obj_name]
+        props.no_neighbor_allowed = False
+        for item in props.neighbor_list:
+            item.selected = False            
+        
+def update_constraint_properties(self, context):
+    
+    props = bpy.context.scene.wfc_props
+    collection = props.collection_obj
+
+    selected = [item.name for item in props.obj_list if item.selected]
+    if len(selected) == 0:
+        return
+    if selected[0] in collection.children:
+        obj = collection.children[selected[0]].objects[0]
+    else:
+        obj = collection.objects[selected[0]]
     
     # reset corner properties to False
     for c in ["f","b"]:
         for nc in ["bl","br","tl","tr"]:
-            self["corner_"+c+nc] = False
+            props["corner_"+c+nc] = False
     # reset edge properties to False
     for e in ['fb','fl','fr','ft','bb','bl','br','bt','lt','lb','rt','rb']:
         self["edge_"+e] = False
     
     # reset face properties to False
     for f in ["front","back","left","right","top","bottom"]:
-        self["face_"+f] = False
+        props["face_"+f] = False
             
-    self["corner_none"] = False
-    self["edge_none"] = False
-    self["face_none"] = False
-    self["inside_none"] = False
+    props["corner_none"] = False
+    props["edge_none"] = False
+    props["face_none"] = False
+    props["inside_none"] = False
     
     if "wfc_corners" in obj:
         for c in obj["wfc_corners"].split(","):
-            self["corner_"+c] = True
+            props["corner_"+c] = True
         if obj["wfc_corners"] == "-":
-            self["corner_none"] = True
+            props["corner_none"] = True
     
     if "wfc_edges" in obj:
         for c in obj["wfc_edges"].split(","):
-            self["edge_"+c] = True
+            props["edge_"+c] = True
         if obj["wfc_edges"] == "-":
-            self["edge_none"] = True
+            props["edge_none"] = True
                     
     if "wfc_faces" in obj:
         for c in obj["wfc_faces"].split(","):
-            self["face_"+c] = True
+            props["face_"+c] = True
         if obj["wfc_faces"] == "-":
-            self["face_none"] = True
+            props["face_none"] = True
          
     if "wfc_inside" in obj:
-        self["inside_none"] = obj["wfc_inside"] == "-"
+        props["inside_none"] = obj["wfc_inside"] == "-"
         
     
     for p in ["weight","probability"] + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS:
         if "wfc_"+p in obj:
-            self[p]=obj["wfc_"+p]
+            props[p]=obj["wfc_"+p]
         else:
-            self[p]=PROP_DEFAULTS[p]
+            props[p]=PROP_DEFAULTS[p]
 
 
 def get_neighbor_constraint_items(_self, _context):
     
-    items = [("_none_","Select a Neighbor Constraint","Please select a neighbor constraint"),None]
+    items = [("_NONE_","Select a Neighbor Constraint","Please select a neighbor constraint"),None]
     translate = { 'TOP': 'top face', 'BOTTOM' : 'bottom face', 'LEFT' : 'left face', 'RIGHT': 'right face', 'FRONT' : 'front face', 'BACK' : 'back face',
                  'FBL':'front bottom left corner', 'FBR' : 'front bottom right corner', 'FTL' : 'front top left corner', 'FTR' : 'front top right corner',
                  'BBL':'back bottom left corner', 'BBR' : 'back bottom right corner', 'BTL' : 'back top left corner', 'BTR' : 'back top right corner', 
@@ -145,7 +135,12 @@ def get_neighbor_constraint_items(_self, _context):
 
 class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()
+    selected: bpy.props.BoolProperty(default=False,update=update_constraint_properties)
+
+class WFC3DEditPanelNeighborMultiSelItem(bpy.types.PropertyGroup):
+    name: bpy.props.StringProperty()
     selected: bpy.props.BoolProperty(default=False)
+    value: bpy.props.StringProperty()
     
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
@@ -160,7 +155,10 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove existing target collection", default=False,)
     obj_list: bpy.props.CollectionProperty(type=WFC3DEditPanelMultiSelItem)
     obj_list_idx: bpy.props.IntProperty()
-    edit_object: bpy.props.EnumProperty(name="", description="Select an object", items=get_object_enum_items, update=update_constraint_properties,)
+    neighbor_list: bpy.props.CollectionProperty(type=WFC3DEditPanelNeighborMultiSelItem)
+    neighbor_list_idx: bpy.props.IntProperty()
+    no_neighbor_allowed: bpy.props.BoolProperty(name="No Neighbor Allowed",description="No neighbor allowed", default=False,)
+    
     edit_constraints: bpy.props.EnumProperty(
         name="", description = "Select constraint type",
         items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),
@@ -174,10 +172,10 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     edit_neighbor_constraint: bpy.props.EnumProperty(
         name="", description="Select a Neighbor Constraint",
         items=get_neighbor_constraint_items,
+        update=handle_edit_neighbor_constraint_update,
     )
     auto_active_object: bpy.props.BoolProperty(name="", description="Automatically select the active object.", default=False,)
     auto_neighbor_object: bpy.props.BoolProperty(name="", description="Automatically select the active object.", default=False,)
-    select_neighbor: bpy.props.EnumProperty(name="", description="Select a Neighbor", items=get_object_edit_enum_items,)
     corner_fbl: bpy.props.BoolProperty( name="fbl", description="Front Bottom Left")
     corner_fbr: bpy.props.BoolProperty( name="fbr", description="Front Bottom Right")
     corner_ftl: bpy.props.BoolProperty( name="ftl", description="Front Top Left")
@@ -238,6 +236,6 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     
     
 
-properties = [ WFC3DEditPanelMultiSelItem, WFC3DProperties ]
+properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
 
     
