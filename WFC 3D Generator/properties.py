@@ -16,11 +16,12 @@ def handle_update_collection(self, context):
         item.name = obj.name
         item.value = obj.name
     for obj in props.collection_obj.children:
-        item = props.obj_list.add()
-        item.name = obj.name
-        item = props.neighbor_list.add()
-        item.name = obj.name 
-        item.value = obj.name
+        if len(obj.objects)>0:
+            item = props.obj_list.add()
+            item.name = obj.name
+            item = props.neighbor_list.add()
+            item.name = obj.name 
+            item.value = obj.name
 
 def handle_edit_neighbor_constraint_update(self, context):
     props = context.scene.wfc_props

@@ -72,7 +72,8 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row = col.row()
         
         if selected[0] in props.collection_obj.children:
-            obj = props.collection_obj.children[selected[0]].objects[0]
+            if len(props.collection_obj.children[selected[0]].objects)>0:
+                obj = props.collection_obj.children[selected[0]].objects[0]
         else:
             obj = props.collection_obj.objects[selected[0]]
             
