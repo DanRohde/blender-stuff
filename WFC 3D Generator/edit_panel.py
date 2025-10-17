@@ -42,7 +42,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             layout.label(text="Choose a Source Collection", icon='INFO')
             return
         
-       
+        if len(props.obj_list) == 0:
+            layout.label(text="Empty Collection")
+            return
+            
+
         row = col.row()
         newcol = row.column()
 
@@ -60,11 +64,6 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         nc.operator("collection.wfc_update_collection_list",icon="FILE_REFRESH")
         nc.enabled = not props.auto_active_object
         
-        if len(props.obj_list) == 0:
-            newrow.label(text="Empty Collection")
-            
-            return
-            
         selected = [item.name for item in props.obj_list if item.selected]
         if len(selected) == 0:
             return

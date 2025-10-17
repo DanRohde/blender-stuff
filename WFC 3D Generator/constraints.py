@@ -224,7 +224,7 @@ class WFC3DConstraints:
                         allowed = self.constraints[current_obj].get(direction, [])
                         # Filter disallowed options
                         new_options = [obj for obj in neighbor_options if obj in allowed]
-                        # Check opposite directions for all new options:
+                        # Check opposite direction for all new options:
                         new_new_options = []
                         for no in new_options:
                             allowed = self.constraints[no].get(OPPOSITE_DIRECTIONS[direction],[])
