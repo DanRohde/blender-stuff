@@ -32,7 +32,7 @@ class WFC3DGenerator:
         self.objects = list(self.collection.objects)
         for child in self.collection.children:
             if len(child.objects)>0:
-                self.objects.extend(child)
+                self.objects.append(child)
 
         if not self.objects:
             raise ValueError("Collection is empty!")
