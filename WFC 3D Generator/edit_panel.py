@@ -93,7 +93,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             newrow.operator("object.wfc_reset_constraint")
             newrow.enabled = props.edit_neighbor_constraint in obj;
             
-            if (props.edit_neighbor_constraint and props.edit_neighbor_constraint !="_none_"):
+            if (props.edit_neighbor_constraint and props.edit_neighbor_constraint !="_NONE_"):
                 if props.edit_neighbor_constraint in obj:  
                     box.label(text="Neighbors: "+obj[props.edit_neighbor_constraint])
                 else:
