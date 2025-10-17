@@ -1,9 +1,15 @@
 import bpy
 
+def _update_list(list, selected_object_names):
+    for item in list:
+        if item.name in selected_object_names:
+            if not item.selected:
+                item.selected = True
+        elif item.selected:
+            item.selected = False
+
 def on_object_activated(scene, depsgraph):
     if bpy.context.view_layer.objects.active:
-        active_object = bpy.context.view_layer.objects.active
-        ao_name = active_object.name
         props = bpy.context.scene.wfc_props
         if not props.collection_obj or ( not props.auto_active_object and not props.auto_neighbor_object ):
             return
@@ -20,18 +26,6 @@ def on_object_activated(scene, depsgraph):
                         if obj.name in child.objects:
                             selected_object_names.append(child.name)
             if props.auto_active_object:
-                for item in props.obj_list:
-                    if item.name in selected_object_names:
-                        if not item.selected:
-                            item.selected = True 
-                    elif item.selected:
-                        item.selected = False
-                    
+                _update_list(props.obj_list, selected_object_names)
             elif props.auto_neighbor_object:
-                for item in props.neighbor_list:
-                    if item.value in selected_object_names:
-                        if not item.selected:
-                            item.selected = True
-                    elif item.selected:
-                        item.selected = False
-            
+                _update_list(props.neighbor_list, selected_object_names)

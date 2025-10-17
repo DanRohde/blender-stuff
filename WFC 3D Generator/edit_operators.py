@@ -167,10 +167,8 @@ class COLLECTION_OT_WFC3DUpdate_Transformation_Constraints(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
     def _update(self, obj, props):
         for c in TRANSFORMATION_CONSTRAINTS:
-            if c in props:
+            if c in props and props[c] != PROP_DEFAULTS[c]:
                 obj["wfc_"+c] = props[c]
-            else:
-                obj["wfc_"+c] = PROP_DEFAULTS[c]
         
     def execute(self, context):
         props = context.scene.wfc_props
@@ -189,7 +187,8 @@ class COLLECTION_OT_WFC3DReset_Transformation_Constraints(bpy.types.Operator):
     
     def _reset(self,obj, props):
         for c in TRANSFORMATION_CONSTRAINTS:
-            obj["wfc_" +c] = PROP_DEFAULTS[c]
+            if "wfc_"+c in obj:
+                del obj["wfc_" +c]
             props[c] = PROP_DEFAULTS[c]
         
     def execute(self, context):
@@ -336,7 +335,7 @@ class COLLECTION_OT_WFC3DCollectionListSelectAll(bpy.types.Operator):
         return {'FINISHED'}
 
 class COLLECTION_OT_WFC3DCollectionListSelectNone(bpy.types.Operator):
-    """De-select all objects in list"""
+    """Deselect all objects in list"""
     bl_idname = "collection.wfc_collection_list_select_none"
     bl_label = ""
     bl_options = {'REGISTER','UNDO'}
@@ -355,7 +354,7 @@ class COLLECTION_OT_WFC3DNeighborListSelectAll(bpy.types.Operator):
         return {'FINISHED'}
 
 class COLLECTION_OT_WFC3DNeighborListSelectNone(bpy.types.Operator):
-    """De-select all objects in list"""
+    """Deselect all objects in list"""
     bl_idname = "collection.wfc_neighbor_list_select_none"
     bl_label = ""
     bl_options = {'REGISTER','UNDO'}
