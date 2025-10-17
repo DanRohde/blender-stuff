@@ -35,6 +35,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         
         box = layout.box()
         box.prop(props, "random_start_cell")
+        #box.prop(props, "random_direction")
         box.prop(props, "seed")
 
         layout.separator(type="LINE", factor=0.2)

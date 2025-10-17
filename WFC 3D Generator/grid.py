@@ -163,7 +163,7 @@ class WFC3DGrid:
         """Remove non-collapsed neighbors"""
         for direction, (dx, dy, dz) in dir.items():
             nx,ny,nz = x+dx, y+dy, z+dz 
-            if not self.within_boundaries(nx,ny,nz) or not self.collapsed[nx,ny,nz]:
+            if not self.within_boundaries(nx,ny,nz) or self.collapsed[nx,ny,nz]:
                 continue
             if neighbor in self.grid[nx,ny,nz]:
                 self.grid[nx,ny,nz] = [ n for n in self.grid[nx,ny,nz] if n!=neighbor]
