@@ -1,6 +1,6 @@
 import bpy
 
-from .constants import PROP_DEFAULTS, DIRECTIONS, TRANSFORMATION_CONSTRAINTS, FREQUENCY_CONSTRAINTS
+from .constants import PROP_DEFAULTS, DIRECTIONS, TRANSFORMATION_CONSTRAINTS, FREQUENCY_CONSTRAINTS, PROBABILITY_CONSTRAINTS
 
 
 def handle_update_collection(self, context):
@@ -48,7 +48,6 @@ def handle_edit_neighbor_constraint_update(self, context):
             item.selected = False            
         
 def update_constraint_properties(self, context):
-    
     props = bpy.context.scene.wfc_props
     collection = props.collection_obj
 
@@ -99,7 +98,7 @@ def update_constraint_properties(self, context):
         props["inside_none"] = obj["wfc_inside"] == "-"
         
     
-    for p in ["weight","probability"] + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS:
+    for p in PROBABILITY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS:
         if "wfc_"+p in obj:
             props[p]=obj["wfc_"+p]
         else:
@@ -135,7 +134,7 @@ def get_neighbor_constraint_items(_self, _context):
 
 class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()
-    selected: bpy.props.BoolProperty(default=False,update=update_constraint_properties)
+    selected: bpy.props.BoolProperty(default=False, update=update_constraint_properties)
 
 class WFC3DEditPanelNeighborMultiSelItem(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()

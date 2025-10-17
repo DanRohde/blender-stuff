@@ -11,16 +11,27 @@ def on_object_activated(scene, depsgraph):
         selected_objects = bpy.context.selected_objects
         
         if selected_objects:
-            selected_object_names = [ obj.name for obj in selected_objects ]
+            selected_object_names = [ ]
             for obj in selected_objects: 
-                for child in props.collection_obj.children:
-                    if obj.name in child.objects:
-                        selected_object_names.append(child.name)
+                if obj.name in props.collection_obj.objects:
+                    selected_object_names.append(obj.name)
+                else:
+                    for child in props.collection_obj.children:
+                        if obj.name in child.objects:
+                            selected_object_names.append(child.name)
             if props.auto_active_object:
                 for item in props.obj_list:
-                    item.selected = item.name in selected_object_names
-                props.obj_list_idx = -1
+                    if item.name in selected_object_names:
+                        if not item.selected:
+                            item.selected = True 
+                    elif item.selected:
+                        item.selected = False
+                    
             elif props.auto_neighbor_object:
                 for item in props.neighbor_list:
-                    item.selected = item.value in selected_object_names
+                    if item.value in selected_object_names:
+                        if not item.selected:
+                            item.selected = True
+                    elif item.selected:
+                        item.selected = False
             
