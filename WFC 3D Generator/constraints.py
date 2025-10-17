@@ -19,7 +19,10 @@ class WFC3DConstraints:
             self.constraints[obj_name] = {}
             
             if obj.name in bpy.data.collections:
-                    obj = bpy.data.collections[obj.name].objects[0]
+                    if len(bpy.data.collections[obj_name].objects) >0:
+                        obj = bpy.data.collections[obj.name].objects[0]
+                    else:
+                        continue
                 
             # load probability and frequency constraints
             for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS:
