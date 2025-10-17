@@ -202,7 +202,6 @@ class WFC3DConstraints:
                 
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
-        print(f"propagate({x},{y},{z})")
         self.propagate_frequency_constraints(grid, x, y, z)
                 
         # propagate neighbor constraints:
