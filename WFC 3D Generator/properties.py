@@ -174,8 +174,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
         items=get_neighbor_constraint_items,
         update=handle_edit_neighbor_constraint_update,
     )
-    auto_active_object: bpy.props.BoolProperty(name="", description="Automatically select the active object.", default=False,)
-    auto_neighbor_object: bpy.props.BoolProperty(name="", description="Automatically select the active object.", default=False,)
+    auto_active_object: bpy.props.BoolProperty(name="", description="Automatically select objects selected in 3D Viewport.", default=False,)
+    auto_neighbor_object: bpy.props.BoolProperty(name="", description="Automatically select objects selected in 3D Viewport.", default=False,)
     corner_fbl: bpy.props.BoolProperty( name="fbl", description="Front Bottom Left")
     corner_fbr: bpy.props.BoolProperty( name="fbr", description="Front Bottom Right")
     corner_ftl: bpy.props.BoolProperty( name="ftl", description="Front Top Left")

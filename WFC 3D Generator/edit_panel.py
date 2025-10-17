@@ -42,10 +42,8 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             layout.label(text="Choose a Source Collection", icon='INFO')
             return
         
+       
         row = col.row()
-        box = row.box()
-        #box.label(text="Object")
-        row = box.row()
         newcol = row.column()
 
         newrow = col.box().row()
@@ -57,8 +55,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         nc.enabled = not props.auto_active_object
         nc=newrow.column()
         nc.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
+        nc.operator("collection.wfc_collection_list_select_all", icon="CHECKBOX_HLT")
+        nc.operator("collection.wfc_collection_list_select_none", icon="CHECKBOX_DEHLT")
         nc.operator("collection.wfc_update_collection_list",icon="FILE_REFRESH")
-            
+        nc.enabled = not props.auto_active_object
+        
         if len(props.obj_list) == 0:
             newrow.label(text="Empty Collection")
             
@@ -98,18 +99,26 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                     box.label(text="Neighbors: "+obj[props.edit_neighbor_constraint])
                 else:
                     box.label(text="Neighbors:")
-                box.prop(props,"no_neighbor_allowed",icon="VIEW_LOCKED")
-                row = box.row()
+                
+                box.box().prop(props,"no_neighbor_allowed",icon="VIEW_LOCKED")
+                row = box.box().row()
                 row.enabled = not props.no_neighbor_allowed 
                 newcol = row.column()
                 newcol.operator("collection.wfc_get_neighbor_selected_object", icon="SELECT_SET")
-                newcol.prop(props,"auto_neighbor_object",icon="TRIA_RIGHT")
+                nc=newcol.column();
+                nc.prop(props,"auto_neighbor_object",icon="TRIA_RIGHT")
+                nc.enabled = not props.auto_active_object
                 newcol = row.column()
                 newcol.template_list("WFC3D_UL_EditPanelNeighborMultiSelList", "", props, "neighbor_list", props, "neighbor_list_idx")
                 newcol.enabled = not props.auto_neighbor_object
                 newcol = row.column()
                 newcol.enabled = not props.auto_neighbor_object
-                newcol.operator("collection.wfc_select_neighbor_object", icon='RESTRICT_SELECT_OFF')
+                nr = newcol.row()
+                nr.operator("collection.wfc_select_neighbor_object", icon='RESTRICT_SELECT_OFF')
+                nr.enabled = not props.auto_active_object
+                newcol.operator("collection.wfc_neighbor_list_select_all", icon="CHECKBOX_HLT")
+                newcol.operator("collection.wfc_neighbor_list_select_none", icon="CHECKBOX_DEHLT")
+        
                 row=box.row()
                 row.operator("object.wfc_save_constraint")
         if (props.edit_constraints == "grid"):    
@@ -165,7 +174,6 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.operator("object.wfc_update_grid_constraints")
         if (props.edit_constraints == "probability"):
             box=col.box()
-            box.label(text=obj_name)
             box.prop(props,"probability")
             box.prop(props, "weight")
             

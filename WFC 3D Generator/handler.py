@@ -20,4 +20,7 @@ def on_object_activated(scene, depsgraph):
                 for item in props.obj_list:
                     item.selected = item.name in selected_object_names
                 props.obj_list_idx = -1
+            elif props.auto_neighbor_object:
+                for item in props.neighbor_list:
+                    item.selected = item.value in selected_object_names
             

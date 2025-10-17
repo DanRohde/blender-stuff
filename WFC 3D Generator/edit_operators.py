@@ -35,7 +35,7 @@ class COLLECTION_OT_WFC3DSave_Neighbor_Constraint(bpy.types.Operator):
 
     
 class COLLECTION_OT_WFC3DReset_Neighbor_Constraint(bpy.types.Operator):
-    """ Reset selected neighbor constraints """
+    """Reset selected neighbor constraints"""
     bl_idname = "object.wfc_reset_constraint"
     bl_label = "Reset"
     bl_options = {'REGISTER', 'UNDO'}
@@ -202,7 +202,7 @@ class COLLECTION_OT_WFC3DReset_Transformation_Constraints(bpy.types.Operator):
 
         return {'FINISHED'}
 class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
-    """Select object"""
+    """Select objects in 3D Viewport"""
     bl_idname = "collection.wfc_select_dropdown_object"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
@@ -235,26 +235,39 @@ class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
         return {'FINISHED'}
 
 class COLLECTION_OT_WFC3DSelectNeighborObject(bpy.types.Operator):
-    """Select object"""
+    """Select objects in 3D Viewport"""
     bl_idname = "collection.wfc_select_neighbor_object"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
-        obj_name = props.select_neighbor
         collection = props.collection_obj
-        if obj_name in collection.children and len(collection.children[obj_name].objects)>0:
-            obj = collection.children[obj_name].objects[0]
+        sel_items = _get_selected_items(props.neighbor_list)
+        if len(sel_items)>0:
+            obj = _get_obj(props.collection_obj, sel_items[0]) 
         else:
-            obj = collection.objects[obj_name]
+            self.report({'WARNING'}, "Please select an object in the object list.")
+            return {'CANCELLED'}
+
         bpy.ops.object.select_all(action='DESELECT')
+        for item in _get_selected_items(props.neighbor_list):
+            _get_obj(props.collection_obj, item).select_set(True)
+        
         context.view_layer.objects.active = obj
         obj.select_set(True)
+        try:
+            for area in context.window.screen.areas:
+                if area.type == 'PROPERTIES':
+                    for space in area.spaces:
+                        if space.type == 'PROPERTIES':
+                            space.context = 'OBJECT'
+                            break
+        except Exception as e:
+            self.report({'WARNING'}, f"Error: {str(e)}")
         return {'FINISHED'}
 
-
 class COLLECTION_OT_WFC3DGetSelectedObject(bpy.types.Operator):
-    """Get active object"""
+    """Select objects selected in 3D Viewport"""
     bl_idname = "collection.wfc_get_selected_object"
     bl_label = ""
     bl_options = {'REGISTER','UNDO'}
@@ -277,29 +290,78 @@ class COLLECTION_OT_WFC3DGetSelectedObject(bpy.types.Operator):
         return {'FINISHED'}
 
 class COLLECTION_OT_WFC3DGetNeighborSelectedObject(bpy.types.Operator):
-    """Get active object"""
+    """Select objects selected in 3D Viewport"""
     bl_idname = "collection.wfc_get_neighbor_selected_object"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
-        collection = props.collection_obj
-        if context.view_layer.objects.active:
-            active_object_name = context.view_layer.objects.active.name
-            if active_object_name in collection.objects or active_object_name in collection.children:
-                props.select_neighbor = active_object_name
-            else:
-                self.report({'WARNING'}," No active object found")
-                return {'CANCELLED'}
+        selected_objects = bpy.context.selected_objects
+
+        if selected_objects:
+            selected_object_names = [ obj.name for obj in selected_objects ]
+            for obj in selected_objects: 
+                for child in props.collection_obj.children:
+                    if obj.name in child.objects:
+                        selected_object_names.append(child.name)
+            for item in props.neighbor_list:
+                item.selected = item.value in selected_object_names
+            props.neighbor_list_idx = -1
+        else:
+            self.report({'WARNING'}, "No active object found")
+            return {'CANCELLED'}
         return {'FINISHED'}
 
-class COLLECTOIN_OT_WFC3DUpdateCollectionList(bpy.types.Operator):
+class COLLECTION_OT_WFC3DUpdateCollectionList(bpy.types.Operator):
     """Reload object list"""
     bl_idname = "collection.wfc_update_collection_list"
     bl_label = ""
     bl_options = {'REGISTER','UNDO'}
     def execute(self,context):
         handle_update_collection(self,context)
+        return {'FINISHED'}
+
+def set_select_all_list_items(list, selected):
+    for item in list:
+        item.selected = selected
+        
+class COLLECTION_OT_WFC3DCollectionListSelectAll(bpy.types.Operator):
+    """Select all objects in list"""
+    bl_idname = "collection.wfc_collection_list_select_all"
+    bl_label = ""
+    bl_options = {'REGISTER','UNDO'}
+    def execute(self,context):
+        props = context.scene.wfc_props
+        set_select_all_list_items(props.obj_list, True)
+        return {'FINISHED'}
+
+class COLLECTION_OT_WFC3DCollectionListSelectNone(bpy.types.Operator):
+    """De-select all objects in list"""
+    bl_idname = "collection.wfc_collection_list_select_none"
+    bl_label = ""
+    bl_options = {'REGISTER','UNDO'}
+    def execute(self,context):
+        props = context.scene.wfc_props
+        set_select_all_list_items(props.obj_list, False)
+        return {'FINISHED'}
+class COLLECTION_OT_WFC3DNeighborListSelectAll(bpy.types.Operator):
+    """Select all objects in list"""
+    bl_idname = "collection.wfc_neighbor_list_select_all"
+    bl_label = ""
+    bl_options = {'REGISTER','UNDO'}
+    def execute(self,context):
+        props = context.scene.wfc_props
+        set_select_all_list_items(props.neighbor_list, True)
+        return {'FINISHED'}
+
+class COLLECTION_OT_WFC3DNeighborListSelectNone(bpy.types.Operator):
+    """De-select all objects in list"""
+    bl_idname = "collection.wfc_neighbor_list_select_none"
+    bl_label = ""
+    bl_options = {'REGISTER','UNDO'}
+    def execute(self,context):
+        props = context.scene.wfc_props
+        set_select_all_list_items(props.neighbor_list, False)
         return {'FINISHED'}
 
 
@@ -317,5 +379,9 @@ operators = [
     COLLECTION_OT_WFC3DGetSelectedObject,
     COLLECTION_OT_WFC3DGetNeighborSelectedObject,    
     COLLECTION_OT_WFC3DSelectNeighborObject,
-    COLLECTOIN_OT_WFC3DUpdateCollectionList,
+    COLLECTION_OT_WFC3DUpdateCollectionList,
+    COLLECTION_OT_WFC3DCollectionListSelectAll,
+    COLLECTION_OT_WFC3DCollectionListSelectNone,
+    COLLECTION_OT_WFC3DNeighborListSelectAll,
+    COLLECTION_OT_WFC3DNeighborListSelectNone,
 ]
