@@ -12,7 +12,7 @@ def register():
         bpy.utils.register_class(cls)
     
     bpy.types.Scene.wfc_props = bpy.props.PointerProperty(type=properties.WFC3DProperties)
-    bpy.app.handlers.depsgraph_update_post.append(handler.on_object_activated)
+    bpy.app.handlers.depsgraph_update_post.append(handler.update_handler)
 
 
 def unregister():
@@ -20,7 +20,7 @@ def unregister():
         bpy.utils.unregister_class(cls)
 
     del bpy.types.Scene.wfc_props
-    bpy.app.handlers.depsgraph_update_post.remove(handler.on_object_activated)
+    bpy.app.handlers.depsgraph_update_post.remove(handler.update_handler)
 
 if __name__ == "__main__":
     register()

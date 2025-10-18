@@ -30,10 +30,7 @@ class WFC3DGenerator:
     def load_objects(self):
         """Loads objects from the collection"""
         self.objects = list(self.collection.objects)
-        for child in self.collection.children:
-            if len(child.objects)>0:
-                self.objects.append(child)
-
+        self.objects.extend([child for child in self.collection.children if len(child.objects)>0])
         if not self.objects:
             raise ValueError("Collection is empty!")
 

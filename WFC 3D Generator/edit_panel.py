@@ -75,8 +75,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             if len(props.collection_obj.children[selected[0]].objects)>0:
                 obj = props.collection_obj.children[selected[0]].objects[0]
             
-        else:
+        elif selected[0] in props.collection_obj.objects:
             obj = props.collection_obj.objects[selected[0]]
+        else:
+            row.label(text="Selected object not found! Please press the reload button.")
+            return
             
         obj_name = ",".join(selected)
         
