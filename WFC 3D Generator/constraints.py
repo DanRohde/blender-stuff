@@ -27,7 +27,7 @@ class WFC3DConstraints:
                         continue
                 
             # load probability, frequency, transformation, symmetry constraints
-            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS:
+            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS:
                 cp = "wfc_"+p
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
@@ -232,10 +232,14 @@ class WFC3DConstraints:
                 return v[random.randrange(0,len(v))]
             else:
                 return vmin + (vmax - vmin) * random.random()
-
-        if src_obj.name not in self.constraints: ### collections bug!!!
+        props = bpy.context.scene.wfc_props
+        src_name = src_obj.name
+        if src_obj.name in props.collection_obj.children:
+            src_obj = props.collection_obj.children[src_obj.name].objects[0]
+            
+        if src_name not in self.constraints:
             return 
-        constraints = self.constraints[src_obj.name]    
+        constraints = self.constraints[src_name]
         if constraints["translation_min"] is not None and constraints["translation_max"] is not None and constraints["translation_steps"] is not None:
             tmin = constraints["translation_min"]
             tmax = constraints["translation_max"]

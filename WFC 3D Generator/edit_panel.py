@@ -176,6 +176,16 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             
             
             box.operator("object.wfc_update_grid_constraints")
+        if (props.edit_constraints == 'region'):
+            box=col.box()
+            row=box.row()
+            row.label(text=obj_name)
+            row.operator("object.wfc_reset_region_constraints")
+            row=box.row()
+            row.prop(props,"region_min")
+            row=box.row()
+            row.prop(props,"region_max")
+            box.operator("object.wfc_update_region_constraints")
         if (props.edit_constraints == "probability"):
             box=col.box()
             row=box.row()

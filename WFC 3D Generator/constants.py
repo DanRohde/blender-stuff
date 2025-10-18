@@ -38,6 +38,7 @@ PROP_DEFAULTS = {
     'freq_neighbor_face': -1, 'freq_neighbor_edge' : -1, 'freq_neighbor_corner' : -1,
     'freq_any_neighbor_face': -1, 'freq_any_neighbor_edge' : -1, 'freq_any_neighbor_corner' : -1,
     'sym_mirror_axes': (False, False, False), 'sym_rotate_axis' : (-1,-1,-1), 'sym_rotate_n': -1,
+    'region_min':(-1,-1,-1), 'region_max':(-1,-1,-1)
 }
 
 SYMMETRY_CONSTRAINTS = [ 'sym_mirror_axes','sym_rotate_axis', 'sym_rotate_n' ]
@@ -54,6 +55,8 @@ FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_neighbor', 'freq_axes', 'freq_any_n
 PROBABILITY_CONSTRAINTS = [ 'weight', 'probability']
 
 GRID_CONSTRAINTS = [ 'faces', 'corners', 'edges', 'inside']
+
+REGION_CONSTRAINTS = [ 'region_min', 'region_max' ]
 
 ICON_MAP = {
         'MESH': 'OUTLINER_OB_MESH',

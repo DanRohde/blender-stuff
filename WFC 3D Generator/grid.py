@@ -122,8 +122,36 @@ class WFC3DGrid:
                 if self.is_on_specific_face(pos,f):
                     return True
             return False
+        if 'region_min' in constraints[name] or 'region_max' in constraints[name]:
+            return self.is_inside_region(pos, constraints[name].get('region_min',None), constraints[name].get('region_max',None))
+        
         return True
-
+    
+    def is_inside_region(self, pos, rmin, rmax):
+        x,y,z = pos
+        if rmin is None:
+            ax,ay,az = (0,0,0)
+        else:
+            ax,ay,az = rmin
+            if ax < 0:
+                ax = 0
+            if ay < 0:
+                ay = 0
+            if az < 0:
+                az = 0
+        if rmax is None:
+            bx,by,bz = (self.grid_size[0]-1,self.grid_size[1]-1,self.grid_size[2]-1)
+        else:
+            bx,by,bz = rmax
+            if bx < 0:
+                bx = self.grid_size[0]-1
+            if by < 0:
+                by = self.grid_size[1]-1
+            if bz < 0:
+                bz = self.grid_size[2]-1
+        
+        return ax <= x <= bx and ay <= y <= by and az <= z <= bz
+        
     def count_obj(self, obj_name):
         count = 0
         gx, gy, gz = self.grid_size

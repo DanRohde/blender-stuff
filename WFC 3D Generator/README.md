@@ -19,13 +19,14 @@ Each object in the source collection can use custom properties to define the per
 ## Statistics: Constraints per Object
 * Neighbor constraints: 26
 * Grid constraints: 30
+* Region constraints: 2
 * Probability constraints: 2
 * Transformation constraints: 10
 * Frequency constraints: 15
 * Symmetry constraints: 9
 
 
-* **Sum: 92**
+* **Sum: 94**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -69,6 +70,10 @@ Each object in the source collection can use custom properties to define the per
     * empty string - allows the object to stay inside the grid
     * "-" - forbids to stay inside
 
+## Region Constraints
+* Used custom properties: `wfc_region_min,wfc_region_max`
+* Allowed property values:
+    * wfc_region_[min|max]: integer vector 
 	
 ## Probability Constraints
 * Used custom properties: `wfc_weight,wfc_probability`

@@ -1,7 +1,6 @@
 import bpy
 
-from .constants import PROP_DEFAULTS, FREQUENCY_CONSTRAINTS, TRANSFORMATION_CONSTRAINTS, SYMMETRY_CONSTRAINTS, PROBABILITY_CONSTRAINTS, GRID_CONSTRAINTS
-
+from .constants import *
 from .properties import update_constraint_properties, handle_update_collection, handle_edit_neighbor_constraint_update
 
 def _get_obj(collection, name):
@@ -118,7 +117,31 @@ class COLLECTION_OT_WFC3DReset_Grid_Constraints(bpy.types.Operator):
         update_constraint_properties(props, context)
         self.report({'INFO'}, f"Grid constraints of {obj_list} have been reset.")  
         return {'FINISHED'}
+class COLLECTION_OT_WFC3DUpdate_Region_Constraints(bpy.types.Operator):
+    """Save region constraints"""
+    bl_idname = "object.wfc_update_region_constraints"
+    bl_label = "Save Region Constraints"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        obj_list = _get_obj_list(props)
+        _update_constraints(props, REGION_CONSTRAINTS)
+        self.report({'INFO'}, f"Region constraints of {obj_list} have been saved.")
+        return {'FINISHED'}
 
+class COLLECTION_OT_WFC3DReset_Region_Constraints(bpy.types.Operator):
+    """Reset region constraints"""
+    bl_idname = "object.wfc_reset_region_constraints"
+    bl_label = "Reset"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        obj_list = _get_obj_list(props)
+        _reset_constraints(props, REGION_CONSTRAINTS)
+        update_constraint_properties(props, context)
+        self.report({'INFO'}, f"Region constraints of {obj_list} have been reset.")  
+        return {'FINISHED'}
+    
 class COLLECTION_OT_WFC3DUpdate_Probability_Constraints(bpy.types.Operator):
     """Save probability constraints"""
     bl_idname = "object.wfc_update_probability_constraints"
@@ -391,6 +414,8 @@ operators = [
     COLLECTION_OT_WFC3DReset_Neighbor_Constraint,
     COLLECTION_OT_WFC3DUpdate_Grid_Constraints,
     COLLECTION_OT_WFC3DReset_Grid_Constraints,
+    COLLECTION_OT_WFC3DUpdate_Region_Constraints,
+    COLLECTION_OT_WFC3DReset_Region_Constraints,
     COLLECTION_OT_WFC3DUpdate_Probability_Constraints,
     COLLECTION_OT_WFC3DReset_Probability_Constraints,
     COLLECTION_OT_WFC3DUpdate_Frequency_Constraints,

@@ -1,7 +1,6 @@
 import bpy
 
-from .constants import PROP_DEFAULTS, DIRECTIONS, TRANSFORMATION_CONSTRAINTS, FREQUENCY_CONSTRAINTS, PROBABILITY_CONSTRAINTS
-
+from .constants import *
 
 def handle_update_collection(self, context):
     props = context.scene.wfc_props
@@ -99,7 +98,7 @@ def update_constraint_properties(self, context):
         props["inside_none"] = obj["wfc_inside"] == "-"
         
     
-    for p in PROBABILITY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS:
+    for p in PROBABILITY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + REGION_CONSTRAINTS:
         if "wfc_"+p in obj:
             props[p]=obj["wfc_"+p]
         else:
@@ -163,7 +162,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     edit_constraints: bpy.props.EnumProperty(
         name="", description = "Select constraint type",
         items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),
-               ("grid","Grid Constraints","Grid constraints"),("probability","Probability Constraints", "Probability constraints"),
+               ("grid","Grid Constraints","Grid constraints"),("region","Region Constraints","Region constraints"),("probability","Probability Constraints", "Probability constraints"),
                ("transformation","Transformation Constraints", "Transformation constraints"), 
                ('frequency',"Frequency Constraints","Frequency constraints"), ("symmetry","Symmetry Constraints","Symmetry constraints"),
                ],
@@ -235,7 +234,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     sym_mirror_axes : bpy.props.BoolVectorProperty(name="Axes",description="Symmetry Axes", default=PROP_DEFAULTS["sym_mirror_axes"])
     sym_rotate_axis : bpy.props.FloatVectorProperty(name="Axis",description="Rotation Axis", default=PROP_DEFAULTS["sym_rotate_axis"])
     sym_rotate_n : bpy.props.IntProperty(name="Number",description="Number of rotations", default=PROP_DEFAULTS["sym_rotate_n"], min=-1)
-    
+    region_min: bpy.props.IntVectorProperty(name="min",description="Region minimum", default=PROP_DEFAULTS["region_min"],min=-1)
+    region_max: bpy.props.IntVectorProperty(name="max",description="Region minimum", default=PROP_DEFAULTS["region_max"],min=-1)
 
 properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
 
