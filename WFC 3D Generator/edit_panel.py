@@ -250,9 +250,14 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.label(text="Mirror Symmetry")
             row = box.row()
             row.prop(props,"sym_mirror_axes")
-            box.operator("object.wfc_update_symmetry_constraints")
             
-            #box.label(text="Rotational Symmetry")
+            box.label(text="Rotational Symmetry")
+            row = box.row()
+            row.prop(props,"sym_rotate_axis")
+            box.prop(props,"sym_rotate_n")
+           
+            box.operator("object.wfc_update_symmetry_constraints")
+           
             #box.label(text="Translational Symmetry")
             #box.label(text="Point Reflection Symmetry")
             #box.label(text="Glide Reflection Symmetry")

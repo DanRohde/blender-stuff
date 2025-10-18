@@ -233,7 +233,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     freq_any_neighbor_corner : bpy.props.IntProperty(name="Corner",description="Neighbor corner frequency max", default=PROP_DEFAULTS["freq_any_neighbor_corner"], min=-1,max=8)
     freq_any_neighbor_edge : bpy.props.IntProperty(name="Edge",description="Neighbor edge frequency max", default=PROP_DEFAULTS["freq_any_neighbor_edge"], min=-1,max=12)
     sym_mirror_axes : bpy.props.BoolVectorProperty(name="Axes",description="Symmetry Axes", default=PROP_DEFAULTS["sym_mirror_axes"])
-    
+    sym_rotate_axis : bpy.props.FloatVectorProperty(name="Axis",description="Rotation Axis", default=PROP_DEFAULTS["sym_rotate_axis"])
+    sym_rotate_n : bpy.props.IntProperty(name="Number",description="Number of rotations", default=PROP_DEFAULTS["sym_rotate_n"], min=-1)
     
 
 properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

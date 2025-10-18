@@ -37,10 +37,10 @@ PROP_DEFAULTS = {
     'freq_grid' : -1, 'freq_neighbor' : -1, 'freq_axes' : (-1,-1,-1), 'freq_any_neighbor' : -1, 'freq_any_axes' : (-1,-1,-1),
     'freq_neighbor_face': -1, 'freq_neighbor_edge' : -1, 'freq_neighbor_corner' : -1,
     'freq_any_neighbor_face': -1, 'freq_any_neighbor_edge' : -1, 'freq_any_neighbor_corner' : -1,
-    'sym_mirror_axes': (False, False, False),
+    'sym_mirror_axes': (False, False, False), 'sym_rotate_axis' : (-1,-1,-1), 'sym_rotate_n': -1,
 }
 
-SYMMETRY_CONSTRAINTS = [ 'sym_mirror_axes' ]
+SYMMETRY_CONSTRAINTS = [ 'sym_mirror_axes','sym_rotate_axis', 'sym_rotate_n' ]
 TRANSFORMATION_CONSTRAINTS = ['scale_min','scale_max','scale_steps','scale_type', 'scale_uni',
                                   'rotation_min','rotation_max','rotation_steps',
                                   #'rotation_neighbor','rotation_grid',

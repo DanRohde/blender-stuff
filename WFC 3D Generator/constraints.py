@@ -1,7 +1,7 @@
 import bpy
 import numpy as np
 from itertools import product
-from mathutils import Vector
+from mathutils import Vector, Matrix
 import random
 from collections import deque
 
@@ -77,6 +77,70 @@ class WFC3DConstraints:
             else:
                 options.append(name)
         return self.get_weighted_options(options)
+    
+    def mirror_and_rotate_3d(self, coords, shape, mirror_axes=(False, False, False), rotate_axis=None, n_rotations=1):
+        """
+        Generates mirrored and/or rotationally symmetric points for a 3D matrix.
+    
+        Parameters
+        ----------
+        coords : tuple[int,int,int]
+            Original point (x, y, z)
+        shape : tuple[int,int,int]
+            Shape of the 3D matrix (nx, ny, nz)
+        mirror_axes : tuple[bool,bool,bool], default=(True, True, True)
+            Axes to mirror (mirror_x, mirror_y, mirror_z)
+        rotate_axis : tuple[float,float,float] or Vector, optional
+            Axis for rotational symmetry (passes through matrix center). None = no rotation
+        n_rotations : int, default=1
+            Number of rotations for rotational symmetry (360/n each)
+    
+        Returns
+        -------
+        set[tuple[int,int,int]]
+            All generated points inside the matrix
+        """
+        p = Vector(coords)
+        center = Vector(((s-1)/2 for s in shape))
+        generated_points = set()
+    
+        # 1️⃣ Generate mirrored points
+        flip_options = [[False, True] if mirror_axes[i] else [False] for i in range(3)]
+        mirrored_points = []
+    
+        for flip_x, flip_y, flip_z in product(*flip_options):
+            q = p.copy()
+            if flip_x:
+                q.x = 2 * center.x - q.x
+            if flip_y:
+                q.y = 2 * center.y - q.y
+            if flip_z:
+                q.z = 2 * center.z - q.z
+            mirrored_points.append(q)
+    
+        # 2️⃣ Apply rotations to each mirrored point
+        if rotate_axis is not None:
+            rot_axis = Vector(rotate_axis).normalized()
+        else:
+            rot_axis = None
+    
+        for mp in mirrored_points:
+            if rot_axis is None or n_rotations <= 1:
+                # No rotation, just use the mirrored point
+                qi = tuple(int(round(v)) for v in mp)
+                if all(0 <= qi[i] < shape[i] for i in range(3)):
+                    generated_points.add(qi)
+            else:
+                for i in range(n_rotations):
+                    theta = (2 * np.pi / n_rotations) * i
+                    rot_matrix = Matrix.Rotation(theta, 4, rot_axis)
+                    q_rot = rot_matrix @ (mp - center) + center
+                    qi = tuple(int(round(v)) for v in q_rot)
+                    if all(0 <= qi[j] < shape[j] for j in range(3)):
+                        generated_points.add(qi)
+    
+        return generated_points
+
     def mirror_3d_axes(self, coords, shape, axes=(True, True, True)):
         """
         Mirrors a cell (x, y, z) in a 3D matrix along specified axes only.
@@ -123,13 +187,18 @@ class WFC3DConstraints:
         if len(grid.grid[x,y,z])==0: 
             return
         mirror_axes = self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes"]
-        if mirror_axes and (mirror_axes[0] or mirror_axes[1] or mirror_axes[2]):
-            points = self.mirror_3d_axes((x,y,z), grid.grid_size, mirror_axes)
-            for point in points:
-                nx,ny,nz = point
-                if not (nx==x and ny==y and nz==z):
-                    grid.grid[nx,ny,nz] = grid.grid[x,y,z]
-                    grid.mark_collapsed(nx,ny,nz)
+        rotate_axis = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_axis"]
+        rotate_n = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_n"]
+
+        if rotate_axis and (rotate_axis[0]<0 or rotate_axis[1]<0 or rotate_axis[2]<0):
+            rotate_axis = None        
+        # points = self.mirror_3d_axes((x,y,z), grid.grid_size, mirror_axes)
+        points = self.mirror_and_rotate_3d((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
+        for point in points:
+            nx,ny,nz = point
+            if not (nx==x and ny==y and nz==z):
+                grid.grid[nx,ny,nz] = grid.grid[x,y,z]
+                grid.mark_collapsed(nx,ny,nz)
 
     def collapse(self, grid, x, y, z):
         """Collapse a grid cell with constraints"""
