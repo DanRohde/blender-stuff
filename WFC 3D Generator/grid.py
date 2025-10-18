@@ -164,7 +164,7 @@ class WFC3DGrid:
         reduced_cells = []
         for direction, (dx, dy, dz) in dir.items():
             nx,ny,nz = x+dx, y+dy, z+dz 
-            if not self.within_boundaries(nx,ny,nz):# or self.collapsed[nx,ny,nz]:
+            if not self.within_boundaries(nx,ny,nz):
                 continue
             if neighbor in self.grid[nx,ny,nz]:
                 self.grid[nx,ny,nz] = [ n for n in self.grid[nx,ny,nz] if n!=neighbor]
@@ -176,7 +176,7 @@ class WFC3DGrid:
         reduced_cells=[]
         xa,ya,za = (1-axis[0])*x, (1-axis[1])*y, (1-axis[2])*z
         while self.within_boundaries(xa, ya, za):
-            if (xa!=x or ya!=y or za!=z) and neighbor in self.grid[xa,ya,za]: # and not self.collapsed[xa,ya,za]:
+            if (xa!=x or ya!=y or za!=z) and neighbor in self.grid[xa,ya,za]:
                 self.grid[xa,ya,za] = [ n for n in self.grid[xa,ya,za] if n!=neighbor]
                 reduced_cells.append((xa,ya,za))
             xa,ya,za = xa+axis[0], ya+axis[1], za+axis[2]
@@ -233,7 +233,7 @@ class WFC3DGrid:
                 for y in range(gy):
                     for z in range(gz):
                         obj_list = self.grid[x, y, z]
-                        if obj_name in obj_list: # and not self.collapsed[x,y,z]:
+                        if obj_name in obj_list and not self.collapsed[x,y,z]:
                             self.grid[x, y, z] = [n for n in obj_list if n != obj_name]
                             reduced_cells.append((x,y,z))
         return reduced_cells
