@@ -135,23 +135,23 @@ class WFC3DGrid:
         
         return count
 
-    def count_neighbors(self, x, y, z, neighbor, dir):
-        """count specific non-collapsed or non-empty collapsed/non-collapsed neighbors"""
+    def count_neighbors(self, x, y, z, neighbor, dirs):
+        """count neighbors"""
         count = 0
-        for direction, (dx, dy, dz) in dir.items():
+        for direction, (dx, dy, dz) in dirs.items():
             nx,ny,nz = x+dx, y+dy, z+dz 
-            if not self.within_boundaries(nx,ny,nz) or (self.collapsed[nx, ny, nz] and neighbor is not None):
+            if not self.within_boundaries(nx,ny,nz):
                 continue
             if (neighbor is None and len(self.grid[nx,ny,nz])>0) or neighbor in self.grid[nx,ny,nz]:
                 count+=1
         return count
 
     def count_axis_neighbors(self, x, y, z, neighbor, axis):
-        """Count specific non-collapsed or non-empty collapsed/non-collapsed objects in a given axis"""
+        """Count objects in a given axis"""
         count = [0,0,0]
         xa,ya,za = (1-axis[0]) * x, (1-axis[1]) * y, (1-axis[2]) * z
         while self.within_boundaries(xa, ya, za):
-            if (not self.collapsed[xa,ya,za] or neighbor is None) and (xa!=x or ya!=y or za!=z):
+            if xa!=x or ya!=y or za!=z:
                 if (neighbor is None and len(self.grid[xa,ya,za])>0) or neighbor in self.grid[xa,ya,za]:
                     count[0]+=axis[0]
                     count[1]+=axis[1]
@@ -160,22 +160,27 @@ class WFC3DGrid:
         return count
     
     def remove_neighbors(self, x, y, z, neighbor, dir):
-        """Remove non-collapsed neighbors"""
+        """Remove neighbors"""
+        reduced_cells = []
         for direction, (dx, dy, dz) in dir.items():
             nx,ny,nz = x+dx, y+dy, z+dz 
-            if not self.within_boundaries(nx,ny,nz) or self.collapsed[nx,ny,nz]:
+            if not self.within_boundaries(nx,ny,nz):# or self.collapsed[nx,ny,nz]:
                 continue
             if neighbor in self.grid[nx,ny,nz]:
                 self.grid[nx,ny,nz] = [ n for n in self.grid[nx,ny,nz] if n!=neighbor]
+                reduced_cells.append((nx,ny,nz))
+        return reduced_cells
     
     def remove_axis_neighbors(self, x, y, z, neighbor, axis):
-        """Remove non-collapsed neighbors"""
+        """Remove neighbors"""
+        reduced_cells=[]
         xa,ya,za = (1-axis[0])*x, (1-axis[1])*y, (1-axis[2])*z
         while self.within_boundaries(xa, ya, za):
-            if not self.collapsed[xa,ya,za] and (xa!=x or ya!=y or za!=z) and neighbor in self.grid[xa,ya,za]:
+            if (xa!=x or ya!=y or za!=z) and neighbor in self.grid[xa,ya,za]: # and not self.collapsed[xa,ya,za]:
                 self.grid[xa,ya,za] = [ n for n in self.grid[xa,ya,za] if n!=neighbor]
+                reduced_cells.append((xa,ya,za))
             xa,ya,za = xa+axis[0], ya+axis[1], za+axis[2]
-    
+        return reduced_cells
     def remove_max_neighbors(self, x, y, z, max_count, dir):
         """Remove max any random neighbor"""
         neighbors_pos = []
@@ -194,7 +199,7 @@ class WFC3DGrid:
         for i in range(max_count):
             dx,dy,dz = neighbors_pos[i]
             self.grid[dx,dy,dz] = []
- 
+        return []
     def remove_max_axis_neighbors(self, x, y, z, max_count, axis):
         """Remove max any random axis neighbor"""
         neighbor_pos = []
@@ -210,28 +215,28 @@ class WFC3DGrid:
         for i in range(max_count):
             xa,ya,za = neighbor_pos[i]
             self.grid[xa,ya,za] = []
-        
+        return []
+    
     def remove_obj(self, obj_name, pos, dir):
         gx, gy, gz = self.grid_size
-        deleted = 0
+        reduced_cells = []
         if pos and dir:
             x,y,z = pos
             dx, dy, dz = dir
-            while (0 <= x+dx < gx and 0 <= y+dy < gy and 0 <= z+dz < gz):
+            if self.within_boundaries(x+dx, y+dy, z+dz):
                 obj_list = self.grid[x+dx,y+dy,z+dz]
                 if obj_name in obj_list and not self.collapsed[x, y, z]:
                     self.grid[x+dx,y+dy,z+dz] = [n for n in obj_list if n != obj_name]
-                    deleted+=1
-            return deleted
+                    reduced_cells.append((x+dx,y+dy,z+dz))
         else:
             for x in range(gx):
                 for y in range(gy):
                     for z in range(gz):
                         obj_list = self.grid[x, y, z]
-                        if obj_name in obj_list and not self.collapsed[x,y,z]:
+                        if obj_name in obj_list: # and not self.collapsed[x,y,z]:
                             self.grid[x, y, z] = [n for n in obj_list if n != obj_name]
-                            deleted=+1
-        return deleted
+                            reduced_cells.append((x,y,z))
+        return reduced_cells
     def mark_collapsed(self, x, y, z):
         self.collapsed[x,y,z] = True
     

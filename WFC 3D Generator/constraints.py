@@ -274,8 +274,8 @@ class WFC3DConstraints:
         
     def propagate_frequency_constraints(self, grid, x, y, z):
         if len(grid.grid[x,y,z])==0:
-            return 
-        
+            return []
+        reduced_cells = []
         current_obj = grid.grid[x,y,z][0]
         # grid frequency
         if self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
@@ -285,15 +285,15 @@ class WFC3DConstraints:
                 grid.grid[x,y,z] = []
            
             if count >= self.constraints[current_obj]["freq_grid"]:
-                grid.remove_obj(current_obj, None, None)
+                reduced_cells.extend(grid.remove_obj(current_obj, None, None))
         
         # neighbor frequency
         nf = [ { "freq_neighbor_face" : FACE_DIRECTIONS}, {"freq_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_neighbor" : DIRECTIONS}]
         for a in nf:
             for p,dir in a.items():
                 if self.constraints[current_obj][p] is not None and self.constraints[current_obj][p]>-1:
-                    if grid.count_neighbors(x, y, z, current_obj, dir) >= self.constraints[current_obj][p]:
-                        grid.remove_neighbors(x, y, z, current_obj, dir)
+                    if grid.count_neighbors(x, y, z, current_obj, dir) > self.constraints[current_obj][p]:
+                        reduced_cells.extend(grid.remove_neighbors(x, y, z, current_obj, dir))
         
         # axes
         axis={ 0: [1,0,0], 1: [0,1,0], 2 : [0,0,1]}
@@ -303,7 +303,7 @@ class WFC3DConstraints:
                 if max_count[i]<0:
                     continue
                 if grid.count_axis_neighbors(x,y,z,current_obj,axis[i])[i] >= max_count[i]:
-                    grid.remove_axis_neighbors(x,y,z,current_obj,axis[i])
+                    reduced_cells.extend(grid.remove_axis_neighbors(x,y,z,current_obj,axis[i]))
         
         nf = [ { "freq_any_neighbor_face" : FACE_DIRECTIONS}, {"freq_any_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_any_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_any_neighbor" : DIRECTIONS}]
         # any neighbor frequency
@@ -322,20 +322,22 @@ class WFC3DConstraints:
                 diff = max_count[i] - grid.count_axis_neighbors(x, y, z, None, axis[i])[i]
                 if diff < 0:
                     grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i])
-                
+        return reduced_cells
+     
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
-        self.propagate_frequency_constraints(grid, x, y, z)
                 
         # propagate neighbor constraints:
         queue = deque([(x, y, z)])
+        queue.extend(self.propagate_frequency_constraints(grid, x, y, z))
+        
         while queue:
             cx, cy, cz = queue.popleft()
             if len(grid.grid[cx,cy,cz])>0:
                 current_obj =  grid.grid[cx, cy, cz][0]
             else:
                 continue
-            
+
             for direction, (dx, dy, dz) in DIRECTIONS.items():
                 nx, ny, nz = cx + dx, cy + dy, cz + dz             
                 if grid.within_boundaries(nx, ny, nz):
