@@ -192,13 +192,15 @@ class WFC3DConstraints:
 
         if rotate_axis and (not rotate_n or rotate_n <=0):
             rotate_axis = None        
-        # points = self.mirror_3d_axes((x,y,z), grid.grid_size, mirror_axes)
-        points = self.mirror_and_rotate_3d((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
-        for point in points:
-            nx,ny,nz = point
-            if not (nx==x and ny==y and nz==z):
-                grid.grid[nx,ny,nz] = grid.grid[x,y,z]
-                grid.mark_collapsed(nx,ny,nz)
+            
+        if mirror_axes or rotate_axis:
+            # points = self.mirror_3d_axes((x,y,z), grid.grid_size, mirror_axes)
+            points = self.mirror_and_rotate_3d((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
+            for point in points:
+                nx,ny,nz = point
+                if not (nx==x and ny==y and nz==z):
+                    grid.grid[nx,ny,nz] = grid.grid[x,y,z]
+                    grid.mark_collapsed(nx,ny,nz)
 
     def collapse(self, grid, x, y, z):
         """Collapse a grid cell with constraints"""
