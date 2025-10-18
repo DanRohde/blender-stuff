@@ -121,7 +121,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 newcol.operator("collection.wfc_neighbor_list_select_none", icon="CHECKBOX_DEHLT")
         
                 row=box.row()
-                row.operator("object.wfc_save_constraint")
+                row.operator("object.wfc_update_constraint")
         if (props.edit_constraints == "grid"):    
             box=col.box()
             row = box.row()
