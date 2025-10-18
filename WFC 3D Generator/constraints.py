@@ -190,7 +190,7 @@ class WFC3DConstraints:
         rotate_axis = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_axis"]
         rotate_n = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_n"]
 
-        if rotate_axis and (rotate_axis[0]==-1 and rotate_axis[1]==-1 and rotate_axis[2]==-1):
+        if rotate_axis and (rotate_n <=0):
             rotate_axis = None        
         # points = self.mirror_3d_axes((x,y,z), grid.grid_size, mirror_axes)
         points = self.mirror_and_rotate_3d((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
