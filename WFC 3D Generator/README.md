@@ -22,10 +22,10 @@ Each object in the source collection can use custom properties to define the per
 * Probability constraints: 2
 * Transformation constraints: 10
 * Frequency constraints: 15
-* Symmetry constraints: 7
+* Symmetry constraints: 9
 
 
-* **Sum: 90**
+* **Sum: 92**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -95,8 +95,11 @@ Each object in the source collection can use custom properties to define the per
 
 
 ## Symmetry Constraints
-* Use custom property: `wfc_sym_mirror`
-* Allowed property values: a vector of booleans
+* Use custom property: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n`
+* Allowed property values: 
+    * wfc_sym_mirror: a vector of booleans or integers
+    * wfc_sym_rotate_axis: a float vector
+    * wfc_sym_rotate_n: an integer (number of rotations: n=4 => 90° rotation)
 
 ## Upcoming Features
 * more constraints: symmetry, pattern, local/region, ...
