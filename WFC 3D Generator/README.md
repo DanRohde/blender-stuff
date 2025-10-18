@@ -22,10 +22,10 @@ Each object in the source collection can use custom properties to define the per
 * Probability constraints: 2
 * Transformation constraints: 10
 * Frequency constraints: 15
-* Symmetry constraints: 3
+* Symmetry constraints: 8
 
 
-* **Sum: 86**
+* **Sum: 91**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -71,7 +71,7 @@ Each object in the source collection can use custom properties to define the per
 
 	
 ## Probability Constraints
-* Used custom property: `wfc_weight,wfc_probability`
+* Used custom properties: `wfc_weight,wfc_probability`
 * Allowed property values:
     * wfc_probability: float value between 0 and 1
     * wfc_weight: empty string - weight of 1, 0 - object will not be used, 1..n - increases the chance of being chosen by a factor of n
@@ -93,6 +93,10 @@ Each object in the source collection can use custom properties to define the per
    * wfc_grid, wfc_freq_[any_]neighbor[_face|_edge|_corner]: an integer
    * wfc_[_any]_axes: an integer vector
 
+
+## Symmetry Constraints
+* Use custom property: `wfc_sym_mirror`
+* Allowed property values: a vector of booleans
 
 ## Upcoming Features
 * more constraints: symmetry, pattern, local/region, ...
