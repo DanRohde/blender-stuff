@@ -1,6 +1,7 @@
 import bpy
 
 def _update_list(list, selected_object_names):
+    # caution: any item.sected change fires an event => only do necessary updates
     for item in list:
         if item.name in selected_object_names:
             if not item.selected:

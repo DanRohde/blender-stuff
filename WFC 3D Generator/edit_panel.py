@@ -175,6 +175,9 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.operator("object.wfc_update_grid_constraints")
         if (props.edit_constraints == "probability"):
             box=col.box()
+            row=box.row()
+            row.label(text=obj_name)
+            row.operator("object.wfc_reset_probability_constraints")
             box.prop(props,"probability")
             box.prop(props, "weight")
             
@@ -240,14 +243,19 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             
         if (props.edit_constraints=="symmetry"):
             box = col.box()
-            box.label(text=obj_name)
-            box.label(text="Symmetry Constraints")
+            row = box.row()
+            row.label(text=obj_name)
+            row.operator("object.wfc_reset_symmetry_constraints")
             
             box.label(text="Mirror Symmetry")
-            box.label(text="Rotational Symmetry")
-            box.label(text="Translational Symmetry")
-            box.label(text="Point Reflection Symmetry")
-            box.label(text="Glide Reflection Symmetry")
+            row = box.row()
+            row.prop(props,"sym_mirror_axes")
+            box.operator("object.wfc_update_symmetry_constraints")
+            
+            #box.label(text="Rotational Symmetry")
+            #box.label(text="Translational Symmetry")
+            #box.label(text="Point Reflection Symmetry")
+            #box.label(text="Glide Reflection Symmetry")
         
 
 panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]

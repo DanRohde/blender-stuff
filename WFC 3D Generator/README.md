@@ -22,9 +22,10 @@ Each object in the source collection can use custom properties to define the per
 * Probability constraints: 2
 * Transformation constraints: 10
 * Frequency constraints: 15
+* Symmetry constraints: 3
 
 
-* **Sum: 83**
+* **Sum: 86**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -70,11 +71,10 @@ Each object in the source collection can use custom properties to define the per
 
 	
 ## Probability Constraints
-* Used custom property: `wfc_weight`
+* Used custom property: `wfc_weight,wfc_probability`
 * Allowed property values:
-    * empty string - weight of 1
-    * 0 - object will not be used
-    * 1..n - increases the chance of being chosen by a factor of n
+    * wfc_probability: float value between 0 and 1
+    * wfc_weight: empty string - weight of 1, 0 - object will not be used, 1..n - increases the chance of being chosen by a factor of n
 
 
 ## Transformation Constraints

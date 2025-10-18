@@ -1,9 +1,11 @@
 import bpy
 import numpy as np
+from itertools import product
+from mathutils import Vector
 import random
 from collections import deque
 
-from .constants import DIRECTIONS, OPPOSITE_DIRECTIONS, TRANSFORMATION_CONSTRAINTS, FREQUENCY_CONSTRAINTS, GRID_CONSTRAINTS, PROBABILITY_CONSTRAINTS, FACE_DIRECTIONS, EDGE_DIRECTIONS, CORNER_DIRECTIONS
+from .constants import *
 
 
 class WFC3DConstraints:
@@ -24,8 +26,8 @@ class WFC3DConstraints:
                     else:
                         continue
                 
-            # load probability and frequency constraints
-            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS:
+            # load probability, frequency, transformation, symmetry constraints
+            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS:
                 cp = "wfc_"+p
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
@@ -38,13 +40,6 @@ class WFC3DConstraints:
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][c] = obj[cp].split(",")
             
-            # load transformation constraints
-            for r in TRANSFORMATION_CONSTRAINTS:
-                if "wfc_"+r in obj:
-                    self.constraints[obj_name][r] = obj["wfc_"+r]
-                else:
-                    self.constraints[obj_name][r] = None
-                    
             
             # load neighbor constraints
             for direction in DIRECTIONS:
@@ -82,14 +77,68 @@ class WFC3DConstraints:
             else:
                 options.append(name)
         return self.get_weighted_options(options)
+    def mirror_3d_axes(self, coords, shape, axes=(True, True, True)):
+        """
+        Mirrors a cell (x, y, z) in a 3D matrix along specified axes only.
     
+        Parameters
+        ----------
+        coords : tuple[int, int, int]
+            The original coordinate (x, y, z).
+        shape : tuple[int, int, int]
+            The shape of the matrix (nx, ny, nz).
+        axes : tuple[bool, bool, bool], default=(True, True, True)
+            Which axes to mirror: (mirror_x, mirror_y, mirror_z)
+    
+        Returns
+        -------
+        set[tuple[int, int, int]]
+            A set of all mirrored coordinates.
+        """
+        p = Vector(coords)
+        center = Vector(((s - 1) / 2 for s in shape))
+        mirrored = set()
+    
+        # Generate all combinations of flips for the selected axes
+        flip_options = [ [False, True] if axes[i] else [False] for i in range(3) ]
+    
+        for flip_x, flip_y, flip_z in product(*flip_options):
+            q = p.copy()
+            if flip_x:
+                q.x = 2 * center.x - q.x
+            if flip_y:
+                q.y = 2 * center.y - q.y
+            if flip_z:
+                q.z = 2 * center.z - q.z
+    
+            qi = tuple(int(round(v)) for v in q)
+            # Keep only coordinates inside the matrix
+            if all(0 <= qi[i] < shape[i] for i in range(3)):
+                mirrored.add(qi)
+    
+        return mirrored
+
+    def apply_symmetry_constraints(self, grid, x, y, z):
+        """Apply symmetry to collapsed cells"""
+        if len(grid.grid[x,y,z])==0: 
+            return
+        mirror_axes = self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes"]
+        if mirror_axes and (mirror_axes[0] or mirror_axes[1] or mirror_axes[2]):
+            points = self.mirror_3d_axes((x,y,z), grid.grid_size, mirror_axes)
+            for point in points:
+                nx,ny,nz = point
+                if not (nx==x and ny==y and nz==z):
+                    grid.grid[nx,ny,nz] = grid.grid[x,y,z]
+                    grid.mark_collapsed(nx,ny,nz)
+
     def collapse(self, grid, x, y, z):
-        """ Collapse a grid cell with constraints """    
+        """Collapse a grid cell with constraints"""
         options = self.apply_probability_constraints(grid.grid[x,y,z])
         if len(options)>0:
             grid.grid[x, y, z] = [ random.choice(options) ]
         else:
             grid.grid[x, y, z] = []
+        self.apply_symmetry_constraints(grid, x, y, z)
         grid.mark_collapsed(x, y, z)
 
 

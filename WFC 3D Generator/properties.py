@@ -165,8 +165,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
         items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),
                ("grid","Grid Constraints","Grid constraints"),("probability","Probability Constraints", "Probability constraints"),
                ("transformation","Transformation Constraints", "Transformation constraints"), 
-               ('frequency',"Frequency Constraints","Frequency constraints")
-               #("symmetry","Symmetry Constraints","Symmetry constraints"),
+               ('frequency',"Frequency Constraints","Frequency constraints"), ("symmetry","Symmetry Constraints","Symmetry constraints"),
                ],
         update=update_constraint_properties,
     )
@@ -233,7 +232,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     freq_any_neighbor_face : bpy.props.IntProperty(name="Face",description="Neighbor face frequency max", default=PROP_DEFAULTS["freq_any_neighbor_face"], min=-1,max=6)
     freq_any_neighbor_corner : bpy.props.IntProperty(name="Corner",description="Neighbor corner frequency max", default=PROP_DEFAULTS["freq_any_neighbor_corner"], min=-1,max=8)
     freq_any_neighbor_edge : bpy.props.IntProperty(name="Edge",description="Neighbor edge frequency max", default=PROP_DEFAULTS["freq_any_neighbor_edge"], min=-1,max=12)
-
+    sym_mirror_axes : bpy.props.BoolVectorProperty(name="Axes",description="Symmetry Axes", default=PROP_DEFAULTS["sym_mirror_axes"])
     
     
 

@@ -1,6 +1,6 @@
 import bpy
 
-from .constants import PROP_DEFAULTS, FREQUENCY_CONSTRAINTS, TRANSFORMATION_CONSTRAINTS
+from .constants import PROP_DEFAULTS, FREQUENCY_CONSTRAINTS, TRANSFORMATION_CONSTRAINTS, SYMMETRY_CONSTRAINTS, PROBABILITY_CONSTRAINTS, GRID_CONSTRAINTS
 
 from .properties import update_constraint_properties, handle_update_collection, handle_edit_neighbor_constraint_update
 
@@ -13,9 +13,31 @@ def _get_obj(collection, name):
 def _get_selected_items(obj_list):
     return [ item.name for item in obj_list if item.selected]
 
-class COLLECTION_OT_WFC3DSave_Neighbor_Constraint(bpy.types.Operator):
+def _get_obj_list(props):
+    return ",".join(_get_selected_items(props.obj_list))
+
+def _update_constraints(props, constraints):
+    for item in _get_selected_items(props.obj_list):
+        obj = _get_obj(props.collection_obj, item)
+        for c in constraints:
+            if c in props:
+                if props[c] != PROP_DEFAULTS[c]:
+                    obj["wfc_"+c] = props[c]
+                else:
+                    if "wfc_"+c in obj:
+                        del obj["wfc_"+c]
+
+def _reset_constraints(props, constraints):
+    for item in _get_selected_items(props.obj_list):
+        obj = _get_obj(props.collection_obj, item)
+        for c in constraints:
+            if "wfc_"+c in obj:
+                del obj["wfc_" +c]
+                props[c] = PROP_DEFAULTS[c]
+            
+class COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint(bpy.types.Operator):
     """Save neighbor constraints"""
-    bl_idname = "object.wfc_save_constraint"
+    bl_idname = "object.wfc_update_constraint"
     bl_label = "Save Neighbor(s)"
     bl_options = {'REGISTER', 'UNDO'}
     def _set_neighbors(self, obj, prop_name, neighbors):
@@ -30,7 +52,6 @@ class COLLECTION_OT_WFC3DSave_Neighbor_Constraint(bpy.types.Operator):
             neighbors = [ item.value for item in props.neighbor_list if item.selected ]
         for item in _get_selected_items(props.obj_list):
             self._set_neighbors(_get_obj(props.collection_obj, item), prop_name, ",".join(neighbors))
-        
         return {'FINISHED'}
 
     
@@ -90,116 +111,116 @@ class COLLECTION_OT_WFC3DReset_Grid_Constraints(bpy.types.Operator):
     bl_idname = "object.wfc_reset_grid_constraints"
     bl_label = "Reset"
     bl_options = {'REGISTER', 'UNDO'}
-    def _reset_grid(self, obj):
-        for c in ["corners","edges","faces","inside"]:
-            obj["wfc_"+c] = PROP_DEFAULTS[c]
-        
     def execute(self, context):
         props = context.scene.wfc_props
-        obj_name = ", ".join(_get_selected_items(props.obj_list))
-        for item in _get_selected_items(props.obj_list):
-            self._reset_grid(_get_obj(props.collection_obj, item))
-        
+        obj_list = _get_obj_list(props)
+        _reset_constraints(props, GRID_CONSTRAINTS)
         update_constraint_properties(props, context)
-        
-        self.report({'INFO'}, f"Grid constraints of object(s) {obj_name} have been reset.")  
-
+        self.report({'INFO'}, f"Grid constraints of {obj_list} have been reset.")  
         return {'FINISHED'}
+
 class COLLECTION_OT_WFC3DUpdate_Probability_Constraints(bpy.types.Operator):
     """Save probability constraints"""
     bl_idname = "object.wfc_update_probability_constraints"
     bl_label = "Save Probability Constraints"
     bl_options = {'REGISTER', 'UNDO'}
-    def _update_prob(self, obj, props):
-        obj["wfc_weight"] = props.weight
-        obj["wfc_probability"] = props.probability
-        
     def execute(self, context):
         props = context.scene.wfc_props
-        obj_name = ",".join(_get_selected_items(props.obj_list))
-        for item in _get_selected_items(props.obj_list):
-            self._update_prob(_get_obj(props.collection_obj, item), props)
-            
-        self.report({'INFO'}, f"Probability constraints of object(s) {obj_name} have been saved.")  
-
+        obj_list = _get_obj_list(props)
+        _update_constraints(props, PROBABILITY_CONSTRAINTS)
+        self.report({'INFO'}, f"Probability constraints of {obj_list} have been saved.")
         return {'FINISHED'}
+
+class COLLECTION_OT_WFC3DReset_Probability_Constraints(bpy.types.Operator):
+    """Reset probability constraints"""
+    bl_idname = "object.wfc_reset_probability_constraints"
+    bl_label = "Reset"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        obj_list = _get_obj_list(props)
+        _reset_constraints(props, PROBABILITY_CONSTRAINTS)
+        update_constraint_properties(props, context)
+        self.report({'INFO'}, f"Probability constraints of {obj_list} have been reset.")  
+        return {'FINISHED'}
+
+
 class COLLECTION_OT_WFC3DUpdate_Frequency_Constraints(bpy.types.Operator):
     """Save frequency constraints"""
     bl_idname = "object.wfc_update_frequency_constraints"
     bl_label = "Save Frequency Constraints"
     bl_options = {'REGISTER', 'UNDO'}
-    def _update(self, obj, props):
-        for c in FREQUENCY_CONSTRAINTS:
-            obj["wfc_"+c] = props.get(c,PROP_DEFAULTS[c])
-        
     def execute(self, context):
         props = context.scene.wfc_props
-        obj_name = ",".join(_get_selected_items(props.obj_list))
-        for item in _get_selected_items(props.obj_list):
-            self._update(_get_obj(props.collection_obj, item), props)
-
-        self.report({'INFO'}, f"Frequency constraints of object(s) {obj_name} have been saved.")  
-
+        obj_list = _get_obj_list(props)
+        _update_constraints(props, FREQUENCY_CONSTRAINTS)
+        self.report({'INFO'}, f"Frequency constraints of {obj_list} have been saved.")  
         return {'FINISHED'}
+
 class COLLECTION_OT_WFC3DReset_Frequency_Constraints(bpy.types.Operator):
     """Reset frequency constraints"""
     bl_idname = "object.wfc_reset_frequency_constraints"
     bl_label = "Reset"
     bl_options = {'REGISTER', 'UNDO'}
-    def _reset(self, obj):
-        for c in FREQUENCY_CONSTRAINTS:
-            obj["wfc_"+c] = PROP_DEFAULTS[c]
-        
     def execute(self, context):
         props = context.scene.wfc_props
-        obj_name = ",".join(_get_selected_items(props.obj_list))
-        for item in _get_selected_items(props.obj_list):
-            self._reset(_get_obj(props.collection_obj, item))
+        obj_list = _get_obj_list(props)
+        _reset_constraints(props, FREQUENCY_CONSTRAINTS)
         update_constraint_properties(props, context)
-        
-        self.report({'INFO'}, f"Frequency constraints of object(s) {obj_name} have been reset.")  
-
+        self.report({'INFO'}, f"Frequency constraints of {obj_list} have been reset.")  
         return {'FINISHED'}
+
 class COLLECTION_OT_WFC3DUpdate_Transformation_Constraints(bpy.types.Operator):
     """Save transformation constraints"""
     bl_idname = "object.wfc_update_transformation_constraints"
     bl_label = "Save Transformation Constraints"
     bl_options = {'REGISTER', 'UNDO'}
-    def _update(self, obj, props):
-        for c in TRANSFORMATION_CONSTRAINTS:
-            if c in props and props[c] != PROP_DEFAULTS[c]:
-                obj["wfc_"+c] = props[c]
         
     def execute(self, context):
         props = context.scene.wfc_props
-        obj_name = ",".join(_get_selected_items(props.obj_list))
-        for item in _get_selected_items(props.obj_list):
-            self._update(_get_obj(props.collection_obj, item), props)
-            
-        self.report({'INFO'}, f"Transformation constraints of object(s) {obj_name} have been saved.")  
-
+        obj_list = _get_obj_list(props)
+        _update_constraints(props, TRANSFORMATION_CONSTRAINTS)         
+        self.report({'INFO'}, f"Transformation constraints of {obj_list} have been saved.")  
         return {'FINISHED'}
+    
 class COLLECTION_OT_WFC3DReset_Transformation_Constraints(bpy.types.Operator):
-    """ Reset transformation constraints. """
+    """Reset transformation constraints"""
     bl_idname = "object.wfc_reset_transformation_constraints"
     bl_label = "Reset"
     bl_options = {'REGISTER', 'UNDO'}
-    
-    def _reset(self,obj, props):
-        for c in TRANSFORMATION_CONSTRAINTS:
-            if "wfc_"+c in obj:
-                del obj["wfc_" +c]
-            props[c] = PROP_DEFAULTS[c]
-        
     def execute(self, context):
         props = context.scene.wfc_props
-        obj_name = ",".join(_get_selected_items(props.obj_list))
-        for item in _get_selected_items(props.obj_list):
-            self._reset(_get_obj(props.collection_obj, item), props)
-             
-        self.report({'INFO'}, f"Transformation constraints of object {obj_name} have been reset.")  
-
+        obj_list = _get_obj_list(props)
+        _reset_constraints(props, TRANSFORMATION_CONSTRAINTS)
+        update_constraint_properties(props, context)
+        self.report({'INFO'}, f"Transformation constraints of {obj_list} have been reset.")  
         return {'FINISHED'}
+    
+class COLLECTION_OT_WFC3DUpdate_Symmetry_Constraints(bpy.types.Operator):
+    """Update symmetry constraints"""
+    bl_idname = "object.wfc_update_symmetry_constraints"
+    bl_label = "Save Symmetry Constraints"
+    bl_options = {'REGISTER','UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        obj_list  = _get_obj_list(props)
+        _update_constraints(props, SYMMETRY_CONSTRAINTS)
+        self.report({'INFO'}, f"Symmetry constraints of {obj_list} have been saved.")
+        return {'FINISHED'}
+ 
+class COLLECTION_OT_WFC3DReset_Symmetry_Constraints(bpy.types.Operator):
+    """Reset symmetry constraints"""
+    bl_idname = "object.wfc_reset_symmetry_constraints"
+    bl_label = "Reset"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        obj_list = _get_obj_list(props)
+        _reset_constraints(props, SYMMETRY_CONSTRAINTS)
+        update_constraint_properties(props, context)
+        self.report({'INFO'}, f"Symmetry constraints of {obj_list} have been reset.")  
+        return {'FINISHED'}
+    
 class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
     """Select objects in 3D Viewport"""
     bl_idname = "collection.wfc_select_dropdown_object"
@@ -364,16 +385,20 @@ class COLLECTION_OT_WFC3DNeighborListSelectNone(bpy.types.Operator):
         return {'FINISHED'}
 
 
+
 operators = [
-    COLLECTION_OT_WFC3DSave_Neighbor_Constraint,
+    COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint,
     COLLECTION_OT_WFC3DReset_Neighbor_Constraint,
     COLLECTION_OT_WFC3DUpdate_Grid_Constraints,
     COLLECTION_OT_WFC3DReset_Grid_Constraints,
     COLLECTION_OT_WFC3DUpdate_Probability_Constraints,
+    COLLECTION_OT_WFC3DReset_Probability_Constraints,
     COLLECTION_OT_WFC3DUpdate_Frequency_Constraints,
     COLLECTION_OT_WFC3DReset_Frequency_Constraints,
     COLLECTION_OT_WFC3DUpdate_Transformation_Constraints,
     COLLECTION_OT_WFC3DReset_Transformation_Constraints,
+    COLLECTION_OT_WFC3DUpdate_Symmetry_Constraints,
+    COLLECTION_OT_WFC3DReset_Symmetry_Constraints,
     COLLECTION_OT_WFC3DSelectDropdownObject,
     COLLECTION_OT_WFC3DGetSelectedObject,
     COLLECTION_OT_WFC3DGetNeighborSelectedObject,    
