@@ -22,10 +22,10 @@ Each object in the source collection can use custom properties to define the per
 * Probability constraints: 2
 * Transformation constraints: 10
 * Frequency constraints: 15
-* Symmetry constraints: 8
+* Symmetry constraints: 7
 
 
-* **Sum: 91**
+* **Sum: 90**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
