@@ -113,7 +113,6 @@ class WFC3DConstraints:
         center = Vector(((s-1)/2 for s in shape))
         generated_points = set()
     
-        # 1️⃣ Generate mirrored points
         flip_options = [[False, True] if mirror_axes[i] else [False] for i in range(3)]
         mirrored_points = []
     
@@ -127,7 +126,6 @@ class WFC3DConstraints:
                 q.z = 2 * center.z - q.z
             mirrored_points.append(q)
     
-        # 2️⃣ Apply rotations to each mirrored point
         if rotate_axis is not None:
             rot_axis = Vector(rotate_axis).normalized()
         else:
@@ -150,47 +148,6 @@ class WFC3DConstraints:
     
         return generated_points
 
-    def mirror_3d_axes(self, coords, shape, axes=(True, True, True)):
-        """
-        Mirrors a cell (x, y, z) in a 3D matrix along specified axes only.
-    
-        Parameters
-        ----------
-        coords : tuple[int, int, int]
-            The original coordinate (x, y, z).
-        shape : tuple[int, int, int]
-            The shape of the matrix (nx, ny, nz).
-        axes : tuple[bool, bool, bool], default=(True, True, True)
-            Which axes to mirror: (mirror_x, mirror_y, mirror_z)
-    
-        Returns
-        -------
-        set[tuple[int, int, int]]
-            A set of all mirrored coordinates.
-        """
-        p = Vector(coords)
-        center = Vector(((s - 1) / 2 for s in shape))
-        mirrored = set()
-    
-        # Generate all combinations of flips for the selected axes
-        flip_options = [ [False, True] if axes[i] else [False] for i in range(3) ]
-    
-        for flip_x, flip_y, flip_z in product(*flip_options):
-            q = p.copy()
-            if flip_x:
-                q.x = 2 * center.x - q.x
-            if flip_y:
-                q.y = 2 * center.y - q.y
-            if flip_z:
-                q.z = 2 * center.z - q.z
-    
-            qi = tuple(int(round(v)) for v in q)
-            # Keep only coordinates inside the matrix
-            if all(0 <= qi[i] < shape[i] for i in range(3)):
-                mirrored.add(qi)
-    
-        return mirrored
-
     def apply_symmetry_constraints(self, grid, x, y, z):
         """Apply symmetry to collapsed cells"""
         if len(grid.grid[x,y,z])==0: 
@@ -203,7 +160,6 @@ class WFC3DConstraints:
             rotate_axis = None        
             
         if mirror_axes or rotate_axis:
-            # points = self.mirror_3d_axes((x,y,z), grid.grid_size, mirror_axes)
             points = self.mirror_and_rotate_3d((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
             for point in points:
                 nx,ny,nz = point
