@@ -296,10 +296,11 @@ class WFC3DGrid:
         return reduced_cells
     def mark_collapsed(self, x, y, z):
         self.collapsed[x,y,z] = True
-    
-    def _mult_vector(self, v1, v2):
+
+    @staticmethod
+    def _mult_vector(v1, v2):
         return tuple(a * b for a, b in zip(v1,v2))
-    
+
     def _init_corners(self):
         gs = (self.grid_size[0]-1, self.grid_size[1]-1, self.grid_size[2]-1)
         self.corners = {

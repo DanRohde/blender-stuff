@@ -1,6 +1,7 @@
 import bpy
 from .constants import DEFAULT_EMPTY_NAME
 
+
 def _update_list(itemlist, selected_object_names):
     # caution: any item.sected change fires an event => only do necessary updates
     for item in itemlist:
@@ -10,16 +11,17 @@ def _update_list(itemlist, selected_object_names):
         elif item.selected:
             item.selected = False
 
+
 def update_handler(_scene, _depsgraph):
     if bpy.context.view_layer.objects.active:
         props = bpy.context.scene.wfc_props
 
-        if props.collection_obj is None and ( not props.auto_active_object and not props.auto_neighbor_object ):
+        if props.collection_obj is None and (not props.auto_active_object and not props.auto_neighbor_object):
             return
-        
+
         # handle collection changes:
-        coll_objects = [ obj for obj in props.collection_obj.objects if obj.name != DEFAULT_EMPTY_NAME ]
-        coll_objects.extend([ child for child in props.collection_obj.children if len(child.objects)>0])
+        coll_objects = [obj for obj in props.collection_obj.objects if obj.name != DEFAULT_EMPTY_NAME]
+        coll_objects.extend([child for child in props.collection_obj.children if len(child.objects) > 0])
         if len(coll_objects) != len(props.obj_list):
             props.obj_list.clear()
             props.neighbor_list.clear()
@@ -33,8 +35,8 @@ def update_handler(_scene, _depsgraph):
         # handle selections:
         selected_objects = bpy.context.selected_objects
         if selected_objects:
-            selected_object_names = [ ]
-            for obj in selected_objects: 
+            selected_object_names = []
+            for obj in selected_objects:
                 if obj.name in props.collection_obj.objects:
                     selected_object_names.append(obj.name)
                 else:

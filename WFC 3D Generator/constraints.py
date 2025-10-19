@@ -87,7 +87,8 @@ class WFC3DConstraints:
                 options.append(name)
         return self.get_weighted_options(options)
     
-    def mirror_and_rotate_3d(self, coords, shape, mirror_axes=(False, False, False), rotate_axis=None, n_rotations=1):
+    @staticmethod
+    def mirror_and_rotate_3d(coords, shape, mirror_axes=(False, False, False), rotate_axis=None, n_rotations=1):
         """
         Generates mirrored and/or rotationally symmetric points for a 3D matrix.
     
@@ -110,7 +111,7 @@ class WFC3DConstraints:
             All generated points inside the matrix
         """
         p = Vector(coords)
-        center = Vector(((s-1)/2 for s in shape))
+        center = Vector([(s-1)/2 for s in shape])
         generated_points = set()
     
         flip_options = [[False, True] if mirror_axes[i] else [False] for i in range(3)]
@@ -182,25 +183,23 @@ class WFC3DConstraints:
         def _get_mapped_random_values(vmin, vmax, steps):
             if steps < 0 and vmin > vmax:
                 steps =- steps
-                s = vmax
+                sw = vmax
                 vmax = vmin 
-                vmin = s
+                vmin = sw
                 
             if steps > 0 and vmax-vmin >= 0:
                 v = []
-                i = vmin
-                while i<=vmax:
-                    v.append(i)
-                    i += steps
-                if i-steps < vmax:
+                j = vmin
+                while j<=vmax:
+                    v.append(j)
+                    j += steps
+                if j-steps < vmax:
                     v.append(vmax)   
                 return v[random.randrange(0,len(v))]
             else:
                 return vmin + (vmax - vmin) * random.random()
-        #props = bpy.context.scene.wfc_props
+
         src_name = src_obj.name
-        #if src_obj.name in props.collection_obj.children:
-        #    src_obj = props.collection_obj.children[src_obj.name].objects[0]
             
         if src_name not in self.constraints:
             return 
