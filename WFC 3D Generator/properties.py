@@ -259,6 +259,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     sym_rotate_n : bpy.props.IntProperty(name="Number",description="Number of rotations", default=PROP_DEFAULTS["sym_rotate_n"], min=-1)
     region_min: bpy.props.IntVectorProperty(name="min",description="Region minimum", default=PROP_DEFAULTS["region_min"],min=-1)
     region_max: bpy.props.IntVectorProperty(name="max",description="Region minimum", default=PROP_DEFAULTS["region_max"],min=-1)
+    region_quadrant: bpy.props.BoolVectorProperty(name="Quadrant",description="Quadrant (fbl,fbr,ftl,ftr,bbl,bbr,btl,btr)", size=8, default=PROP_DEFAULTS["region_quadrant"])
 
 properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
 

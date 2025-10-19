@@ -190,6 +190,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.prop(props,"region_min")
             row=box.row()
             row.prop(props,"region_max")
+
+            
+            box.row().label(text="Quadrant")
+            box.row().prop(props, "region_quadrant",text="")
+
             box.operator("object.wfc_update_region_constraints")
         if (props.edit_constraints == "probability"):
             box=col.box()
@@ -258,22 +263,22 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.prop(props,"freq_any_axes")
             
             box.operator("object.wfc_update_frequency_constraints")
-            
+
         if (props.edit_constraints=="symmetry"):
             box = col.box()
             row = box.row()
             row.label(text=obj_name)
             row.operator("object.wfc_reset_symmetry_constraints")
-            
+
             box.label(text="Mirror Symmetry")
             row = box.row()
             row.prop(props,"sym_mirror_axes")
-            
+
             box.label(text="Rotational Symmetry")
             row = box.row()
             row.prop(props,"sym_rotate_axis")
             box.prop(props,"sym_rotate_n")
-           
+            
             box.operator("object.wfc_update_symmetry_constraints")
            
             #box.label(text="Translational Symmetry")

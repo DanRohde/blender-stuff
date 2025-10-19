@@ -15,18 +15,19 @@ Each object in the source collection can use custom properties to define the per
 
 ## Limitations and Known Issues
 * For neighbor restrictions to take effect, there must be more than one object in the source collection.
+* Region constraints don't work with all symmetry constraint variants
 
 ## Statistics: Constraints per Object
 * Neighbor constraints: 26
 * Grid constraints: 30
-* Region constraints: 2
+* Region constraints: 3
 * Probability constraints: 2
 * Transformation constraints: 10
 * Frequency constraints: 15
 * Symmetry constraints: 9
 
 
-* **Sum: 94**
+* **Sum: 95**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -71,9 +72,10 @@ Each object in the source collection can use custom properties to define the per
     * "-" - forbids to stay inside
 
 ## Region Constraints
-* Used custom properties: `wfc_region_min,wfc_region_max`
+* Used custom properties: `wfc_region_min,wfc_region_max,wfc_region_quadrant`
 * Allowed property values:
     * wfc_region_[min|max]: integer vector 
+    * wfc_region_quadrant: boolean vector of size 8 (fbl,fbr,ftl,ftr,bbl,bbr,btl,btr)
 	
 ## Probability Constraints
 * Used custom properties: `wfc_weight,wfc_probability`

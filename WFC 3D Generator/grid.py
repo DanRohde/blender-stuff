@@ -122,10 +122,13 @@ class WFC3DGrid:
                 if self.is_on_specific_face(pos,f):
                     return True
             return False
+        ret = True
         if 'region_min' in constraints[name] or 'region_max' in constraints[name]:
-            return self.is_inside_region(pos, constraints[name].get('region_min',None), constraints[name].get('region_max',None))
+            ret = ret and self.is_inside_region(pos, constraints[name].get('region_min',None), constraints[name].get('region_max',None))
+        if 'region_quadrant' in constraints[name]:
+            ret = ret and self.is_inside_region_quadrant(pos, constraints[name]['region_quadrant'])
         
-        return True
+        return ret
     
     def is_inside_region(self, pos, rmin, rmax):
         x,y,z = pos
@@ -151,7 +154,36 @@ class WFC3DGrid:
                 bz = self.grid_size[2]-1
         
         return ax <= x <= bx and ay <= y <= by and az <= z <= bz
+
+    def get_quadrant(self, pos):
+        ''' returns the quadrant of pos:
+            fbl:0, fbr:1, ftl:2, ftr:3 , bbl:4, bbr:5, btl:6, btr: 7, oob: -1
+        '''
+        x,y,z = pos
+        mx,my,mz = self.grid_size[0]-1,self.grid_size[1]-1,self.grid_size[2]-1
+        hx,hy,hz = mx/2,my/2,mz/2
         
+        if 0 <= x <= hx and 0 <= y <= hy and 0 <= z <= hz: # fbl
+            return 0
+        elif hx < x <= mx and 0 <= y <= hy and 0 <= z <= hz: # fbr
+            return 1
+        elif 0 <= x <= hx and 0 <= y <= hy and hz < z <= mz: # ftl
+            return 2
+        elif hx < x <= mx and 0 <= y <= hy and hz < z <= mz: # ftr
+            return 3
+        elif 0<= x <= hx and hy < y <= my and 0 <= z <= hz: # bbl
+            return 4
+        elif hx < x <= mx and hy < y <= my and 0 <= z <= hz: # bbr
+            return 5
+        elif 0 <= x <= hx and hy < y <= my and hz < z <= mz: # btl
+            return 6
+        elif hx < x <= mx and hy < y <= my and hz < z <= mz: # btr
+            return 7
+        return -1
+
+    def is_inside_region_quadrant(self, pos, constraint):
+        return not constraint or constraint[self.get_quadrant(pos)]
+
     def count_obj(self, obj_name):
         count = 0
         gx, gy, gz = self.grid_size
