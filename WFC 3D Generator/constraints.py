@@ -7,9 +7,7 @@ from collections import deque
 
 from .constants import *
 
-
 class WFC3DConstraints:
-    
     def __init__(self):
         self.constraints = {}
     
@@ -52,8 +50,7 @@ class WFC3DConstraints:
             for direction in DIRECTIONS:
                 prop_name = f"wfc_{direction.lower()}"
                 eo = obj
-                if prop_name not in obj and default_obj:
-                    eo = default_obj
+                if prop_name not in obj and default_obj: eo = default_obj
                 if prop_name in eo:
                     if eo[prop_name] == "":
                         self.constraints[obj_name][direction] = allobjects
@@ -119,12 +116,9 @@ class WFC3DConstraints:
     
         for flip_x, flip_y, flip_z in product(*flip_options):
             q = p.copy()
-            if flip_x:
-                q.x = 2 * center.x - q.x
-            if flip_y:
-                q.y = 2 * center.y - q.y
-            if flip_z:
-                q.z = 2 * center.z - q.z
+            if flip_x: q.x = 2 * center.x - q.x
+            if flip_y: q.y = 2 * center.y - q.y
+            if flip_z: q.z = 2 * center.z - q.z
             mirrored_points.append(q)
     
         if rotate_axis is not None:
@@ -136,8 +130,7 @@ class WFC3DConstraints:
             if rot_axis is None or n_rotations <= 1:
                 # No rotation, just use the mirrored point
                 qi = tuple(int(round(v)) for v in mp)
-                if all(0 <= qi[i] < shape[i] for i in range(3)):
-                    generated_points.add(qi)
+                if all(0 <= qi[i] < shape[i] for i in range(3)): generated_points.add(qi)
             else:
                 for i in range(n_rotations):
                     theta = (2 * np.pi / n_rotations) * i
@@ -193,8 +186,7 @@ class WFC3DConstraints:
                 while j<=vmax:
                     v.append(j)
                     j += steps
-                if j-steps < vmax:
-                    v.append(vmax)   
+                if j-steps < vmax: v.append(vmax)
                 return v[random.randrange(0,len(v))]
             else:
                 return vmin + (vmax - vmin) * random.random()
@@ -237,8 +229,7 @@ class WFC3DConstraints:
             axis=['X','Y','Z']
             for i in range(3):
                 a = _get_mapped_random_values(rmin[i], rmax[i], rs[i])
-                if a!=0:
-                    target_obj.rotation_euler.rotate_axis(axis[i], a)
+                if a!=0: target_obj.rotation_euler.rotate_axis(axis[i], a)
         
     def propagate_frequency_constraints(self, grid, x, y, z):
         if len(grid.grid[x,y,z])==0:
@@ -250,11 +241,9 @@ class WFC3DConstraints:
             count = 0
             if current_obj and self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
                 count = grid.count_obj(current_obj)
-            if self.constraints[current_obj]["freq_grid"] == 0: 
-                grid.grid[x,y,z] = []
+            if self.constraints[current_obj]["freq_grid"] == 0: grid.grid[x,y,z] = []
            
-            if count >= self.constraints[current_obj]["freq_grid"]:
-                reduced_cells.extend(grid.remove_obj(current_obj, None, None))
+            if count >= self.constraints[current_obj]["freq_grid"]: reduced_cells.extend(grid.remove_obj(current_obj, None, None))
         
         # neighbor frequency
         nf = [ { "freq_neighbor_face" : FACE_DIRECTIONS}, {"freq_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_neighbor" : DIRECTIONS}]
@@ -269,8 +258,7 @@ class WFC3DConstraints:
         if self.constraints[current_obj]["freq_axes"] is not None:
             max_count = self.constraints[current_obj]["freq_axes"]
             for i in range(3):
-                if max_count[i]<0:
-                    continue
+                if max_count[i] < 0: continue
                 if grid.count_axis_neighbors(x,y,z,current_obj,axis[i])[i] >= max_count[i]:
                     reduced_cells.extend(grid.remove_axis_neighbors(x,y,z,current_obj,axis[i]))
         
@@ -280,8 +268,7 @@ class WFC3DConstraints:
             for p, direction in a.items():
                 if self.constraints[current_obj][p] is not None and self.constraints[current_obj][p]>-1:
                     diff = self.constraints[current_obj][p] - grid.count_neighbors(x, y, z, None, direction)
-                    if diff < 0:
-                        grid.remove_max_neighbors(x, y, z, abs(diff), direction)
+                    if diff < 0: grid.remove_max_neighbors(x, y, z, abs(diff), direction)
         
         if self.constraints[current_obj]["freq_any_axes"] is not None:
             max_count = self.constraints[current_obj]["freq_any_axes"]
@@ -289,8 +276,7 @@ class WFC3DConstraints:
                 if max_count[i]<0:
                     continue
                 diff = max_count[i] - grid.count_axis_neighbors(x, y, z, None, axis[i])[i]
-                if diff < 0:
-                    grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i])
+                if diff < 0: grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i])
         return reduced_cells
      
     def propagate(self, grid, x, y, z):
@@ -327,4 +313,3 @@ class WFC3DConstraints:
                         if len(new_new_options) < len(neighbor_options):
                             grid.grid[nx, ny, nz] = new_new_options
                             queue.append((nx, ny, nz))
-        
