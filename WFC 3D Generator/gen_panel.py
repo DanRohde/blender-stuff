@@ -44,8 +44,8 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             layout.box().label(text="Target collection will be removed!", icon="WARNING_LARGE")
             
 
-        row = layout.row();
-        row.enabled = props.collection_obj!=None and ( (len(props.collection_obj.objects)>0)or(len(props.collection_obj.children)>0) ) and props.collection_obj.name != props.target_collection
+        row = layout.row()
+        row.enabled = props.collection_obj is not None and ( (len(props.collection_obj.objects)>0)or(len(props.collection_obj.children)>0) ) and props.collection_obj.name != props.target_collection
         row.operator("object.wfc_3d_generate")
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon="INFO_LARGE")

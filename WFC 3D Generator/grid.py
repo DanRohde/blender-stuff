@@ -1,18 +1,17 @@
 import numpy as np
-from .constants import DIRECTIONS
 import random
 
 class WFC3DGrid:
     def __init__(self, grid_size):
-        self.grid_size = grid_size;        
+        self.grid_size = grid_size
         self.grid = None
+        self.collapsed = np.empty(self.grid_size)
         self._init_corners()
         self._init_edges()
         
     def initialize_grid(self, objects, constraints):
         """Initializes the 3D grid"""
         self.grid = np.empty(self.grid_size, dtype=object)
-        self.collapsed = np.empty(self.grid_size)
         for x in range(self.grid_size[0]):
             for y in range(self.grid_size[1]):
                 for z in range(self.grid_size[2]):
@@ -27,7 +26,7 @@ class WFC3DGrid:
     def is_corner(self, pos):
         x, y, z = pos
         l, w, h = self.grid_size
-        return (x in {0, l-1} and y in {0, w-1} and z in {0, h-1})
+        return x in {0, l-1} and y in {0, w-1} and z in {0, h-1}
     
     def is_edge(self, pos):
         x, y, z = pos
@@ -62,8 +61,6 @@ class WFC3DGrid:
         return 0 <= t <= 1
 
     def is_face(self, pos):
-        x, y, z = pos
-        l, w, h = self.grid_size
         return not self.is_corner(pos) and not self.is_edge(pos) and not self.is_inside(pos)
     
     def is_on_specific_face(self, pos, face):
@@ -156,9 +153,9 @@ class WFC3DGrid:
         return ax <= x <= bx and ay <= y <= by and az <= z <= bz
 
     def get_quadrant(self, pos):
-        ''' returns the quadrant of pos:
+        """ returns the quadrant of pos:
             fbl:0, fbr:1, ftl:2, ftr:3 , bbl:4, bbr:5, btl:6, btr: 7, oob: -1
-        '''
+        """
         x,y,z = pos
         mx,my,mz = self.grid_size[0]-1,self.grid_size[1]-1,self.grid_size[2]-1
         hx,hy,hz = mx/2,my/2,mz/2
@@ -219,10 +216,10 @@ class WFC3DGrid:
             xa,ya,za = xa+axis[0], ya+axis[1], za+axis[2]
         return count
     
-    def remove_neighbors(self, x, y, z, neighbor, dir):
+    def remove_neighbors(self, x, y, z, neighbor, d):
         """Remove neighbors"""
         reduced_cells = []
-        for direction, (dx, dy, dz) in dir.items():
+        for direction, (dx, dy, dz) in d.items():
             nx,ny,nz = x+dx, y+dy, z+dz 
             if not self.within_boundaries(nx,ny,nz):
                 continue
@@ -241,11 +238,11 @@ class WFC3DGrid:
                 reduced_cells.append((xa,ya,za))
             xa,ya,za = xa+axis[0], ya+axis[1], za+axis[2]
         return reduced_cells
-    def remove_max_neighbors(self, x, y, z, max_count, dir):
+    def remove_max_neighbors(self, x, y, z, max_count, d):
         """Remove max any random neighbor"""
         neighbors_pos = []
         ## collect neighbors
-        for direction, (dx, dy, dz) in dir.items():
+        for direction, (dx, dy, dz) in d.items():
             nx,ny,nz = x+dx, y+dy, z+dz
             if not self.within_boundaries(nx, ny, nz) or len(self.grid[nx,ny,nz])<1:
                 continue
@@ -277,12 +274,12 @@ class WFC3DGrid:
             self.grid[xa,ya,za] = []
         return []
     
-    def remove_obj(self, obj_name, pos, dir):
+    def remove_obj(self, obj_name, pos, d):
         gx, gy, gz = self.grid_size
         reduced_cells = []
         if pos and dir:
             x,y,z = pos
-            dx, dy, dz = dir
+            dx, dy, dz = d
             if self.within_boundaries(x+dx, y+dy, z+dz):
                 obj_list = self.grid[x+dx,y+dy,z+dz]
                 if obj_name in obj_list and not self.collapsed[x, y, z]:

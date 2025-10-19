@@ -2,7 +2,7 @@ import bpy
 
 from .constants import *
 
-def handle_update_collection(self, context):
+def handle_update_collection(_self, context):
     props = context.scene.wfc_props
     if props.collection_obj is None:
         return
@@ -24,11 +24,12 @@ def handle_update_collection(self, context):
             item.name = obj.name 
             item.value = obj.name
 
-def handle_edit_neighbor_constraint_update(self, context):
+def handle_edit_neighbor_constraint_update(_self, context):
     props = context.scene.wfc_props
     if props.edit_neighbor_constraint == "_NONE_":
         return
     default_obj = None
+    obj = None
     if props.edit_type == 'objects':
         sel_obj_list = [ item.name for item in props.obj_list if item.selected ]
         if len(sel_obj_list) == 0:
@@ -59,9 +60,9 @@ def handle_edit_neighbor_constraint_update(self, context):
     else:
         props.no_neighbor_allowed = False
         for item in props.neighbor_list:
-            item.selected = False            
+            item.selected = False
         
-def update_constraint_properties(self, context):
+def update_constraint_properties(self, _context):
     props = bpy.context.scene.wfc_props
     collection = props.collection_obj
 

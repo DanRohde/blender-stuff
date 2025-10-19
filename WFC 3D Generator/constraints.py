@@ -180,27 +180,27 @@ class WFC3DConstraints:
 
     def apply_transformation_constraints(self, src_obj, target_obj):
         def _get_mapped_random_values(vmin, vmax, steps):
-            if (steps < 0 and vmin > vmax):
+            if steps < 0 and vmin > vmax:
                 steps =- steps
                 s = vmax
                 vmax = vmin 
                 vmin = s
                 
-            if (steps > 0 and vmax-vmin >= 0):
+            if steps > 0 and vmax-vmin >= 0:
                 v = []
                 i = vmin
                 while i<=vmax:
                     v.append(i)
                     i += steps
-                if (i-steps < vmax):
+                if i-steps < vmax:
                     v.append(vmax)   
                 return v[random.randrange(0,len(v))]
             else:
                 return vmin + (vmax - vmin) * random.random()
-        props = bpy.context.scene.wfc_props
+        #props = bpy.context.scene.wfc_props
         src_name = src_obj.name
-        if src_obj.name in props.collection_obj.children:
-            src_obj = props.collection_obj.children[src_obj.name].objects[0]
+        #if src_obj.name in props.collection_obj.children:
+        #    src_obj = props.collection_obj.children[src_obj.name].objects[0]
             
         if src_name not in self.constraints:
             return 
@@ -248,6 +248,7 @@ class WFC3DConstraints:
         current_obj = grid.grid[x,y,z][0]
         # grid frequency
         if self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
+            count = 0
             if current_obj and self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
                 count = grid.count_obj(current_obj)
             if self.constraints[current_obj]["freq_grid"] == 0: 
@@ -259,10 +260,10 @@ class WFC3DConstraints:
         # neighbor frequency
         nf = [ { "freq_neighbor_face" : FACE_DIRECTIONS}, {"freq_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_neighbor" : DIRECTIONS}]
         for a in nf:
-            for p,dir in a.items():
+            for p,direction in a.items():
                 if self.constraints[current_obj][p] is not None and self.constraints[current_obj][p]>-1:
-                    if grid.count_neighbors(x, y, z, current_obj, dir) > self.constraints[current_obj][p]:
-                        reduced_cells.extend(grid.remove_neighbors(x, y, z, current_obj, dir))
+                    if grid.count_neighbors(x, y, z, current_obj, direction) > self.constraints[current_obj][p]:
+                        reduced_cells.extend(grid.remove_neighbors(x, y, z, current_obj, direction))
         
         # axes
         axis={ 0: [1,0,0], 1: [0,1,0], 2 : [0,0,1]}
@@ -277,11 +278,11 @@ class WFC3DConstraints:
         nf = [ { "freq_any_neighbor_face" : FACE_DIRECTIONS}, {"freq_any_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_any_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_any_neighbor" : DIRECTIONS}]
         # any neighbor frequency
         for a in nf:
-            for p, dir in a.items():
+            for p, direction in a.items():
                 if self.constraints[current_obj][p] is not None and self.constraints[current_obj][p]>-1:
-                    diff = self.constraints[current_obj][p] - grid.count_neighbors(x, y, z, None, dir)
+                    diff = self.constraints[current_obj][p] - grid.count_neighbors(x, y, z, None, direction)
                     if diff < 0:
-                        grid.remove_max_neighbors(x, y, z, abs(diff), dir)
+                        grid.remove_max_neighbors(x, y, z, abs(diff), direction)
         
         if self.constraints[current_obj]["freq_any_axes"] is not None:
             max_count = self.constraints[current_obj]["freq_any_axes"]

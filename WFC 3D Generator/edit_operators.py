@@ -30,6 +30,7 @@ def _get_obj_list(props):
     return ",".join(_get_selected_items(props.obj_list))
 
 def _update_constraints(props, constraints):
+    items = []
     if props.edit_type == 'objects':
         items = _get_selected_items(props.obj_list)
     elif props.edit_type == 'defaults':
@@ -46,6 +47,7 @@ def _update_constraints(props, constraints):
                 
 
 def _reset_constraints(props, constraints):
+    items = []
     if props.edit_type == 'objects':
         items = _get_selected_items(props.obj_list)
     elif props.edit_type == 'defaults':
@@ -279,7 +281,6 @@ class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
 
     def execute(self, context):
         props = context.scene.wfc_props
-        collection = props.collection_obj
         sel_items = _get_selected_items(props.obj_list)
         if len(sel_items)>0:
             obj = _get_obj(props, sel_items[0]) 
@@ -311,7 +312,6 @@ class COLLECTION_OT_WFC3DSelectNeighborObject(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
-        collection = props.collection_obj
         sel_items = _get_selected_items(props.neighbor_list)
         if len(sel_items)>0:
             obj = _get_obj(props, sel_items[0]) 
@@ -391,8 +391,8 @@ class COLLECTION_OT_WFC3DUpdateCollectionList(bpy.types.Operator):
         handle_update_collection(self,context)
         return {'FINISHED'}
 
-def set_select_all_list_items(list, selected):
-    for item in list:
+def set_select_all_list_items(itemlist, selected):
+    for item in itemlist:
         item.selected = selected
         
 class COLLECTION_OT_WFC3DCollectionListSelectAll(bpy.types.Operator):

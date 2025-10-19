@@ -1,16 +1,16 @@
 import bpy
 from .constants import DEFAULT_EMPTY_NAME
 
-def _update_list(list, selected_object_names):
+def _update_list(itemlist, selected_object_names):
     # caution: any item.sected change fires an event => only do necessary updates
-    for item in list:
+    for item in itemlist:
         if item.name in selected_object_names:
             if not item.selected:
                 item.selected = True
         elif item.selected:
             item.selected = False
 
-def update_handler(scene, depsgraph):
+def update_handler(_scene, _depsgraph):
     if bpy.context.view_layer.objects.active:
         props = bpy.context.scene.wfc_props
 

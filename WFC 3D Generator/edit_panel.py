@@ -2,7 +2,7 @@ import bpy
 from .constants import ICON_MAP, DEFAULT_EMPTY_NAME
 
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
-    def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
+    def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         props = context.scene.wfc_props
         if item.name in props.collection_obj.objects:
             icon_name = ICON_MAP[props.collection_obj.objects[item.name].type]
@@ -13,7 +13,7 @@ class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
         row.prop(item, "selected", text=item.name, icon=icon_name)
 
 class WFC3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
-    def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
+    def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         props = context.scene.wfc_props
         if item.value in props.collection_obj.objects:
             icon_name = ICON_MAP[props.collection_obj.objects[item.value].type]
@@ -49,7 +49,8 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
 
         row = col.row()
         row.prop(props,"edit_type", icon="OBJECT_DATA")
-        
+
+        selected = []
         if props.edit_type == 'objects':
             newrow = col.box().row()
             nc=newrow.column()
@@ -74,6 +75,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         box = row.box()
 
         obj = None
+        obj_name = ""
         if props.edit_type == 'objects':
             if selected[0] in props.collection_obj.children:
                 if len(props.collection_obj.children[selected[0]].objects)>0:
@@ -94,7 +96,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         
         box.prop(props,"edit_constraints",icon="SETTINGS")
         
-        if (props.edit_constraints == "neighbor"):
+        if props.edit_constraints == "neighbor":
             box=col.box()
             row = box.row()
             row.label(icon="CUBE",text="")
@@ -103,7 +105,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             newrow.operator("object.wfc_reset_constraint")
             newrow.enabled = props.edit_type == 'defaults' or (obj and props.edit_neighbor_constraint in obj)
             
-            if (props.edit_neighbor_constraint and props.edit_neighbor_constraint !="_NONE_"):
+            if props.edit_neighbor_constraint and props.edit_neighbor_constraint !="_NONE_":
                 if obj and props.edit_neighbor_constraint in obj:
                     box.label(text="Neighbors: "+obj[props.edit_neighbor_constraint])
                 else:
@@ -114,7 +116,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 row.enabled = not props.no_neighbor_allowed 
                 newcol = row.column()
                 newcol.operator("collection.wfc_get_neighbor_selected_object", icon="SELECT_SET")
-                nc=newcol.column();
+                nc=newcol.column()
                 nc.prop(props,"auto_neighbor_object",icon="TRIA_RIGHT")
                 nc.enabled = not props.auto_active_object
                 newcol = row.column()
@@ -130,7 +132,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         
                 row=box.row()
                 row.operator("object.wfc_update_constraint")
-        if (props.edit_constraints == "grid"):    
+        if props.edit_constraints == "grid":
             box=col.box()
             row = box.row()
             row.label(text=obj_name)
@@ -181,7 +183,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             
             
             box.operator("object.wfc_update_grid_constraints")
-        if (props.edit_constraints == 'region'):
+        if props.edit_constraints == 'region':
             box=col.box()
             row=box.row()
             row.label(text=obj_name)
@@ -196,7 +198,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.row().prop(props, "region_quadrant",text="")
 
             box.operator("object.wfc_update_region_constraints")
-        if (props.edit_constraints == "probability"):
+        if props.edit_constraints == "probability":
             box=col.box()
             row=box.row()
             row.label(text=obj_name)
@@ -205,7 +207,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.prop(props, "weight")
             
             box.operator("object.wfc_update_probability_constraints")    
-        if (props.edit_constraints == "transformation"):
+        if props.edit_constraints == "transformation":
             box=col.box()
             row = box.row()
             row.label(text=obj_name)
@@ -236,7 +238,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 newbox.row().prop(props,"scale_steps")
 
             box.operator('object.wfc_update_transformation_constraints')
-        if (props.edit_constraints=="frequency"):
+        if props.edit_constraints=="frequency":
             box = col.box()
             row=box.row()
             row.label(text=obj_name)
@@ -264,7 +266,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             
             box.operator("object.wfc_update_frequency_constraints")
 
-        if (props.edit_constraints=="symmetry"):
+        if props.edit_constraints=="symmetry":
             box = col.box()
             row = box.row()
             row.label(text=obj_name)

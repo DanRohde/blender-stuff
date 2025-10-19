@@ -43,7 +43,6 @@ class WFC3DGenerator:
     def get_lowest_entropy_cell(self):
         """Finds the cell with the lowest entropy"""
         min_entropy = float('inf')
-        min_cell = None
         min_cells = {}
         for x in range(self.grid_size[0]):
             for y in range(self.grid_size[1]):
