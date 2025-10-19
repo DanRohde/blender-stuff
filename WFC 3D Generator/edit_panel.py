@@ -1,5 +1,5 @@
 import bpy
-from .constants import ICON_MAP
+from .constants import ICON_MAP, DEFAULT_EMPTY_NAME
 
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
@@ -48,44 +48,49 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             
 
         row = col.row()
-        newcol = row.column()
-
-        newrow = col.box().row()
-        nc=newrow.column()
-        nc.operator("collection.wfc_get_selected_object", icon="SELECT_SET")
-        nc.prop(props,"auto_active_object", icon="TRIA_RIGHT")
-        nc=newrow.column()
-        nc.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
-        nc.enabled = not props.auto_active_object
-        nc=newrow.column()
-        nc.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
-        nc.operator("collection.wfc_collection_list_select_all", icon="CHECKBOX_HLT")
-        nc.operator("collection.wfc_collection_list_select_none", icon="CHECKBOX_DEHLT")
-        nc.operator("collection.wfc_update_collection_list",icon="FILE_REFRESH")
-        nc.enabled = not props.auto_active_object
+        row.prop(props,"edit_type", icon="OBJECT_DATA")
         
-        selected = [item.name for item in props.obj_list if item.selected]
-        if len(selected) == 0:
-            return
-            
-            
-        row = col.row()
+        if props.edit_type == 'objects':
+            newrow = col.box().row()
+            nc=newrow.column()
+            nc.operator("collection.wfc_get_selected_object", icon="SELECT_SET")
+            nc.prop(props,"auto_active_object", icon="TRIA_RIGHT")
+            nc=newrow.column()
+            nc.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
+            nc.enabled = not props.auto_active_object
+            nc=newrow.column()
+            nc.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
+            nc.operator("collection.wfc_collection_list_select_all", icon="CHECKBOX_HLT")
+            nc.operator("collection.wfc_collection_list_select_none", icon="CHECKBOX_DEHLT")
+            nc.operator("collection.wfc_update_collection_list",icon="FILE_REFRESH")
+            nc.enabled = not props.auto_active_object
         
-        if selected[0] in props.collection_obj.children:
-            if len(props.collection_obj.children[selected[0]].objects)>0:
-                obj = props.collection_obj.children[selected[0]].objects[0]
+            selected = [item.name for item in props.obj_list if item.selected]
+            if len(selected) == 0 and props.edit_type == 'objects':
+                return
+                
             
-        elif selected[0] in props.collection_obj.objects:
-            obj = props.collection_obj.objects[selected[0]]
-        else:
-            row.label(text="Selected object not found! Please press the reload button.")
-            return
-            
-        obj_name = ",".join(selected)
-        
+        row = col.row()        
         box = row.box()
-        
-        box.label(text=obj_name, icon="OBJECT_DATA")
+
+        obj = None
+        if props.edit_type == 'objects':
+            if selected[0] in props.collection_obj.children:
+                if len(props.collection_obj.children[selected[0]].objects)>0:
+                    obj = props.collection_obj.children[selected[0]].objects[0]
+                
+            elif selected[0] in props.collection_obj.objects:
+                obj = props.collection_obj.objects[selected[0]]
+            else:
+                row.label(text="Selected object not found! Please press the reload button.")
+                return
+            obj_name = ",".join(selected)
+            box.label(text=obj_name, icon="OBJECT_DATA")
+            
+        elif props.edit_type == 'defaults':
+            if DEFAULT_EMPTY_NAME in props.collection_obj.objects:
+                obj = props.collection_obj.objects[DEFAULT_EMPTY_NAME]
+            obj_name = 'Collection Defaults'
         
         box.prop(props,"edit_constraints",icon="SETTINGS")
         
@@ -96,10 +101,10 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.prop(props,"edit_neighbor_constraint")
             newrow = row.row()
             newrow.operator("object.wfc_reset_constraint")
-            newrow.enabled = props.edit_neighbor_constraint in obj;
+            newrow.enabled = props.edit_type == 'defaults' or (obj and props.edit_neighbor_constraint in obj)
             
             if (props.edit_neighbor_constraint and props.edit_neighbor_constraint !="_NONE_"):
-                if props.edit_neighbor_constraint in obj:  
+                if obj and props.edit_neighbor_constraint in obj:
                     box.label(text="Neighbors: "+obj[props.edit_neighbor_constraint])
                 else:
                     box.label(text="Neighbors:")

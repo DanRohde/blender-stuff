@@ -3,6 +3,7 @@ import random
 
 from .constraints import WFC3DConstraints
 from .grid import WFC3DGrid
+from .constants import DEFAULT_EMPTY_NAME
 
 class WFC3DGenerator:
     def __init__(self, collection, props):
@@ -23,13 +24,13 @@ class WFC3DGenerator:
 
         if self.use_constraints:
             self.constraints = WFC3DConstraints()
-            self.constraints.initialize_constraints(self.objects)
+            self.constraints.initialize_constraints(self.collection, self.objects)
                     
         self.grid = WFC3DGrid(self.grid_size)
 
     def load_objects(self):
         """Loads objects from the collection"""
-        self.objects = list(self.collection.objects)
+        self.objects = [ obj for obj in self.collection.objects if obj.name != DEFAULT_EMPTY_NAME ]
         self.objects.extend([child for child in self.collection.children if len(child.objects)>0])
         if not self.objects:
             raise ValueError("Collection is empty!")

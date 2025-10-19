@@ -3,11 +3,25 @@ import bpy
 from .constants import *
 from .properties import update_constraint_properties, handle_update_collection, handle_edit_neighbor_constraint_update
 
-def _get_obj(collection, name):
-    if name in collection.objects:
-        return collection.objects[name]
-    elif name in collection.children:
-        return collection.children[name].objects[0]
+def _get_obj(props, name):
+    collection = props.collection_obj
+    if props.edit_type == 'objects':
+        if name in collection.objects:
+            return collection.objects[name]
+        elif name in collection.children:
+            return collection.children[name].objects[0]
+    elif props.edit_type == 'defaults':
+        if DEFAULT_EMPTY_NAME in collection.objects:
+            return collection.objects[DEFAULT_EMPTY_NAME]
+        else:
+            obj = bpy.data.objects.new(DEFAULT_EMPTY_NAME, None)
+            collection.objects.link(obj)
+            obj.empty_display_type = 'SPHERE'
+            obj.location = (0,0,0)
+            obj.hide_viewport = True
+            obj.hide_render = True
+            return obj
+    return None
     
 def _get_selected_items(obj_list):
     return [ item.name for item in obj_list if item.selected]
@@ -16,23 +30,35 @@ def _get_obj_list(props):
     return ",".join(_get_selected_items(props.obj_list))
 
 def _update_constraints(props, constraints):
-    for item in _get_selected_items(props.obj_list):
-        obj = _get_obj(props.collection_obj, item)
+    if props.edit_type == 'objects':
+        items = _get_selected_items(props.obj_list)
+    elif props.edit_type == 'defaults':
+        items = [ DEFAULT_EMPTY_NAME]
+        
+    for item in items:
+        obj = _get_obj(props, item)
         for c in constraints:
             if c in props:
                 if props[c] != PROP_DEFAULTS[c]:
                     obj["wfc_"+c] = props[c]
-                else:
-                    if "wfc_"+c in obj:
-                        del obj["wfc_"+c]
+                elif "wfc_"+c in obj:
+                    del obj["wfc_"+c]
+                
 
 def _reset_constraints(props, constraints):
-    for item in _get_selected_items(props.obj_list):
-        obj = _get_obj(props.collection_obj, item)
+    if props.edit_type == 'objects':
+        items = _get_selected_item(props.obj_list)
+    elif props.edit_type == 'defaults':
+        items = [ DEFAULT_EMPTY_NAME ]
+
+    for item in items:
+        obj = _get_obj(props, item)
         for c in constraints:
             if "wfc_"+c in obj:
                 del obj["wfc_" +c]
                 props[c] = PROP_DEFAULTS[c]
+            elif c.startswith("wfc_") and c in obj:
+                del obj[c]
             
 class COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint(bpy.types.Operator):
     """Save neighbor constraints"""
@@ -40,8 +66,9 @@ class COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint(bpy.types.Operator):
     bl_label = "Save Neighbor(s)"
     bl_options = {'REGISTER', 'UNDO'}
     def _set_neighbors(self, obj, prop_name, neighbors):
-        obj[prop_name] = neighbors
-        self.report({'INFO'}, f"Neighbor(s) {neighbors} has/have been added to {prop_name} of object {obj.name}")
+        n = ",".join(neighbors)
+        obj[prop_name] = n
+        self.report({'INFO'}, f"Neighbor(s) {n} has/have been added to {prop_name} of object {obj.name}")
     def execute(self, context):
         props= context.scene.wfc_props
         prop_name = props.edit_neighbor_constraint
@@ -49,27 +76,24 @@ class COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint(bpy.types.Operator):
             neighbors = ["-"]
         else:
             neighbors = [ item.value for item in props.neighbor_list if item.selected ]
-        for item in _get_selected_items(props.obj_list):
-            self._set_neighbors(_get_obj(props.collection_obj, item), prop_name, ",".join(neighbors))
+        if props.edit_type == 'objects':
+            for item in _get_selected_items(props.obj_list):
+                self._set_neighbors(_get_obj(props, item), prop_name, neighbors)
+        elif props.edit_type == 'defaults':
+            self._set_neighbors(_get_obj(props, DEFAULT_EMPTY_NAME), prop_name, neighbors)
         return {'FINISHED'}
 
-    
 class COLLECTION_OT_WFC3DReset_Neighbor_Constraint(bpy.types.Operator):
     """Reset selected neighbor constraints"""
     bl_idname = "object.wfc_reset_constraint"
     bl_label = "Reset"
     bl_options = {'REGISTER', 'UNDO'}
-    def _reset_neighbor(self, obj, prop_name):
-        if prop_name and prop_name in obj:
-            obj[prop_name]=''
-            self.report({'INFO'}, f"{prop_name} have been reset for object: {obj.name}")
-
     def execute(self, context):
         props = context.scene.wfc_props
         prop_name = props.edit_neighbor_constraint
-        for item in _get_selected_items(props.obj_list):
-            self._reset_neighbor(_get_obj(props.collection_obj, item), prop_name)
+        _reset_constraints(props, [ prop_name ])        
         handle_edit_neighbor_constraint_update(self,context)
+        self.report({'INFO'}, f"{prop_name} have been reset.")
         return {'FINISHED'}
 
 class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
@@ -100,7 +124,7 @@ class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
         props = context.scene.wfc_props
         obj_name = ", ".join(_get_selected_items(props.obj_list))
         for item in _get_selected_items(props.obj_list):
-            self._set_grid_constraints(_get_obj(props.collection_obj, item), props)
+            self._set_grid_constraints(_get_obj(props, item), props)
         
         self.report({'INFO'}, f"Grid constraints of object(s) {obj_name} have been saved.")
         return {'FINISHED'}
@@ -255,14 +279,14 @@ class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
         collection = props.collection_obj
         sel_items = _get_selected_items(props.obj_list)
         if len(sel_items)>0:
-            obj = _get_obj(props.collection_obj, sel_items[0]) 
+            obj = _get_obj(props, sel_items[0]) 
         else:
             self.report({'WARNING'}, "Please select an object in the object list.")
             return {'CANCELLED'}
 
         bpy.ops.object.select_all(action='DESELECT')
         for item in _get_selected_items(props.obj_list):
-            _get_obj(props.collection_obj, item).select_set(True)
+            _get_obj(props, item).select_set(True)
         
         context.view_layer.objects.active = obj
         obj.select_set(True)
@@ -287,14 +311,14 @@ class COLLECTION_OT_WFC3DSelectNeighborObject(bpy.types.Operator):
         collection = props.collection_obj
         sel_items = _get_selected_items(props.neighbor_list)
         if len(sel_items)>0:
-            obj = _get_obj(props.collection_obj, sel_items[0]) 
+            obj = _get_obj(props, sel_items[0]) 
         else:
             self.report({'WARNING'}, "Please select an object in the object list.")
             return {'CANCELLED'}
 
         bpy.ops.object.select_all(action='DESELECT')
         for item in _get_selected_items(props.neighbor_list):
-            _get_obj(props.collection_obj, item).select_set(True)
+            _get_obj(props, item).select_set(True)
         
         context.view_layer.objects.active = obj
         obj.select_set(True)

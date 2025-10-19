@@ -58,6 +58,8 @@ GRID_CONSTRAINTS = [ 'faces', 'corners', 'edges', 'inside']
 
 REGION_CONSTRAINTS = [ 'region_min', 'region_max' ]
 
+DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
+
 ICON_MAP = {
         'MESH': 'OUTLINER_OB_MESH',
         'CURVE': 'OUTLINER_OB_CURVE',

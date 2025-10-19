@@ -19,8 +19,8 @@ def unregister():
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
 
-    del bpy.types.Scene.wfc_props
     bpy.app.handlers.depsgraph_update_post.remove(handler.update_handler)
+    del bpy.types.Scene.wfc_props
 
 if __name__ == "__main__":
     register()

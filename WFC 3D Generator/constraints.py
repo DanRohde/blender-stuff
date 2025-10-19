@@ -13,24 +13,30 @@ class WFC3DConstraints:
     def __init__(self):
         self.constraints = {}
     
-    def initialize_constraints(self, objects):
+    def initialize_constraints(self, collection, objects):
         """Loads constraints from custom properties"""
         allobjects = [o.name for o in objects]
+        default_obj = None
+        if DEFAULT_EMPTY_NAME in collection.objects:
+            default_obj = collection.objects[DEFAULT_EMPTY_NAME]
+
         for obj in objects:
             obj_name = obj.name
             self.constraints[obj_name] = {}
             
             if obj.name in bpy.data.collections:
-                    if len(bpy.data.collections[obj_name].objects) >0:
-                        obj = bpy.data.collections[obj.name].objects[0]
-                    else:
-                        continue
-                
+                if len(bpy.data.collections[obj_name].objects) >0:
+                    obj = bpy.data.collections[obj.name].objects[0]
+                else:
+                    continue
+
             # load probability, frequency, transformation, symmetry constraints
             for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS:
                 cp = "wfc_"+p
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
+                elif default_obj and cp in default_obj and default_obj[cp] != "":
+                    self.constraints[obj_name][p] = default_obj[cp]
                 else:
                     self.constraints[obj_name][p] = None
 
@@ -39,17 +45,20 @@ class WFC3DConstraints:
                 cp = "wfc_"+c
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][c] = obj[cp].split(",")
-            
-            
+                elif default_obj and cp in default_obj and default_obj[cp] != "":
+                    self.constraints[obj_name][c] = default_obj[cp].split(",")
+
             # load neighbor constraints
             for direction in DIRECTIONS:
                 prop_name = f"wfc_{direction.lower()}"
-                # take first element from collection to get constraints
-                if prop_name in obj:
-                    if obj[prop_name] == "":
+                eo = obj
+                if prop_name not in obj and default_obj:
+                    eo = default_obj
+                if prop_name in eo:
+                    if eo[prop_name] == "":
                         self.constraints[obj_name][direction] = allobjects
                     else:
-                        self.constraints[obj_name][direction] = obj[prop_name].split(',')
+                        self.constraints[obj_name][direction] = eo[prop_name].split(',')
                 else:
                     self.constraints[obj_name][direction] = allobjects 
 
