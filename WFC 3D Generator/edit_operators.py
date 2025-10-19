@@ -123,8 +123,11 @@ class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
     def execute(self, context):
         props = context.scene.wfc_props
         obj_name = ", ".join(_get_selected_items(props.obj_list))
-        for item in _get_selected_items(props.obj_list):
-            self._set_grid_constraints(_get_obj(props, item), props)
+        if props.edit_type == 'objects':
+            for item in _get_selected_items(props.obj_list):
+                self._set_grid_constraints(_get_obj(props, item), props)
+        elif props.edit_type == 'defaults':
+            self._set_grid_constraints(_get_obj(props, DEFAULT_EMPTY_NAME), props)
         
         self.report({'INFO'}, f"Grid constraints of object(s) {obj_name} have been saved.")
         return {'FINISHED'}
