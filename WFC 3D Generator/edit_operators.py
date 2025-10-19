@@ -47,7 +47,7 @@ def _update_constraints(props, constraints):
 
 def _reset_constraints(props, constraints):
     if props.edit_type == 'objects':
-        items = _get_selected_item(props.obj_list)
+        items = _get_selected_items(props.obj_list)
     elif props.edit_type == 'defaults':
         items = [ DEFAULT_EMPTY_NAME ]
 
