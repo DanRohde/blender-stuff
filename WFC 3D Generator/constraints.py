@@ -89,76 +89,7 @@ class WFC3DConstraints:
         return self.get_weighted_options(options)
 
     @staticmethod
-    def mirror_with_orientation(coords, shape, mirror_axes=(True, True, True),
-                                        rotate_axis=None, n_rotations=1):
-        """
-        For each mirrored/rotated point, calculates rotation angles for X, Y, Z axes in radians
-        using proper mirror matrices to ensure correct object orientation.
-
-        Returns: list of tuples (x, y, z, rx, ry, rz)
-        """
-        p = Vector(coords)
-        center = Vector(((s - 1) / 2 for s in shape))
-        results = []
-
-        flip_options = [[False, True] if mirror_axes[i] else [False] for i in range(3)]
-
-        for flip_x, flip_y, flip_z in product(*flip_options):
-            q = p.copy()
-            if flip_x: q.x = 2 * center.x - q.x
-            if flip_y: q.y = 2 * center.y - q.y
-            if flip_z: q.z = 2 * center.z - q.z
-
-            mirror_matrix = Matrix.Identity(4)
-            if flip_x: mirror_matrix[0][0] = -1
-            if flip_y: mirror_matrix[1][1] = -1
-            if flip_z: mirror_matrix[2][2] = -1
-
-            R = Matrix.Identity(4)
-
-            # Apply mirror
-            R_mirrored = mirror_matrix @ R
-
-            if rotate_axis is not None and n_rotations > 1:
-                rot_axis = Vector(rotate_axis).normalized()
-                for i in range(n_rotations):
-                    theta = (2 * np.pi / n_rotations) * i  # radians
-                    rot_matrix = Matrix.Rotation(theta, 4, rot_axis)
-                    R_total = rot_matrix @ R_mirrored
-                    q_rot = R_total @ (q - center).to_4d() + center.to_4d()
-                    qi = tuple(int(round(v)) for v in q_rot[:3])
-                    euler_angles = R_total.to_euler('XYZ')
-                    results.append((*qi, euler_angles.x, euler_angles.y, euler_angles.z))
-            else:
-                qi = tuple(int(round(v)) for v in q)
-                euler_angles = R_mirrored.to_euler('XYZ')
-                results.append((*qi, euler_angles.x, euler_angles.y, euler_angles.z))
-
-        return results
-
-    @staticmethod
     def mirror_and_rotate_3d(coords, shape, mirror_axes=(False, False, False), rotate_axis=None, n_rotations=1):
-        """
-        Generates mirrored and/or rotationally symmetric points for a 3D matrix.
-    
-        Parameters
-        ----------
-        coords : tuple[int,int,int]
-            Original point (x, y, z)
-        shape : tuple[int,int,int]
-            Shape of the 3D matrix (nx, ny, nz)
-        mirror_axes : tuple[bool,bool,bool], default=(True, True, True)
-            Axes to mirror (mirror_x, mirror_y, mirror_z)
-        rotate_axis : tuple[float,float,float] or Vector, optional
-            Axis for rotational symmetry (passes through matrix center). None = no rotation
-        n_rotations : int, default=1
-            Number of rotations for rotational symmetry (360/n each)
-    
-        Returns
-        -------
-        set[tuple[int,int,int]]
-            All generated points inside the matrix
-        """
         p = Vector(coords)
         center = Vector([(s-1)/2 for s in shape])
         generated_points = set()
@@ -206,21 +137,18 @@ class WFC3DConstraints:
             rotate_axis = None        
             
         if mirror_axes or rotate_axis:
-            po = self.mirror_with_orientation((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
-            for pt in po:
-                point = pt[:3]
-                angles = pt[3:]
+            points = self.mirror_and_rotate_3d((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
+            for point in points:
                 nx,ny,nz = point
                 if not (nx==x and ny==y and nz==z):
                     grid.grid[nx,ny,nz] = grid.grid[x,y,z]
-                    if (nx,ny,nz) in self.symrotation:
-                        self.symrotation[(nx,ny,nz)] = tuple(a+b for a,b in zip(self.symrotation[(nx,ny,nz)], angles))
-                    else:
-                        self.symrotation[(nx,ny,nz)] = angles
+                    #if 'sym_mirror_axes_rotate' in bpy.context.scene.wfc_props and bpy.context.scene.wfc_props['sym_mirror_axes_rotate']:
+                        #if (nx,ny,nz) in self.symrotation:
+                            #self.symrotation[(nx,ny,nz)] = tuple(a+b for a,b in zip(self.symrotation[(nx,ny,nz)], angles))
+                        #self.symrotation[(nx, ny, nz)] = angles
                     grid.mark_collapsed(nx,ny,nz)
 
     def apply_symmetry_rotation(self, position, obj):
-        print(f"{self.symrotation[position]} found for {position}")
         angles = self.symrotation[position]
         axis = ['X', 'Y', 'Z']
         for a in range(3):

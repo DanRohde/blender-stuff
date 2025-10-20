@@ -15,6 +15,9 @@ def _get_obj(props, name):
         if DEFAULT_EMPTY_NAME in collection.objects:
             return collection.objects[DEFAULT_EMPTY_NAME]
         else:
+            for o in collection.objects:
+                if o.name.startswith(DEFAULT_EMPTY_NAME):
+                    return o
             obj = bpy.data.objects.new(DEFAULT_EMPTY_NAME, None)
             collection.objects.link(obj)
             obj.empty_display_type = 'SPHERE'
@@ -148,7 +151,7 @@ def _get_constraints(props):
         constraints = REGION_CONSTRAINTS
     elif props.edit_constraints == 'grid':
         constraints = GRID_CONSTRAINTS
-    elif props.edit_constraings == 'neighbor':
+    elif props.edit_constraints == 'neighbor':
         constraints = [props.edit_neighbor_constraint]
     return constraints
 
