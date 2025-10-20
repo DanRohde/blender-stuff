@@ -191,10 +191,10 @@ class WFC3DConstraints:
         if src_name not in self.constraints:
             return 
         constraints = self.constraints[src_name]
-        if constraints["translation_min"] is not None and constraints["translation_max"] is not None and constraints["translation_steps"] is not None:
-            tmin = constraints["translation_min"]
-            tmax = constraints["translation_max"]
-            ts = constraints["translation_steps"]
+        if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
+            tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
+            tmax = constraints.get("translation_max",PROP_DEFAULTS["translation_max"])
+            ts = constraints.get("translation_steps",PROP_DEFAULTS["translation_steps"])
             loc = target_obj.location
             for i in range(3):
                 loc[i]+=_get_mapped_random_values(tmin[i], tmax[i], ts[i])
@@ -216,10 +216,10 @@ class WFC3DConstraints:
                 target_obj.scale.y = _get_mapped_random_values(smin[1], smax[1], ss[1])
                 target_obj.scale.z = _get_mapped_random_values(smin[2], smax[2], ss[2])
         
-        if constraints["rotation_min"] is not None and constraints["rotation_max"] is not None and constraints["rotation_steps"] is not None:
-            rmin = constraints["rotation_min"]
-            rmax = constraints["rotation_max"]
-            rs = constraints["rotation_steps"]
+        if constraints["rotation_min"] is not None or constraints["rotation_max"] is not None or constraints["rotation_steps"] is not None:
+            rmin = constraints.get("rotation_min",PROP_DEFAULTS["rotation_min"])
+            rmax = constraints.get("rotation_max",PROP_DEFAULTS["rotation_max"])
+            rs = constraints.get("rotation_steps",PROP_DEFAULTS["rotation_steps"])
             
             axis=['X','Y','Z']
             for i in range(3):
