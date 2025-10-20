@@ -102,7 +102,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.label(icon="CUBE",text="")
             row.prop(props,"edit_neighbor_constraint")
             newrow = row.row()
-            newrow.operator("object.wfc_reset_constraint")
+            newrow.operator("object.wfc_reset_constraints")
             newrow.enabled = props.edit_type == 'defaults' or (obj and props.edit_neighbor_constraint in obj)
             
             if props.edit_neighbor_constraint and props.edit_neighbor_constraint !="_NONE_":
@@ -131,12 +131,12 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 newcol.operator("collection.wfc_neighbor_list_select_none", icon="CHECKBOX_DEHLT")
         
                 row=box.row()
-                row.operator("object.wfc_update_constraint")
+                row.operator("object.wfc_update_neighbor_constraints")
         if props.edit_constraints == "grid":
             box=col.box()
             row = box.row()
             row.label(text=obj_name)
-            row.operator("object.wfc_reset_grid_constraints")
+            row.operator("object.wfc_reset_constraints")
             newbox = box.box()
             newrow = newbox.row()
             newrow.label(text="Corners")
@@ -187,7 +187,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box=col.box()
             row=box.row()
             row.label(text=obj_name)
-            row.operator("object.wfc_reset_region_constraints")
+            row.operator("object.wfc_reset_constraints")
             row=box.row()
             row.prop(props,"region_min")
             row=box.row()
@@ -197,21 +197,21 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.row().label(text="Quadrant")
             box.row().prop(props, "region_quadrant",text="")
 
-            box.operator("object.wfc_update_region_constraints")
+            box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "probability":
             box=col.box()
             row=box.row()
             row.label(text=obj_name)
-            row.operator("object.wfc_reset_probability_constraints")
+            row.operator("object.wfc_reset_constraints")
             box.prop(props,"probability")
             box.prop(props, "weight")
             
-            box.operator("object.wfc_update_probability_constraints")    
+            box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "transformation":
             box=col.box()
             row = box.row()
             row.label(text=obj_name)
-            row.operator("object.wfc_reset_transformation_constraints")
+            row.operator("object.wfc_reset_constraints")
             newbox = box.box()
             newbox.label(text="Translation")
             newbox.row().prop(props,"translation_min")
@@ -237,12 +237,12 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 newbox.row().prop(props,"scale_max")
                 newbox.row().prop(props,"scale_steps")
 
-            box.operator('object.wfc_update_transformation_constraints')
+            box.operator('object.wfc_update_constraints')
         if props.edit_constraints=="frequency":
             box = col.box()
             row=box.row()
             row.label(text=obj_name)
-            row.operator("object.wfc_reset_frequency_constraints")
+            row.operator("object.wfc_reset_constraints")
             
             newbox = box.box()
             newbox.label(text="Same Object")
@@ -264,13 +264,13 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = newbox.row()
             row.prop(props,"freq_any_axes")
             
-            box.operator("object.wfc_update_frequency_constraints")
+            box.operator("object.wfc_update_constraints")
 
         if props.edit_constraints=="symmetry":
             box = col.box()
             row = box.row()
             row.label(text=obj_name)
-            row.operator("object.wfc_reset_symmetry_constraints")
+            row.operator("object.wfc_reset_constraints")
 
             box.label(text="Mirror Symmetry")
             row = box.row()
@@ -281,7 +281,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.prop(props,"sym_rotate_axis")
             box.prop(props,"sym_rotate_n")
             
-            box.operator("object.wfc_update_symmetry_constraints")
+            box.operator("object.wfc_update_constraints")
            
             #box.label(text="Translational Symmetry")
             #box.label(text="Point Reflection Symmetry")
