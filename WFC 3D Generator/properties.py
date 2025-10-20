@@ -192,11 +192,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ],
         update=update_constraint_properties,
     )
-    edit_neighbor_constraint: bpy.props.EnumProperty(
-        name="", description="Select a Neighbor Constraint",
-        items=get_neighbor_constraint_items,
-        update=handle_edit_neighbor_constraint_update,
-    )
+    edit_neighbor_constraint: bpy.props.EnumProperty(name="", description="Select a Neighbor Constraint", items=get_neighbor_constraint_items, update=handle_edit_neighbor_constraint_update,)
     auto_active_object: bpy.props.BoolProperty(name="", description="Automatically select objects selected in 3D Viewport.", default=False,)
     auto_neighbor_object: bpy.props.BoolProperty(name="", description="Automatically select objects selected in 3D Viewport.", default=False,)
     corner_fbl: bpy.props.BoolProperty( name="fbl", description="Front Bottom Left")
@@ -256,6 +252,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     freq_any_neighbor_corner : bpy.props.IntProperty(name="Corner",description="Neighbor corner frequency max", default=PROP_DEFAULTS["freq_any_neighbor_corner"], min=-1,max=8)
     freq_any_neighbor_edge : bpy.props.IntProperty(name="Edge",description="Neighbor edge frequency max", default=PROP_DEFAULTS["freq_any_neighbor_edge"], min=-1,max=12)
     sym_mirror_axes : bpy.props.BoolVectorProperty(name="Axes",description="Symmetry Axes", default=PROP_DEFAULTS["sym_mirror_axes"])
+    sym_mirror_axes_rotate: bpy.props.BoolProperty(name="Rotate Object", description="Rotate Objects", default=PROP_DEFAULTS["sym_mirror_axes_rotate"])
     sym_rotate_axis : bpy.props.FloatVectorProperty(name="Axis",description="Rotation Axis", default=PROP_DEFAULTS["sym_rotate_axis"])
     sym_rotate_n : bpy.props.IntProperty(name="Number",description="Number of rotations", default=PROP_DEFAULTS["sym_rotate_n"], min=-1)
     region_min: bpy.props.IntVectorProperty(name="min",description="Region minimum", default=PROP_DEFAULTS["region_min"],min=-1)

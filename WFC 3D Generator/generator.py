@@ -22,11 +22,12 @@ class WFC3DGenerator:
         self.constraints = None
         self.load_objects()
 
+        self.grid = WFC3DGrid(self.grid_size)
+
         if self.use_constraints:
             self.constraints = WFC3DConstraints()
-            self.constraints.initialize_constraints(self.collection, self.objects)
+            self.constraints.initialize_constraints(self.grid, self.collection, self.objects)
                     
-        self.grid = WFC3DGrid(self.grid_size)
 
     def load_objects(self):
         """Loads objects from the collection"""
@@ -135,7 +136,7 @@ class WFC3DGenerator:
                         new_obj.location = tuple(newloc)        
 
                         if self.use_constraints:
-                            self.constraints.apply_transformation_constraints(original_obj, new_obj)
+                            self.constraints.apply_transformation_constraints((x,y,z), original_obj, new_obj)
                             
                         new_collection.objects.link(new_obj)
 

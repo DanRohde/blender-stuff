@@ -275,7 +275,9 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.label(text="Mirror Symmetry")
             row = box.row()
             row.prop(props,"sym_mirror_axes")
-
+            if props.sym_mirror_axes[0] or props.sym_mirror_axes[1] or props.sym_mirror_axes[2]:
+                row = box.row()
+                row.prop(props, 'sym_mirror_axes_rotate')
             box.label(text="Rotational Symmetry")
             row = box.row()
             row.prop(props,"sym_rotate_axis")

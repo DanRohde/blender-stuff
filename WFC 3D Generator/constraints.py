@@ -10,13 +10,17 @@ from .constants import *
 class WFC3DConstraints:
     def __init__(self):
         self.constraints = {}
+        self.symrotation = {}
+        self.grid = None
     
-    def initialize_constraints(self, collection, objects):
+    def initialize_constraints(self, grid, collection, objects):
         """Loads constraints from custom properties"""
         allobjects = [o.name for o in objects]
         default_obj = None
         if DEFAULT_EMPTY_NAME in collection.objects:
             default_obj = collection.objects[DEFAULT_EMPTY_NAME]
+
+        self.grid = grid
 
         for obj in objects:
             obj_name = obj.name
@@ -83,7 +87,55 @@ class WFC3DConstraints:
             else:
                 options.append(name)
         return self.get_weighted_options(options)
-    
+
+    @staticmethod
+    def mirror_with_orientation(coords, shape, mirror_axes=(True, True, True),
+                                        rotate_axis=None, n_rotations=1):
+        """
+        For each mirrored/rotated point, calculates rotation angles for X, Y, Z axes in radians
+        using proper mirror matrices to ensure correct object orientation.
+
+        Returns: list of tuples (x, y, z, rx, ry, rz)
+        """
+        p = Vector(coords)
+        center = Vector(((s - 1) / 2 for s in shape))
+        results = []
+
+        flip_options = [[False, True] if mirror_axes[i] else [False] for i in range(3)]
+
+        for flip_x, flip_y, flip_z in product(*flip_options):
+            q = p.copy()
+            if flip_x: q.x = 2 * center.x - q.x
+            if flip_y: q.y = 2 * center.y - q.y
+            if flip_z: q.z = 2 * center.z - q.z
+
+            mirror_matrix = Matrix.Identity(4)
+            if flip_x: mirror_matrix[0][0] = -1
+            if flip_y: mirror_matrix[1][1] = -1
+            if flip_z: mirror_matrix[2][2] = -1
+
+            R = Matrix.Identity(4)
+
+            # Apply mirror
+            R_mirrored = mirror_matrix @ R
+
+            if rotate_axis is not None and n_rotations > 1:
+                rot_axis = Vector(rotate_axis).normalized()
+                for i in range(n_rotations):
+                    theta = (2 * np.pi / n_rotations) * i  # radians
+                    rot_matrix = Matrix.Rotation(theta, 4, rot_axis)
+                    R_total = rot_matrix @ R_mirrored
+                    q_rot = R_total @ (q - center).to_4d() + center.to_4d()
+                    qi = tuple(int(round(v)) for v in q_rot[:3])
+                    euler_angles = R_total.to_euler('XYZ')
+                    results.append((*qi, euler_angles.x, euler_angles.y, euler_angles.z))
+            else:
+                qi = tuple(int(round(v)) for v in q)
+                euler_angles = R_mirrored.to_euler('XYZ')
+                results.append((*qi, euler_angles.x, euler_angles.y, euler_angles.z))
+
+        return results
+
     @staticmethod
     def mirror_and_rotate_3d(coords, shape, mirror_axes=(False, False, False), rotate_axis=None, n_rotations=1):
         """
@@ -154,12 +206,26 @@ class WFC3DConstraints:
             rotate_axis = None        
             
         if mirror_axes or rotate_axis:
-            points = self.mirror_and_rotate_3d((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
-            for point in points:
+            po = self.mirror_with_orientation((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
+            for pt in po:
+                point = pt[:3]
+                angles = pt[3:]
                 nx,ny,nz = point
                 if not (nx==x and ny==y and nz==z):
                     grid.grid[nx,ny,nz] = grid.grid[x,y,z]
+                    if (nx,ny,nz) in self.symrotation:
+                        self.symrotation[(nx,ny,nz)] = tuple(a+b for a,b in zip(self.symrotation[(nx,ny,nz)], angles))
+                    else:
+                        self.symrotation[(nx,ny,nz)] = angles
                     grid.mark_collapsed(nx,ny,nz)
+
+    def apply_symmetry_rotation(self, position, obj):
+        print(f"{self.symrotation[position]} found for {position}")
+        angles = self.symrotation[position]
+        axis = ['X', 'Y', 'Z']
+        for a in range(3):
+            obj.rotation_euler.rotate_axis(axis[a], angles[a])
+
 
     def collapse(self, grid, x, y, z):
         """Collapse a grid cell with constraints"""
@@ -172,7 +238,8 @@ class WFC3DConstraints:
         grid.mark_collapsed(x, y, z)
 
 
-    def apply_transformation_constraints(self, src_obj, target_obj):
+
+    def apply_transformation_constraints(self, position, src_obj, target_obj):
         def _get_mapped_random_values(vmin, vmax, steps):
             if steps < 0 and vmin > vmax:
                 steps =- steps
@@ -230,7 +297,9 @@ class WFC3DConstraints:
             for i in range(3):
                 a = _get_mapped_random_values(rmin[i], rmax[i], rs[i])
                 if a!=0: target_obj.rotation_euler.rotate_axis(axis[i], a)
-        
+        if position in self.symrotation:
+            self.apply_symmetry_rotation(position, target_obj)
+
     def propagate_frequency_constraints(self, grid, x, y, z):
         if len(grid.grid[x,y,z])==0:
             return []
