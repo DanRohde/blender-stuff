@@ -40,7 +40,7 @@ class WFC3DConstraints:
                 elif default_obj and cp in default_obj and default_obj[cp] != "":
                     self.constraints[obj_name][p] = default_obj[cp]
                 else:
-                    self.constraints[obj_name][p] = None
+                    self.constraints[obj_name][p] = PROP_DEFAULTS[p]
 
             # load grid constraints
             for c in GRID_CONSTRAINTS:
