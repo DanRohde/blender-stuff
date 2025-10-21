@@ -62,7 +62,38 @@ class WFC3DConstraints:
                         self.constraints[obj_name][direction] = eo[prop_name].split(',')
                 else:
                     self.constraints[obj_name][direction] = allobjects 
+    def are_grid_constraints_satisfied(self, name, pos):
+        if 'corners' in self.constraints[name] and self.grid.is_corner(pos):
+            for c in self.constraints[name]['corners']:
+                if c == '' and len(self.constraints[name]['corners']) == 1: return True
+                if c == '-' or c == 'None' or c == 'False': return False
+                if c in self.grid.corners and pos == self.grid.corners[c]: return True
+            return False
+        if 'edges' in self.constraints[name] and self.grid.is_edge(pos):
+            for c in self.constraints[name]['edges']:
+                if c == '' and len(self.constraints[name]['edges']) == 1: return True
+                if c == '-' or c == 'None': return False
+                if c in self.grid.edges and self.grid.is_on_given_edge(pos, self.grid.edges[c]): return True
+            return False
+        if 'inside' in self.constraints[name] and self.grid.is_inside(pos):
+            inside = self.constraints[name]['inside']
+            if inside == '' or inside == 'True': return True
+            if inside == '-' or inside == 'None' or inside == 'False': return False
+            return False
+        if 'faces' in self.constraints[name] and self.grid.is_face(pos):
+            for f in self.constraints[name]['faces']:
+                if f == '' and len(self.constraints[name]['faces']) == 1: return True
+                if f == '-' or f == 'None' or f == 'False': return False
+                if self.grid.is_on_specific_face(pos, f): return True
+            return False
+        ret = True
+        if 'region_min' in self.constraints[name] or 'region_max' in self.constraints[name]:
+            ret = ret and self.grid.is_inside_region(pos, self.constraints[name].get('region_min', None),
+                                                self.constraints[name].get('region_max', None))
+        if 'region_quadrant' in self.constraints[name]:
+            ret = ret and self.grid.is_inside_region_quadrant(pos, self.constraints[name]['region_quadrant'])
 
+        return ret
     def get_weighted_options(self, elements):
         options = []    
         for name in elements:

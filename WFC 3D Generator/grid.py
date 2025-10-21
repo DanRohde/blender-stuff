@@ -18,8 +18,7 @@ class WFC3DGrid:
                 for z in range(self.grid_size[2]):
                     cell = []
                     for obj in objects:
-                        if constraints is None or self.are_grid_constraints_satisfied(obj.name, constraints.constraints,
-                                                                                      (x, y, z)):
+                        if constraints is None or constraints.are_grid_constraints_satisfied(obj.name, (x, y, z)):
                             cell.append(obj.name)
 
                     self.grid[x, y, z] = cell
@@ -85,39 +84,6 @@ class WFC3DGrid:
 
     def within_boundaries(self, x, y, z):
         return 0 <= x < self.grid_size[0] and 0 <= y < self.grid_size[1] and 0 <= z < self.grid_size[2]
-
-    def are_grid_constraints_satisfied(self, name, constraints, pos):
-        if 'corners' in constraints[name] and self.is_corner(pos):
-            for c in constraints[name]['corners']:
-                if c == '' and len(constraints[name]['corners']) == 1: return True
-                if c == '-' or c == 'None' or c == 'False': return False
-                if c in self.corners and pos == self.corners[c]: return True
-            return False
-        if 'edges' in constraints[name] and self.is_edge(pos):
-            for c in constraints[name]['edges']:
-                if c == '' and len(constraints[name]['edges']) == 1: return True
-                if c == '-' or c == 'None': return False
-                if c in self.edges and self.is_on_given_edge(pos, self.edges[c]): return True
-            return False
-        if 'inside' in constraints[name] and self.is_inside(pos):
-            inside = constraints[name]['inside']
-            if inside == '' or inside == 'True': return True
-            if inside == '-' or inside == 'None' or inside == 'False': return False
-            return False
-        if 'faces' in constraints[name] and self.is_face(pos):
-            for f in constraints[name]['faces']:
-                if f == '' and len(constraints[name]['faces']) == 1: return True
-                if f == '-' or f == 'None' or f == 'False': return False
-                if self.is_on_specific_face(pos, f): return True
-            return False
-        ret = True
-        if 'region_min' in constraints[name] or 'region_max' in constraints[name]:
-            ret = ret and self.is_inside_region(pos, constraints[name].get('region_min', None),
-                                                constraints[name].get('region_max', None))
-        if 'region_quadrant' in constraints[name]:
-            ret = ret and self.is_inside_region_quadrant(pos, constraints[name]['region_quadrant'])
-
-        return ret
 
     def is_inside_region(self, pos, rmin, rmax):
         x, y, z = pos
