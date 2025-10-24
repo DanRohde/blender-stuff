@@ -112,6 +112,7 @@ class WFC3DGenerator:
             return self.render_delay
         else:
             bpy.context.scene.wfc_props.running_delayed_renderer = False
+            bpy.context.scene.wfc_props.paused_delayed_renderer = False
             def draw(self, context):
                 self.layout.label(text="WFC 3D model successfully rendered!")
             bpy.context.window_manager.popup_menu(draw, title="Info", icon='INFO')

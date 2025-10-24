@@ -31,7 +31,9 @@ class OBJECT_OT_WFC3DGenerateStopDelayedRenderer(bpy.types.Operator):
     def execute(self, context):
         props = context.scene.wfc_props
         props.running_delayed_renderer = False
+        props.paused_delayed_renderer = False
         return {'FINISHED'}
+
 class OBJECT_OT_WFC3DGenerateTogglePauseDelayedRenderer(bpy.types.Operator):
     """Toggle pause for running delayed WFC 3D model renderer"""
     bl_idname = "object.wfc_3d_generate_toggle_pause_delayed_renderer"
