@@ -27,7 +27,7 @@ class WFC3DConstraints:
             
             if obj_name in bpy.data.collections:
                 obj = get_default_empty_object(bpy.data.collections[obj_name])
-                if obj is None: continue
+                if obj is None: obj = bpy.data.collections[obj_name].objects[0]
 
             # load probability, frequency, transformation, symmetry constraints
             for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
