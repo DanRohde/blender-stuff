@@ -129,7 +129,9 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 nr.enabled = not props.auto_active_object
                 newcol.operator("collection.wfc_neighbor_list_select_all", icon="CHECKBOX_HLT")
                 newcol.operator("collection.wfc_neighbor_list_select_none", icon="CHECKBOX_DEHLT")
-        
+
+                row = box.row()
+                row.prop(props,"allow_neighbor_constraint_violations",icon="VIEW_UNLOCKED")
                 row=box.row()
                 row.operator("object.wfc_update_neighbor_constraints")
         if props.edit_constraints == "grid":

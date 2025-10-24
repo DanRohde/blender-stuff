@@ -90,9 +90,13 @@ class COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint(bpy.types.Operator):
             neighbors = [item.value for item in props.neighbor_list if item.selected]
         if props.edit_type == 'objects':
             for item in _get_selected_items(props.obj_list):
-                self._set_neighbors(_get_obj(props, item), prop_name, neighbors)
+                obj = _get_obj(props, item)
+                _update_constraints(props, ADD_NEIGHBOR_CONSTRAINTS)
+                self._set_neighbors(obj, prop_name, neighbors)
         elif props.edit_type == 'defaults':
-            self._set_neighbors(_get_obj(props, DEFAULT_EMPTY_NAME), prop_name, neighbors)
+            obj = _get_obj(props, DEFAULT_EMPTY_NAME)
+            _update_constraints(props, ADD_NEIGHBOR_CONSTRAINTS)
+            self._set_neighbors(obj, prop_name, neighbors)
         return {'FINISHED'}
 
 

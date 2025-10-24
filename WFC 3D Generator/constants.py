@@ -24,6 +24,7 @@ PROP_DEFAULTS = {
     'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '', 
     'en_fl':'','en_fr':'','en_ft':'','en_fb':'','en_bl':'','en_br':'','en_bt':'','en_bb':'','en_lt':'','en_lb':'','en_rt':'','en_rb':'',
     'cn_fbl':'','cn_fbr':'','cn_ftl':'','cn_ftr':'','cn_bbl':'','cn_bbr':'','cn_btl':'','cn_btr':'',
+    'allow_neighbor_constraint_violations':False,
     # probability constraints:
     'weight' : 1, 'probability' : 1,
     # grid constraints:
@@ -40,6 +41,8 @@ PROP_DEFAULTS = {
     'sym_mirror_axes': (False, False, False), 'sym_rotate_axis' : (-1,-1,-1), 'sym_rotate_n': -1, 'sym_mirror_axes_rotate' : False,
     'region_min':(-1,-1,-1), 'region_max':(-1,-1,-1), 'region_quadrant': (True,)*8,
 }
+
+ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
 
 SYMMETRY_CONSTRAINTS = [ 'sym_mirror_axes','sym_rotate_axis', 'sym_rotate_n', 'sym_mirror_axes_rotate' ]
 TRANSFORMATION_CONSTRAINTS = ['scale_min','scale_max','scale_steps','scale_type', 'scale_uni',

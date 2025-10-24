@@ -32,7 +32,7 @@ Each object in the source collection can use custom properties to define the per
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
 * Used custom properties: face neighbors: `wfc_[left|right|front|back|top|bottom]`, edge neighbors: `wfc_en_[fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb]`,
-  corner neighbors: `wfc_cn[fbl|fbr|ftl|ftr|bbl|bbr|btl|btr]`
+  corner neighbors: `wfc_cn_[fbl|fbr|ftl|ftr|bbl|bbr|btl|btr]`
 * Allowed property values:
     * empty string - allows all neighbors
     * comma separated list of object names - permitted neighbor(s)
@@ -85,7 +85,7 @@ Each object in the source collection can use custom properties to define the per
 
 
 ## Transformation Constraints
-* Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_translation_steps,wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps,wfc_scale_min,wfc_scale_max,wfc_scale_steps`
+* Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_translation_steps,wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps,wfc_scale_min,wfc_scale_max,wfc_scale_steps,wfc_scale_uni,wfc_scale_type`
 * Allowed property values:
     * wfc_translation_min,wfc_translation_max,wfc_translation_steps: a float vector (x,y,z)
     * wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps: a float vector  (x,y,z)

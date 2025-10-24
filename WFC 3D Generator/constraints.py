@@ -33,7 +33,7 @@ class WFC3DConstraints:
                     continue
 
             # load probability, frequency, transformation, symmetry constraints
-            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS:
+            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
                 cp = "wfc_"+p
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
@@ -323,21 +323,18 @@ class WFC3DConstraints:
 
             for direction, (dx, dy, dz) in DIRECTIONS.items():
                 nx, ny, nz = cx + dx, cy + dy, cz + dz             
-                if grid.within_boundaries(nx, ny, nz):
-                    neighbor_options = grid.grid[nx, ny, nz]
-                    #if len(neighbor_options) > 1:
-                    if not grid.collapsed[nx,ny,nz]:
-                        # Find permitted neighbors for this direction
-                        allowed = self.constraints[current_obj].get(direction, [])
-                        # Filter disallowed options
-                        new_options = [obj for obj in neighbor_options if obj in allowed]
-                        # Check opposite direction for all new options:
-                        new_new_options = []
-                        for no in new_options:
-                            allowed = self.constraints[no].get(OPPOSITE_DIRECTIONS[direction],[])
-                            if current_obj in allowed:
-                                new_new_options.append(no)
-                        
-                        if len(new_new_options) < len(neighbor_options):
-                            grid.grid[nx, ny, nz] = new_new_options
-                            queue.append((nx, ny, nz))
+                if not grid.within_boundaries(nx, ny, nz) or grid.collapsed[nx,ny,nz]: continue
+
+                neighbor_options = grid.grid[nx, ny, nz]
+
+                # Filter disallowed options
+                new_options = [obj for obj in neighbor_options if obj in self.constraints[current_obj].get(direction, []) and current_obj in self.constraints[obj].get(OPPOSITE_DIRECTIONS[direction],[])]
+
+                if len(new_options) >= len(neighbor_options): continue
+                if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
+                    new_options= [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
+                    if len(new_options) == 0: new_options = [random.choice(neighbor_options)]
+                    if len(new_options) >= len(neighbor_options): continue
+
+                grid.grid[nx, ny, nz] = new_options
+                queue.append((nx, ny, nz))

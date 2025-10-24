@@ -115,7 +115,7 @@ def update_constraint_properties(self, _context):
                 for c in eo[cp].split(","):
                     props[p+c] = True
         
-    for p in PROBABILITY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS:
+    for p in PROBABILITY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
         pn = "wfc_"+p
         if obj and pn in obj:
             props[p]=obj[pn]
@@ -224,6 +224,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     face_top: bpy.props.BoolProperty(name="top", description="Top")
     face_bottom: bpy.props.BoolProperty(name="bottom", description="Bottom")
     face_none: bpy.props.BoolProperty(name="-", description="Faces Forbidden")
+    allow_neighbor_constraint_violations: bpy.props.BoolProperty(name="Allow Neighbor Constraint Violations", description="... prevents empty grid cells", default=PROP_DEFAULTS['allow_neighbor_constraint_violations'])
     inside_none: bpy.props.BoolProperty(name="-", description="Inside Forbidden")
     weight: bpy.props.IntProperty(name="Weight", description="Weight constraint", default=PROP_DEFAULTS["weight"], min=0)
     probability: bpy.props.FloatProperty(name="Probability", description="Probability constraint", default=PROP_DEFAULTS["probability"], min=0, max=1)
