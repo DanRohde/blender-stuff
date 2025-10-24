@@ -25,9 +25,10 @@ Each object in the source collection can use custom properties to define the per
 * Transformation constraints: 10
 * Frequency constraints: 15
 * Symmetry constraints: 9
+* Connector constraints: 26
 
 
-* **Sum: 95**
+* **Sum: 121**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -102,13 +103,16 @@ Each object in the source collection can use custom properties to define the per
 
 
 ## Symmetry Constraints
-* Use custom property: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n`
+* Used custom properties: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n`
 * Allowed property values: 
     * wfc_sym_mirror: a vector of booleans or integers
     * wfc_sym_rotate_axis: a float vector
     * wfc_sym_rotate_n: an integer (number of rotations: n=4 => 90° rotation)
 
+## Connector Constraints
+* Used custom properties: `wfc_conn_[front|back|left|right|top|bottom|cn_(fbl|fbr|ftl|ftr|bbl|bbr|btl|btr)|en_(fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb)]` 
+* Allowed property value: string with a connector name
+
 ## Upcoming Features
-* more constraints: symmetry, pattern, local/region, ...
 * a constraint validator ...
-* a different kind of constraints based on connector types instead of object lists
+* viewport constraint visualizer

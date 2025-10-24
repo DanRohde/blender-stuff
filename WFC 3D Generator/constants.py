@@ -77,7 +77,6 @@ CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn
                          'conn_en_lt','conn_en_lb','conn_en_rt','conn_en_rb',
                          'conn_cn_fbl','conn_cn_fbr','conn_cn_ftl','conn_cn_ftr',
                          'conn_cn_bbl','conn_cn_bbr','conn_cn_btl','conn_cn_btr',
-                         'conn_names',
 ]
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'

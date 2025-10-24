@@ -29,8 +29,8 @@ class WFC3DConstraints:
                 obj = get_default_empty_object(bpy.data.collections[obj_name])
                 if obj is None: obj = bpy.data.collections[obj_name].objects[0]
 
-            # load probability, frequency, transformation, symmetry constraints
-            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
+            # load probability, frequency, transformation, symmetry, region, neighbor, connector constraints
+            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS + CONNECTOR_CONSTRAINTS:
                 cp = "wfc_"+p
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
@@ -324,11 +324,20 @@ class WFC3DConstraints:
 
                 neighbor_options = grid.grid[nx, ny, nz]
 
-                # Filter disallowed options
+                # Filter disallowed neighbor options
                 new_options = [obj for obj in neighbor_options if obj in self.constraints[current_obj].get(direction, []) and current_obj in self.constraints[obj].get(OPPOSITE_DIRECTIONS[direction],[])]
 
                 if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
                     new_options= [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
+
+                # Filter disallowed connector options:
+                if self.constraints[current_obj].get('conn_'+direction.lower(),"") != "":
+                    prop_name = 'conn_' + direction.lower()
+                    opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
+                    new_options = [obj
+                                   for obj in neighbor_options
+                                   if self.constraints[current_obj][prop_name] == self.constraints[obj].get(opp_prop_name,"")
+                                   or self.constraints[obj].get(opp_prop_name,"")==""]
 
                 if len(new_options) >= len(neighbor_options): continue
 
