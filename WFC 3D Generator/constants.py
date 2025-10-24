@@ -35,11 +35,21 @@ PROP_DEFAULTS = {
     'rotation_grid' : (False,False,False), 'rotation_neighbor' : (False,False, False),
     'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0), 
     'scale_type' : 0, 'scale_uni': (1,1,0),
+    # frequency constraints:
     'freq_grid' : -1, 'freq_neighbor' : -1, 'freq_axes' : (-1,-1,-1), 'freq_any_neighbor' : -1, 'freq_any_axes' : (-1,-1,-1),
     'freq_neighbor_face': -1, 'freq_neighbor_edge' : -1, 'freq_neighbor_corner' : -1,
     'freq_any_neighbor_face': -1, 'freq_any_neighbor_edge' : -1, 'freq_any_neighbor_corner' : -1,
+    # symmetry constraints:
     'sym_mirror_axes': (False, False, False), 'sym_rotate_axis' : (-1,-1,-1), 'sym_rotate_n': -1, 'sym_mirror_axes_rotate' : False,
+    # region constraints:
     'region_min':(-1,-1,-1), 'region_max':(-1,-1,-1), 'region_quadrant': (True,)*8,
+    # connector constraints:
+    'conn_left':'','conn_right':'','conn_top':'','conn_bottom':'','conn_back':'','conn_front':'',
+    'conn_en_fl':'','conn_en_fr':'','conn_en_ft':'','conn_en_fb':'',
+    'conn_en_bl':'','conn_en_br':'','conn_en_bt':'','conn_en_bb':'',
+    'conn_en_lt':'','conn_en_lb':'','conn_en_rt':'','conn_en_rb':'',
+    'conn_cn_fbl':'','conn_cn_fbr':'','conn_cn_ftl':'','conn_cn_ftr':'',
+    'conn_cn_bbl':'','conn_cn_bbr':'','conn_cn_btl':'','conn_cn_btr':'',
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
@@ -61,7 +71,24 @@ GRID_CONSTRAINTS = [ 'faces', 'corners', 'edges', 'inside']
 
 REGION_CONSTRAINTS = [ 'region_min', 'region_max','region_quadrant']
 
+CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn_top','conn_bottom',
+                        'conn_en_fl','conn_en_fr','conn_en_ft','conn_en_fb',
+                         'conn_en_bl','conn_en_br','conn_en_bt','conn_en_bb',
+                         'conn_en_lt','conn_en_lb','conn_en_rt','conn_en_rb',
+                         'conn_cn_fbl','conn_cn_fbr','conn_cn_ftl','conn_cn_ftr',
+                         'conn_cn_bbl','conn_cn_bbr','conn_cn_btl','conn_cn_btr',
+                         'conn_names',
+]
+
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
+
+DIR_TRANSLATION = { 'TOP': 'top face', 'BOTTOM' : 'bottom face', 'LEFT' : 'left face', 'RIGHT': 'right face', 'FRONT' : 'front face', 'BACK' : 'back face',
+                 'FBL':'front bottom left corner', 'FBR' : 'front bottom right corner', 'FTL' : 'front top left corner', 'FTR' : 'front top right corner',
+                 'BBL':'back bottom left corner', 'BBR' : 'back bottom right corner', 'BTL' : 'back top left corner', 'BTR' : 'back top right corner',
+                 'FL':'front left edge', 'FR': 'front right edge', 'FB' : 'front bottom edge', 'FT' : 'front top edge',
+                 'BL':'back left edge', 'BR': 'back right edge', 'BB' : 'back bottom edge', 'BT' : 'back top edge',
+                 'LT':'left top edge', 'LB' : 'left bottom edge', 'RT' : 'right top edge', 'RB' : 'right bottom edge',
+}
 
 ICON_MAP = {
         'MESH': 'OUTLINER_OB_MESH',

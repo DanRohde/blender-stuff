@@ -1,7 +1,7 @@
 import bpy
 
 from .constants import *
-from .helper import get_default_empty_object
+from .helper import get_default_empty_object, get_object_by_name
 
 def handle_update_collection(_self, context):
     props = context.scene.wfc_props
@@ -110,7 +110,10 @@ def update_constraint_properties(self, _context):
             elif obj:
                 for c in eo[cp].split(","):
                     props[p+c] = True
-        
+    # connector constraints:
+    props.conn_directions = "_NONE_"
+
+
     for p in PROBABILITY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
         pn = "wfc_"+p
         if obj and pn in obj:
@@ -120,33 +123,43 @@ def update_constraint_properties(self, _context):
         else:
             props[p]=PROP_DEFAULTS[p]
 
-
-def get_neighbor_constraint_items(_self, _context):
-    
-    items = [("_NONE_","Select a Neighbor Constraint","Please select a neighbor constraint"),None]
-    translate = { 'TOP': 'top face', 'BOTTOM' : 'bottom face', 'LEFT' : 'left face', 'RIGHT': 'right face', 'FRONT' : 'front face', 'BACK' : 'back face',
-                 'FBL':'front bottom left corner', 'FBR' : 'front bottom right corner', 'FTL' : 'front top left corner', 'FTR' : 'front top right corner',
-                 'BBL':'back bottom left corner', 'BBR' : 'back bottom right corner', 'BTL' : 'back top left corner', 'BTR' : 'back top right corner', 
-                 'FL':'front left edge', 'FR': 'front right edge', 'FB' : 'front bottom edge', 'FT' : 'front top edge',
-                 'BL':'back left edge', 'BR': 'back right edge', 'BB' : 'back bottom edge', 'BT' : 'back top edge',
-                 'LT':'left top edge', 'LB' : 'left bottom edge', 'RT' : 'right top edge', 'RB' : 'right bottom edge',
-                 }
+def get_direction_list(items, prefix):
     ls = ""
     for d in DIRECTIONS:
         label = d.lower()
-        if d.find("_")>-1:
-            s, n = d.split("_",1)
-            if ls != s :
-                ls = s 
+        if d.find("_") > -1:
+            s, n = d.split("_", 1)
+            if ls != s:
+                ls = s
                 items.append(None)
-            if n in translate:
-                label = translate[n]
+            if n in DIR_TRANSLATION:
+                label = DIR_TRANSLATION[n]
         else:
-            if d in translate:
-                label = translate[d] 
-            
-        items.append(('wfc_'+d.lower(),label,label+" neighbor"))
+            if d in DIR_TRANSLATION:
+                label = DIR_TRANSLATION[d]
+
+        items.append((prefix + d.lower(), label, label ))
     return items
+
+def get_neighbor_constraint_items(_self, _context):
+    items = [("_NONE_","Select a Neighbor Constraint","Please select a neighbor constraint"),None]
+    return get_direction_list(items, "wfc_")
+
+def get_conn_directions(_self, _context):
+    items = [("_NONE_","Select a Direction","Please select a direction"),None]
+    return get_direction_list(items, 'wfc_conn_')
+
+def get_conn_direction_value(_self, _context):
+    props = bpy.context.scene.wfc_props
+
+    if props.conn_directions == '_NONE_':
+        props.conn_name = ''
+        return
+    selected = [item.name for item in props.obj_list if item.selected]
+    if len(selected) == 0: return
+    d = props.conn_directions
+    obj = get_object_by_name(props, selected[0])
+    props.conn_name = obj.get(d,'')
 
 class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()
@@ -156,7 +169,7 @@ class WFC3DEditPanelNeighborMultiSelItem(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()
     selected: bpy.props.BoolProperty(default=False)
     value: bpy.props.StringProperty()
-    
+
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, max=100,)
@@ -188,6 +201,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ("grid","Grid Constraints","Grid constraints"),("region","Region Constraints","Region constraints"),("probability","Probability Constraints", "Probability constraints"),
                ("transformation","Transformation Constraints", "Transformation constraints"), 
                ('frequency',"Frequency Constraints","Frequency constraints"), ("symmetry","Symmetry Constraints","Symmetry constraints"),
+               ('connector','Connector Constraints','Connector constraints'),
                ],
         update=update_constraint_properties,
     )
@@ -258,6 +272,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     region_min: bpy.props.IntVectorProperty(name="min",description="Region minimum", default=PROP_DEFAULTS["region_min"],min=-1)
     region_max: bpy.props.IntVectorProperty(name="max",description="Region minimum", default=PROP_DEFAULTS["region_max"],min=-1)
     region_quadrant: bpy.props.BoolVectorProperty(name="Quadrant",description="Quadrant (fbl,fbr,ftl,ftr,bbl,bbr,btl,btr)", size=8, default=PROP_DEFAULTS["region_quadrant"])
+    conn_directions: bpy.props.EnumProperty(name="", description="Select a direction", items=get_conn_directions, update=get_conn_direction_value)
+    conn_name: bpy.props.StringProperty(name="Connector name",description="Connector name", default="")
 
 properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
 

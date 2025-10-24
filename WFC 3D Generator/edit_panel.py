@@ -278,7 +278,18 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             #box.label(text="Translational Symmetry")
             #box.label(text="Point Reflection Symmetry")
             #box.label(text="Glide Reflection Symmetry")
-        
+        if props.edit_constraints=="connector":
+            box = col.box()
+            row = box.row()
+            row.label(text=obj_name)
+            row.operator("object.wfc_reset_constraints")
+            row = box.row()
+            row.prop(props, "conn_directions")
+            if props.conn_directions != '_NONE_':
+                row = box.row()
+                row.prop(props,"conn_name")
+                row = box.row()
+                row.operator("object.wfc_update_connector_constraints")
 
 panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_PT_EditPanel,]
 

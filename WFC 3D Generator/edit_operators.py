@@ -2,19 +2,7 @@ import bpy
 
 from .constants import *
 from .properties import update_constraint_properties, handle_update_collection
-from .helper import get_default_empty_object
-
-def _get_obj(props, name):
-    collection = props.collection_obj
-    if props.edit_type == 'objects':
-        if name in collection.objects:
-            return collection.objects[name]
-        elif name in collection.children:
-            return get_default_empty_object(collection.children[name], True)
-    elif props.edit_type == 'defaults':
-        return get_default_empty_object(collection, True)
-    return None
-
+from .helper import get_object_by_name
 
 def _get_selected_items(obj_list):
     return [item.name for item in obj_list if item.selected]
@@ -32,7 +20,7 @@ def _update_constraints(props, constraints):
         items = [DEFAULT_EMPTY_NAME]
 
     for item in items:
-        obj = _get_obj(props, item)
+        obj = get_object_by_name(props, item)
         for c in constraints:
             if c in props:
                 if props[c] != PROP_DEFAULTS[c]:
@@ -49,7 +37,7 @@ def _reset_constraints(props, constraints):
         items = [DEFAULT_EMPTY_NAME]
 
     for item in items:
-        obj = _get_obj(props, item)
+        obj = get_object_by_name(props, item)
         for c in constraints:
             if "wfc_" + c in obj:
                 del obj["wfc_" + c]
@@ -78,15 +66,37 @@ class COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint(bpy.types.Operator):
             neighbors = [item.value for item in props.neighbor_list if item.selected]
         if props.edit_type == 'objects':
             for item in _get_selected_items(props.obj_list):
-                obj = _get_obj(props, item)
+                obj = get_object_by_name(props, item)
                 _update_constraints(props, ADD_NEIGHBOR_CONSTRAINTS)
                 self._set_neighbors(obj, prop_name, neighbors)
         elif props.edit_type == 'defaults':
-            obj = _get_obj(props, DEFAULT_EMPTY_NAME)
+            obj = get_object_by_name(props, DEFAULT_EMPTY_NAME)
             _update_constraints(props, ADD_NEIGHBOR_CONSTRAINTS)
             self._set_neighbors(obj, prop_name, neighbors)
         return {'FINISHED'}
 
+class COLLECTION_OT_WFC3DUpdate_Connector_Constraint(bpy.types.Operator):
+    """Save connector constraints"""
+    bl_idname = "object.wfc_update_connector_constraints"
+    bl_label = "Save Connector"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def _set_directions(self, obj, prop_name, connector):
+        obj[prop_name] = connector
+        self.report({'INFO'}, f"Connector {connector} has/have been set to {prop_name} of object {obj.name}")
+
+    def execute(self, context):
+        props = context.scene.wfc_props
+        prop_name = props.conn_directions
+        connector = props.conn_name
+        if props.edit_type == 'objects':
+            for item in _get_selected_items(props.obj_list):
+                obj = get_object_by_name(props, item)
+                self._set_directions(obj, prop_name, connector)
+        elif props.edit_type == 'defaults':
+            obj = get_object_by_name(props, DEFAULT_EMPTY_NAME)
+            self._set_directions(obj, prop_name, connector)
+        return {'FINISHED'}
 
 class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
     """Save grid constraints"""
@@ -121,9 +131,9 @@ class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
         obj_name = ", ".join(_get_selected_items(props.obj_list))
         if props.edit_type == 'objects':
             for item in _get_selected_items(props.obj_list):
-                self._set_grid_constraints(_get_obj(props, item), props)
+                self._set_grid_constraints(get_object_by_name(props, item), props)
         elif props.edit_type == 'defaults':
-            self._set_grid_constraints(_get_obj(props, DEFAULT_EMPTY_NAME), props)
+            self._set_grid_constraints(get_object_by_name(props, DEFAULT_EMPTY_NAME), props)
 
         self.report({'INFO'}, f"Grid constraints of object(s) {obj_name} have been saved.")
         return {'FINISHED'}
@@ -145,6 +155,8 @@ def _get_constraints(props):
         constraints = GRID_CONSTRAINTS
     elif props.edit_constraints == 'neighbor':
         constraints = [props.edit_neighbor_constraint]
+    elif props.edit_constraints == 'connector':
+        constraints = CONNECTOR_CONSTRAINTS
     return constraints
 
 
@@ -187,14 +199,14 @@ class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
         props = context.scene.wfc_props
         sel_items = _get_selected_items(props.obj_list)
         if len(sel_items) > 0:
-            obj = _get_obj(props, sel_items[0])
+            obj = get_object_by_name(props, sel_items[0])
         else:
             self.report({'WARNING'}, "Please select an object in the object list.")
             return {'CANCELLED'}
 
         bpy.ops.object.select_all(action='DESELECT')
         for item in _get_selected_items(props.obj_list):
-            _get_obj(props, item).select_set(True)
+            get_object_by_name(props, item).select_set(True)
 
         context.view_layer.objects.active = obj
         obj.select_set(True)
@@ -220,14 +232,14 @@ class COLLECTION_OT_WFC3DSelectNeighborObject(bpy.types.Operator):
         props = context.scene.wfc_props
         sel_items = _get_selected_items(props.neighbor_list)
         if len(sel_items) > 0:
-            obj = _get_obj(props, sel_items[0])
+            obj = get_object_by_name(props, sel_items[0])
         else:
             self.report({'WARNING'}, "Please select an object in the object list.")
             return {'CANCELLED'}
 
         bpy.ops.object.select_all(action='DESELECT')
         for item in _get_selected_items(props.neighbor_list):
-            _get_obj(props, item).select_set(True)
+            get_object_by_name(props, item).select_set(True)
 
         context.view_layer.objects.active = obj
         obj.select_set(True)
@@ -359,6 +371,7 @@ class COLLECTION_OT_WFC3DNeighborListSelectNone(bpy.types.Operator):
 
 operators = [
     COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint,
+    COLLECTION_OT_WFC3DUpdate_Connector_Constraint,
     COLLECTION_OT_WFC3DUpdate_Grid_Constraints,
     COLLECTION_OT_WFC3DUpdateConstraints,
     COLLECTION_OT_WFC3DResetConstraints,

@@ -17,3 +17,14 @@ def get_default_empty_object(collection: object, create: object = False) -> Any 
         obj.hide_viewport = True
         obj.hide_render = True
         return obj
+
+def get_object_by_name(props, name):
+    collection = props.collection_obj
+    if props.edit_type == 'objects':
+        if name in collection.objects:
+            return collection.objects[name]
+        elif name in collection.children:
+            return get_default_empty_object(collection.children[name], True)
+    elif props.edit_type == 'defaults':
+        return get_default_empty_object(collection, True)
+    return None
