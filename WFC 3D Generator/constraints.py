@@ -330,11 +330,10 @@ class WFC3DConstraints:
                 # Filter disallowed options
                 new_options = [obj for obj in neighbor_options if obj in self.constraints[current_obj].get(direction, []) and current_obj in self.constraints[obj].get(OPPOSITE_DIRECTIONS[direction],[])]
 
-                if len(new_options) >= len(neighbor_options): continue
                 if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
                     new_options= [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
-                    if len(new_options) == 0: new_options = [random.choice(neighbor_options)]
-                    if len(new_options) >= len(neighbor_options): continue
+
+                if len(new_options) >= len(neighbor_options): continue
 
                 grid.grid[nx, ny, nz] = new_options
                 queue.append((nx, ny, nz))
