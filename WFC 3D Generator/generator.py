@@ -50,18 +50,17 @@ class WFC3DGenerator:
         for x in range(self.grid_size[0]):
             for y in range(self.grid_size[1]):
                 for z in range(self.grid_size[2]):
-                    if not self.grid.collapsed[x, y, z]:
-                        entropy = self.get_entropy(x, y, z)
-                        if entropy <= min_entropy:
-                            min_entropy = entropy
-                            min_cell = (x, y, z)
-                            if min_entropy in min_cells:
-                                min_cells[min_entropy].append(min_cell)
-                            else:
-                                min_cells[min_entropy] = [ min_cell ]
+                    if self.grid.collapsed[x, y, z]: continue
+                    entropy = self.get_entropy(x, y, z)
+                    if entropy > min_entropy: continue
+                    min_entropy = entropy
+                    min_cell = (x, y, z)
+                    if min_entropy in min_cells:
+                        min_cells[min_entropy].append(min_cell)
+                    else:
+                        min_cells[min_entropy] = [ min_cell ]
 
-        if len(min_cells) == 0:
-            return None
+        if len(min_cells) == 0: return None
         
         if self.random_start_cell:
             return random.choice(min_cells[min_entropy])
