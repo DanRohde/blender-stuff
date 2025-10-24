@@ -156,7 +156,7 @@ class WFC3DConstraints:
     def apply_symmetry_constraints(self, grid, x, y, z):
         """Apply symmetry to collapsed cells"""
         if len(grid.grid[x,y,z])==0: 
-            return
+            return []
         mirror_axes = self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes"]
         rotate_axis = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_axis"]
         rotate_n = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_n"]

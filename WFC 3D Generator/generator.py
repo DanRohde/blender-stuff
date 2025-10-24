@@ -89,18 +89,16 @@ class WFC3DGenerator:
             x, y, z = cell
             collapsed = self.collapse(x, y, z)
 
-            for pos in collapsed:
-                if self.render_delay > 0:
-                    self.delayed_objects.append(pos)
-                else:
-                    self.place_object(pos)
-
+            self.delayed_objects.extend(collapsed)
             if self.use_constraints:
                 self.constraints.propagate(self.grid, x, y, z)
 
         if self.render_delay > 0:
             bpy.context.scene.wfc_props.running_delayed_renderer = True
             bpy.app.timers.register(self.place_delayed_objects, first_interval=self.render_delay)
+        else:
+            while len(self.delayed_objects)>0:
+                self.place_object(self.delayed_objects.pop(0))
 
     def place_delayed_objects(self):
         if not bpy.context.scene.wfc_props.running_delayed_renderer:
