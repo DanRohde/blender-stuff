@@ -236,6 +236,7 @@ class WFC3DGrid:
 
     def mark_collapsed(self, x, y, z):
         self.collapsed[x, y, z] = True
+        return x, y, z
 
     @staticmethod
     def _mult_vector(v1, v2):

@@ -160,7 +160,7 @@ class WFC3DConstraints:
         mirror_axes = self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes"]
         rotate_axis = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_axis"]
         rotate_n = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_n"]
-
+        collapsed = []
         if rotate_axis and (not rotate_n or rotate_n <=0):
             rotate_axis = None        
             
@@ -174,7 +174,8 @@ class WFC3DConstraints:
                         #if (nx,ny,nz) in self.symrotation:
                             #self.symrotation[(nx,ny,nz)] = tuple(a+b for a,b in zip(self.symrotation[(nx,ny,nz)], angles))
                         #self.symrotation[(nx, ny, nz)] = angles
-                    grid.mark_collapsed(nx,ny,nz)
+                    collapsed.append(grid.mark_collapsed(nx,ny,nz))
+        return collapsed
 
     def apply_symmetry_rotation(self, position, obj):
         angles = self.symrotation[position]
@@ -185,15 +186,15 @@ class WFC3DConstraints:
 
     def collapse(self, grid, x, y, z):
         """Collapse a grid cell with constraints"""
+        collapsed = []
         options = self.apply_probability_constraints(grid.grid[x,y,z])
         if len(options)>0:
             grid.grid[x, y, z] = [ random.choice(options) ]
         else:
             grid.grid[x, y, z] = []
-        self.apply_symmetry_constraints(grid, x, y, z)
-        grid.mark_collapsed(x, y, z)
-
-
+        collapsed.extend(self.apply_symmetry_constraints(grid, x, y, z))
+        collapsed.append(grid.mark_collapsed(x, y, z))
+        return collapsed
 
     def apply_transformation_constraints(self, position, obj_name, target_obj):
         def _get_mapped_random_values(vmin, vmax, steps):

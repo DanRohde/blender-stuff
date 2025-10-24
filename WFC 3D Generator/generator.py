@@ -15,7 +15,9 @@ class WFC3DGenerator:
         self.link_objects = props.link_objects
         self.copy_modifiers = props.copy_modifiers
         self.random_start_cell = props.random_start_cell
-        
+        self.render_delay = props.render_delay
+        self.delayed_objects = []
+
         random.seed(props.seed)
         self.remove_target_collection = props.remove_target_collection
         self.objects = []
@@ -68,75 +70,97 @@ class WFC3DGenerator:
         
     def collapse(self, x, y, z):
         """Collapses a cell into a single state"""
+        collapsed = None
         if self.use_constraints:
-            self.constraints.collapse(self.grid, x, y, z)
+            collapsed = self.constraints.collapse(self.grid, x, y, z)
         else:
             self.grid.grid[x, y, z] = [random.choice(self.grid.grid[x,y,z])]
-            self.grid.mark_collapsed(x, y, z)
+            collapsed = self.grid.mark_collapsed(x, y, z)
+        return collapsed
 
     def generate_model(self):
-        """Excecute WFC algorithm and generate the model"""
+        """Execute WFC algorithm and generate the model"""
         self.grid.initialize_grid(self.objects, self.constraints)
-        
+        self.init_target_collection()
         while True:
             cell = self.get_lowest_entropy_cell()
             if cell is None:
                 break    
             x, y, z = cell
-            self.collapse(x, y, z)
+            collapsed = self.collapse(x, y, z)
+
+            for pos in collapsed:
+                if self.render_delay > 0:
+                    self.delayed_objects.append(pos)
+                else:
+                    self.place_object(pos)
+
             if self.use_constraints:
                 self.constraints.propagate(self.grid, x, y, z)
-        
-        self.place_objects()
 
-    def place_objects(self):
-        """Place the objects in 3D space"""
-        # Create a new collection for the result
+        if self.render_delay > 0:
+            bpy.context.scene.wfc_props.running_delayed_renderer = True
+            bpy.app.timers.register(self.place_delayed_objects, first_interval=self.render_delay)
+
+    def place_delayed_objects(self):
+        if not bpy.context.scene.wfc_props.running_delayed_renderer:
+            return None
+        if len(self.delayed_objects) > 0:
+            self.place_object(self.delayed_objects.pop(0))
+
+        if len(self.delayed_objects) > 0:
+            return self.render_delay
+        else:
+            bpy.context.scene.wfc_props.running_delayed_renderer = False
+            def draw(self, context):
+                self.layout.label(text="WFC 3D model successfully rendered!")
+            bpy.context.window_manager.popup_menu(draw, title="Info", icon='INFO')
+        return None
+
+    def init_target_collection(self):
         collection_name = self.target_collection
         if self.remove_target_collection and collection_name in bpy.data.collections:
             bpy.data.collections.remove(bpy.data.collections[collection_name])
-        
         new_collection = bpy.data.collections.new(collection_name)
         bpy.context.scene.collection.children.link(new_collection)
-        
-        
-        # Place objects
-        for x in range(self.grid_size[0]):
-            for y in range(self.grid_size[1]):
-                for z in range(self.grid_size[2]):
-                    if len(self.grid.grid[x,y,z]) > 0:
-                        obj_name = self.grid.grid[x, y, z][0]
-                    else:
-                        continue
-                    # pick random  objects from a collection
-                    if obj_name in bpy.data.collections:
-                        c = bpy.data.collections[obj_name]
-                        original_obj = random.choice([o for o in c.objects if not o.name.startswith(DEFAULT_EMPTY_NAME)])
-                    else:
-                        original_obj = next((obj for obj in self.objects if obj.name == obj_name), None)
-                    
-                    if original_obj:
-                        if self.link_objects:
-                            new_obj = bpy.data.objects.new(name=original_obj.name, object_data = original_obj.data)
-                            if self.copy_modifiers:
-                                for mod in original_obj.modifiers:
-                                    new_mod = new_obj.modifiers.new(name=mod.name, type=mod.type)
-                                    for attr in dir(mod):
-                                        if attr.startswith("_"):
-                                            continue
-                                        try:
-                                            setattr(new_mod, attr, getattr(mod, attr))
-                                        except Exception:
-                                            pass
-                        else:
-                            new_obj = original_obj.copy()
-                            new_obj.data = original_obj.data.copy()
-                            
-                        newloc = [ x * self.spacing[0],  y * self.spacing[1], z * self.spacing[2] ]                        
-                        new_obj.location = tuple(newloc)        
 
-                        if self.use_constraints:
-                            self.constraints.apply_transformation_constraints((x,y,z), obj_name, new_obj)
-                            
-                        new_collection.objects.link(new_obj)
+    def place_object(self, pos):
+        x, y, z = pos
+        if len(self.grid.grid[x, y, z]) > 0:
+            obj_name = self.grid.grid[x, y, z][0]
+        else:
+            return
 
+        collection = bpy.data.collections[self.target_collection]
+
+        # pick random  objects from a collection
+        if obj_name in bpy.data.collections:
+            c = bpy.data.collections[obj_name]
+            original_obj = random.choice([o for o in c.objects if not o.name.startswith(DEFAULT_EMPTY_NAME)])
+        else:
+            original_obj = next((obj for obj in self.objects if obj.name == obj_name), None)
+
+        if original_obj:
+            if self.link_objects:
+                new_obj = bpy.data.objects.new(name=original_obj.name, object_data=original_obj.data)
+                if self.copy_modifiers:
+                    for mod in original_obj.modifiers:
+                        new_mod = new_obj.modifiers.new(name=mod.name, type=mod.type)
+                        for attr in dir(mod):
+                            if attr.startswith("_"):
+                                continue
+                            try:
+                                setattr(new_mod, attr, getattr(mod, attr))
+                            except Exception:
+                                pass
+            else:
+                new_obj = original_obj.copy()
+                new_obj.data = original_obj.data.copy()
+
+            newloc = [x * self.spacing[0], y * self.spacing[1], z * self.spacing[2]]
+            new_obj.location = tuple(newloc)
+
+            if self.use_constraints:
+                self.constraints.apply_transformation_constraints((x, y, z), obj_name, new_obj)
+
+            collection.objects.link(new_obj)

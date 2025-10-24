@@ -32,7 +32,15 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row.prop(props, "copy_modifiers")
         row.enabled = props.link_objects
         box.prop(props, "remove_target_collection")
-        
+
+
+        box = layout.box()
+        row = box.row()
+        row.prop(props, "render_delay")
+        col = row.column()
+        col.operator("object.wfc_3d_generate_stop_delayed_renderer", icon='EVENT_MEDIASTOP')
+        col.enabled = props.running_delayed_renderer
+
         box = layout.box()
         box.prop(props, "random_start_cell")
         #box.prop(props, "random_direction")
@@ -45,8 +53,13 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             
 
         row = layout.row()
-        row.enabled = props.collection_obj is not None and ( (len(props.collection_obj.objects)>0)or(len(props.collection_obj.children)>0) ) and props.collection_obj.name != props.target_collection
+        row.enabled = props.collection_obj is not None and ( (len(props.collection_obj.objects)>0)or(len(props.collection_obj.children)>0) ) and props.collection_obj.name != props.target_collection and not props.running_delayed_renderer
         row.operator("object.wfc_3d_generate")
+        if props.render_delay > 0:
+            row = layout.row()
+            row.operator("object.wfc_3d_generate_stop_delayed_renderer", text="Stop Delayed Renderer",icon='EVENT_MEDIASTOP')
+            row.enabled = props.running_delayed_renderer
+
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon="INFO_LARGE")
         if props.collection_obj is not None and props.collection_obj.name == props.target_collection:

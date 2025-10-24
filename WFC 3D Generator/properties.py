@@ -163,6 +163,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     spacing: bpy.props.FloatVectorProperty(name="", description="Size of a Grid Cell", subtype="TRANSLATION", default=(2.0,2.0,2.0), min=0.1,) 
     use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)
     target_collection: bpy.props.StringProperty(name="", description="Target collection for 3D grid", default="WFC_Generated",)
+    render_delay: bpy.props.FloatProperty(name="Render Delay", description="Render Delay in seconds", default=0, min=0,)
+    running_delayed_renderer : bpy.props.BoolProperty(name="Running Delayed Renderer", description="Running Delayed Renderer", default=False,)
     random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False,)
     random_direction: bpy.props.BoolProperty(name="Random Direction", description="Random direction", default=False,)
     seed: bpy.props.IntProperty(name="Random Seed", description="Random seed", default=0,)
