@@ -192,8 +192,8 @@ class WFC3DConstraints:
             grid.grid[x, y, z] = [ random.choice(options) ]
         else:
             grid.grid[x, y, z] = []
-        collapsed.extend(self.apply_symmetry_constraints(grid, x, y, z))
         collapsed.append(grid.mark_collapsed(x, y, z))
+        collapsed.extend(self.apply_symmetry_constraints(grid, x, y, z))
         return collapsed
 
     def apply_transformation_constraints(self, position, obj_name, target_obj):

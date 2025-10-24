@@ -105,7 +105,7 @@ class WFC3DGenerator:
     def place_delayed_objects(self):
         if not bpy.context.scene.wfc_props.running_delayed_renderer:
             return None
-        if len(self.delayed_objects) > 0:
+        if len(self.delayed_objects) > 0 and not bpy.context.scene.wfc_props.paused_delayed_renderer:
             self.place_object(self.delayed_objects.pop(0))
 
         if len(self.delayed_objects) > 0:

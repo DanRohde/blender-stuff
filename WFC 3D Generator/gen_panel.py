@@ -38,6 +38,9 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row = box.row()
         row.prop(props, "render_delay")
         col = row.column()
+        col.operator("object.wfc_3d_generate_toggle_pause_delayed_renderer", icon='PAUSE', depress=props.paused_delayed_renderer)
+        col.enabled = props.running_delayed_renderer
+        col = row.column()
         col.operator("object.wfc_3d_generate_stop_delayed_renderer", icon='EVENT_MEDIASTOP')
         col.enabled = props.running_delayed_renderer
 
