@@ -2,7 +2,7 @@ import bpy
 
 from .constants import *
 from .properties import update_constraint_properties, handle_update_collection
-
+from .helper import get_default_empty_object
 
 def _get_obj(props, name):
     collection = props.collection_obj
@@ -10,21 +10,9 @@ def _get_obj(props, name):
         if name in collection.objects:
             return collection.objects[name]
         elif name in collection.children:
-            return collection.children[name].objects[0]
+            return get_default_empty_object(collection.children[name], True)
     elif props.edit_type == 'defaults':
-        if DEFAULT_EMPTY_NAME in collection.objects:
-            return collection.objects[DEFAULT_EMPTY_NAME]
-        else:
-            for o in collection.objects:
-                if o.name.startswith(DEFAULT_EMPTY_NAME):
-                    return o
-            obj = bpy.data.objects.new(DEFAULT_EMPTY_NAME, None)
-            collection.objects.link(obj)
-            obj.empty_display_type = 'SPHERE'
-            obj.location = (0, 0, 0)
-            obj.hide_viewport = True
-            obj.hide_render = True
-            return obj
+        return get_default_empty_object(collection, True)
     return None
 
 

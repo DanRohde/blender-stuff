@@ -6,6 +6,7 @@ import random
 from collections import deque
 
 from .constants import *
+from .helper import get_default_empty_object
 
 class WFC3DConstraints:
     def __init__(self):
@@ -16,9 +17,7 @@ class WFC3DConstraints:
     def initialize_constraints(self, grid, collection, objects):
         """Loads constraints from custom properties"""
         allobjects = [o.name for o in objects]
-        default_obj = None
-        if DEFAULT_EMPTY_NAME in collection.objects:
-            default_obj = collection.objects[DEFAULT_EMPTY_NAME]
+        default_obj = get_default_empty_object(collection)
 
         self.grid = grid
 
@@ -26,11 +25,9 @@ class WFC3DConstraints:
             obj_name = obj.name
             self.constraints[obj_name] = {}
             
-            if obj.name in bpy.data.collections:
-                if len(bpy.data.collections[obj_name].objects) >0:
-                    obj = bpy.data.collections[obj.name].objects[0]
-                else:
-                    continue
+            if obj_name in bpy.data.collections:
+                obj = get_default_empty_object(bpy.data.collections[obj_name])
+                if obj is None: continue
 
             # load probability, frequency, transformation, symmetry constraints
             for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
@@ -198,7 +195,7 @@ class WFC3DConstraints:
 
 
 
-    def apply_transformation_constraints(self, position, src_obj, target_obj):
+    def apply_transformation_constraints(self, position, obj_name, target_obj):
         def _get_mapped_random_values(vmin, vmax, steps):
             if steps < 0 and vmin > vmax:
                 steps =- steps
@@ -217,11 +214,10 @@ class WFC3DConstraints:
             else:
                 return vmin + (vmax - vmin) * random.random()
 
-        src_name = src_obj.name
             
-        if src_name not in self.constraints:
+        if obj_name not in self.constraints:
             return 
-        constraints = self.constraints[src_name]
+        constraints = self.constraints[obj_name]
         if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
             tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
             tmax = constraints.get("translation_max",PROP_DEFAULTS["translation_max"])

@@ -1,6 +1,7 @@
 import bpy
 
 from .constants import *
+from .helper import get_default_empty_object
 
 def handle_update_collection(_self, context):
     props = context.scene.wfc_props
@@ -9,8 +10,7 @@ def handle_update_collection(_self, context):
     props.obj_list.clear()
     props.neighbor_list.clear()
     for obj in props.collection_obj.objects:
-        if obj.name == DEFAULT_EMPTY_NAME:
-            continue
+        if obj.name.startswith(DEFAULT_EMPTY_NAME): continue
         item = props.obj_list.add()
         item.name = obj.name
         item = props.neighbor_list.add()
@@ -40,18 +40,16 @@ def handle_edit_neighbor_constraint_update(_self, context):
         elif obj_name in props.collection_obj.children:
             obj = props.collection_obj.children[obj_name].objects[0]
         
-        if DEFAULT_EMPTY_NAME in props.collection_obj.objects:
-            default_obj = props.collection_obj.objects[DEFAULT_EMPTY_NAME]
+        default_obj = get_default_empty_object(props.collection_obj.objects[obj_name])
     elif props.edit_type == 'defaults':
-        if DEFAULT_EMPTY_NAME in props.collection_obj.objects:
-            obj = props.collection_obj.objects[DEFAULT_EMPTY_NAME]
+        obj = get_default_empty_object(props.collection_obj)
     else:
         return
     
-    if props.edit_neighbor_constraint not in obj and default_obj and props.edit_neighbor_constraint in default_obj:
+    if obj and props.edit_neighbor_constraint not in obj and default_obj and props.edit_neighbor_constraint in default_obj:
         obj = default_obj
 
-    if props.edit_neighbor_constraint in obj:
+    if obj and props.edit_neighbor_constraint in obj:
         vals = obj[props.edit_neighbor_constraint].split(",")
         props.no_neighbor_allowed = '-' in vals
         
@@ -73,15 +71,13 @@ def update_constraint_properties(self, _context):
         if len(selected) == 0:
             return
         if selected[0] in collection.children:
-            obj = collection.children[selected[0]].objects[0]
+            obj = get_default_empty_object(collection.children[selected[0]], True)
         else:
             obj = collection.objects[selected[0]]
         
-        if DEFAULT_EMPTY_NAME in collection.objects:
-            default_obj = collection.objects[DEFAULT_EMPTY_NAME]
+        default_obj = get_default_empty_object(collection)
     elif props.edit_type == 'defaults':
-        if DEFAULT_EMPTY_NAME in collection.objects:
-            obj = collection.objects[DEFAULT_EMPTY_NAME]
+        obj = get_default_empty_object(collection)
 
 
     # reset corner properties to False

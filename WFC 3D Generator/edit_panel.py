@@ -1,5 +1,6 @@
 import bpy
-from .constants import ICON_MAP, DEFAULT_EMPTY_NAME
+from .constants import ICON_MAP
+from .helper import get_default_empty_object
 
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
@@ -78,8 +79,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.label(text=obj_name, icon="OBJECT_DATA")
             
         elif props.edit_type == 'defaults':
-            if DEFAULT_EMPTY_NAME in props.collection_obj.objects:
-                obj = props.collection_obj.objects[DEFAULT_EMPTY_NAME]
+            obj = get_default_empty_object(props.collection_obj)
             obj_name = 'Collection Defaults'
         
         box.prop(props,"edit_constraints",icon="SETTINGS")

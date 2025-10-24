@@ -31,7 +31,7 @@ class WFC3DGenerator:
 
     def load_objects(self):
         """Loads objects from the collection"""
-        self.objects = [ obj for obj in self.collection.objects if obj.name != DEFAULT_EMPTY_NAME ]
+        self.objects = [ obj for obj in self.collection.objects if not obj.name.startswith(DEFAULT_EMPTY_NAME)]
         self.objects.extend([child for child in self.collection.children if len(child.objects)>0])
         if not self.objects:
             raise ValueError("Collection is empty!")
@@ -111,7 +111,7 @@ class WFC3DGenerator:
                     # pick random  objects from a collection
                     if obj_name in bpy.data.collections:
                         c = bpy.data.collections[obj_name]
-                        original_obj = random.choice(c.objects)
+                        original_obj = random.choice([o for o in c.objects if not o.name.startswith(DEFAULT_EMPTY_NAME)])
                     else:
                         original_obj = next((obj for obj in self.objects if obj.name == obj_name), None)
                     
@@ -136,7 +136,7 @@ class WFC3DGenerator:
                         new_obj.location = tuple(newloc)        
 
                         if self.use_constraints:
-                            self.constraints.apply_transformation_constraints((x,y,z), original_obj, new_obj)
+                            self.constraints.apply_transformation_constraints((x,y,z), obj_name, new_obj)
                             
                         new_collection.objects.link(new_obj)
 

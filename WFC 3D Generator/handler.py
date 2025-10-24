@@ -20,7 +20,7 @@ def update_handler(_scene, _depsgraph):
             return
 
         # handle collection changes:
-        coll_objects = [obj for obj in props.collection_obj.objects if obj.name != DEFAULT_EMPTY_NAME]
+        coll_objects = [obj for obj in props.collection_obj.objects if not obj.name.startswith(DEFAULT_EMPTY_NAME)]
         coll_objects.extend([child for child in props.collection_obj.children if len(child.objects) > 0])
         if len(coll_objects) != len(props.obj_list):
             props.obj_list.clear()
