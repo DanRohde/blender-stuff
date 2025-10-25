@@ -12,6 +12,7 @@ class WFC3DGenerator:
         self.spacing = props.spacing
         self.use_constraints = props.use_constraints
         self.target_collection = props.target_collection
+        self.target_collection_obj = None
         self.link_objects = props.link_objects
         self.copy_modifiers = props.copy_modifiers
         self.random_start_cell = props.random_start_cell
@@ -119,8 +120,8 @@ class WFC3DGenerator:
         collection_name = self.target_collection
         if self.remove_target_collection and collection_name in bpy.data.collections:
             bpy.data.collections.remove(bpy.data.collections[collection_name])
-        new_collection = bpy.data.collections.new(collection_name)
-        bpy.context.scene.collection.children.link(new_collection)
+        self.target_collection_obj = bpy.data.collections.new(collection_name)
+        bpy.context.scene.collection.children.link(self.target_collection_obj)
 
     def place_object(self, pos):
         x, y, z = pos
@@ -129,7 +130,7 @@ class WFC3DGenerator:
         else:
             return
 
-        collection = bpy.data.collections[self.target_collection]
+        collection = self.target_collection_obj
 
         # pick random  objects from a collection
         if obj_name in bpy.data.collections:
