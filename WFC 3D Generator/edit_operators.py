@@ -76,7 +76,7 @@ class COLLECTION_OT_WFC3DUpdateConstraints(bpy.types.Operator):
 class COLLECTION_OT_WFC3DResetConstraints(bpy.types.Operator):
     """Reset constraints"""
     bl_idname = "object.wfc_reset_constraints"
-    bl_label = "Reset"
+    bl_label = "Reset ⟲"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):

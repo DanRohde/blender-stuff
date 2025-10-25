@@ -30,7 +30,7 @@ def update_handler(_scene, _depsgraph):
                 item = props.neighbor_list.add()
                 item.name = obj.name
                 item.value = obj.name
-                
+
         # handle selections:
         selected_objects = bpy.context.selected_objects
         if selected_objects:
