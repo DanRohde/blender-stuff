@@ -1,6 +1,7 @@
 import bpy
 from .constants import ICON_MAP
 from .helper import get_default_empty_object
+from .properties import get_known_conn_names
 
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
@@ -287,9 +288,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.prop(props, "conn_directions")
             if props.conn_directions != '_NONE_':
                 row = box.row()
-                row.prop(props,"conn_name")
-                row = box.row()
-                row.operator("object.wfc_update_connector_constraints")
+                row.prop(props,"conn_name",text="Name")
+                if len(get_known_conn_names(None, None)) > 1:
+                    box.row().label(text="Known connector names:")
+                    box.row().prop(props,"conn_known_names",text="")
+                box.row().operator("object.wfc_update_connector_constraints")
 
 panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_PT_EditPanel,]
 

@@ -161,6 +161,27 @@ def get_conn_direction_value(_self, _context):
     obj = get_object_by_name(props, selected[0])
     props.conn_name = obj.get(d,'')
 
+def get_known_conn_names(_self, _context):
+    props = bpy.context.scene.wfc_props
+    if props.conn_directions == '_NONE_': return ('_NONE_','Nothing found','No other connectors found for this (opposite) direction')
+    pn = props.conn_directions
+    dn = pn.split('_', 2)[2]
+    odn = OPPOSITE_DIRECTIONS[dn.upper()]
+    opn = 'wfc_conn_'+odn
+    items = [None]
+    for obj in props.collection_obj.objects:
+        if opn in obj: items.append((obj[opn],obj[opn], f"Select to apply {obj[opn]}"))
+        if pn in obj: items.append((obj[pn],obj[pn],f"Select to apply {obj[pn]}"))
+    for child in props.collection_obj.children:
+        for obj in child.objects:
+            if opn in obj: items.append((obj[opn], obj[opn], f"Select to apply {obj[opn]}"))
+            if pn in obj: items.append((obj[pn], obj[pn], f"Select to apply {obj[pn]}"))
+    return items
+def take_known_conn_name(_self, _context):
+    props = bpy.context.scene.wfc_props
+    if props.conn_known_names == '_NONE_': return
+    props.conn_name = props.conn_known_names
+
 class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()
     selected: bpy.props.BoolProperty(default=False, update=update_constraint_properties)
@@ -274,6 +295,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     region_quadrant: bpy.props.BoolVectorProperty(name="Quadrant",description="Quadrant (fbl,fbr,ftl,ftr,bbl,bbr,btl,btr)", size=8, default=PROP_DEFAULTS["region_quadrant"])
     conn_directions: bpy.props.EnumProperty(name="", description="Select a direction", items=get_conn_directions, update=get_conn_direction_value)
     conn_name: bpy.props.StringProperty(name="Connector name",description="Connector name", default="")
+    conn_known_names : bpy.props.EnumProperty(items=get_known_conn_names, name='Select to apply',update=take_known_conn_name)
 
 properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
 
