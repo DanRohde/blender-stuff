@@ -13,6 +13,8 @@ Each object in the source collection can use custom properties to define the per
     1. open 3D Viewport: WFC 3D Gen > WFC 3D Generator
     2. Press "Generate WFC 3D Model"
 
+Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff/tree/main/Examples).
+
 ## Limitations and Known Issues
 * For neighbor restrictions to take effect, there must be more than one object in the source collection.
 * Region constraints don't work with all symmetry constraint variants
