@@ -170,13 +170,22 @@ def get_known_conn_names(_self, _context):
     opn = 'wfc_conn_'+odn.lower()
     items = [None]
     opp_items = [None]
+    dup_items = []
     for obj in props.collection_obj.objects:
-        if opn in obj: opp_items.append((obj[opn],obj[opn], f"Select to apply opposite connector name {obj[opn]}"))
-        if pn in obj: items.append((obj[pn],obj[pn],f"Select to apply {obj[pn]}"))
+        if opn in obj and not obj[opn] in dup_items:
+            opp_items.append((obj[opn],obj[opn], f"Select to apply opposite connector name {obj[opn]}"))
+            dup_items.append(obj[opn])
+        if pn in obj and not obj[pn] in dup_items:
+            items.append((obj[pn],obj[pn],f"Select to apply {obj[pn]}"))
+            dup_items.append(obj[pn])
     for child in props.collection_obj.children:
         for obj in child.objects:
-            if opn in obj: opp_items.append((obj[opn], obj[opn], f"Select to apply opposite connector name {obj[opn]}"))
-            if pn in obj: items.append((obj[pn], obj[pn], f"Select to apply {obj[pn]}"))
+            if opn in obj and not obj[opn] in dup_items:
+                opp_items.append((obj[opn], obj[opn], f"Select to apply opposite connector name {obj[opn]}"))
+                dup_items.append(obj[opn])
+            if pn in obj and not obj[pn] in dup_items:
+                items.append((obj[pn], obj[pn], f"Select to apply {obj[pn]}"))
+                dup_items.append(obj[pn])
     if len(opp_items) > 1: items.extend(opp_items)
     return items
 def take_known_conn_name(_self, _context):
