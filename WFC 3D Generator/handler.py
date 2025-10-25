@@ -1,7 +1,6 @@
 import bpy
 from .constants import DEFAULT_EMPTY_NAME
 
-
 def _update_list(itemlist, selected_object_names):
     # caution: any item.sected change fires an event => only do necessary updates
     for item in itemlist:
@@ -31,7 +30,7 @@ def update_handler(_scene, _depsgraph):
                 item = props.neighbor_list.add()
                 item.name = obj.name
                 item.value = obj.name
-
+                
         # handle selections:
         selected_objects = bpy.context.selected_objects
         if selected_objects:

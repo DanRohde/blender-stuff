@@ -82,9 +82,10 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         elif props.edit_type == 'defaults':
             obj = get_default_empty_object(props.collection_obj)
             obj_name = 'Collection Defaults'
-        
-        box.prop(props,"edit_constraints",icon="SETTINGS")
-        
+
+        row = box.row()
+        row.prop(props,"edit_constraints",icon="SETTINGS")
+        row.operator('collection.wfc_auto_save_toggle',icon='IMPORT',depress = props.auto_save)
         if props.edit_constraints == "neighbor":
             box=col.box()
             row = box.row()
@@ -119,10 +120,9 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 newcol.operator("collection.wfc_neighbor_list_select_all", icon="CHECKBOX_HLT")
                 newcol.operator("collection.wfc_neighbor_list_select_none", icon="CHECKBOX_DEHLT")
 
-                row = box.row()
-                row.prop(props,"allow_neighbor_constraint_violations",icon="VIEW_UNLOCKED")
-                row=box.row()
-                row.operator("object.wfc_update_neighbor_constraints")
+                box.row().prop(props,"allow_neighbor_constraint_violations",icon="VIEW_UNLOCKED")
+
+                if not props.auto_save: box.row().operator("object.wfc_update_neighbor_constraints")
         if props.edit_constraints == "grid":
             box=col.box()
             row = box.row()
@@ -173,7 +173,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             newrow.prop(props,"inside_none")
             
             
-            box.operator("object.wfc_update_grid_constraints")
+            if not props.auto_save: box.operator("object.wfc_update_grid_constraints")
         if props.edit_constraints == 'region':
             box=col.box()
             row=box.row()
@@ -188,7 +188,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.row().label(text="Quadrant")
             box.row().prop(props, "region_quadrant",text="")
 
-            box.operator("object.wfc_update_constraints")
+            if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "probability":
             box=col.box()
             row=box.row()
@@ -197,7 +197,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.prop(props,"probability")
             box.prop(props, "weight")
             
-            box.operator("object.wfc_update_constraints")
+            if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "transformation":
             box=col.box()
             row = box.row()
@@ -228,7 +228,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 newbox.row().prop(props,"scale_max")
                 newbox.row().prop(props,"scale_steps")
 
-            box.operator('object.wfc_update_constraints')
+            if not props.auto_save: box.operator('object.wfc_update_constraints')
         if props.edit_constraints=="frequency":
             box = col.box()
             row=box.row()
@@ -255,7 +255,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = newbox.row()
             row.prop(props,"freq_any_axes")
             
-            box.operator("object.wfc_update_constraints")
+            if not props.auto_save: box.operator("object.wfc_update_constraints")
 
         if props.edit_constraints=="symmetry":
             box = col.box()
@@ -273,8 +273,8 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             row.prop(props,"sym_rotate_axis")
             box.prop(props,"sym_rotate_n")
-            
-            box.operator("object.wfc_update_constraints")
+
+            if not props.auto_save: box.operator("object.wfc_update_constraints")
            
             #box.label(text="Translational Symmetry")
             #box.label(text="Point Reflection Symmetry")
@@ -292,7 +292,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 if len(get_known_conn_names(None, None)) > 1:
                     box.row().label(text="Known connector names:")
                     box.row().prop(props,"conn_known_names",text="")
-                box.row().operator("object.wfc_update_connector_constraints")
+                if not props.auto_save: box.row().operator("object.wfc_update_connector_constraints")
 
 panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_PT_EditPanel,]
 
