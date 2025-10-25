@@ -167,15 +167,17 @@ def get_known_conn_names(_self, _context):
     pn = props.conn_directions
     dn = pn.split('_', 2)[2]
     odn = OPPOSITE_DIRECTIONS[dn.upper()]
-    opn = 'wfc_conn_'+odn
+    opn = 'wfc_conn_'+odn.lower()
     items = [None]
+    opp_items = [None]
     for obj in props.collection_obj.objects:
-        if opn in obj: items.append((obj[opn],obj[opn], f"Select to apply {obj[opn]}"))
+        if opn in obj: opp_items.append((obj[opn],obj[opn], f"Select to apply opposite connector name {obj[opn]}"))
         if pn in obj: items.append((obj[pn],obj[pn],f"Select to apply {obj[pn]}"))
     for child in props.collection_obj.children:
         for obj in child.objects:
-            if opn in obj: items.append((obj[opn], obj[opn], f"Select to apply {obj[opn]}"))
+            if opn in obj: opp_items.append((obj[opn], obj[opn], f"Select to apply opposite connector name {obj[opn]}"))
             if pn in obj: items.append((obj[pn], obj[pn], f"Select to apply {obj[pn]}"))
+    if len(opp_items) > 1: items.extend(opp_items)
     return items
 def take_known_conn_name(_self, _context):
     props = bpy.context.scene.wfc_props
