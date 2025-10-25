@@ -306,11 +306,11 @@ class WFC3DConstraints:
      
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
-                
+
+        self.propagate_frequency_constraints(grid, x, y, z)
         # propagate neighbor constraints:
         queue = deque([(x, y, z)])
-        queue.extend(self.propagate_frequency_constraints(grid, x, y, z))
-        
+
         while queue:
             cx, cy, cz = queue.popleft()
             if len(grid.grid[cx,cy,cz])>0:
@@ -338,8 +338,7 @@ class WFC3DConstraints:
                                    for obj in neighbor_options
                                    if self.constraints[current_obj][prop_name] == self.constraints[obj].get(opp_prop_name,"")
                                    or self.constraints[obj].get(opp_prop_name,"")==""]
-
                 if len(new_options) >= len(neighbor_options): continue
 
                 grid.grid[nx, ny, nz] = new_options
-                queue.append((nx, ny, nz))
+                if len(new_options) == 1: queue.append((nx, ny, nz))

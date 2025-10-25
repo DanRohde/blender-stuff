@@ -16,7 +16,7 @@ class WFC3DGenerator:
         self.copy_modifiers = props.copy_modifiers
         self.random_start_cell = props.random_start_cell
         self.render_delay = props.render_delay
-        self.delayed_objects = []
+        self.collapsed_cells = []
 
         random.seed(props.seed)
         self.remove_target_collection = props.remove_target_collection
@@ -74,7 +74,7 @@ class WFC3DGenerator:
             collapsed = self.constraints.collapse(self.grid, x, y, z)
         else:
             self.grid.grid[x, y, z] = [random.choice(self.grid.grid[x,y,z])]
-            collapsed = self.grid.mark_collapsed(x, y, z)
+            collapsed = [ self.grid.mark_collapsed(x, y, z) ]
         return collapsed
 
     def generate_model(self):
@@ -88,7 +88,7 @@ class WFC3DGenerator:
             x, y, z = cell
             collapsed = self.collapse(x, y, z)
 
-            self.delayed_objects.extend(collapsed)
+            self.collapsed_cells.extend(collapsed)
             if self.use_constraints:
                 self.constraints.propagate(self.grid, x, y, z)
 
@@ -96,16 +96,16 @@ class WFC3DGenerator:
             bpy.context.scene.wfc_props.running_delayed_renderer = True
             bpy.app.timers.register(self.place_delayed_objects, first_interval=self.render_delay)
         else:
-            while len(self.delayed_objects)>0:
-                self.place_object(self.delayed_objects.pop(0))
+            while len(self.collapsed_cells)>0:
+                self.place_object(self.collapsed_cells.pop(0))
 
     def place_delayed_objects(self):
         if not bpy.context.scene.wfc_props.running_delayed_renderer:
             return None
-        if len(self.delayed_objects) > 0 and not bpy.context.scene.wfc_props.paused_delayed_renderer:
-            self.place_object(self.delayed_objects.pop(0))
+        if len(self.collapsed_cells) > 0 and not bpy.context.scene.wfc_props.paused_delayed_renderer:
+            self.place_object(self.collapsed_cells.pop(0))
 
-        if len(self.delayed_objects) > 0:
+        if len(self.collapsed_cells) > 0:
             return self.render_delay
         else:
             bpy.context.scene.wfc_props.running_delayed_renderer = False
