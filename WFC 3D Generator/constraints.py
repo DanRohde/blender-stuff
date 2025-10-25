@@ -335,7 +335,7 @@ class WFC3DConstraints:
                     prop_name = 'conn_' + direction.lower()
                     opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
                     new_options = [obj
-                                   for obj in neighbor_options
+                                   for obj in new_options
                                    if self.constraints[current_obj][prop_name] == self.constraints[obj].get(opp_prop_name,"")
                                    or self.constraints[obj].get(opp_prop_name,"")==""]
                 if len(new_options) >= len(neighbor_options): continue
