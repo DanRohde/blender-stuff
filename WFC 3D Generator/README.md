@@ -26,11 +26,11 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
 * Probability constraints: 2
 * Transformation constraints: 10
 * Frequency constraints: 15
-* Symmetry constraints: 9
+* Symmetry constraints: 16
 * Connector constraints: 26
 
 
-* **Sum: 121**
+* **Sum: 128**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -105,11 +105,13 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
 
 
 ## Symmetry Constraints
-* Used custom properties: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n`
+* Used custom properties: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n,wfc_sym_mirror_[x|y|z|xy|xz|yz|xyz]`
 * Allowed property values: 
     * wfc_sym_mirror: a vector of booleans or integers
+    * wfc_sym_mirror_[x|y|z|xy|xz|yz|xyz]: a pointer to an object
     * wfc_sym_rotate_axis: a float vector
     * wfc_sym_rotate_n: an integer (number of rotations: n=4 => 90° rotation)
+    
 
 ## Connector Constraints
 * Used custom properties: `wfc_conn_[front|back|left|right|top|bottom|cn_(fbl|fbr|ftl|ftr|bbl|bbr|btl|btr)|en_(fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb)]` 
