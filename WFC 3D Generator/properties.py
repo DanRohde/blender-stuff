@@ -1,13 +1,12 @@
 import bpy
 
 from .constants import *
-from .helper import get_default_empty_object, get_object_by_name, auto_save
+from .helper import get_object_by_name, auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update
 
 
 def handle_update_collection(_self, context):
     props = context.scene.wfc_props
-    if props.collection_obj is None:
-        return
+    if props.collection_obj is None: return
     props.obj_list.clear()
     props.neighbor_list.clear()
     for obj in props.collection_obj.objects:
@@ -24,105 +23,6 @@ def handle_update_collection(_self, context):
             item = props.neighbor_list.add()
             item.name = obj.name 
             item.value = obj.name
-
-def handle_edit_neighbor_constraint_update(_self, context):
-    props = context.scene.wfc_props
-    if props.edit_neighbor_constraint == "_NONE_":
-        return
-    default_obj = None
-    obj = None
-    if props.edit_type == 'objects':
-        sel_obj_list = [ item.name for item in props.obj_list if item.selected ]
-        if len(sel_obj_list) == 0:
-            return
-        obj_name = sel_obj_list[0]
-        if obj_name in props.collection_obj.objects:
-            obj = props.collection_obj.objects[obj_name]
-        elif obj_name in props.collection_obj.children:
-            obj = props.collection_obj.children[obj_name].objects[0]
-        
-        default_obj = get_default_empty_object(props.collection_obj.objects[obj_name])
-    elif props.edit_type == 'defaults':
-        obj = get_default_empty_object(props.collection_obj)
-    else:
-        return
-    
-    if obj and props.edit_neighbor_constraint not in obj and default_obj and props.edit_neighbor_constraint in default_obj:
-        obj = default_obj
-
-    if obj and props.edit_neighbor_constraint in obj:
-        vals = obj[props.edit_neighbor_constraint].split(",")
-        props.no_neighbor_allowed = '-' in vals
-        
-        for item in props.neighbor_list:
-            item.selected = item.value in vals
-    else:
-        props.no_neighbor_allowed = False
-        for item in props.neighbor_list:
-            item.selected = False
-        
-def update_constraint_properties(self, _context):
-    props = bpy.context.scene.wfc_props
-    collection = props.collection_obj
-
-    obj = None
-    default_obj = None    
-    if props.edit_type == 'objects':
-        selected = [item.name for item in props.obj_list if item.selected]
-        if len(selected) == 0:
-            return
-        if selected[0] in collection.children:
-            obj = get_default_empty_object(collection.children[selected[0]], True)
-        else:
-            obj = collection.objects[selected[0]]
-        
-        default_obj = get_default_empty_object(collection)
-    elif props.edit_type == 'defaults':
-        obj = get_default_empty_object(collection)
-
-
-    # reset corner properties to False
-    for c in ["f","b"]:
-        for nc in ["bl","br","tl","tr"]:
-            props["corner_"+c+nc] = False
-    # reset edge properties to False
-    for e in ['fb','fl','fr','ft','bb','bl','br','bt','lt','lb','rt','rb']:
-        self["edge_"+e] = False
-
-    # reset face properties to False
-    for f in ["front","back","left","right","top","bottom"]:
-        props["face_"+f] = False
-
-    props["corner_none"] = False
-    props["edge_none"] = False
-    props["face_none"] = False
-    props["inside_none"] = False
-
-    # grid constraints:
-    pmap = {'corner' : 'wfc_corners', 'edge' : 'wfc_edges', 'face' : 'wfc_faces', 'wfc_inside' : 'inside'}
-    for p,cp in pmap.items():
-        eo = obj
-        if obj and cp not in obj:
-            eo = default_obj
-        
-        if eo and cp in eo:
-            if eo[cp] == "-":
-                props[p+"_none"] = True
-            elif obj:
-                for c in eo[cp].split(","):
-                    props[p+c] = True
-    # connector constraints:
-    props.conn_directions = "_NONE_"
-
-
-    for p in PROBABILITY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
-        pn = "wfc_"+p
-        if obj and pn in obj:
-            props[p]=obj[pn]
-        elif default_obj and pn in default_obj:
-            props[p]=default_obj[pn]
-        else:
-            props[p]=PROP_DEFAULTS[p]
 
 def get_direction_list(items, prefix):
     ls = ""
@@ -149,18 +49,6 @@ def get_neighbor_constraint_items(_self, _context):
 def get_conn_directions(_self, _context):
     items = [("_NONE_","Select a Direction","Please select a direction"),None]
     return get_direction_list(items, 'wfc_conn_')
-
-def get_conn_direction_value(_self, _context):
-    props = bpy.context.scene.wfc_props
-
-    if props.conn_directions == '_NONE_':
-        props.conn_name = ''
-        return
-    selected = [item.name for item in props.obj_list if item.selected]
-    if len(selected) == 0: return
-    d = props.conn_directions
-    obj = get_object_by_name(props, selected[0])
-    props.conn_name = obj.get(d,'')
 
 def get_known_conn_names(_self, _context):
     props = bpy.context.scene.wfc_props
@@ -196,7 +84,7 @@ def take_known_conn_name(_self, _context):
 
 class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()
-    selected: bpy.props.BoolProperty(default=False, update=update_constraint_properties)
+    selected: bpy.props.BoolProperty(default=False, update=update_edit_form)
 
 class WFC3DEditPanelNeighborMultiSelItem(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()
@@ -223,7 +111,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     obj_list_idx: bpy.props.IntProperty()
     edit_type: bpy.props.EnumProperty(name="", description="Select constraints type",
         items=[('objects','Object Constraints','Object constraints'),('defaults','Collection Defaults','Collection defaults')],
-        update=update_constraint_properties,
+        update=update_edit_form,
     )
     edit_constraints: bpy.props.EnumProperty(
         name="", description = "Select constraint type",
@@ -233,7 +121,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ('frequency',"Frequency Constraints","Frequency constraints"), ("symmetry","Symmetry Constraints","Symmetry constraints"),
                ('connector','Connector Constraints','Connector constraints'),
                ],
-        update=update_constraint_properties,
+        update = update_edit_form
     )
     edit_neighbor_constraint: bpy.props.EnumProperty(name="", description="Select a Neighbor Constraint", items=get_neighbor_constraint_items, update=handle_edit_neighbor_constraint_update,)
     neighbor_list: bpy.props.CollectionProperty(type=WFC3DEditPanelNeighborMultiSelItem)
@@ -305,10 +193,10 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     region_min: bpy.props.IntVectorProperty(name="min",description="Region minimum", default=PROP_DEFAULTS["region_min"],min=-1, update=auto_save)
     region_max: bpy.props.IntVectorProperty(name="max",description="Region minimum", default=PROP_DEFAULTS["region_max"],min=-1, update=auto_save)
     region_quadrant: bpy.props.BoolVectorProperty(name="Quadrant",description="Quadrant (fbl,fbr,ftl,ftr,bbl,bbr,btl,btr)", size=8, default=PROP_DEFAULTS["region_quadrant"], update=auto_save)
-    conn_directions: bpy.props.EnumProperty(name="", description="Select a direction", items=get_conn_directions, update=get_conn_direction_value)
+    conn_directions: bpy.props.EnumProperty(name="", description="Select a direction", items=get_conn_directions, update=handle_conn_directions_update)
     conn_name: bpy.props.StringProperty(name="Connector name",description="Connector name", default="", update=auto_save)
     conn_known_names : bpy.props.EnumProperty(items=get_known_conn_names, name='Select to apply', update=take_known_conn_name)
-    auto_save: bpy.props.BoolProperty(name="Auto save",description="Auto save the model", default=False)
+    auto_save: bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties", default=False)
 
 properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
 

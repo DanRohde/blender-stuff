@@ -90,17 +90,15 @@ def update_grid_constraints(props):
             newval.append("-")
         else:
             for v in values:
-                if props[prop_name + "_" + v]:
-                    newval.append(v)
+                if '_' in v: v = v.split('_',1)[1]
+                pn = prop_name + '_' + v.lower()
+                if pn in props and props[pn]: newval.append(v.lower())
         return ",".join(newval)
 
     def _set_grid_constraints(obj, props):
-        obj["wfc_corners"] = _get_new_prop_val(props, "corner",
-                                               ['fbl', 'fbr', 'ftl', 'ftr', 'bbl', 'bbr', 'btl', 'btr'])
-        obj["wfc_edges"] = _get_new_prop_val(props, "edge",
-                                             ['fb', 'fl', 'fr', 'ft', 'bb', 'bl', 'br', 'bt', 'lb', 'lt', 'rb',
-                                              'rt'])
-        obj["wfc_faces"] = _get_new_prop_val(props, "face", ['front', 'back', 'top', 'bottom', 'left', 'right'])
+        obj["wfc_corners"] = _get_new_prop_val(props, "corner", CORNER_DIRECTIONS)
+        obj["wfc_edges"] = _get_new_prop_val(props, "edge", EDGE_DIRECTIONS)
+        obj["wfc_faces"] = _get_new_prop_val(props, "face", FACE_DIRECTIONS)
         if props["inside_none"]:
             obj["wfc_inside"] = "-"
         else:
@@ -146,3 +144,108 @@ def auto_save(_self, context):
         return
 
     update_constraints(props, get_constraints(props))
+
+def update_edit_form(self, _context):
+    props = bpy.context.scene.wfc_props
+    default_obj = None
+    obj = None
+    if props.edit_type == 'defaults':
+        obj = get_default_empty_object(props.collection_obj, True)
+    elif props.edit_type == 'objects':
+        sel_items = get_selected_items(props.obj_list)
+        if len(sel_items) < 1: return
+        obj = get_object_by_name(props, sel_items[0])
+        default_obj = get_default_empty_object(props.collection_obj)
+        if obj is None: obj = default_obj
+        if obj is None: return
+
+    if props.edit_constraints == '_none_': return
+
+    auto_save = props.auto_save
+    props.auto_save = False
+
+    if props.edit_constraints == 'neighbor':
+        props.edit_neighbor_constraint = props.edit_neighbor_constraint
+    elif props.edit_constraints == 'grid':
+        pmap = {'corner' : 'wfc_corners', 'edge' : 'wfc_edges', 'face' : 'wfc_faces', 'inside' : 'wfc_inside'}
+        for p,cp in pmap.items():
+            if cp in obj or (default_obj and cp in default_obj):
+                eo = default_obj
+                if cp in obj: eo = obj
+                props[p+"_none"] = eo[cp] == "-"
+                vals = eo[cp].split(",")
+                for c in vals: props[p+'_'+c] = True
+                for a in DIRECTIONS:
+                    if '_' in a: a = a.split('_',1)[1]
+                    if a.lower() not in vals: props[p+'_'+a.lower()] = False
+            else:
+                props[p+"_none"] = False
+                for a in DIRECTIONS:
+                    if '_' in a: a = a.split('_', 1)[1]
+                    props[p+'_'+a.lower()] = False
+    elif props.edit_constraints == 'connector':
+        props.conn_directions = props.conn_directions
+    else:
+        for c in SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS + REGION_CONSTRAINTS:
+            cp = 'wfc_' + c.lower()
+            if cp in obj:
+                props[c] = obj[cp]
+            elif default_obj and cp in default_obj:
+                props[c] = default_obj[cp]
+            elif c in PROP_DEFAULTS:
+                props[c] = PROP_DEFAULTS[c]
+
+    props.auto_save = auto_save
+
+
+def handle_edit_neighbor_constraint_update(_self, context):
+    props = context.scene.wfc_props
+    if props.edit_neighbor_constraint == "_NONE_": return
+    default_obj = None
+    obj = None
+    if props.edit_type == 'objects':
+        sel_obj_list = get_selected_items(props.obj_list)
+        if len(sel_obj_list) == 0: return
+        obj = get_object_by_name(props, sel_obj_list[0])
+        default_obj = get_default_empty_object(props.collection_obj)
+    elif props.edit_type == 'defaults':
+        obj = get_default_empty_object(props.collection_obj, True)
+    else:
+        return
+
+    if obj and props.edit_neighbor_constraint not in obj and default_obj and props.edit_neighbor_constraint in default_obj:
+        obj = default_obj
+
+    auto_save = props.auto_save
+    props.auto_save = False
+
+    if obj and props.edit_neighbor_constraint in obj:
+        vals = obj[props.edit_neighbor_constraint].split(",")
+        props.no_neighbor_allowed = '-' in vals
+        for item in props.neighbor_list: item.selected = item.value in vals
+    else:
+        props.no_neighbor_allowed = False
+        for item in props.neighbor_list: item.selected = False
+
+    if obj and "wfc_allow_neighbor_constraint_violations" in obj:
+        props.allow_neighbor_constraint_violations = obj["wfc_allow_neighbor_constraint_violations"]
+    elif default_obj and "wfc_allow_neighbor_constraint_violations" in default_obj:
+        props.allow_neighbor_constraint_violations = default_obj["wfc_allow_neighbor_constraint_violations"]
+    else:
+        props.allow_neighbor_constraint_violations = PROP_DEFAULTS["allow_neighbor_constraint_violations"]
+    props.auto_save = auto_save
+
+def handle_conn_directions_update(_self, _context):
+    props = bpy.context.scene.wfc_props
+    if props.conn_directions == '_NONE_': return
+    obj = None
+    if props.edit_type == 'objects':
+        selected = get_selected_items(props.obj_list)
+        if len(selected) == 0: return
+        obj = get_object_by_name(props, selected[0])
+    elif props.edit_type == 'defaults':
+        obj = get_default_empty_object(props.collection_obj)
+    auto_save = props.auto_save
+    props.auto_save = False
+    props.conn_name = obj.get(props.conn_directions, '')
+    props.auto_save = auto_save

@@ -1,8 +1,8 @@
 import bpy
 
 from .constants import *
-from .properties import update_constraint_properties, handle_update_collection
-from .helper import get_object_by_name, update_constraints, get_selected_items, get_constraints, update_connector_constraints, update_grid_constraints, update_neighbor_constraints
+from .properties import handle_update_collection
+from .helper import get_object_by_name, update_constraints, get_selected_items, get_constraints, update_connector_constraints, update_grid_constraints, update_neighbor_constraints, update_edit_form
 
 
 def _get_obj_list(props):
@@ -83,7 +83,7 @@ class COLLECTION_OT_WFC3DResetConstraints(bpy.types.Operator):
         props = context.scene.wfc_props
         obj_list = _get_obj_list(props)
         _reset_constraints(props, get_constraints(props))
-        update_constraint_properties(props, context)
+        update_edit_form(props, context)
         self.report({'INFO'}, f"{props.edit_constraints.capitalize()} constraints of {obj_list} have been reset.")
         return {'FINISHED'}
 
