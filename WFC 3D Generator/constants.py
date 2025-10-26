@@ -41,6 +41,8 @@ PROP_DEFAULTS = {
     'freq_any_neighbor_face': -1, 'freq_any_neighbor_edge' : -1, 'freq_any_neighbor_corner' : -1,
     # symmetry constraints:
     'sym_mirror_axes': (False, False, False), 'sym_rotate_axis' : (-1,-1,-1), 'sym_rotate_n': -1, 'sym_mirror_axes_rotate' : False,
+    'sym_mirror_axes_x':None, 'sym_mirror_axes_y':None, 'sym_mirror_axes_z':None, 'sym_mirror_axes_xy':None,
+    'sym_mirror_axes_xz':None, 'sym_mirror_axes_yz':None, 'sym_mirror_axes_xyz':None,
     # region constraints:
     'region_min':(-1,-1,-1), 'region_max':(-1,-1,-1), 'region_quadrant': (True,)*8,
     # connector constraints:
@@ -54,7 +56,9 @@ PROP_DEFAULTS = {
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
 
-SYMMETRY_CONSTRAINTS = [ 'sym_mirror_axes','sym_rotate_axis', 'sym_rotate_n', 'sym_mirror_axes_rotate' ]
+SYMMETRY_CONSTRAINTS = [ 'sym_mirror_axes','sym_rotate_axis', 'sym_rotate_n', 'sym_mirror_axes_rotate',
+                         'sym_mirror_axes_x', 'sym_mirror_axes_y', 'sym_mirror_axes_z', 'sym_mirror_axes_xy',
+                         'sym_mirror_axes_xz' , 'sym_mirror_axes_yz', 'sym_mirror_axes_xyz']
 TRANSFORMATION_CONSTRAINTS = ['scale_min','scale_max','scale_steps','scale_type', 'scale_uni',
                                   'rotation_min','rotation_max','rotation_steps',
                                   #'rotation_neighbor','rotation_grid',

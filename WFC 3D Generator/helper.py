@@ -189,11 +189,20 @@ def update_edit_form(self, _context):
         for c in SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS + REGION_CONSTRAINTS:
             cp = 'wfc_' + c.lower()
             if cp in obj:
-                props[c] = obj[cp]
+                try:
+                    props[c] = obj[cp]
+                except:
+                    pass
             elif default_obj and cp in default_obj:
-                props[c] = default_obj[cp]
+                try:
+                    props[c] = default_obj[cp]
+                except:
+                    pass
             elif c in PROP_DEFAULTS:
-                props[c] = PROP_DEFAULTS[c]
+                try:
+                    props[c] = PROP_DEFAULTS[c]
+                except:
+                    pass
 
     props.auto_save = auto_save
 

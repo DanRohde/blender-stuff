@@ -169,7 +169,23 @@ class WFC3DConstraints:
             for point in points:
                 nx,ny,nz = point
                 if not (nx==x and ny==y and nz==z):
-                    grid.grid[nx,ny,nz] = grid.grid[x,y,z]
+                    mp = grid.grid[x,y,z]
+                    if nx!=x and ny==y and nz==z and self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_x"] is not None:
+                        mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_x"].name ]
+                    if nx==x and ny!=y and nz==z and self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_y"] is not None:
+                        mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_y"].name ]
+                    if nx==x and ny==y and nz!=z and self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_z"] is not None:
+                        mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_z"].name ]
+                    if nx!=x and ny!=y and nz==z and self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_xy"] is not None:
+                        mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_xy"].name ]
+                    if nx != x and ny == y and nz != z and self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xz"] is not None:
+                        mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xz"].name ]
+                    if nx == x and ny != y and nz != z and self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_yz"] is not None:
+                        mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_yz"].name ]
+                    if nx != x and ny != y and nz != z and self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xyz"] is not None:
+                        mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xyz"].name ]
+                    grid.grid[nx,ny,nz] = mp
+
                     #if 'sym_mirror_axes_rotate' in bpy.context.scene.wfc_props and bpy.context.scene.wfc_props['sym_mirror_axes_rotate']:
                         #if (nx,ny,nz) in self.symrotation:
                             #self.symrotation[(nx,ny,nz)] = tuple(a+b for a,b in zip(self.symrotation[(nx,ny,nz)], angles))
