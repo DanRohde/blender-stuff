@@ -321,7 +321,6 @@ class WFC3DConstraints:
             for direction, (dx, dy, dz) in DIRECTIONS.items():
                 nx, ny, nz = cx + dx, cy + dy, cz + dz             
                 if not grid.within_boundaries(nx, ny, nz) or grid.collapsed[nx,ny,nz]: continue
-
                 neighbor_options = grid.grid[nx, ny, nz]
 
                 # Filter disallowed neighbor options

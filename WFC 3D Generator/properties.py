@@ -57,8 +57,8 @@ def get_known_conn_names(_self, _context):
     dn = pn.split('_', 2)[2]
     odn = OPPOSITE_DIRECTIONS[dn.upper()]
     opn = 'wfc_conn_'+odn.lower()
-    items = [None]
-    opp_items = [None]
+    items = []
+    opp_items = []
     dup_items = []
     for obj in props.collection_obj.objects:
         if opn in obj and not obj[opn] in dup_items:
@@ -75,7 +75,11 @@ def get_known_conn_names(_self, _context):
             if pn in obj and not obj[pn] in dup_items:
                 items.append((obj[pn], obj[pn], f"Select to apply {obj[pn]}"))
                 dup_items.append(obj[pn])
-    if len(opp_items) > 1: items.extend(opp_items)
+    if len(items) > 0: items.sort(key=lambda i: i[0])
+    if len(opp_items) > 0:
+        opp_items.sort(key=lambda i: i[0])
+        items.append(None)
+        items.extend(opp_items)
     return items
 def take_known_conn_name(_self, _context):
     props = bpy.context.scene.wfc_props
