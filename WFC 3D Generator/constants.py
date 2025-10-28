@@ -111,3 +111,7 @@ ICON_MAP = {
         'POINTCLOUD': 'OUTLINER_OB_POINTCLOUD',
         'CURVES': 'OUTLINER_OB_CURVES'
 }
+
+NODEGROUP_NAMES = {
+    'directions' : 'WFC 3D Directions',
+}

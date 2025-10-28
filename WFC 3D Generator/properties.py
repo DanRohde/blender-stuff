@@ -209,6 +209,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     conn_known_names : bpy.props.EnumProperty(items=get_known_conn_names, name='Select to apply', update=take_known_conn_name)
     auto_save: bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties", default=False)
 
+    vis_directions : bpy.props.BoolProperty(name="",description="Show directions", default = False)
+
 properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
 
     

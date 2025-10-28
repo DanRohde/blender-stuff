@@ -4,6 +4,7 @@ from .constants import *
 from .properties import handle_update_collection
 from .helper import get_object_by_name, update_constraints, get_selected_items, get_constraints, update_connector_constraints, update_grid_constraints, update_neighbor_constraints, update_edit_form
 
+from .vis import *
 
 def _get_obj_list(props):
     return ",".join(get_selected_items(props.obj_list))
@@ -278,6 +279,24 @@ class COLLECTION_OT_WFC3DAutoSaveToggle(bpy.types.Operator):
         props.auto_save = not props.auto_save
         return {'FINISHED'}
 
+class WFC3DVisDirections(bpy.types.Operator):
+    """Show directions"""
+    bl_idname = "object.wfc_vis_directions"
+    bl_label = ""
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        props = context.scene.wfc_props
+        props.vis_directions = not props.vis_directions
+        for item in get_selected_items(props.obj_list):
+            obj = get_object_by_name(props, item)
+            if props.vis_directions:
+                add_directions_geometry_nodegroup(obj)
+            else:
+                remove_directions_geometry_nodegroup(obj)
+
+        return {'FINISHED'}
+
 operators = [
     COLLECTION_OT_WFC3DAutoSaveToggle,
     COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint,
@@ -294,4 +313,5 @@ operators = [
     COLLECTION_OT_WFC3DCollectionListSelectNone,
     COLLECTION_OT_WFC3DNeighborListSelectAll,
     COLLECTION_OT_WFC3DNeighborListSelectNone,
+    WFC3DVisDirections,
 ]

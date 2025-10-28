@@ -89,8 +89,9 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         if props.edit_constraints == "neighbor":
             box=col.box()
             row = box.row()
-            row.label(icon="CUBE",text="")
             row.prop(props,"edit_neighbor_constraint")
+            row.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
+
             newrow = row.row()
             newrow.operator("object.wfc_reset_constraints")
             newrow.enabled = props.edit_type == 'defaults' or (obj and props.edit_neighbor_constraint in obj)
@@ -292,6 +293,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.operator("object.wfc_reset_constraints")
             row = box.row()
             row.prop(props, "conn_directions")
+            row.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
             if props.conn_directions != '_NONE_':
                 row = box.row()
                 row.prop(props,"conn_name",text="Name")
