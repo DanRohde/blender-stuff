@@ -18,6 +18,7 @@ class WFC3DGenerator:
         self.random_start_cell = props.random_start_cell
         self.render_delay = props.render_delay
         self.collapsed_cells = []
+        self.odd_offset = props.odd_offset
 
         random.seed(props.seed)
         self.remove_target_collection = props.remove_target_collection
@@ -70,7 +71,6 @@ class WFC3DGenerator:
         
     def collapse(self, x, y, z):
         """Collapses a cell into a single state"""
-        collapsed = None
         if self.use_constraints:
             collapsed = self.constraints.collapse(self.grid, x, y, z)
         else:
@@ -111,7 +111,7 @@ class WFC3DGenerator:
         else:
             bpy.context.scene.wfc_props.running_delayed_renderer = False
             bpy.context.scene.wfc_props.paused_delayed_renderer = False
-            def draw(self, context):
+            def draw(self, _context):
                 self.layout.label(text="WFC 3D model successfully rendered!")
             bpy.context.window_manager.popup_menu(draw, title="Info", icon='INFO')
         return None
@@ -156,7 +156,8 @@ class WFC3DGenerator:
                 new_obj = original_obj.copy()
                 new_obj.data = original_obj.data.copy()
 
-            newloc = [x * self.spacing[0], y * self.spacing[1], z * self.spacing[2]]
+            newloc = [x * self.spacing[0] + (self.odd_offset[0] * (y % 2)), y * self.spacing[1] + (self.odd_offset[1] * (x % 2)), z * self.spacing[2] + (self.odd_offset[2] * (x % 2))]
+
             new_obj.location = tuple(newloc)
 
             if self.use_constraints:
