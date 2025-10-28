@@ -4,7 +4,7 @@ from .constants import *
 from .properties import handle_update_collection
 from .helper import get_object_by_name, update_constraints, get_selected_items, get_constraints, update_connector_constraints, update_grid_constraints, update_neighbor_constraints, update_edit_form
 
-from .vis import *
+from .vis import add_directions_geometry_nodegroup, remove_directions_geometry_nodegroup
 
 def _get_obj_list(props):
     return ",".join(get_selected_items(props.obj_list))
@@ -17,6 +17,9 @@ def _reset_constraints(props, constraints):
     elif props.edit_type == 'defaults':
         items = [DEFAULT_EMPTY_NAME]
 
+    auto_save = props.auto_save
+    props.auto_save = False
+
     for item in items:
         obj = get_object_by_name(props, item)
         for c in constraints:
@@ -26,6 +29,7 @@ def _reset_constraints(props, constraints):
             elif c.startswith("wfc_") and c in obj:
                 del obj[c]
 
+    props.auto_save = auto_save
 
 class COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint(bpy.types.Operator):
     """Save neighbor constraints"""
@@ -77,7 +81,7 @@ class COLLECTION_OT_WFC3DUpdateConstraints(bpy.types.Operator):
 class COLLECTION_OT_WFC3DResetConstraints(bpy.types.Operator):
     """Reset constraints"""
     bl_idname = "object.wfc_reset_constraints"
-    bl_label = "Reset ⟲"
+    bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):

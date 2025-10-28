@@ -131,3 +131,9 @@ def remove_directions_geometry_nodegroup(obj):
     modifier = obj.modifiers.get(ngn)
     if modifier is not None:
         modifier.show_viewport = False
+
+def is_directions_geometry_nodegroup_visible(obj):
+    ngn = NODEGROUP_NAMES['directions']
+    modifier = obj.modifiers.get(ngn)
+    if modifier is None: return False
+    return modifier.show_viewport

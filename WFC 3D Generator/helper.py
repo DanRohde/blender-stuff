@@ -1,6 +1,7 @@
 from typing import Any
 import bpy
 from .constants import *
+from .vis import is_directions_geometry_nodegroup_visible
 
 def get_default_empty_object(collection: object, create: object = False) -> Any | None:
     if DEFAULT_EMPTY_NAME in collection.objects:
@@ -165,6 +166,7 @@ def update_edit_form(self, _context):
     props.auto_save = False
 
     if props.edit_constraints == 'neighbor':
+        props.vis_directions = is_directions_geometry_nodegroup_visible(obj)
         props.edit_neighbor_constraint = props.edit_neighbor_constraint
     elif props.edit_constraints == 'grid':
         pmap = {'corner' : 'wfc_corners', 'edge' : 'wfc_edges', 'face' : 'wfc_faces', 'inside' : 'wfc_inside'}
@@ -184,6 +186,7 @@ def update_edit_form(self, _context):
                     if '_' in a: a = a.split('_', 1)[1]
                     props[p+'_'+a.lower()] = False
     elif props.edit_constraints == 'connector':
+        props.vis_directions = is_directions_geometry_nodegroup_visible(obj)
         props.conn_directions = props.conn_directions
     else:
         for c in SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS + REGION_CONSTRAINTS:
