@@ -14,6 +14,18 @@ class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
         row = layout.row(align=True)
         row.prop(item, "selected", text=item.name, icon=icon_name)
 
+
+class WFC3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
+    def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+        props = context.scene.wfc_props
+        if item.name in props.collection_obj.objects:
+            icon_name = ICON_MAP[props.collection_obj.objects[item.name].type]
+        else:
+            icon_name = "GROUP"
+
+        row = layout.row(align=True)
+        row.prop(item, "selected", text=item.name, icon=icon_name)
+
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Constraint Editor"
@@ -113,7 +125,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 nc.prop(props,"auto_neighbor_object",icon="TRIA_RIGHT")
                 nc.enabled = not props.auto_active_object
                 newcol = row.column()
-                newcol.template_list("WFC3D_UL_EditPanelMultiSelList", "", props, "neighbor_list", props, "neighbor_list_idx")
+                newcol.template_list("WFC3D_UL_EditPanelNeighborMultiSelList", "", props, "neighbor_list", props, "neighbor_list_idx")
                 newcol.enabled = not props.auto_neighbor_object
                 newcol = row.column()
                 newcol.enabled = not props.auto_neighbor_object
@@ -306,6 +318,6 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                     box.row().prop(props,"conn_known_names",text="")
                 if not props.auto_save: box.row().operator("object.wfc_update_connector_constraints")
 
-panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_PT_EditPanel,]
+panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
         
