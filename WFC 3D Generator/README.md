@@ -20,22 +20,22 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
 * Region constraints don't work with all symmetry constraint variants
 
 ## Statistics: Constraints per Object
-* Neighbor constraints: 26
+* Neighbor constraints: 27
 * Grid constraints: 30
 * Region constraints: 3
 * Probability constraints: 2
 * Transformation constraints: 10
 * Frequency constraints: 15
 * Symmetry constraints: 16
-* Connector constraints: 26
+* Connector constraints: 27
 
 
-* **Sum: 128**
+* **Sum: 130**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
 * Used custom properties: face neighbors: `wfc_[left|right|front|back|top|bottom]`, edge neighbors: `wfc_en_[fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb]`,
-  corner neighbors: `wfc_cn_[fbl|fbr|ftl|ftr|bbl|bbr|btl|btr]`, `wfc_allow_neighbor_constraint_violoations`
+  corner neighbors: `wfc_cn_[fbl|fbr|ftl|ftr|bbl|bbr|btl|btr]`, `wfc_allow_neighbor_constraint_violoations`, `wfc_any`
 * Allowed property values:
     * empty string - allows all neighbors
     * comma separated list of object names - permitted neighbor(s)
@@ -114,7 +114,7 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
     
 
 ## Connector Constraints
-* Used custom properties: `wfc_conn_[front|back|left|right|top|bottom|cn_(fbl|fbr|ftl|ftr|bbl|bbr|btl|btr)|en_(fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb)]` 
+* Used custom properties: `wfc_conn_[any|front|back|left|right|top|bottom|cn_(fbl|fbr|ftl|ftr|bbl|bbr|btl|btr)|en_(fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb)]`
 * Allowed property value: string with a connector name
 
 ## Upcoming Features

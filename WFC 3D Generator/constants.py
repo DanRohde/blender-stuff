@@ -10,13 +10,16 @@ EDGE_DIRECTIONS = {
     'EN_BL' : (-1,1,0), 'EN_BR' : (1,1,0), 'EN_BB' : (0,1,-1), 'EN_BT' : (0,1,1),
     'EN_LB' : (-1,0,-1), 'EN_LT' : (-1,0,1), 'EN_RB' : (1,0,-1), 'EN_RT' : (1,0,1),
 }
-DIRECTIONS = { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS }
+ANY_DIRECTION = { 'ANY' : (0,0,0) }
+
+DIRECTIONS = { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS, **ANY_DIRECTION }
 
 OPPOSITE_DIRECTIONS = { 'TOP':'BOTTOM', 'BOTTOM':'TOP', 'FRONT':'BACK', 'BACK':'FRONT', 'LEFT':'RIGHT', 'RIGHT':'LEFT', 
                        'CN_FBL':'CN_BTR', 'CN_BTR':'CN_FBL', 'CN_FBR':'CN_BTL', 'CN_BTL':'CN_FBR',
                        'CN_FTL':'CN_BBR', 'CN_BBR':'CN_FTL', 'CN_FTR':'CN_BBL', 'CN_BBL':'CN_FTR',
                        'EN_FL':'EN_BR', 'EN_BR':'EN_FL', 'EN_FR':'EN_BL', 'EN_BL':'EN_FR', 'EN_FT':'EN_BB','EN_BB':'EN_FT', 'EN_FB':'EN_BT','EN_BT':'EN_FB',
-                       'EN_LT':'EN_RB', 'EN_RB':'EN_LT', 'EN_LB':'EN_RT', 'EN_RT':'EN_LB',     
+                       'EN_LT':'EN_RB', 'EN_RB':'EN_LT', 'EN_LB':'EN_RT', 'EN_RT':'EN_LB',
+                       'ANY':'ANY',
 }
 
 PROP_DEFAULTS = {
@@ -24,6 +27,7 @@ PROP_DEFAULTS = {
     'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '', 
     'en_fl':'','en_fr':'','en_ft':'','en_fb':'','en_bl':'','en_br':'','en_bt':'','en_bb':'','en_lt':'','en_lb':'','en_rt':'','en_rb':'',
     'cn_fbl':'','cn_fbr':'','cn_ftl':'','cn_ftr':'','cn_bbl':'','cn_bbr':'','cn_btl':'','cn_btr':'',
+    'any':'',
     'allow_neighbor_constraint_violations':False,
     # probability constraints:
     'weight' : 1, 'probability' : 1,
@@ -81,6 +85,7 @@ CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn
                          'conn_en_lt','conn_en_lb','conn_en_rt','conn_en_rb',
                          'conn_cn_fbl','conn_cn_fbr','conn_cn_ftl','conn_cn_ftr',
                          'conn_cn_bbl','conn_cn_bbr','conn_cn_btl','conn_cn_btr',
+                         'conn_any',
 ]
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
@@ -91,6 +96,7 @@ DIR_TRANSLATION = { 'TOP': 'top face', 'BOTTOM' : 'bottom face', 'LEFT' : 'left 
                  'FL':'front left edge', 'FR': 'front right edge', 'FB' : 'front bottom edge', 'FT' : 'front top edge',
                  'BL':'back left edge', 'BR': 'back right edge', 'BB' : 'back bottom edge', 'BT' : 'back top edge',
                  'LT':'left top edge', 'LB' : 'left bottom edge', 'RT' : 'right top edge', 'RB' : 'right bottom edge',
+                 'ANY': 'any direction',
 }
 
 ICON_MAP = {

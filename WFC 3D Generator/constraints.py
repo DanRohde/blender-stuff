@@ -50,6 +50,7 @@ class WFC3DConstraints:
             # load neighbor constraints
             for direction in DIRECTIONS:
                 prop_name = f"wfc_{direction.lower()}"
+                any_prop_name = "wfc_any"
                 eo = obj
                 if prop_name not in obj and default_obj: eo = default_obj
                 if prop_name in eo:
@@ -57,6 +58,8 @@ class WFC3DConstraints:
                         self.constraints[obj_name][direction] = allobjects
                     else:
                         self.constraints[obj_name][direction] = eo[prop_name].split(',')
+                elif any_prop_name in eo:
+                    self.constraints[obj_name][direction] = eo[any_prop_name].split(',')
                 else:
                     self.constraints[obj_name][direction] = allobjects 
     def are_grid_constraints_satisfied(self, name, pos):
@@ -336,23 +339,32 @@ class WFC3DConstraints:
 
             for direction, (dx, dy, dz) in DIRECTIONS.items():
                 nx, ny, nz = cx + dx, cy + dy, cz + dz             
-                if not grid.within_boundaries(nx, ny, nz) or grid.collapsed[nx,ny,nz]: continue
+                if not grid.within_boundaries(nx, ny, nz) or grid.collapsed[nx,ny,nz] or direction == 'ANY': continue
                 neighbor_options = grid.grid[nx, ny, nz]
 
                 # Filter disallowed neighbor options
-                new_options = [obj for obj in neighbor_options if obj in self.constraints[current_obj].get(direction, []) and current_obj in self.constraints[obj].get(OPPOSITE_DIRECTIONS[direction],[])]
-
+                new_options = [obj
+                               for obj in neighbor_options
+                                if obj in self.constraints[current_obj].get(direction, self.constraints[current_obj].get('ANY',[]))
+                                and current_obj in self.constraints[obj].get(OPPOSITE_DIRECTIONS[direction],self.constraints[obj].get('ANY',[]))
+                               ]
                 if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
                     new_options= [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
 
                 # Filter disallowed connector options:
-                if self.constraints[current_obj].get('conn_'+direction.lower(),"") != "":
+                if self.constraints[current_obj].get('conn_any', self.constraints[current_obj].get('conn_'+direction.lower(),"")) != "":
                     prop_name = 'conn_' + direction.lower()
                     opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
+                    any_prop_name = 'conn_any'
+                    if self.constraints[current_obj].get(any_prop_name,"") != "":
+                        prop_val = self.constraints[current_obj].get(any_prop_name, self.constraints[current_obj].get(prop_name,""))
+                    else:
+                        prop_val = self.constraints[current_obj].get(prop_name,"")
                     new_options = [obj
                                    for obj in new_options
-                                   if self.constraints[current_obj][prop_name] == self.constraints[obj].get(opp_prop_name,"")
-                                   or self.constraints[obj].get(opp_prop_name,"")==""]
+                                   if prop_val == self.constraints[obj].get(any_prop_name, self.constraints[obj].get(prop_name,""))
+                                   or self.constraints[obj].get(any_prop_name, self.constraints[obj].get(opp_prop_name,"")) == ""
+                                   ]
                 if len(new_options) >= len(neighbor_options): continue
 
                 grid.grid[nx, ny, nz] = new_options
