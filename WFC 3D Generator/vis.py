@@ -117,14 +117,14 @@ def add_directions_geometry_nodegroup(obj):
     ngn = NODEGROUP_NAMES['directions']
     ng = _get_directions_geometry_nodegroup(ngn)
 
-    if obj.type != 'MESH': return
-
     # link modifier to object
     modifier = obj.modifiers.get(ngn) or obj.modifiers.new(name=ngn, type="NODES")
+    if modifier is None: return False
     modifier.node_group = ng
     modifier.show_render = False
     modifier.show_viewport = True
     modifier.show_in_editmode = False
+    return True
 
 def remove_directions_geometry_nodegroup(obj):
     ngn = NODEGROUP_NAMES['directions']

@@ -141,7 +141,12 @@ class WFC3DGenerator:
 
         if original_obj:
             if self.link_objects:
-                new_obj = bpy.data.objects.new(name=original_obj.name, object_data=original_obj.data)
+                try:
+                    new_obj = bpy.data.objects.new(name=original_obj.name, object_data=original_obj.data)
+                except:
+                    new_obj = original_obj.copy()
+                    new_obj.data = original_obj.data.copy()
+
                 if self.copy_modifiers:
                     for mod in original_obj.modifiers:
                         new_mod = new_obj.modifiers.new(name=mod.name, type=mod.type)

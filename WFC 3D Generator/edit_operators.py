@@ -295,7 +295,7 @@ class WFC3DVisDirections(bpy.types.Operator):
         for item in get_selected_items(props.obj_list):
             obj = get_object_by_name(props, item)
             if props.vis_directions:
-                add_directions_geometry_nodegroup(obj)
+                props.vis_directions = add_directions_geometry_nodegroup(obj)
             else:
                 remove_directions_geometry_nodegroup(obj)
 
