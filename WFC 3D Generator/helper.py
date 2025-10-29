@@ -177,12 +177,12 @@ def update_edit_form(self, _context):
                 props[p+"_none"] = eo[cp] == "-"
                 vals = eo[cp].split(",")
                 for c in vals: props[p+'_'+c] = True
-                for a in FACE_DIRECTIONS + CORNER_DIRECTIONS + EDGE_DIRECTIONS:
+                for a in { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS }:
                     if '_' in a: a = a.split('_',1)[1]
                     if a.lower() not in vals: props[p+'_'+a.lower()] = False
             else:
                 props[p+"_none"] = False
-                for a in FACE_DIRECTIONS + CORNER_DIRECTIONS + EDGE_DIRECTIONS:
+                for a in { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS }:
                     if '_' in a: a = a.split('_', 1)[1]
                     props[p+'_'+a.lower()] = False
     elif props.edit_constraints == 'connector':
