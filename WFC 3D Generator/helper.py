@@ -3,6 +3,14 @@ import bpy
 from .constants import *
 from .vis import is_directions_geometry_nodegroup_visible
 
+
+def get_icon_name(props, item):
+    if item.name in props.collection_obj.objects:
+        icon_name = ICON_MAP[props.collection_obj.objects[item.name].type]
+    else:
+        icon_name = "GROUP"
+    return icon_name
+
 def get_default_empty_object(collection: object, create: object = False) -> Any | None:
     if DEFAULT_EMPTY_NAME in collection.objects:
         return collection.objects[DEFAULT_EMPTY_NAME]
@@ -80,9 +88,6 @@ def update_connector_constraints(props):
     elif props.edit_type == 'defaults':
         obj = get_object_by_name(props, DEFAULT_EMPTY_NAME)
         obj[prop_name] = connector
-
-
-
 
 def update_grid_constraints(props):
     def _get_new_prop_val(props, prop_name, values):

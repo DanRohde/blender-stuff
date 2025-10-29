@@ -1,30 +1,15 @@
 import bpy
-from .constants import ICON_MAP
-from .helper import get_default_empty_object
+from .helper import get_default_empty_object, get_icon_name
 from .properties import get_known_conn_names
 
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
-        props = context.scene.wfc_props
-        if item.name in props.collection_obj.objects:
-            icon_name = ICON_MAP[props.collection_obj.objects[item.name].type]
-        else:
-            icon_name = "GROUP"
-            
-        row = layout.row(align=True)
-        row.prop(item, "selected", text=item.name, icon=icon_name)
+        layout.row(align=True).prop(item, "selected", text=item.name, icon=get_icon_name(context.scene.wfc_props,item))
 
 
 class WFC3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
-        props = context.scene.wfc_props
-        if item.name in props.collection_obj.objects:
-            icon_name = ICON_MAP[props.collection_obj.objects[item.name].type]
-        else:
-            icon_name = "GROUP"
-
-        row = layout.row(align=True)
-        row.prop(item, "selected", text=item.name, icon=icon_name)
+        layout.row(align=True).prop(item, "selected", text=item.name, icon=get_icon_name(context.scene.wfc_props,item))
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
