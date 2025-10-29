@@ -24,7 +24,7 @@ OPPOSITE_DIRECTIONS = { 'TOP':'BOTTOM', 'BOTTOM':'TOP', 'FRONT':'BACK', 'BACK':'
 
 PROP_DEFAULTS = {
     # neighbor constraints
-    'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '', 
+    'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '',
     'en_fl':'','en_fr':'','en_ft':'','en_fb':'','en_bl':'','en_br':'','en_bt':'','en_bb':'','en_lt':'','en_lb':'','en_rt':'','en_rb':'',
     'cn_fbl':'','cn_fbr':'','cn_ftl':'','cn_ftr':'','cn_bbl':'','cn_bbr':'','cn_btl':'','cn_btr':'',
     'any':'',
@@ -56,6 +56,7 @@ PROP_DEFAULTS = {
     'conn_en_lt':'','conn_en_lb':'','conn_en_rt':'','conn_en_rb':'',
     'conn_cn_fbl':'','conn_cn_fbr':'','conn_cn_ftl':'','conn_cn_ftr':'',
     'conn_cn_bbl':'','conn_cn_bbr':'','conn_cn_btl':'','conn_cn_btr':'',
+    'conn_any':'',
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
