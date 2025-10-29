@@ -120,3 +120,4 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
 ## Upcoming Features
 * a constraint validator ...
 * viewport constraint visualizer
+* various grid shapes: cubic, spherical, and cylindrical
