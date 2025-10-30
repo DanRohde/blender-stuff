@@ -68,14 +68,17 @@ def update_constraints(props, constraints):
     elif props.edit_type == 'defaults':
         items = [DEFAULT_EMPTY_NAME]
 
+    default_object = get_default_empty_object(props.collection_obj, False)
     for item in items:
         obj = get_object_by_name(props, item)
+
         for c in constraints:
             if c in props:
-                if props[c] != PROP_DEFAULTS[c]:
-                    obj["wfc_" + c] = props[c]
-                elif "wfc_" + c in obj:
-                    del obj["wfc_" + c]
+                prop_name = 'wfc_' +c
+                if props[c] != PROP_DEFAULTS[c] or (default_object and default_object != obj and prop_name in default_object and default_object[prop_name] != props[c]):
+                    obj[prop_name] = props[c]
+                elif prop_name in obj:
+                    del obj[prop_name]
 
 def update_connector_constraints(props):
     prop_name = props.conn_directions

@@ -191,6 +191,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.operator("object.wfc_reset_constraints")
             box.prop(props,"probability")
             box.prop(props, "weight")
+            box.prop(props, "auto_weight", icon="MOD_VERTEX_WEIGHT")
             
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "transformation":

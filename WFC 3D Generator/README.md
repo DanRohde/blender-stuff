@@ -23,14 +23,14 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
 * Neighbor constraints: 27
 * Grid constraints: 30
 * Region constraints: 3
-* Probability constraints: 2
+* Probability constraints: 3
 * Transformation constraints: 10
 * Frequency constraints: 15
 * Symmetry constraints: 16
 * Connector constraints: 27
 
 
-* **Sum: 130**
+* **Sum: 131**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -81,10 +81,11 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
     * wfc_region_quadrant: boolean vector of size 8 (fbl,fbr,ftl,ftr,bbl,bbr,btl,btr)
 	
 ## Probability Constraints
-* Used custom properties: `wfc_weight,wfc_probability`
+* Used custom properties: `wfc_weight,wfc_probability,wfc_auto_weight`
 * Allowed property values:
     * wfc_probability: float value between 0 and 1
     * wfc_weight: empty string - weight of 1, 0 - object will not be used, 1..n - increases the chance of being chosen by a factor of n
+    * wfc_auto_weight: boolean enables/disables automatic weight determination
 
 
 ## Transformation Constraints

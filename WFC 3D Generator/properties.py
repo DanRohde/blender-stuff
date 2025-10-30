@@ -170,6 +170,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     inside_none: bpy.props.BoolProperty(name="-", description="Inside Forbidden", update=auto_save)
     weight: bpy.props.IntProperty(name="Weight", description="Weight constraint", default=PROP_DEFAULTS["weight"], min=0, update=auto_save)
     probability: bpy.props.FloatProperty(name="Probability", description="Probability constraint", default=PROP_DEFAULTS["probability"], min=0, max=1, update=auto_save)
+    auto_weight: bpy.props.BoolProperty(name="Automatic weight determination", description="Automatic weight determination", update=auto_save)
     rotation_min : bpy.props.FloatVectorProperty(name="Min", description="Degrees min", default=PROP_DEFAULTS["rotation_min"], subtype="EULER", update=auto_save)
     rotation_max : bpy.props.FloatVectorProperty(name="Max", description="Degrees max", default=PROP_DEFAULTS["rotation_max"], subtype="EULER", update=auto_save)
     rotation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Degree Steps", default=PROP_DEFAULTS["rotation_steps"], subtype="EULER", update=auto_save)

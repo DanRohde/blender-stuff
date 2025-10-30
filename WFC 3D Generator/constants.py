@@ -30,7 +30,7 @@ PROP_DEFAULTS = {
     'any':'',
     'allow_neighbor_constraint_violations':False,
     # probability constraints:
-    'weight' : 1, 'probability' : 1,
+    'weight' : 1, 'probability' : 1, 'auto_weight' : False,
     # grid constraints:
     'corners' : '', 'edges' : '', 'faces' : '','inside' : '',
     #transformation constraints:
@@ -74,7 +74,7 @@ FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_neighbor', 'freq_axes', 'freq_any_n
                          'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner',
 ]
 
-PROBABILITY_CONSTRAINTS = [ 'weight', 'probability']
+PROBABILITY_CONSTRAINTS = [ 'weight', 'probability', 'auto_weight']
 
 GRID_CONSTRAINTS = [ 'faces', 'corners', 'edges', 'inside']
 

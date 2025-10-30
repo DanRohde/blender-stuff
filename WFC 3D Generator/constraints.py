@@ -11,11 +11,14 @@ from .helper import get_default_empty_object
 class WFC3DConstraints:
     def __init__(self):
         self.constraints = {}
+        self.objects = {}
+        self.auto_weights = {}
         self.symrotation = {}
         self.grid = None
     
     def initialize_constraints(self, grid, collection, objects):
         """Loads constraints from custom properties"""
+        self.objects = objects
         allobjects = [o.name for o in objects]
         default_obj = get_default_empty_object(collection)
 
@@ -52,7 +55,7 @@ class WFC3DConstraints:
                 prop_name = f"wfc_{direction.lower()}"
                 any_prop_name = "wfc_any"
                 eo = obj
-                if prop_name not in obj and default_obj: eo = default_obj
+                if prop_name not in obj and any_prop_name not in obj and default_obj: eo = default_obj
                 if prop_name in eo:
                     if eo[prop_name] == "":
                         self.constraints[obj_name][direction] = allobjects
@@ -61,7 +64,8 @@ class WFC3DConstraints:
                 elif any_prop_name in eo:
                     self.constraints[obj_name][direction] = eo[any_prop_name].split(',')
                 else:
-                    self.constraints[obj_name][direction] = allobjects 
+                    self.constraints[obj_name][direction] = allobjects
+
     def are_grid_constraints_satisfied(self, name, pos):
         if 'corners' in self.constraints[name] and self.grid.is_corner(pos):
             for c in self.constraints[name]['corners']:
@@ -94,11 +98,45 @@ class WFC3DConstraints:
             ret = ret and self.grid.is_inside_region_quadrant(pos, self.constraints[name]['region_quadrant'])
 
         return ret
+
+    def get_auto_weight(self, name):
+        if not self.constraints[name].get('auto_weight', False): return 0
+        if self.auto_weights.get(name, -1) != -1: return self.auto_weights.get(name)
+        def _get_mapped_value(fminv, fmaxv, tminv, tmaxv, value):
+            fraction = (value - fminv) / (fmaxv - fminv)
+            mapped_value = tminv + fraction * (tmaxv - tminv)
+            return int(np.floor(mapped_value))
+        weight = 0
+        for d in DIRECTIONS:
+            if d not in self.constraints[name] or self.constraints[name][d] == "":
+                weight += len(self.objects)
+            elif self.constraints[name][d] != "-":
+                weight += len(self.constraints[name][d])
+        for c in CONNECTOR_CONSTRAINTS:
+            if c not in self.constraints[name] or self.constraints[name][c] == "":
+                weight += len(self.objects)
+            else:
+                weight += 1
+        for c in GRID_CONSTRAINTS:
+            if c not in self.constraints[name] or self.constraints[name][c] == "":
+                weight += len(self.objects)
+            elif self.constraints[name][c] != "-":
+                weight += len(self.constraints[name][c])
+        for c in REGION_CONSTRAINTS:
+            if c not in self.constraints[name] or self.constraints[name][c] == "":
+                weight += len(self.objects)
+
+        weight = _get_mapped_value(0, len(CONNECTOR_CONSTRAINTS+GRID_CONSTRAINTS+REGION_CONSTRAINTS)+len(DIRECTIONS), 0, len(self.objects), weight)
+
+        self.auto_weights[name] = weight
+        return weight
+
     def get_weighted_options(self, elements):
-        options = []    
+        options = []
         for name in elements:
-            if self.constraints[name]['weight']:
-                weight = self.constraints[name]['weight']
+            weight = self.get_auto_weight(name)
+            if self.constraints[name].get('weight',-1) > -1 or weight > 0:
+                weight += self.constraints[name].get('weight',1)
                 option = [name for _ in range(weight)]
                 options.extend(option)
             else:
@@ -345,8 +383,8 @@ class WFC3DConstraints:
                 # Filter disallowed neighbor options
                 new_options = [obj
                                for obj in neighbor_options
-                                if obj in self.constraints[current_obj].get(direction, self.constraints[current_obj].get('ANY',[]))
-                                and current_obj in self.constraints[obj].get(OPPOSITE_DIRECTIONS[direction],self.constraints[obj].get('ANY',[]))
+                                if obj in self.constraints[current_obj].get(direction, [])
+                                and current_obj in self.constraints[obj].get(OPPOSITE_DIRECTIONS[direction],[])
                                ]
                 if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
                     new_options= [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
