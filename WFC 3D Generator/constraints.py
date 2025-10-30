@@ -102,10 +102,7 @@ class WFC3DConstraints:
     def get_auto_weight(self, name):
         if not self.constraints[name].get('auto_weight', False): return 0
         if self.auto_weights.get(name, -1) != -1: return self.auto_weights.get(name)
-        def _get_mapped_value(fminv, fmaxv, tminv, tmaxv, value):
-            fraction = (value - fminv) / (fmaxv - fminv)
-            mapped_value = tminv + fraction * (tmaxv - tminv)
-            return int(np.floor(mapped_value))
+
         weight = 0
         for d in DIRECTIONS:
             if d not in self.constraints[name] or self.constraints[name][d] == "":
@@ -126,7 +123,8 @@ class WFC3DConstraints:
             if c not in self.constraints[name] or self.constraints[name][c] == "":
                 weight += len(self.objects)
 
-        weight = _get_mapped_value(0, len(CONNECTOR_CONSTRAINTS+GRID_CONSTRAINTS+REGION_CONSTRAINTS)+len(DIRECTIONS), 0, len(self.objects), weight)
+        maxlen = (len(CONNECTOR_CONSTRAINTS+GRID_CONSTRAINTS+REGION_CONSTRAINTS)+len(DIRECTIONS))*len(self.objects)
+        weight = int(len(self.objects) * weight / maxlen)
 
         self.auto_weights[name] = weight
         return weight
