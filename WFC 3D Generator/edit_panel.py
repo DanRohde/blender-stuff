@@ -39,13 +39,13 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         selected = []
         if props.edit_type == 'objects':
             newrow = box.row()
-            nc=newrow.column()
+            nc=newrow.column().box()
             nc.operator("collection.wfc_get_selected_object", icon="SELECT_SET")
             nc.prop(props,"auto_active_object", icon="TRIA_RIGHT")
             nc=newrow.column()
             nc.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
             nc.enabled = not props.auto_active_object
-            nc=newrow.column()
+            nc=newrow.column().box()
             nc.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
             nc.operator("collection.wfc_collection_list_select_all", icon="CHECKBOX_HLT")
             nc.operator("collection.wfc_collection_list_select_none", icon="CHECKBOX_DEHLT")
@@ -96,10 +96,10 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 else:
                     box.label(text="Neighbors:")
                 
-                box.box().prop(props,"no_neighbor_allowed",icon="VIEW_LOCKED")
-                row = box.box().row()
+                box.prop(props,"no_neighbor_allowed",icon="VIEW_LOCKED")
+                row = box.row()
                 row.enabled = not props.no_neighbor_allowed 
-                newcol = row.column()
+                newcol = row.column().box()
                 newcol.operator("collection.wfc_get_neighbor_selected_object", icon="SELECT_SET")
                 nc=newcol.column()
                 nc.prop(props,"auto_neighbor_object",icon="TRIA_RIGHT")
@@ -107,7 +107,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 newcol = row.column()
                 newcol.template_list("WFC3D_UL_EditPanelNeighborMultiSelList", "", props, "neighbor_list", props, "neighbor_list_idx")
                 newcol.enabled = not props.auto_neighbor_object
-                newcol = row.column()
+                newcol = row.column().box()
                 newcol.enabled = not props.auto_neighbor_object
                 nr = newcol.row()
                 nr.operator("collection.wfc_select_neighbor_object", icon='RESTRICT_SELECT_OFF')
