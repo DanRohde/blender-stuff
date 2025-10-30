@@ -53,7 +53,7 @@ class WFC3DConstraints:
             # load connector constraints
             for c in CONNECTOR_CONSTRAINTS:
                 cp = "wfc_"+c
-                any_cp = "wfc_any"
+                any_cp = "wfc_conn_any"
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][c] = obj[cp]
                 elif any_cp in obj and obj[any_cp] != "":
@@ -67,7 +67,6 @@ class WFC3DConstraints:
                         self.constraints[obj_name][c] = PROP_DEFAULTS[c]
                 else:
                     self.constraints[obj_name][c] = PROP_DEFAULTS[c]
-
             # load neighbor constraints
             for direction in DIRECTIONS:
                 prop_name = f"wfc_{direction.lower()}"
@@ -83,7 +82,6 @@ class WFC3DConstraints:
                     self.constraints[obj_name][direction] = eo[any_prop_name].split(',')
                 else:
                     self.constraints[obj_name][direction] = allobjects
-
     def are_grid_constraints_satisfied(self, name, pos):
         if 'corners' in self.constraints[name] and self.grid.is_corner(pos):
             for c in self.constraints[name]['corners']:
@@ -415,6 +413,5 @@ class WFC3DConstraints:
                                    or self.constraints[obj][opp_prop_name] == ""
                                    ]
                 if len(new_options) >= len(neighbor_options): continue
-
                 grid.grid[nx, ny, nz] = new_options
                 if len(new_options) == 1: queue.append((nx, ny, nz))
