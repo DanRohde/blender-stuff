@@ -32,8 +32,8 @@ class WFC3DConstraints:
                 obj = get_default_empty_object(bpy.data.collections[obj_name])
                 if obj is None: obj = bpy.data.collections[obj_name].objects[0]
 
-            # load probability, frequency, transformation, symmetry, region, neighbor, connector constraints
-            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS + CONNECTOR_CONSTRAINTS:
+            # load probability, frequency, transformation, symmetry, region, neighbor
+            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
                 cp = "wfc_"+p
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
@@ -49,6 +49,24 @@ class WFC3DConstraints:
                     self.constraints[obj_name][c] = obj[cp].split(",")
                 elif default_obj and cp in default_obj and default_obj[cp] != "":
                     self.constraints[obj_name][c] = default_obj[cp].split(",")
+
+            # load connector constraints
+            for c in CONNECTOR_CONSTRAINTS:
+                cp = "wfc_"+c
+                any_cp = "wfc_any"
+                if cp in obj and obj[cp] != "":
+                    self.constraints[obj_name][c] = obj[cp]
+                elif any_cp in obj and obj[any_cp] != "":
+                    self.constraints[obj_name][c] = obj[any_cp]
+                elif default_obj:
+                    if cp in default_obj and default_obj[cp] != "":
+                        self.constraints[obj_name][c] = default_obj[cp]
+                    elif any_cp in default_obj and default_obj[any_cp] != "":
+                        self.constraints[obj_name][c] = default_obj[any_cp]
+                    else:
+                        self.constraints[obj_name][c] = PROP_DEFAULTS[c]
+                else:
+                    self.constraints[obj_name][c] = PROP_DEFAULTS[c]
 
             # load neighbor constraints
             for direction in DIRECTIONS:
@@ -388,18 +406,13 @@ class WFC3DConstraints:
                     new_options= [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
 
                 # Filter disallowed connector options:
-                if self.constraints[current_obj].get('conn_any', self.constraints[current_obj].get('conn_'+direction.lower(),"")) != "":
+                if self.constraints[current_obj].get('conn_'+direction.lower(),"") != "":
                     prop_name = 'conn_' + direction.lower()
                     opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
-                    any_prop_name = 'conn_any'
-                    if self.constraints[current_obj].get(any_prop_name,"") != "":
-                        prop_val = self.constraints[current_obj].get(any_prop_name, self.constraints[current_obj].get(prop_name,""))
-                    else:
-                        prop_val = self.constraints[current_obj].get(prop_name,"")
                     new_options = [obj
                                    for obj in new_options
-                                   if prop_val == self.constraints[obj].get(any_prop_name, self.constraints[obj].get(prop_name,""))
-                                   or self.constraints[obj].get(any_prop_name, self.constraints[obj].get(opp_prop_name,"")) == ""
+                                   if self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name]
+                                   or self.constraints[obj][opp_prop_name] == ""
                                    ]
                 if len(new_options) >= len(neighbor_options): continue
 
