@@ -78,10 +78,11 @@ class WFC3DConstraints:
                         self.constraints[obj_name][direction] = allobjects
                     else:
                         self.constraints[obj_name][direction] = eo[prop_name].split(',')
-                elif any_prop_name in eo:
+                elif any_prop_name in eo and eo[any_prop_name] != "":
                     self.constraints[obj_name][direction] = eo[any_prop_name].split(',')
                 else:
                     self.constraints[obj_name][direction] = allobjects
+
     def are_grid_constraints_satisfied(self, name, pos):
         if 'corners' in self.constraints[name] and self.grid.is_corner(pos):
             for c in self.constraints[name]['corners']:
@@ -123,7 +124,7 @@ class WFC3DConstraints:
         for d in DIRECTIONS:
             if d not in self.constraints[name] or self.constraints[name][d] == "":
                 weight += len(self.objects)
-            elif self.constraints[name][d] != "-":
+            else:
                 weight += len(self.constraints[name][d])
         for c in CONNECTOR_CONSTRAINTS:
             if c not in self.constraints[name] or self.constraints[name][c] == "":
@@ -133,14 +134,14 @@ class WFC3DConstraints:
         for c in GRID_CONSTRAINTS:
             if c not in self.constraints[name] or self.constraints[name][c] == "":
                 weight += len(self.objects)
-            elif self.constraints[name][c] != "-":
+            else:
                 weight += len(self.constraints[name][c])
         for c in REGION_CONSTRAINTS:
             if c not in self.constraints[name] or self.constraints[name][c] == "":
                 weight += len(self.objects)
 
         maxlen = (len(CONNECTOR_CONSTRAINTS+GRID_CONSTRAINTS+REGION_CONSTRAINTS)+len(DIRECTIONS))*len(self.objects)
-        weight = int(len(self.objects) * weight / maxlen)
+        weight = int(round(len(self.objects) * weight/ maxlen))
 
         self.auto_weights[name] = weight
         return weight

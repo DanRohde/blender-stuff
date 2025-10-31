@@ -19,18 +19,18 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
 * For neighbor restrictions to take effect, there must be more than one object in the source collection.
 * Region constraints don't work with all symmetry constraint variants
 
-## Statistics: Constraints per Object
-* Neighbor constraints: 27
-* Grid constraints: 30
+## Statistics: Constraint Properties per Object
+* Neighbor constraints: 28
+* Grid constraints: 27
 * Region constraints: 3
 * Probability constraints: 3
-* Transformation constraints: 10
-* Frequency constraints: 15
-* Symmetry constraints: 16
+* Transformation constraints: 11
+* Frequency constraints: 11
+* Symmetry constraints: 10
 * Connector constraints: 27
 
 
-* **Sum: 131**
+* **Sum: 120**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -121,4 +121,5 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
 ## Upcoming Features
 * a constraint validator ...
 * viewport constraint visualizer
+* geometry constraints: matching edges/faces
 * various grid shapes: cubic, spherical, and cylindrical
