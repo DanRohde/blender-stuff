@@ -46,7 +46,7 @@ class OBJECT_OT_WFC3DGenerateTogglePauseDelayedRenderer(bpy.types.Operator):
         return {'FINISHED'}
 
 class OBJECT_OT_WFC3DCherryPicking(bpy.types.Operator):
-    """Toggle cherry picking """
+    """Start/Stop cherry picking """
     bl_idname = "object.wfc_3d_cherry_picking"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}

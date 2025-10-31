@@ -47,7 +47,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         col.enabled = props.running_delayed_renderer
         if props.render_delay>0:
             row = box.row()
-            render_time = props.render_delay * props.grid_size[0] * props.grid_size[1] * props.grid_size[2]
+            render_time = props.render_delay/1000 * props.grid_size[0] * props.grid_size[1] * props.grid_size[2]
             row.label(text=f"Min. rendering time: {render_time:.2f} second(s).")
 
         box = layout.box()

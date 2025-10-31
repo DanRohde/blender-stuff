@@ -95,7 +95,7 @@ class WFC3DGenerator:
 
         if self.render_delay > 0:
             bpy.context.scene.wfc_props.running_delayed_renderer = True
-            bpy.app.timers.register(self.place_delayed_objects, first_interval=self.render_delay)
+            bpy.app.timers.register(self.place_delayed_objects, first_interval=self.render_delay/1000)
         else:
             while len(self.collapsed_cells)>0:
                 self.place_object(self.collapsed_cells.pop(0))
@@ -107,7 +107,7 @@ class WFC3DGenerator:
             self.place_object(self.collapsed_cells.pop(0))
 
         if len(self.collapsed_cells) > 0:
-            return self.render_delay
+            return self.render_delay/1000
         else:
             bpy.context.scene.wfc_props.running_delayed_renderer = False
             bpy.context.scene.wfc_props.paused_delayed_renderer = False
