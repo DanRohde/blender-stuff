@@ -1,7 +1,7 @@
 import bpy
 
 from .constants import *
-from .helper import get_object_by_name, auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update
+from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update
 
 
 def handle_update_collection(_self, context):
@@ -55,7 +55,7 @@ def get_conn_directions(_self, _context):
 
 def get_known_conn_names(_self, _context):
     props = bpy.context.scene.wfc_props
-    if props.conn_directions == '_NONE_': return ('_NONE_','Nothing found','No other connectors found for this (opposite) direction')
+    if props.conn_directions == '_NONE_': return '_NONE_','Nothing found','No other connectors found for this (opposite) direction'
     pn = props.conn_directions
     dn = pn.split('_', 2)[2]
     odn = OPPOSITE_DIRECTIONS[dn.upper()]
@@ -217,6 +217,16 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
     vis_directions : bpy.props.BoolProperty(name="",description="Show directions", default = False)
 
-properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
 
-    
+#class WFC3DAddOnPreferences(bpy.types.AddOnPreferences):
+#    bl_idname = __package__
+#
+#    cherry_picking_delay: bpy.props.IntProperty(name="Cherry Picking Delay", description="Cherry picking delay in seconds", default=CHERRY_PICKING_DELAY,)
+#    default_empty_name: bpy.props.StringProperty(name="Default Empty Name", description="Default empty name for collection constraints", default= DEFAULT_EMPTY_NAME,)
+#
+#    def draw(self, _context):
+#        layout = self.layout
+#        layout.prop(self, "cherry_picking_delay")
+#        layout.prop(self, "default_empty_name")
+#
+properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
