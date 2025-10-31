@@ -57,15 +57,15 @@ class OBJECT_OT_WFC3DCherryPicking(bpy.types.Operator):
             vl = bpy.context.view_layer
             for c in vl.layer_collection.children:
                 if c.name.startswith(props.target_collection): c.hide_viewport = True
-        generate_model(props)
         props.seed += 1
+        generate_model(props)
         return CHERRY_PICKING_DELAY
 
     def execute(self, context):
         props = context.scene.wfc_props
-        self.context = context
         if not props.cherry_picking_running:
             props.cherry_picking_running = True
+            props.seed -= 1
             self._cherry_picking()
             bpy.app.timers.register(self._cherry_picking, first_interval=CHERRY_PICKING_DELAY)
         else:
