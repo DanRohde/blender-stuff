@@ -55,7 +55,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row = box.row()
         row.prop(props, "seed")
         col = row.column()
-        col.operator("object.wfc_3d_cherry_picking", icon='PLAY', depress=props.cherry_picking_running)
+        col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
         col.enabled = props.collection_obj is not None
         layout.separator(type="LINE", factor=0.2)
 

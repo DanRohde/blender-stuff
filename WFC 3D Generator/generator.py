@@ -119,7 +119,10 @@ class WFC3DGenerator:
     def init_target_collection(self):
         collection_name = self.target_collection
         if self.remove_target_collection and collection_name in bpy.data.collections:
+            for obj in bpy.data.collections[collection_name].objects:
+                bpy.data.objects.remove(obj,do_unlink=True)
             bpy.data.collections.remove(bpy.data.collections[collection_name])
+            bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
         self.target_collection_obj = bpy.data.collections.new(collection_name)
         bpy.context.scene.collection.children.link(self.target_collection_obj)
 
