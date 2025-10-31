@@ -113,7 +113,7 @@ class WFC3DGenerator:
             bpy.context.scene.wfc_props.paused_delayed_renderer = False
             def draw(self, _context):
                 self.layout.label(text="WFC 3D model successfully rendered!")
-            bpy.context.window_manager.popup_menu(draw, title="Info", icon='INFO')
+            if not bpy.context.scene.wfc_props.cherry_picking_running: bpy.context.window_manager.popup_menu(draw, title="Info", icon='INFO')
         return None
 
     def init_target_collection(self):

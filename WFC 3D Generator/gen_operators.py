@@ -53,6 +53,7 @@ class OBJECT_OT_WFC3DCherryPicking(bpy.types.Operator):
     def _cherry_picking(self):
         props = bpy.context.scene.wfc_props
         if not props.cherry_picking_running: return None
+        if props.running_delayed_renderer: return CHERRY_PICKING_DELAY
         if not props.remove_target_collection:
             vl = bpy.context.view_layer
             for c in vl.layer_collection.children:
