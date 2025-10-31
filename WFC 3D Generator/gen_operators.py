@@ -1,9 +1,6 @@
 import bpy
 
 from .generator import WFC3DGenerator
-from .constants import CHERRY_PICKING_DELAY
-
-
 
 def generate_model(props):
     generator = WFC3DGenerator(props.collection_obj, props)
@@ -46,29 +43,32 @@ class OBJECT_OT_WFC3DGenerateTogglePauseDelayedRenderer(bpy.types.Operator):
         return {'FINISHED'}
 
 class OBJECT_OT_WFC3DCherryPicking(bpy.types.Operator):
-    """Start/Stop cherry picking """
+    """Start/Pause cherry picking """
     bl_idname = "object.wfc_3d_cherry_picking"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
     def _cherry_picking(self):
         props = bpy.context.scene.wfc_props
+        prefs = bpy.context.preferences.addons[__package__].preferences
         if not props.cherry_picking_running: return None
-        if props.running_delayed_renderer: return CHERRY_PICKING_DELAY
+        if props.running_delayed_renderer: return prefs.cherry_picking_delay
         if not props.remove_target_collection:
             vl = bpy.context.view_layer
             for c in vl.layer_collection.children:
                 if c.name.startswith(props.target_collection): c.hide_viewport = True
         props.seed += 1
         generate_model(props)
-        return CHERRY_PICKING_DELAY
+        return prefs.cherry_picking_delay
 
     def execute(self, context):
         props = context.scene.wfc_props
+        prefs = bpy.context.preferences.addons[__package__].preferences
+
         if not props.cherry_picking_running:
             props.cherry_picking_running = True
             props.seed -= 1
             self._cherry_picking()
-            bpy.app.timers.register(self._cherry_picking, first_interval=CHERRY_PICKING_DELAY)
+            bpy.app.timers.register(self._cherry_picking, first_interval=prefs.cherry_picking_delay)
         else:
             props.cherry_picking_running = False
         return {'FINISHED'}

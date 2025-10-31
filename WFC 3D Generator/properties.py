@@ -218,15 +218,14 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     vis_directions : bpy.props.BoolProperty(name="",description="Show directions", default = False)
 
 
-#class WFC3DAddOnPreferences(bpy.types.AddOnPreferences):
-#    bl_idname = __package__
-#
-#    cherry_picking_delay: bpy.props.IntProperty(name="Cherry Picking Delay", description="Cherry picking delay in seconds", default=CHERRY_PICKING_DELAY,)
-#    default_empty_name: bpy.props.StringProperty(name="Default Empty Name", description="Default empty name for collection constraints", default= DEFAULT_EMPTY_NAME,)
-#
-#    def draw(self, _context):
-#        layout = self.layout
-#        layout.prop(self, "cherry_picking_delay")
-#        layout.prop(self, "default_empty_name")
-#
-properties = [ WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+class WFC3DAddonPreferences(bpy.types.AddonPreferences):
+    bl_idname = __package__
+
+    cherry_picking_delay: bpy.props.IntProperty(name="Cherry Picking Delay", description="Cherry picking delay in seconds", min=0, default=CHERRY_PICKING_DELAY,)
+
+    def draw(self, _context):
+        layout = self.layout
+        layout.prop(self, "cherry_picking_delay")
+        layout.prop(self, "default_empty_name")
+
+properties = [ WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

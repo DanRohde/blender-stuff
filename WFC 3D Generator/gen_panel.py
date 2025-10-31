@@ -10,6 +10,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         props = context.scene.wfc_props
+        prefs = bpy.context.preferences.addons[__package__].preferences
         
         layout.label(text="Source Collection")
         
@@ -54,9 +55,10 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         box.prop(props, "random_start_cell")
         row = box.row()
         row.prop(props, "seed")
-        col = row.column()
-        col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
-        col.enabled = props.collection_obj is not None
+        if prefs.cherry_picking_delay > 0:
+            col = row.column()
+            col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
+            col.enabled = props.collection_obj is not None
         layout.separator(type="LINE", factor=0.2)
 
         if props.remove_target_collection and props.target_collection != "" and props.target_collection in bpy.data.collections:
