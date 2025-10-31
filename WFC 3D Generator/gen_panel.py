@@ -52,9 +52,11 @@ class WFC3DGeneratePanel(bpy.types.Panel):
 
         box = layout.box()
         box.prop(props, "random_start_cell")
-        #box.prop(props, "random_direction")
-        box.prop(props, "seed")
-
+        row = box.row()
+        row.prop(props, "seed")
+        col = row.column()
+        col.operator("object.wfc_3d_cherry_picking", icon='PLAY', depress=props.cherry_picking_running)
+        col.enabled = props.collection_obj is not None
         layout.separator(type="LINE", factor=0.2)
 
         if props.remove_target_collection and props.target_collection != "" and props.target_collection in bpy.data.collections:

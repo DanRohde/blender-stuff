@@ -70,7 +70,7 @@ def _get_directions_geometry_nodegroup(gn):
     # Original Object to Curve -> Switch -> Join Geometry -> Output
     jg, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry',{},{'Geometry':og.inputs['Geometry']})
     nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch':ig.outputs['Hide Object']},{'Output':jg.inputs['Geometry']})
-    m2c,loc = _create_and_link(ng, loc, 'GeometryNodeMeshToCurve', {  'Mesh' : ig.outputs['Geometry']}, { 'Curve' : nsw.inputs['False']})
+    _m2c,_loc = _create_and_link(ng, loc, 'GeometryNodeMeshToCurve', {  'Mesh' : ig.outputs['Geometry']}, { 'Curve' : nsw.inputs['False']})
 
     loc = [800,200,-200,0]
     nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch': ig.outputs['Hide Bounding Box']}, {'Output':jg.inputs['Geometry']})

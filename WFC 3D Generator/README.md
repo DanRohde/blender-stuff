@@ -21,7 +21,7 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
 
 ## Statistics: Constraint Properties per Object
 * Neighbor constraints: 28
-* Grid constraints: 27
+* Grid constraints: 4
 * Region constraints: 3
 * Probability constraints: 3
 * Transformation constraints: 11
@@ -30,12 +30,12 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
 * Connector constraints: 27
 
 
-* **Sum: 120**
+* **Sum: 97**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
 * Used custom properties: face neighbors: `wfc_[left|right|front|back|top|bottom]`, edge neighbors: `wfc_en_[fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb]`,
-  corner neighbors: `wfc_cn_[fbl|fbr|ftl|ftr|bbl|bbr|btl|btr]`, `wfc_allow_neighbor_constraint_violoations`, `wfc_any`
+  corner neighbors: `wfc_cn_[fbl|fbr|ftl|ftr|bbl|bbr|btl|btr]`, `wfc_allow_neighbor_constraint_violations`, `wfc_any`
 * Allowed property values:
     * empty string - allows all neighbors
     * comma separated list of object names - permitted neighbor(s)
@@ -120,6 +120,7 @@ Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff
 
 ## Upcoming Features
 * a constraint validator ...
+* add noise to the grid (Perlin, Voronoi, ... ):  removes objects from the grid or adds objects to the grid to change the probability of an object appearing.
 * viewport constraint visualizer
 * geometry constraints: matching edges/faces
-* various grid shapes: cubic, spherical, and cylindrical
+* maybe various grid shapes: cubic, spherical, and cylindrical

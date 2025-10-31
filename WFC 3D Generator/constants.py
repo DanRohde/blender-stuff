@@ -123,3 +123,4 @@ ICON_MAP = {
 NODEGROUP_NAMES = {
     'directions' : 'WFC 3D Directions',
 }
+CHERRY_PICKING_DELAY = 3
