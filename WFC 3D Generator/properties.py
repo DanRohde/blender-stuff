@@ -101,6 +101,7 @@ class WFC3DEditPanelNeighborMultiSelItem(bpy.types.PropertyGroup):
 class WFC3DValidatorOutputItem(bpy.types.PropertyGroup):
     severity: bpy.props.IntProperty()
     logentry: bpy.props.StringProperty()
+    description: bpy.props.StringProperty()
 
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
