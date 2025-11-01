@@ -18,7 +18,7 @@ class WFC3DValidatorPanel(bpy.types.Panel):
                 layout.template_list("WFC3D_UL_ValidatorOutputList","",props,"validator_output_list",props,"validator_output_list_idx", sort_lock = True, item_dyntip_propname="description")
 
 class WFC3D_UL_ValidatorOutputList(bpy.types.UIList):
-    def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         icon_map = { 0 : 'INFO_LARGE', 1: 'WARNING_LARGE', 2: 'ERROR'}
         layout.label(text=item.logentry,icon=icon_map[item.severity])
 

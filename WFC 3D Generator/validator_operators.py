@@ -53,7 +53,7 @@ class WFC3DValidator(bpy.types.Operator):
     bl_idname = "object.wfc3d_validator"
     bl_label = "Validate Source Collection"
     bl_options = {'REGISTER', 'UNDO'}
-    def execute(self, context):
+    def execute(self, _context):
         validate_source_collection()
         return {'FINISHED'}
 
