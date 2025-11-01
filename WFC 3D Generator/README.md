@@ -52,8 +52,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 2. Find the cell with the **lowest entropy**, in this case, the cell with the smallest list of building blocks. If there is more than one, the first or a random one is selected.
 3. **Collapse** the cell: Select a random object from the list of building blocks. Probability constraints and symmetry constraints are propagated and matching cells are collapsed.
 4. **Propagate** the constraints of the randomly selected building block to the neighborhood and the entire grid. Frequency constraints and adjacency constraints are applied.
-5. Repeat steps 2-4 until all cells are collapsed.
-6. **Render** the grid in the order in which cells are collapsed.
+5. **Repeat** steps 2-4 until all cells are collapsed.
+6. **Render** the grid in the order in which cells are collapsed. Transformation constraints are applied.
 
 
 ## Limitations and Known Issues

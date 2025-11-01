@@ -98,6 +98,10 @@ class WFC3DEditPanelNeighborMultiSelItem(bpy.types.PropertyGroup):
     selected: bpy.props.BoolProperty(default=False, update=auto_save)
     value: bpy.props.StringProperty()
 
+class WFC3DValidatorOutputItem(bpy.types.PropertyGroup):
+    severity: bpy.props.IntProperty()
+    logentry: bpy.props.StringProperty()
+
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, max=100,)
@@ -105,7 +109,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     odd_offset: bpy.props.FloatVectorProperty(name="", description="Odd Offset", subtype="TRANSLATION", default=(0.0,0.0,0.0))
     use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)
     target_collection: bpy.props.StringProperty(name="", description="Target collection for 3D grid", default="WFC_Generated",)
-    render_delay: bpy.props.FloatProperty(name="Render Delay", description="Render Delay in milliseconds", default=0, min=0,)
+    render_delay: bpy.props.FloatProperty(name="Render Delay", description="Render Delay in milliseconds", default=0, min=0,step=10,precision=2)
     running_delayed_renderer : bpy.props.BoolProperty(name="Running Delayed Renderer", description="Running Delayed Renderer", default=False,)
     paused_delayed_renderer: bpy.props.BoolProperty(name="Paused Delayed Renderer", description="Paused Delayed Renderer", default=False,)
     random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False,)
@@ -217,6 +221,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
     vis_directions : bpy.props.BoolProperty(name="",description="Show directions", default = False)
 
+    validator_output_list: bpy.props.CollectionProperty(type=WFC3DValidatorOutputItem)
+    validator_output_list_idx: bpy.props.IntProperty()
 
 class WFC3DAddonPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
@@ -227,4 +233,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         layout.prop(self, "cherry_picking_delay")
         layout.prop(self, "default_empty_name")
 
-properties = [ WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
