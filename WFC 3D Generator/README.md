@@ -29,6 +29,9 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * Offers the option of defining constraints for one or more objects simultaneously (object constraints) or for the entire source collection (collection defaults).
   * Allows you to select objects in the 3D viewport or outliner with manual or automatic transfer of the selected objects
   * Auto-Safe: every constraint change is automatically saved as a custom property when enabled
+* WFC 3D Validator:
+  * Checks the source collection with building blocks to see whether transformations (scale, rotate) 
+    have been applied and whether neighbors exist in neighbor constraints.
 
 ## Constraints Overview
 * Adjacency Constraints: 
@@ -160,7 +163,6 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Allowed property value: string with a connector name
 
 ## Upcoming Features
-* a constraint validator ...
 * add noise to the grid (Perlin, Voronoi, ... ):  removes objects from the grid or adds objects to the grid to change the probability of an object appearing.
 * viewport constraint visualizer
 * geometry constraints: matching edges/faces
