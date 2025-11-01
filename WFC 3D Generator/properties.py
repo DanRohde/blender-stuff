@@ -226,6 +226,5 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
     def draw(self, _context):
         layout = self.layout
         layout.prop(self, "cherry_picking_delay")
-        layout.prop(self, "default_empty_name")
 
 properties = [ WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
