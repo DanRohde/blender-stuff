@@ -19,11 +19,11 @@ def check_collection(collection):
     warn_count, error_count = 0, 0
     for obj in collection.objects:
         if obj.scale.x != 1 or obj.scale.y != 1 or obj.scale.z != 1:
-            add_log_entry(2, f"Please apply scale to {obj.name}",f"Go to 3D Viewport, select {obj.name} and press [CTRL + A] + S")
+            add_log_entry(2, f"Please apply the scaling to {obj.name}.",f"Go to 3D Viewport, select {obj.name}, and press [CTRL + A] + S")
             error_count += 1
         euler = obj.rotation_euler
         if abs(euler.x)>0 or abs(euler.y)>0 or abs(euler.z)>0:
-            add_log_entry(2, f"Please apply rotation to {obj.name}", f"Go to 3D Viewport, select {obj.name} and press [CTRL + A] + R")
+            add_log_entry(2, f"Please apply the rotation to {obj.name}.", f"Go to 3D Viewport, select {obj.name}, and press [CTRL + A] + R")
             error_count += 1
 
         for d in DIRECTIONS:
