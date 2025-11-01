@@ -12,14 +12,14 @@ def get_icon_name(props, item):
     return icon_name
 
 def get_default_empty_object(collection: object, create: object = False) -> Any | None:
-    if DEFAULT_EMPTY_NAME in collection.objects:
-        return collection.objects[DEFAULT_EMPTY_NAME]
+    if get_default_empty_name() in collection.objects:
+        return collection.objects[get_default_empty_name()]
     else:
         for o in collection.objects:
-            if o.name.startswith(DEFAULT_EMPTY_NAME):
+            if o.name.startswith(get_default_empty_name()):
                 return o
         if not create: return None
-        obj = bpy.data.objects.new(DEFAULT_EMPTY_NAME, None)
+        obj = bpy.data.objects.new(get_default_empty_name(), None)
         collection.objects.link(obj)
         obj.empty_display_type = 'SPHERE'
         obj.location = (0, 0, 0)
@@ -66,7 +66,7 @@ def update_constraints(props, constraints):
     if props.edit_type == 'objects':
         items = get_selected_items(props.obj_list)
     elif props.edit_type == 'defaults':
-        items = [DEFAULT_EMPTY_NAME]
+        items = [get_default_empty_name()]
 
     default_object = get_default_empty_object(props.collection_obj, False)
     for item in items:
@@ -89,7 +89,7 @@ def update_connector_constraints(props):
             obj = get_object_by_name(props, item)
             obj[prop_name] = connector
     elif props.edit_type == 'defaults':
-        obj = get_object_by_name(props, DEFAULT_EMPTY_NAME)
+        obj = get_object_by_name(props, get_default_empty_name())
         obj[prop_name] = connector
 
 def update_grid_constraints(props):
@@ -117,7 +117,7 @@ def update_grid_constraints(props):
         for item in get_selected_items(props.obj_list):
             _set_grid_constraints(get_object_by_name(props, item), props)
     elif props.edit_type == 'defaults':
-        _set_grid_constraints(get_object_by_name(props, DEFAULT_EMPTY_NAME), props)
+        _set_grid_constraints(get_object_by_name(props, get_default_empty_name()), props)
 
 def update_neighbor_constraints(props):
     def _set_neighbors(obj, prop_name, neighbors):
@@ -134,7 +134,7 @@ def update_neighbor_constraints(props):
             update_constraints(props, ADD_NEIGHBOR_CONSTRAINTS)
             _set_neighbors(obj, prop_name, neighbors)
     elif props.edit_type == 'defaults':
-        obj = get_object_by_name(props, DEFAULT_EMPTY_NAME)
+        obj = get_object_by_name(props, get_default_empty_name())
         update_constraints(props, ADD_NEIGHBOR_CONSTRAINTS)
         _set_neighbors(obj, prop_name, neighbors)
 
@@ -269,3 +269,7 @@ def handle_conn_directions_update(_self, _context):
     props.auto_save = False
     props.conn_name = obj.get(props.conn_directions, '')
     props.auto_save = auto_save
+
+def get_default_empty_name():
+    prefs =  bpy.context.preferences.addons[__package__].preferences
+    return prefs.default_empty_name if prefs.default_empty_name != "" else DEFAULT_EMPTY_NAME

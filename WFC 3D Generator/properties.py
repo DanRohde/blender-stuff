@@ -1,7 +1,7 @@
 import bpy
 
 from .constants import *
-from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update
+from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, get_default_empty_name
 
 
 def handle_update_collection(_self, context):
@@ -10,7 +10,7 @@ def handle_update_collection(_self, context):
     props.obj_list.clear()
     props.neighbor_list.clear()
     for obj in props.collection_obj.objects:
-        if obj.name.startswith(DEFAULT_EMPTY_NAME): continue
+        if obj.name.startswith(get_default_empty_name()): continue
         item = props.obj_list.add()
         item.name = obj.name
         item = props.neighbor_list.add()
@@ -220,11 +220,11 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
 class WFC3DAddonPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
-
     cherry_picking_delay: bpy.props.IntProperty(name="Cherry Picking Delay", description="Cherry picking delay in seconds", min=0, default=CHERRY_PICKING_DELAY,)
-
+    default_empty_name : bpy.props.StringProperty(name="Default Empty Name", description="Default Empty Name", default=DEFAULT_EMPTY_NAME,)
     def draw(self, _context):
         layout = self.layout
         layout.prop(self, "cherry_picking_delay")
+        layout.prop(self, "default_empty_name")
 
 properties = [ WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

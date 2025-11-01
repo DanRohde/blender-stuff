@@ -1,5 +1,5 @@
 import bpy
-from .constants import DEFAULT_EMPTY_NAME
+from .helper import get_default_empty_name
 
 def _update_list(itemlist, selected_object_names):
     # caution: any item.sected change fires an event => only do necessary updates
@@ -19,7 +19,7 @@ def update_handler(_scene, _depsgraph):
             return
 
         # handle collection changes:
-        coll_objects = [obj for obj in props.collection_obj.objects if not obj.name.startswith(DEFAULT_EMPTY_NAME)]
+        coll_objects = [obj for obj in props.collection_obj.objects if not obj.name.startswith(get_default_empty_name())]
         coll_objects.extend([child for child in props.collection_obj.children if len(child.objects) > 0])
         if len(coll_objects) != len(props.obj_list):
             props.obj_list.clear()

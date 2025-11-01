@@ -2,7 +2,7 @@ import bpy
 
 from .constants import *
 from .properties import handle_update_collection
-from .helper import get_object_by_name, update_constraints, get_selected_items, get_constraints, update_connector_constraints, update_grid_constraints, update_neighbor_constraints, update_edit_form
+from .helper import *
 
 from .vis import add_directions_geometry_nodegroup, remove_directions_geometry_nodegroup
 
@@ -15,7 +15,7 @@ def _reset_constraints(props, constraints):
     if props.edit_type == 'objects':
         items = get_selected_items(props.obj_list)
     elif props.edit_type == 'defaults':
-        items = [DEFAULT_EMPTY_NAME]
+        items = [get_default_empty_name()]
 
     auto_save = props.auto_save
     props.auto_save = False

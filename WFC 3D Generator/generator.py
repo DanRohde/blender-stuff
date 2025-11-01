@@ -3,7 +3,7 @@ import random
 
 from .constraints import WFC3DConstraints
 from .grid import WFC3DGrid
-from .constants import DEFAULT_EMPTY_NAME
+from .helper import get_default_empty_name
 
 class WFC3DGenerator:
     def __init__(self, collection, props):
@@ -35,7 +35,7 @@ class WFC3DGenerator:
 
     def load_objects(self):
         """Loads objects from the collection"""
-        self.objects = [ obj for obj in self.collection.objects if not obj.name.startswith(DEFAULT_EMPTY_NAME)]
+        self.objects = [ obj for obj in self.collection.objects if not obj.name.startswith(get_default_empty_name())]
         self.objects.extend([child for child in self.collection.children if len(child.objects)>0])
         if not self.objects:
             raise ValueError("Collection is empty!")
@@ -138,7 +138,7 @@ class WFC3DGenerator:
         # pick random  objects from a collection
         if obj_name in bpy.data.collections:
             c = bpy.data.collections[obj_name]
-            original_obj = random.choice([o for o in c.objects if not o.name.startswith(DEFAULT_EMPTY_NAME)])
+            original_obj = random.choice([o for o in c.objects if not o.name.startswith(get_default_empty_name())])
         else:
             original_obj = next((obj for obj in self.objects if obj.name == obj_name), None)
 
