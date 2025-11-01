@@ -39,14 +39,14 @@ def check_collection(collection):
 def validate_source_collection():
     props = bpy.context.scene.wfc_props
     clear_log()
-    add_log_entry(0, f"Validation of  {props.collection_obj.name} started.")
+    add_log_entry(0, f"Validation of {props.collection_obj.name} started.")
     warn_count, error_count = check_collection(props.collection_obj)
     for child in props.collection_obj.children:
         w, e = check_collection(child)
         warn_count += w
         error_count += e
 
-    add_log_entry(0, f"Validation of  {props.collection_obj.name} finished.")
+    add_log_entry(0, f"Validation of {props.collection_obj.name} finished.")
     add_log_entry(0 if warn_count == 0 and error_count == 0 else 2, f"Found {warn_count} warning(s), {error_count} error(s).")
 
 class WFC3DValidator(bpy.types.Operator):
