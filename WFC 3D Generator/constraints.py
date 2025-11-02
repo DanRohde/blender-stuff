@@ -231,16 +231,16 @@ class WFC3DConstraints:
                 if nx==x and ny==y and nz==z: continue
                 mp = grid.grid[x,y,z]
                 if nx!=x and ny==y and nz==z:
-                    if self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_x"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_x"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_x"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_x"].name ]
                     if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_x"]: self.symflip[nx, ny, nz] = (-1, 1, 1)
                 if nx==x and ny!=y and nz==z:
-                    if self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_y"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_y"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_y"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_y"].name ]
                     if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_y"]: self.symflip[nx, ny, nz] = (1, -1, 1)
                 if nx==x and ny==y and nz!=z:
-                    if self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_z"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_z"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_z"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_z"].name ]
                     if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_z"]: self.symflip[nx, ny, nz] = (1, 1, -1)
                 if nx!=x and ny!=y and nz==z:
-                    if self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_xy"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_xy"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xy"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_xy"].name ]
                     if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_xy"]: self.symflip[nx, ny, nz] = (-1, -1, 1)
                 if nx != x and ny == y and nz != z:
                     if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xz"] is not None: mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xz"].name ]
@@ -276,7 +276,6 @@ class WFC3DConstraints:
                 sw = vmax
                 vmax = vmin 
                 vmin = sw
-                
             if steps > 0 and vmax-vmin >= 0:
                 v = []
                 j = vmin
@@ -328,9 +327,9 @@ class WFC3DConstraints:
                 smax = constraints["scale_max"]
                 ss = constraints["scale_steps"]
                 sm = [ _get_mapped_random_values(smin[0], smax[0], ss[0]), _get_mapped_random_values(smin[1], smax[1], ss[1]), _get_mapped_random_values(smin[2], smax[2], ss[2]) ]
-                target_obj.scale.x = sm[0]
-                target_obj.scale.y = sm[1]
-                target_obj.scale.z = sm[2]
+            target_obj.scale.x = sm[0]
+            target_obj.scale.y = sm[1]
+            target_obj.scale.z = sm[2]
             symtransmat.extend(sm)
         else:
             symtransmat.extend([1.0, 1.0, 1.0])
@@ -355,7 +354,7 @@ class WFC3DConstraints:
             symtransmat.extend([0.0, 0.0, 0.0])
 
         # transfer transformations to symmetry partners:
-        if self.sympartner[x, y, z] is not None and self.constraints[obj_name]['sym_mirror_trans']:
+        if self.constraints[obj_name]['sym_mirror_trans'] and self.sympartner[x, y, z] is not None:
             for p in self.sympartner[x, y, z]: self.symtransform[p[0], p[1], p[2]] = symtransmat
 
     def propagate_frequency_constraints(self, grid, x, y, z):
