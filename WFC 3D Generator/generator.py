@@ -137,8 +137,11 @@ class WFC3DGenerator:
 
         # pick random  objects from a collection
         if obj_name in bpy.data.collections:
-            c = bpy.data.collections[obj_name]
-            original_obj = random.choice([o for o in c.objects if not o.name.startswith(get_default_empty_name())])
+            if self.constraints:
+                original_obj = self.constraints.get_random_object_from_collection(pos, bpy.data.collections[obj_name])
+            else:
+                c = bpy.data.collections[obj_name]
+                original_obj = random.choice([o for o in c.objects if not o.name.startswith(get_default_empty_name())])
         else:
             original_obj = next((obj for obj in self.objects if obj.name == obj_name), None)
 
