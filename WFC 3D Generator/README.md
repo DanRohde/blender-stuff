@@ -70,11 +70,11 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Probability constraints: 3
 * Transformation constraints: 11
 * Frequency constraints: 11
-* Symmetry constraints: 10
+* Symmetry constraints: 18
 * Connector constraints: 27
 
 
-* **Sum: 97**
+* **Sum: 105**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -150,10 +150,12 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 
 
 ## Symmetry Constraints
-* Used custom properties: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n,wfc_sym_mirror_[x|y|z|xy|xz|yz|xyz]`
+* Used custom properties: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n,wfc_sym_mirror_axes_[x|y|z|xy|xz|yz|xyz],wfc_sym_mirror_flip_[x|y|z|xy|xz|yz|xyz],wfc_mirror_trans`
 * Allowed property values: 
     * wfc_sym_mirror: a vector of booleans or integers
-    * wfc_sym_mirror_[x|y|z|xy|xz|yz|xyz]: a pointer to an object
+    * wfc_sym_mirror_axes_[x|y|z|xy|xz|yz|xyz]: a pointer to an object
+    * wfc_sym_mirror_flip_[x|y|z|xy|xz|yz|xyz]: a boolean to allow flipping mirror partners
+    * wfc_sym_mirror_trans: a boolean to allow transfer of random transformations
     * wfc_sym_rotate_axis: a float vector
     * wfc_sym_rotate_n: an integer (number of rotations: n=4 => 90° rotation)
     

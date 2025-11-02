@@ -260,21 +260,36 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.operator("object.wfc_reset_constraints")
 
             box.label(text="Mirror Symmetry")
-            box.row().prop(props,"sym_mirror_axes")
+            newbox = box.box()
+            newbox.row().prop(props,"sym_mirror_axes")
             if props.edit_type == 'objects':
-                if props.sym_mirror_axes[0]: box.prop(props,"sym_mirror_axes_x", text="X Partner")
-                if props.sym_mirror_axes[1]: box.prop(props,"sym_mirror_axes_y", text="Y Partner")
-                if props.sym_mirror_axes[2]: box.prop(props,"sym_mirror_axes_z", text="Z Partner")
-                if props.sym_mirror_axes[0] and props.sym_mirror_axes[1]: box.prop(props,"sym_mirror_axes_xy", text="XY Partner")
-                if props.sym_mirror_axes[0] and props.sym_mirror_axes[2]: box.prop(props,"sym_mirror_axes_xz", text="XZ Partner")
-                if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: box.prop(props,"sym_mirror_axes_yz", text="YZ Partner")
-                if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: box.prop(props,"sym_mirror_axes_xyz", text="XYZ Partner")
+                if props.sym_mirror_axes[0]: newbox.prop(props,"sym_mirror_axes_x", text="X Partner")
+                if props.sym_mirror_axes[1]: newbox.prop(props,"sym_mirror_axes_y", text="Y Partner")
+                if props.sym_mirror_axes[2]: newbox.prop(props,"sym_mirror_axes_z", text="Z Partner")
+                if props.sym_mirror_axes[0] and props.sym_mirror_axes[1]: newbox.prop(props,"sym_mirror_axes_xy", text="XY Partner")
+                if props.sym_mirror_axes[0] and props.sym_mirror_axes[2]: newbox.prop(props,"sym_mirror_axes_xz", text="XZ Partner")
+                if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: newbox.prop(props,"sym_mirror_axes_yz", text="YZ Partner")
+                if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: newbox.prop(props,"sym_mirror_axes_xyz", text="XYZ Partner")
+
+            newbox.row().label(text="Flip Mirror Partners")
+            row = newbox.row()
+            if props.sym_mirror_axes[0]: row.prop(props,"sym_mirror_flip_x")
+            if props.sym_mirror_axes[1]: row.prop(props,"sym_mirror_flip_y")
+            if props.sym_mirror_axes[2]: row.prop(props,"sym_mirror_flip_z")
+            if props.sym_mirror_axes[0] and props.sym_mirror_axes[1]: row.prop(props,"sym_mirror_flip_xy")
+            if props.sym_mirror_axes[0] and props.sym_mirror_axes[2]: row.prop(props,"sym_mirror_flip_xz")
+            if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: row.prop(props,"sym_mirror_flip_yz")
+            if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: row.prop(props,"sym_mirror_flip_xyz")
+
+            newbox.row().prop(props,"sym_mirror_trans")
+
             #if props.sym_mirror_axes[0] or props.sym_mirror_axes[1] or props.sym_mirror_axes[2]:
             #    row = box.row()
             #    row.prop(props, 'sym_mirror_axes_rotate')
             box.label(text="Rotational Symmetry")
-            box.row().prop(props,"sym_rotate_axis")
-            box.prop(props,"sym_rotate_n")
+            newbox = box.box()
+            newbox.row().prop(props,"sym_rotate_axis")
+            newbox.prop(props,"sym_rotate_n")
 
             if not props.auto_save: box.operator("object.wfc_update_constraints")
            

@@ -13,9 +13,10 @@ class WFC3DConstraints:
         self.constraints = {}
         self.objects = {}
         self.auto_weights = {}
-        self.symrotation = {}
         self.sympartner = []
         self.sympartner_obj = []
+        self.symtransform = []
+        self.symflip = []
         self.grid = None
     
     def initialize_constraints(self, grid, collection, objects):
@@ -27,7 +28,8 @@ class WFC3DConstraints:
         self.grid = grid
         self.sympartner = np.empty(grid.grid_size, dtype=object)
         self.sympartner_obj = np.empty(grid.grid_size, dtype=object)
-
+        self.symtransform = np.empty(grid.grid_size, dtype=object)
+        self.symflip = np.empty(grid.grid_size, dtype=object)
         for obj in objects:
             obj_name = obj.name
             self.constraints[obj_name] = {}
@@ -218,49 +220,42 @@ class WFC3DConstraints:
         if len(grid.grid[x,y,z])==0: 
             return []
         mirror_axes = self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes"]
-        rotate_axis = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_axis"]
         rotate_n = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_n"]
+        rotate_axis = self.constraints[grid.grid[x, y, z][0]]["sym_rotate_axis"] if rotate_n and rotate_n > 0 else None
         collapsed = []
-        if rotate_axis and (not rotate_n or rotate_n <=0):
-            rotate_axis = None        
-            
+
         if mirror_axes or rotate_axis:
             points = self.mirror_and_rotate_3d((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
             for point in points:
                 nx, ny, nz = point
                 if nx==x and ny==y and nz==z: continue
                 mp = grid.grid[x,y,z]
-                if nx!=x and ny==y and nz==z and self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_x"] is not None:
-                    mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_x"].name ]
-                if nx==x and ny!=y and nz==z and self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_y"] is not None:
-                    mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_y"].name ]
-                if nx==x and ny==y and nz!=z and self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_z"] is not None:
-                    mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_z"].name ]
-                if nx!=x and ny!=y and nz==z and self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_xy"] is not None:
-                    mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_xy"].name ]
-                if nx != x and ny == y and nz != z and self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xz"] is not None:
-                    mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xz"].name ]
-                if nx == x and ny != y and nz != z and self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_yz"] is not None:
-                    mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_yz"].name ]
-                if nx != x and ny != y and nz != z and self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xyz"] is not None:
-                    mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xyz"].name ]
-                grid.grid[nx,ny,nz] = mp
-
-                #if 'sym_mirror_axes_rotate' in bpy.context.scene.wfc_props and bpy.context.scene.wfc_props['sym_mirror_axes_rotate']:
-                #if (nx,ny,nz) in self.symrotation:
-                #self.symrotation[(nx,ny,nz)] = tuple(a+b for a,b in zip(self.symrotation[(nx,ny,nz)], angles))
-                #self.symrotation[(nx, ny, nz)] = angles
+                if nx!=x and ny==y and nz==z:
+                    if self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_x"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_x"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_x"]: self.symflip[nx, ny, nz] = (-1, 1, 1)
+                if nx==x and ny!=y and nz==z:
+                    if self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_y"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_y"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_y"]: self.symflip[nx, ny, nz] = (1, -1, 1)
+                if nx==x and ny==y and nz!=z:
+                    if self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_z"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_z"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_z"]: self.symflip[nx, ny, nz] = (1, 1, -1)
+                if nx!=x and ny!=y and nz==z:
+                    if self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_xy"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_xy"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_xy"]: self.symflip[nx, ny, nz] = (-1, -1, 1)
+                if nx != x and ny == y and nz != z:
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xz"] is not None: mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xz"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_xz"]: self.symflip[nx, ny, nz] = (-1, 1, -1)
+                if nx == x and ny != y and nz != z:
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_yz"] is not None: mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_yz"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_yz"]: self.symflip[nx, ny, nz] = (1, -1, -1)
+                if nx != x and ny != y and nz != z:
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xyz"] is not None: mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xyz"].name ]
+                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_xyz"]: self.symflip[nx, ny, nz] = (-1, -1, -1)
+                grid.grid[nx, ny, nz] = mp
                 collapsed.append(grid.mark_collapsed(nx,ny,nz))
-                self.sympartner[point] = [[x,y,z]]
+                self.sympartner[nx, ny, nz] = [[x,y,z]]
         self.sympartner[x,y,z] = collapsed
         return collapsed
-
-    def apply_symmetry_rotation(self, position, obj):
-        angles = self.symrotation[position]
-        axis = ['X', 'Y', 'Z']
-        for a in range(3):
-            obj.rotation_euler.rotate_axis(axis[a], angles[a])
-
 
     def collapse(self, grid, x, y, z):
         """Collapse a grid cell with constraints"""
@@ -292,47 +287,70 @@ class WFC3DConstraints:
                 return v[random.randrange(0,len(v))]
             else:
                 return vmin + (vmax - vmin) * random.random()
-
-            
-        if obj_name not in self.constraints:
-            return 
+        x,y,z = position
+        if obj_name not in self.constraints: return
+        if self.symtransform[x, y, z] is not None:
+            mat = self.symtransform[x, y, z]
+            tmat, smat, rmat = mat[:3], mat[3:6], mat[6:]
+            for i in range(3):
+                target_obj.location[i] += tmat[i]
+            if self.symflip[x, y, z] is not None:
+                print(f"flip found for {x},{y},{z}: {self.symflip[x, y, z]}")
+                smat = [ a*b for a,b in zip(smat, self.symflip[x, y, z]) ]
+            target_obj.scale.x, target_obj.scale.y, target_obj.scale.z = smat
+            axis = ['X','Y','Z']
+            for i in range(len(axis)):
+                if rmat[i] != 0: target_obj.rotation_euler.rotate_axis(axis[i], rmat[i])
+            return
         constraints = self.constraints[obj_name]
+        symtransmat = []
         if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
             tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
             tmax = constraints.get("translation_max",PROP_DEFAULTS["translation_max"])
             ts = constraints.get("translation_steps",PROP_DEFAULTS["translation_steps"])
             loc = target_obj.location
+            newloc = [0.0, 0.0, 0.0]
             for i in range(3):
-                loc[i]+=_get_mapped_random_values(tmin[i], tmax[i], ts[i])
+                newloc[i] =_get_mapped_random_values(tmin[i], tmax[i], ts[i])
+                loc[i] += newloc[i]
             target_obj.location = loc
-        
+            symtransmat.extend(newloc)
+        else:
+            symtransmat.extend([0.0, 0.0, 0.0])
         if constraints["scale_type"] is not None and constraints["scale_type"] > 0:
-            
+            sm = [0.0, 0.0, 0.0]
             if constraints["scale_type"] == 1 and constraints["scale_uni"] is not None:
                 s = _get_mapped_random_values(constraints["scale_uni"][0], constraints["scale_uni"][1], constraints["scale_uni"][2])
-                target_obj.scale.x = s 
-                target_obj.scale.y = s
-                target_obj.scale.z = s
+                sm = [s,s,s]
             if constraints["scale_type"] == 2 and constraints["scale_min"] is not None and constraints["scale_max"] is not None and constraints["scale_steps"] is not None:
                 smin = constraints["scale_min"]
                 smax = constraints["scale_max"]
                 ss = constraints["scale_steps"]
-                
-                target_obj.scale.x = _get_mapped_random_values(smin[0], smax[0], ss[0])
-                target_obj.scale.y = _get_mapped_random_values(smin[1], smax[1], ss[1])
-                target_obj.scale.z = _get_mapped_random_values(smin[2], smax[2], ss[2])
-        
+                sm = [ _get_mapped_random_values(smin[0], smax[0], ss[0]), _get_mapped_random_values(smin[1], smax[1], ss[1]), _get_mapped_random_values(smin[2], smax[2], ss[2]) ]
+            target_obj.scale.x = sm[0]
+            target_obj.scale.y = sm[1]
+            target_obj.scale.z = sm[2]
+            symtransmat.extend(sm)
+        else:
+            symtransmat.extend([1.0, 1.0, 1.0])
+
         if constraints["rotation_min"] is not None or constraints["rotation_max"] is not None or constraints["rotation_steps"] is not None:
             rmin = constraints.get("rotation_min",PROP_DEFAULTS["rotation_min"])
             rmax = constraints.get("rotation_max",PROP_DEFAULTS["rotation_max"])
             rs = constraints.get("rotation_steps",PROP_DEFAULTS["rotation_steps"])
-            
             axis=['X','Y','Z']
+            rotmat = [0.0, 0.0, 0.0]
             for i in range(3):
                 a = _get_mapped_random_values(rmin[i], rmax[i], rs[i])
+                rotmat[i] = a
                 if a!=0: target_obj.rotation_euler.rotate_axis(axis[i], a)
-        if position in self.symrotation:
-            self.apply_symmetry_rotation(position, target_obj)
+            symtransmat.extend(rotmat)
+        else:
+            symtransmat.extend([0.0, 0.0, 0.0])
+
+        # transfer transformations to symmetry partners:
+        if self.sympartner[x, y, z] is not None and self.constraints[obj_name]['sym_mirror_trans']:
+            for p in self.sympartner[x, y, z]: self.symtransform[p[0], p[1], p[2]] = symtransmat
 
     def propagate_frequency_constraints(self, grid, x, y, z):
         if len(grid.grid[x,y,z])==0:
@@ -423,11 +441,11 @@ class WFC3DConstraints:
                 grid.grid[nx, ny, nz] = new_options
                 if len(new_options) == 1: queue.append((nx, ny, nz))
     def get_random_object_from_collection(self, pos, collection):
-        obj_name = self.grid.grid[pos][0]
-        if self.sympartner[pos] is not None:
-            if self.sympartner_obj[pos] is None:
-                self.sympartner_obj[pos] = random.choice([o for o in collection.objects if not o.name.startswith(get_default_empty_name())])
-                for p in self.sympartner[pos]:
-                    self.sympartner_obj[p] = self.sympartner_obj[pos]
-            return self.sympartner_obj[pos]
-        return random.choice([o for o in c.objects if not o.name.startswith(get_default_empty_name())])
+        x, y, z = pos
+        if self.sympartner[x, y, z] is not None:
+            if self.sympartner_obj[x, y, z] is None:
+                self.sympartner_obj[x, y, z] = random.choice([o for o in collection.objects if not o.name.startswith(get_default_empty_name())])
+                for p in self.sympartner[x, y, z]:
+                    self.sympartner_obj[p[0],p[1],p[2]] = self.sympartner_obj[x, y, z]
+            return self.sympartner_obj[x, y, z]
+        return random.choice([o for o in collection.objects if not o.name.startswith(get_default_empty_name())])
