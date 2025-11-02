@@ -289,20 +289,21 @@ class WFC3DConstraints:
                 return vmin + (vmax - vmin) * random.random()
         x,y,z = position
         if obj_name not in self.constraints: return
+        constraints = self.constraints[obj_name]
+
         if self.symtransform[x, y, z] is not None:
             mat = self.symtransform[x, y, z]
             tmat, smat, rmat = mat[:3], mat[3:6], mat[6:]
+            if self.symflip[x, y, z] is not None:
+                smat = [ a*b for a,b in zip(smat, self.symflip[x, y, z]) ]
+                if constraints['sym_mirror_flip_transl']: tmat = [ a*b for a,b in zip(tmat, self.symflip[x, y, z]) ]
             for i in range(3):
                 target_obj.location[i] += tmat[i]
-            if self.symflip[x, y, z] is not None:
-                print(f"flip found for {x},{y},{z}: {self.symflip[x, y, z]}")
-                smat = [ a*b for a,b in zip(smat, self.symflip[x, y, z]) ]
             target_obj.scale.x, target_obj.scale.y, target_obj.scale.z = smat
             axis = ['X','Y','Z']
             for i in range(len(axis)):
                 if rmat[i] != 0: target_obj.rotation_euler.rotate_axis(axis[i], rmat[i])
             return
-        constraints = self.constraints[obj_name]
         symtransmat = []
         if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
             tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])

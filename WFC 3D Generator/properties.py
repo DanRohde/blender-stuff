@@ -218,6 +218,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     sym_mirror_flip_yz: bpy.props.BoolProperty(name="yz", description="Flip object on Y & Z axes", update=auto_save)
     sym_mirror_flip_xyz: bpy.props.BoolProperty(name="xyz", description="Flip object on X & Y & Z axes", update=auto_save)
     sym_mirror_trans: bpy.props.BoolProperty(name="Transfer Random Transformations", description="Transfer random scaling, rotation and translation to mirror partners", update=auto_save)
+    sym_mirror_flip_transl: bpy.props.BoolProperty(name="Apply Flipping to Translation", description="Apply the flipping to the translation transformation", update=auto_save)
     sym_rotate_axis : bpy.props.FloatVectorProperty(name="Axis",description="Rotation Axis", default=PROP_DEFAULTS["sym_rotate_axis"], update=auto_save)
     sym_rotate_n : bpy.props.IntProperty(name="Number",description="Number of rotations", default=PROP_DEFAULTS["sym_rotate_n"], min=-1, update=auto_save)
     region_min: bpy.props.IntVectorProperty(name="min",description="Region minimum", default=PROP_DEFAULTS["region_min"],min=-1, update=auto_save)

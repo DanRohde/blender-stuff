@@ -281,11 +281,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: row.prop(props,"sym_mirror_flip_yz")
             if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: row.prop(props,"sym_mirror_flip_xyz")
 
+            flip = sum([props['sym_mirror_flip_'+k] for k in ['x','y','z','xy','xz','yz','xyz']])
+            if flip > 0: newbox.row().prop(props,"sym_mirror_flip_transl")
+
             newbox.row().prop(props,"sym_mirror_trans")
 
-            #if props.sym_mirror_axes[0] or props.sym_mirror_axes[1] or props.sym_mirror_axes[2]:
-            #    row = box.row()
-            #    row.prop(props, 'sym_mirror_axes_rotate')
             box.label(text="Rotational Symmetry")
             newbox = box.box()
             newbox.row().prop(props,"sym_rotate_axis")
