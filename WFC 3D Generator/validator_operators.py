@@ -1,7 +1,7 @@
 import bpy
 from datetime import datetime
 
-from .constants import DIRECTIONS
+from .constants import DIRECTIONS, OPPOSITE_DIRECTIONS
 
 def add_log_entry(severity, entry, description = ""):
     props = bpy.context.scene.wfc_props
@@ -18,6 +18,8 @@ def clear_log():
 
 def check_collection(collection):
     warn_count, error_count = 0, 0
+    conn_names = {}
+    conn_obj_names = {}
     for obj in collection.objects:
         if obj.scale.x != 1 or obj.scale.y != 1 or obj.scale.z != 1:
             add_log_entry(2, f"Please apply the scaling to {obj.name}.",f"Go to 3D Viewport, select {obj.name}, and press [CTRL + A] + S")
@@ -26,8 +28,18 @@ def check_collection(collection):
         if abs(euler.x)>0 or abs(euler.y)>0 or abs(euler.z)>0:
             add_log_entry(2, f"Please apply the rotation to {obj.name}.", f"Go to 3D Viewport, select {obj.name}, and press [CTRL + A] + R")
             error_count += 1
-
         for d in DIRECTIONS:
+            if 'wfc_conn_' + d.lower() in obj:
+                cp = 'wfc_conn_' + d.lower()
+                if d in conn_names:
+                    if obj[cp] not in conn_names[d]: conn_names[d].append(obj[cp])
+                    if obj[cp] in conn_obj_names[d]:
+                        conn_obj_names[d][obj[cp]].append(obj.name)
+                    else:
+                        conn_obj_names[d][obj[cp]] = [obj.name]
+                else:
+                    conn_names[d] = [obj[cp]]
+                    conn_obj_names[d] =  { obj[cp] : [ obj.name ] }
             prop_name = "wfc_" + d.lower()
             if prop_name not in obj: continue
             neighbors = obj[prop_name].split(",")
@@ -35,6 +47,12 @@ def check_collection(collection):
                 if n in collection.objects or n  in collection.children: continue
                 add_log_entry(1,f"Neighbor {n} in {d.lower()} neighbor constraint of {obj.name} does not exists in {collection.name}!")
                 warn_count += 1
+    for d in conn_names:
+        for cn in conn_names[d]:
+            if OPPOSITE_DIRECTIONS[d] in conn_names and cn in conn_names[OPPOSITE_DIRECTIONS[d]]: continue
+            add_log_entry(1, f"Connector name {cn} found in {d.lower()} connector constraint of '{', '.join(conn_obj_names[d][cn])}' has no counterpart in the opposite direction {OPPOSITE_DIRECTIONS[d].lower()}!")
+            warn_count += 1
+
     return warn_count, error_count
 
 def validate_source_collection():
@@ -48,7 +66,10 @@ def validate_source_collection():
         error_count += e
 
     add_log_entry(0, f"Validation of {props.collection_obj.name} finished.", datetime.now().strftime("%c"))
-    add_log_entry(0 if warn_count == 0 and error_count == 0 else 2, f"Found {warn_count} warning(s), {error_count} error(s).", datetime.now().strftime("%c"))
+    sev = 0
+    if warn_count > 0: sev = 1
+    if error_count > 0: sev = 2
+    add_log_entry(sev, f"Found {warn_count} warning(s), {error_count} error(s).", datetime.now().strftime("%c"))
 
 class WFC3DValidator(bpy.types.Operator):
     bl_idname = "object.wfc3d_validator"
