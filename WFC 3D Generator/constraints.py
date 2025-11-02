@@ -313,7 +313,7 @@ class WFC3DConstraints:
             newloc = [0.0, 0.0, 0.0]
             for i in range(3):
                 newloc[i] =_get_mapped_random_values(tmin[i], tmax[i], ts[i])
-                loc[i] += newloc[i]
+                loc[i] += newloc[i] if self.symflip[x, y, z] is None or not constraints['sym_mirror_flip_transl'] else newloc[i] * self.symflip[x, y, z][i]
             target_obj.location = loc
             symtransmat.extend(newloc)
         else:
@@ -328,12 +328,17 @@ class WFC3DConstraints:
                 smax = constraints["scale_max"]
                 ss = constraints["scale_steps"]
                 sm = [ _get_mapped_random_values(smin[0], smax[0], ss[0]), _get_mapped_random_values(smin[1], smax[1], ss[1]), _get_mapped_random_values(smin[2], smax[2], ss[2]) ]
-            target_obj.scale.x = sm[0]
-            target_obj.scale.y = sm[1]
-            target_obj.scale.z = sm[2]
+                target_obj.scale.x = sm[0]
+                target_obj.scale.y = sm[1]
+                target_obj.scale.z = sm[2]
             symtransmat.extend(sm)
         else:
             symtransmat.extend([1.0, 1.0, 1.0])
+
+        if self.symflip[x, y, z] is not None:
+            target_obj.scale.x *= self.symflip[x, y, z][0]
+            target_obj.scale.y *= self.symflip[x, y, z][1]
+            target_obj.scale.z *= self.symflip[x, y, z][2]
 
         if constraints["rotation_min"] is not None or constraints["rotation_max"] is not None or constraints["rotation_steps"] is not None:
             rmin = constraints.get("rotation_min",PROP_DEFAULTS["rotation_min"])
