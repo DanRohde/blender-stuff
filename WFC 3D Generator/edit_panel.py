@@ -271,7 +271,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: newbox.prop(props,"sym_mirror_axes_yz", text="YZ Partner")
                 if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: newbox.prop(props,"sym_mirror_axes_xyz", text="XYZ Partner")
 
-            newbox.row().label(text="Flip Mirror Partners")
+            newbox.row().label(text="Flip Mirror Partner")
             row = newbox.column_flow(columns=4,align=True)
             if props.sym_mirror_axes[0]: row.prop(props,"sym_mirror_flip_x")
             if props.sym_mirror_axes[1]: row.prop(props,"sym_mirror_flip_y")
