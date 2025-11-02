@@ -47,6 +47,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * Define how often the same object or any other object may occur in the immediate vicinity or on one of the 3 axes XYZ.
 * Symmetry Constraints:
   * These constraints allow mirror-symmetric and/or rotation-symmetric objects to be generated.
+  * It is possible to transfer random transformations to mirror partners, flip mirror partners accordingly,
+    or define other building blocks as mirror partners.
 * Transformation Constraints:
   * These are not really restrictions. This allows you to randomize the position, size, and rotation of building blocks.
 
@@ -153,9 +155,9 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Used custom properties: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n,wfc_sym_mirror_axes_[x|y|z|xy|xz|yz|xyz],wfc_sym_mirror_flip_[x|y|z|xy|xz|yz|xyz],wfc_mirror_trans`
 * Allowed property values: 
     * wfc_sym_mirror: a vector of booleans or integers
-    * wfc_sym_mirror_axes_[x|y|z|xy|xz|yz|xyz]: a pointer to an object
-    * wfc_sym_mirror_flip_[x|y|z|xy|xz|yz|xyz]: a boolean to allow flipping mirror partners
-    * wfc_sym_mirror_trans: a boolean to allow transfer of random transformations
+    * wfc_sym_mirror_axes_[x|y|z|xy|xz|yz|xyz]: a pointer to an mirror partner object
+    * wfc_sym_mirror_flip_[x|y|z|xy|xz|yz|xyz]: a boolean value that allows the mirror partners to be flipped
+    * wfc_sym_mirror_trans: a boolean that allows a transfer of random transformations to mirror partners
     * wfc_sym_rotate_axis: a float vector
     * wfc_sym_rotate_n: an integer (number of rotations: n=4 => 90° rotation)
     
