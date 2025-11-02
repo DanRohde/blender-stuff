@@ -49,7 +49,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * These constraints allow mirror-symmetric and/or rotation-symmetric objects to be generated.
   * It is possible to transfer random transformations to mirror partners, flip mirror partners accordingly,
     or define other building blocks as mirror partners.
-* Transformation Constraints:
+* Transformations:
   * These are not really restrictions. This allows you to randomize the position, size, and rotation of building blocks.
 
 ## How the WFC 3D Generator algorithm works
@@ -70,7 +70,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Grid constraints: 4
 * Region constraints: 3
 * Probability constraints: 3
-* Transformation constraints: 11
+* Transformation: 11
 * Frequency constraints: 11
 * Symmetry constraints: 18
 * Connector constraints: 27
@@ -134,7 +134,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
     * wfc_auto_weight: boolean enables/disables automatic weight determination
 
 
-## Transformation Constraints
+## Transformations
 * Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_translation_steps,wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps,wfc_scale_min,wfc_scale_max,wfc_scale_steps,wfc_scale_uni,wfc_scale_type`
 * Allowed property values:
     * wfc_translation_min,wfc_translation_max,wfc_translation_steps: a float vector (x,y,z)
