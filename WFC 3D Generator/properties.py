@@ -117,9 +117,9 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     random_direction: bpy.props.BoolProperty(name="Random Direction", description="Random direction", default=False,)
     seed: bpy.props.IntProperty(name="Random Seed", description="Random seed", default=0,)
     cherry_picking_running: bpy.props.BoolProperty(name="Cherry Picking Running", default=False,)
-    link_objects: bpy.props.BoolProperty(name="Link New Objects (recommended)", description="Link new objects instead of copying them.", default=True,)
-    copy_modifiers: bpy.props.BoolProperty(name="Copy Modifiers", description="Copy modifiers to linked objects.", default=False,)
-    remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove existing target collection", default=False,)
+    link_objects: bpy.props.BoolProperty(name="Link New Objects (recommended)", description="Link new objects instead of copying them.", default = True,)
+    copy_modifiers: bpy.props.BoolProperty(name="Copy Modifiers", description="Copy modifiers to linked objects.",)
+    remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove existing target collection",)
    
     obj_list: bpy.props.CollectionProperty(type=WFC3DEditPanelMultiSelItem)
     obj_list_idx: bpy.props.IntProperty()
@@ -227,20 +227,51 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     conn_directions: bpy.props.EnumProperty(name="", description="Select a direction", items=get_conn_directions, update=handle_conn_directions_update)
     conn_name: bpy.props.StringProperty(name="Connector name",description="Connector name", default="", update=auto_save)
     conn_known_names : bpy.props.EnumProperty(items=get_known_conn_names, name='Select to apply', update=take_known_conn_name)
-    auto_save: bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties", default=False)
+    auto_save: bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties")
 
     vis_directions : bpy.props.BoolProperty(name="",description="Show directions", default = False)
 
     validator_output_list: bpy.props.CollectionProperty(type=WFC3DValidatorOutputItem)
     validator_output_list_idx: bpy.props.IntProperty()
 
+    prefs_migrated : bpy.props.BoolProperty(name="Preferences migrated", default = False)
+
+def handle_update_pref(self, _context=None):
+    props = bpy.context.scene.wfc_props
+
+    props.auto_save = self.auto_save
+    props.copy_modifiers = self.copy_modifiers
+    props.remove_target_collection = self.remove_target_collection
+    props.link_objects = self.link_objects
+    props.render_delay = self.render_delay
+
+from bpy.app.handlers import persistent
+@persistent
+def handle_blend_load(fn):
+    props = bpy.context.scene.wfc_props
+    if fn== "" or not props.prefs_migrated:
+        handle_update_pref(bpy.context.preferences.addons[__package__].preferences)
+        props.prefs_migrated = True
+
 class WFC3DAddonPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
-    cherry_picking_delay: bpy.props.IntProperty(name="Cherry Picking Delay", description="Cherry picking delay in seconds", min=0, default=CHERRY_PICKING_DELAY,)
-    default_empty_name : bpy.props.StringProperty(name="Default Empty Name", description="Default Empty Name", default=DEFAULT_EMPTY_NAME,)
+    link_objects : bpy.props.BoolProperty(name="Link Objects",description="Link objects", default=True, update=handle_update_pref)
+    copy_modifiers: bpy.props.BoolProperty(name="Copy Modifiers",description="Copy modifiers", default=False, update=handle_update_pref)
+    remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove target collection", default=False, update=handle_update_pref)
+    cherry_picking_delay: bpy.props.IntProperty(name="Cherry Picking Delay", description="Cherry picking delay in seconds", min=0, default=CHERRY_PICKING_DELAY, update=handle_update_pref)
+    auto_save:   bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties", default=False, update=handle_update_pref)
+    default_empty_name : bpy.props.StringProperty(name="Default Empty Name", description="Default Empty Name", default=DEFAULT_EMPTY_NAME, update=handle_update_pref)
+    render_delay : bpy.props.FloatProperty(name="Render Delay", description="Render Delay in seconds", default=0.0, min=0.0, update=handle_update_pref)
     def draw(self, _context):
         layout = self.layout
+        layout.label(text="WFC 3D Gen")
+        layout.prop(self, "render_delay")
+        layout.prop(self, "link_objects")
+        layout.prop(self, "copy_modifiers")
+        layout.prop(self, "remove_target_collection")
         layout.prop(self, "cherry_picking_delay")
+        layout.label(text="WFC 3D Edit")
+        layout.prop(self, "auto_save")
         layout.prop(self, "default_empty_name")
 
 properties = [ WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

@@ -28,7 +28,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * All currently supported constraints can be easily assigned to objects there.
   * Offers the option of defining constraints for one or more objects simultaneously (object constraints) or for the entire source collection (collection defaults).
   * Allows you to select objects in the 3D viewport or outliner with manual or automatic transfer of the selected objects
-  * Auto-Safe: every constraint change is automatically saved as a custom property when enabled
+  * Auto-Save: every constraint change is automatically saved as a custom property when enabled
 * WFC 3D Validator:
   * Checks the source collection with building blocks to see whether transformations (scale, rotate) 
     have been applied and whether neighbors exist in neighbor constraints.
