@@ -1,5 +1,6 @@
 import bpy
 import random
+import numpy as np
 
 from .constraints import WFC3DConstraints
 from .grid import WFC3DGrid
@@ -21,6 +22,8 @@ class WFC3DGenerator:
         self.odd_offset = props.odd_offset
 
         random.seed(props.seed)
+        np.random.seed(props.seed)
+
         self.remove_target_collection = props.remove_target_collection
         self.objects = []
         self.constraints = None
