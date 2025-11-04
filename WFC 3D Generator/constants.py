@@ -62,6 +62,8 @@ PROP_DEFAULTS = {
     'conn_any':'',
     # dimension constraints:
     'dim_xyz' : (1,1,1), 'dim_alignment':(0,0,0),
+    # fixed position constraints:
+    'fixed_position_xyz' : (-1,-1,-1)
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
@@ -98,6 +100,8 @@ CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn
 ]
 
 DIMENSION_CONSTRAINTS = [ 'dim_xyz', 'dim_alignment']
+
+FIXED_POSITION_CONSTRAINTS = [ 'fixed_position_xyz' ]
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
 

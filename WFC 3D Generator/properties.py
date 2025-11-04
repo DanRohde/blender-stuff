@@ -135,6 +135,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ('frequency',"Frequency Constraints","Frequency constraints"), ("symmetry","Symmetry Constraints","Symmetry constraints"),
                ('connector','Connector Constraints','Connector constraints'),
                ('dimension','Dimension Constraints','Dimension constraints'),
+               ('fixedposition','Fixed Position Constraints','Fixed position constraints'),
                ],
         update = update_edit_form
     )
@@ -240,6 +241,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
     dim_xyz : bpy.props.IntVectorProperty(name="Dimensions",description="Dimensions of a building block.",min=1,default=PROP_DEFAULTS["dim_xyz"], update=auto_save)
     dim_alignment : bpy.props.IntVectorProperty(name="Alignment", description="Alignment", default=PROP_DEFAULTS["dim_alignment"], update=auto_save, min=-1, max=1)
+
+    fixed_position_xyz : bpy.props.IntVectorProperty(name="Fixed Position", description="Fixed Position for a building block", min=-1, default=PROP_DEFAULTS['fixed_position_xyz'], update=auto_save)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
