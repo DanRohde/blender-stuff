@@ -217,8 +217,6 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             newbox.row().prop(props,"rotation_min")
             newbox.row().prop(props,"rotation_max")
             newbox.row().prop(props,"rotation_steps")
-            #newbox.row().prop(props,"rotation_neighbor")
-            #newbox.row().prop(props,"rotation_grid")
 
             newbox = box.box()
             newrow = newbox.row()
@@ -231,6 +229,9 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 newbox.row().prop(props,"scale_max")
                 newbox.row().prop(props,"scale_steps")
 
+            newbox = box.box()
+            newrow = newbox.row()
+            newrow.prop(props,"flipping")
             if not props.auto_save: box.operator('object.wfc_update_constraints')
         if props.edit_constraints=="frequency":
             box = box.box()

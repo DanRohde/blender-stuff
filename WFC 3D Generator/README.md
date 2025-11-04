@@ -50,7 +50,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * It is possible to transfer random transformations to mirror partners, flip mirror partners accordingly,
     or define other building blocks as mirror partners.
 * Transformations:
-  * These are not really restrictions. This allows you to randomize the position, size, and rotation of building blocks.
+  * These are not really restrictions. This allows you to randomize the position, size, rotation, and flipping of building blocks.
 
 ## How the WFC 3D Generator algorithm works
 1. **Initializes** each cell of the grid with a list of permitted building blocks. Grid and region constraints are taken into account.

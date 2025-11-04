@@ -292,7 +292,7 @@ class WFC3DConstraints:
 
         if self.symtransform[x, y, z] is not None:
             mat = self.symtransform[x, y, z]
-            tmat, smat, rmat = mat[:3], mat[3:6], mat[6:]
+            tmat, smat, rmat, fmat = mat[:3], mat[3:6], mat[6:9], mat[9:]
             if self.symflip[x, y, z] is not None:
                 smat = [ a*b for a,b in zip(smat, self.symflip[x, y, z]) ]
                 if constraints['sym_mirror_flip_transl']: tmat = [ a*b for a,b in zip(tmat, self.symflip[x, y, z]) ]
@@ -302,6 +302,10 @@ class WFC3DConstraints:
             axis = ['X','Y','Z']
             for i in range(len(axis)):
                 if rmat[i] != 0: target_obj.rotation_euler.rotate_axis(axis[i], rmat[i])
+
+            target_obj.scale.x *= fmat[0]
+            target_obj.scale.x *= fmat[1]
+            target_obj.scale.x *= fmat[2]
             return
         symtransmat = []
         if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
@@ -353,6 +357,18 @@ class WFC3DConstraints:
         else:
             symtransmat.extend([0.0, 0.0, 0.0])
 
+        if constraints["flipping"] is not None and sum(constraints["flipping"]) > 0:
+            rv = np.random.rand(3)
+            fv = [1, 1, 1]
+            pv = constraints["flipping"]
+            for i in range(3):
+                if (1 - pv[i]) < rv[i]: fv[i] = -1
+            target_obj.scale.x *= fv[0]
+            target_obj.scale.y *= fv[1]
+            target_obj.scale.z *= fv[2]
+            symtransmat.extend(fv)
+        else:
+            symtransmat.extend([1.0, 1.0, 1.0])
         # transfer transformations to symmetry partners:
         if self.constraints[obj_name]['sym_mirror_trans'] and self.sympartner[x, y, z] is not None:
             for p in self.sympartner[x, y, z]: self.symtransform[p[0], p[1], p[2]] = symtransmat

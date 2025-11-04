@@ -190,6 +190,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     translation_min : bpy.props.FloatVectorProperty(name="Min", description="Translation minimum", default=PROP_DEFAULTS["translation_min"], subtype="TRANSLATION", update=auto_save)
     translation_max : bpy.props.FloatVectorProperty(name="Max", description="Translation maximum", default=PROP_DEFAULTS["translation_max"], subtype="TRANSLATION", update=auto_save)
     translation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Translation steps", default=PROP_DEFAULTS["translation_steps"], subtype="TRANSLATION", update=auto_save)
+    flipping: bpy.props.FloatVectorProperty(name="Flipping", description="Flipping on given axes", default=PROP_DEFAULTS["flipping"], update=auto_save, min=0, max=1)
     freq_grid: bpy.props.IntProperty(name="Grid",description="Grid frequency max", default=PROP_DEFAULTS["freq_grid"], min=-1, update=auto_save)
     freq_neighbor: bpy.props.IntProperty(name="Neighbor",description="Neighbor frequency max", default=PROP_DEFAULTS["freq_neighbor"], min=-1,max=26, update=auto_save)
     freq_axes: bpy.props.IntVectorProperty(name="Axes",description="Axes frequency max", default=PROP_DEFAULTS["freq_axes"], size=3, min=-1, update=auto_save)
