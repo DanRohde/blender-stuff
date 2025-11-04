@@ -134,6 +134,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ("transformation","Transformations", "Transformations"),
                ('frequency',"Frequency Constraints","Frequency constraints"), ("symmetry","Symmetry Constraints","Symmetry constraints"),
                ('connector','Connector Constraints','Connector constraints'),
+               ('dimension','Dimension Constraints','Dimension constraints'),
                ],
         update = update_edit_form
     )
@@ -236,6 +237,9 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     validator_output_list_idx: bpy.props.IntProperty()
 
     prefs_migrated : bpy.props.BoolProperty(name="Preferences migrated", default = False)
+
+    dim_xyz : bpy.props.IntVectorProperty(name="Dimensions",description="Dimensions of a building block.",min=1,default=PROP_DEFAULTS["dim_xyz"], update=auto_save)
+    dim_alignment : bpy.props.IntVectorProperty(name="Alignment", description="Alignment", default=PROP_DEFAULTS["dim_alignment"], update=auto_save, min=-1, max=1)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props

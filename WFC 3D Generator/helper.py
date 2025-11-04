@@ -56,6 +56,8 @@ def get_constraints(props):
         constraints = [props.edit_neighbor_constraint]
     elif props.edit_constraints == 'connector':
         constraints = CONNECTOR_CONSTRAINTS
+    elif props.edit_constraints == 'dimension':
+        constraints = DIMENSION_CONSTRAINTS
     return constraints
 
 def get_selected_items(obj_list):
