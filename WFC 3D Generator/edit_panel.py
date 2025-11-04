@@ -1,6 +1,7 @@
 import bpy
 from .helper import get_default_empty_object, get_icon_name
 from .properties import get_known_conn_names
+from .constants import DIRECTIONS, DIR_TRANSLATION
 
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
@@ -118,6 +119,12 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 box.row().prop(props,"allow_neighbor_constraint_violations",icon="VIEW_UNLOCKED")
 
                 if not props.auto_save: box.row().operator("object.wfc_update_neighbor_constraints")
+                if obj:
+                    newbox = box.box()
+                    newbox.label(text=f"Defined neighbor constraints:")
+                    for d in DIRECTIONS:
+                        if 'wfc_' + d.lower() not in obj: continue
+                        newbox.label(text=f"{DIR_TRANSLATION[d]}: {obj['wfc_' + d.lower()]}")
         if props.edit_constraints == "grid":
             box = box.box()
             row = box.row()
@@ -315,6 +322,13 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                     box.row().label(text="Known connector names:")
                     box.row().prop(props,"conn_known_names",text="")
                 if not props.auto_save: box.row().operator("object.wfc_update_connector_constraints")
+                if obj:
+                    newbox = box.box()
+                    newbox.label(text=f"Defined connector constraints:")
+                    cf = newbox.column_flow(columns=2,align=True)
+                    for d in DIRECTIONS:
+                        pn = 'wfc_conn_' + d.lower()
+                        if pn in obj: cf.label(text=f"{d.lower()}: {obj[pn]}")
 
 panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
