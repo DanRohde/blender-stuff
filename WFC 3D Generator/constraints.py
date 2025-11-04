@@ -304,8 +304,8 @@ class WFC3DConstraints:
                 if rmat[i] != 0: target_obj.rotation_euler.rotate_axis(axis[i], rmat[i])
 
             target_obj.scale.x *= fmat[0]
-            target_obj.scale.x *= fmat[1]
-            target_obj.scale.x *= fmat[2]
+            target_obj.scale.y *= fmat[1]
+            target_obj.scale.z *= fmat[2]
             return
         symtransmat = []
         if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
