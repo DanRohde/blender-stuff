@@ -70,13 +70,13 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Grid constraints: 4
 * Region constraints: 3
 * Probability constraints: 3
-* Transformations: 11
+* Transformations: 12
 * Frequency constraints: 11
 * Symmetry constraints: 19
 * Connector constraints: 27
 
 
-* **Sum: 106**
+* **Sum: 107**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -135,13 +135,14 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 
 
 ## Transformations
-* Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_translation_steps,wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps,wfc_scale_min,wfc_scale_max,wfc_scale_steps,wfc_scale_uni,wfc_scale_type`
+* Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_translation_steps,wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps,wfc_scale_min,wfc_scale_max,wfc_scale_steps,wfc_scale_uni,wfc_scale_type,wfc_flipping`
 * Allowed property values:
     * wfc_translation_min,wfc_translation_max,wfc_translation_steps: a float vector (x,y,z)
     * wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps: a float vector  (x,y,z)
     * wfc_scale_type: integer value: 0 - no scaling, 1 - uniform scaling, 2 - non-uniform scaling
     * wfc_scale_uni: a float vector (min,max,steps) for uniform scaling
     * wfc_scale_min,wfc_scale_max,wfc_scale_steps: a float vector (x,y,z) for non-uniform scaling
+    * wfc_flipping: a float vector with probabilities for flipping on a specific axis
     
    
 ## Frequency Constraints
