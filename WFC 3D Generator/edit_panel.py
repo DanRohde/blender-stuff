@@ -200,7 +200,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.label(text=obj_name)
             row.operator("object.wfc_reset_constraints")
             newbox = box.box()
-            newbox.label(text="Translation")
+            newbox.label(text="Translation Offset")
             newbox.row().prop(props,"translation_min")
             newbox.row().prop(props,"translation_max")
             newbox.row().prop(props,"translation_steps")

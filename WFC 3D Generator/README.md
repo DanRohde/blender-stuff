@@ -58,7 +58,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 3. **Collapse** the cell: Select a random object from the list of building blocks. Probability constraints and symmetry constraints are propagated and matching cells are collapsed.
 4. **Propagate** the constraints of the randomly selected building block to the neighborhood and the entire grid. Frequency constraints and adjacency constraints are applied.
 5. **Repeat** steps 2-4 until all cells are collapsed.
-6. **Render** the grid in the order in which cells are collapsed. Transformation constraints are applied.
+6. **Render** the grid in the order in which cells are collapsed. Transformations are applied.
 
 
 ## Limitations and Known Issues
@@ -70,7 +70,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Grid constraints: 4
 * Region constraints: 3
 * Probability constraints: 3
-* Transformation: 11
+* Transformations: 11
 * Frequency constraints: 11
 * Symmetry constraints: 19
 * Connector constraints: 27
@@ -168,6 +168,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Allowed property value: string with a connector name
 
 ## Upcoming Features
+* dimension constraints: allows a building block to cover more than one grid cell (XYZ span and alignment)
+* improved translations: adding flipping
 * add noise to the grid (Perlin, Voronoi, ... ):  removes objects from the grid or adds objects to the grid to change the probability of an object appearing.
 * viewport constraint visualizer
 * geometry constraints: matching edges/faces

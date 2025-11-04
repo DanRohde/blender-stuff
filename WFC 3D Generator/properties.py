@@ -265,13 +265,16 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
     def draw(self, _context):
         layout = self.layout
         layout.label(text="WFC 3D Gen")
-        layout.prop(self, "render_delay")
-        layout.prop(self, "link_objects")
-        layout.prop(self, "copy_modifiers")
-        layout.prop(self, "remove_target_collection")
-        layout.prop(self, "cherry_picking_delay")
+        f = layout.box().column_flow(columns=2)
+        f.prop(self, "render_delay")
+        f.prop(self, "link_objects")
+        f.prop(self, "copy_modifiers")
+        f.prop(self, "remove_target_collection")
+        f.prop(self, "cherry_picking_delay")
+
         layout.label(text="WFC 3D Edit")
-        layout.prop(self, "auto_save")
-        layout.prop(self, "default_empty_name")
+        f = layout.box().column_flow(columns=2)
+        f.prop(self, "auto_save")
+        f.prop(self, "default_empty_name")
 
 properties = [ WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
