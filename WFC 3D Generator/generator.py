@@ -94,8 +94,6 @@ class WFC3DGenerator:
             x, y, z = cell
             collapsed.extend(self.collapse(x, y, z))
 
-            print(f"collapsed: {collapsed}")
-
             self.collapsed_cells.extend(collapsed)
             if self.use_constraints:
                 for c in collapsed:

@@ -201,7 +201,7 @@ def update_edit_form(self, _context):
         props.vis_directions = is_directions_geometry_nodegroup_visible(obj)
         props.conn_directions = props.conn_directions
     else:
-        for c in SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS + REGION_CONSTRAINTS:
+        for c in GEN_CONSTRAINTS:
             cp = 'wfc_' + c.lower()
             if cp in obj:
                 try:

@@ -39,6 +39,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
     Advantage: easy to define, Disadvantage: difficult to expand
   * Connector Constraints: define a connector name for any direction that match with the connector name of possible neighbors with the same connector name in the opposite direction;
     Advantage: building blocks are easily expandable, Disadvantage: not always easy to define
+* Fixed Position Constraint:
+  * This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
 * Grid and Region Constraints:
   * Allows you to specify where an object may be located within the grid.
 * Probability Constraints:
@@ -74,9 +76,10 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Frequency constraints: 11
 * Symmetry constraints: 19
 * Connector constraints: 27
+* Fixed position constraint: 1
 
 
-* **Sum: 107**
+* **Sum: 108**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -87,6 +90,10 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
     * comma separated list of object names - permitted neighbor(s)
     * "None" - disallows all neighbors
 
+## Fixed Position Constraints
+* This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
+* Used custom property: `wfc_fixed_position`
+* Allowed property value: an integer vector
 
 ## Grid Constraints
 
