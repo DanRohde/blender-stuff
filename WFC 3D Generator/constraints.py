@@ -263,11 +263,13 @@ class WFC3DConstraints:
         if sum(self.constraints[obj_name]["dim_xyz"]) == 3: return collapsed
         d = self.constraints[obj_name]["dim_xyz"]
         coll = []
+        fac = (1,1,1) if self.symflip[x,y,z] is None else self.symflip[x,y,z]
         for nx in range(d[0]):
             for ny in range(d[1]):
                 for nz in range(d[2]):
-                    if not self.grid.within_boundaries(x+nx,y+ny,z+nz) or (((nx!=0)or(ny!=0)or(nz!=0)) and self.grid.collapsed[x+nx,y+ny,z+nz]): continue
-                    coll.append([nx+x,ny+y,nz+z])
+                    gx,gy,gz = x+nx*fac[0],y+ny*fac[1],z+nz*fac[2]
+                    if not self.grid.within_boundaries(gx,gy,gz) or (((nx!=0)or(ny!=0)or(nz!=0)) and self.grid.collapsed[gx,gy,gz]): continue
+                    coll.append([gx,gy,gz])
         if len(coll) == d[0]*d[1]*d[2]:
             for c in coll:
                 self.grid.grid[c[0], c[1], c[2]] = self.grid.grid[x, y, z]
@@ -285,8 +287,11 @@ class WFC3DConstraints:
         else:
             grid.grid[x, y, z] = []
         collapsed.append(grid.mark_collapsed(x, y, z))
-        collapsed.extend(self.apply_dimensions_constraints(x, y, z))
         collapsed.extend(self.apply_symmetry_constraints(x, y, z))
+        collapsedadd = []
+        for c in collapsed:
+            collapsedadd.extend(self.apply_dimensions_constraints(c[0], c[1], c[2]))
+        collapsed.extend(collapsedadd)
         return collapsed
 
     def apply_transformation_constraints(self, position, obj_name, target_obj):
@@ -511,14 +516,15 @@ class WFC3DConstraints:
         d = self.constraints[obj_name]["dim_xyz"]
         # align element:
         loc = new_obj.location
-
-        newloc = [ loc[0] + (d[0]-1)/2 * spacing[0], loc[1] + (d[1]-1)/2 * spacing[1], loc[2] + (d[2]-1)/2 * spacing[2] ]
+        fac = (1, 1, 1) if self.symflip[x, y, z] is None else self.symflip[x, y, z]
+        newloc = [ loc[0] + (d[0]-1)/2 * spacing[0] * fac[0], loc[1] + (d[1]-1)/2 * spacing[1] * fac[1], loc[2] + (d[2]-1)/2 * spacing[2] * fac[2] ]
         new_obj.location = newloc
+
         # prevent drawing:
         for nx in range(d[0]):
             for ny in range(d[1]):
                 for nz in range(d[2]):
-                    self.grid.grid[x+nx, y+ny, z+nz] = []
+                    self.grid.grid[x+nx*fac[0], y+ny*fac[1], z+nz*fac[2]] = []
 
     def apply_draw_constraints(self, position, spacing, obj_name, target_obj):
         self.apply_transformation_constraints(position, obj_name, target_obj)
