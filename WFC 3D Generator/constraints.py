@@ -145,8 +145,8 @@ class WFC3DConstraints:
         for c in REGION_CONSTRAINTS:
             if c not in self.constraints[name] or self.constraints[name][c] == "":
                 weight += len(self.objects)
-
-        maxlen = (len(CONNECTOR_CONSTRAINTS+GRID_CONSTRAINTS+REGION_CONSTRAINTS)+len(DIRECTIONS))*len(self.objects)
+        if sum(self.constraints[name]['dim_xyz'])==3: weight += 1
+        maxlen = (len(CONNECTOR_CONSTRAINTS+GRID_CONSTRAINTS+REGION_CONSTRAINTS)+len(DIRECTIONS)+1)*len(self.objects)
         weight = int(round(len(self.objects) * weight/ maxlen))
 
         self.auto_weights[name] = weight
@@ -257,7 +257,7 @@ class WFC3DConstraints:
                 self.sympartner[nx, ny, nz] = [[x,y,z]]
         self.sympartner[x,y,z] = collapsed
         return collapsed
-    def apply_dimension_constraints(self, x, y, z):
+    def apply_dimensions_constraints(self, x, y, z):
         collapsed = []
         obj_name = self.grid.grid[x,y,z][0]
         if sum(self.constraints[obj_name]["dim_xyz"]) == 3: return collapsed
@@ -285,7 +285,7 @@ class WFC3DConstraints:
         else:
             grid.grid[x, y, z] = []
         collapsed.append(grid.mark_collapsed(x, y, z))
-        collapsed.extend(self.apply_dimension_constraints(x, y, z))
+        collapsed.extend(self.apply_dimensions_constraints(x, y, z))
         collapsed.extend(self.apply_symmetry_constraints(x, y, z))
         return collapsed
 
@@ -505,7 +505,7 @@ class WFC3DConstraints:
         collapsed.extend(self.apply_fixed_position_constraints())
         return collapsed
 
-    def apply_dimension_draw_constraints(self, position, spacing, obj_name, new_obj):
+    def apply_dimensions_draw_constraints(self, position, spacing, obj_name, new_obj):
         x, y, z = position
         if sum(self.constraints[obj_name]["dim_xyz"])==3: return
         d = self.constraints[obj_name]["dim_xyz"]
@@ -522,4 +522,4 @@ class WFC3DConstraints:
 
     def apply_draw_constraints(self, position, spacing, obj_name, target_obj):
         self.apply_transformation_constraints(position, obj_name, target_obj)
-        self.apply_dimension_draw_constraints(position, spacing, obj_name, target_obj)
+        self.apply_dimensions_draw_constraints(position, spacing, obj_name, target_obj)

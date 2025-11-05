@@ -99,6 +99,17 @@ def check_frequency_constraints(_obj):
     warn_count = 0
 
     return warn_count
+def check_dimensions_constraints(obj):
+    if 'wfc_dim_xzy' in obj and sum(obj['wfc_dim_xzy'])==3: return 0
+    warn_count = 0
+    props = bpy.context.scene.wfc_props
+    x, y, z = obj['wfc_dim_xzy']
+
+    if props.grid_size[0] <= x or props.grid_size[1] <= y or props.grid_size[2] <= z:
+        add_log_entry(1, f"The dimensions of object {obj.name} exceed the current grid size.")
+        warn_count +=1
+
+    return warn_count
 
 def check_collection(collection):
     warn_count, error_count = 0, 0
@@ -111,6 +122,8 @@ def check_collection(collection):
         warn_count += check_region_constraints(obj)
         warn_count += check_probability_constraints(obj)
         warn_count += check_frequency_constraints(obj)
+        warn_count += check_dimensions_constraints(obj)
+
     warn_count += check_connector_names(conn_names, conn_obj_names)
     return warn_count, error_count
 

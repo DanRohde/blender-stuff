@@ -56,8 +56,8 @@ def get_constraints(props):
         constraints = [props.edit_neighbor_constraint]
     elif props.edit_constraints == 'connector':
         constraints = CONNECTOR_CONSTRAINTS
-    elif props.edit_constraints == 'dimension':
-        constraints = DIMENSION_CONSTRAINTS
+    elif props.edit_constraints == 'dimensions':
+        constraints = DIMENSIONS_CONSTRAINTS
     elif props.edit_constraints == 'fixed_position':
         constraints = FIXED_POSITION_CONSTRAINTS
     return constraints

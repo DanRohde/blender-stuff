@@ -60,8 +60,8 @@ PROP_DEFAULTS = {
     'conn_cn_fbl':'','conn_cn_fbr':'','conn_cn_ftl':'','conn_cn_ftr':'',
     'conn_cn_bbl':'','conn_cn_bbr':'','conn_cn_btl':'','conn_cn_btr':'',
     'conn_any':'',
-    # dimension constraints:
-    'dim_xyz' : (1,1,1), 'dim_alignment':(0,0,0),
+    # dimensions constraints:
+    'dim_xyz' : (1,1,1),
     # fixed position constraints:
     'fixed_position_xyz' : (-1,-1,-1)
 }
@@ -99,13 +99,13 @@ CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn
                          'conn_any',
 ]
 
-DIMENSION_CONSTRAINTS = [ 'dim_xyz', 'dim_alignment']
+DIMENSIONS_CONSTRAINTS = [ 'dim_xyz' ]
 
 FIXED_POSITION_CONSTRAINTS = [ 'fixed_position_xyz' ]
 
 
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS
-                   + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSION_CONSTRAINTS)
+                   + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS)
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
 

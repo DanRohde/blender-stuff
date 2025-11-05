@@ -134,7 +134,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ("neighbor","Neighbor Constraints","Neighbor constraints"),
                ('connector', 'Connector Constraints', 'Connector constraints'),
                None,
-               ('dimension', 'Dimension Constraints', 'Dimension constraints'),
+               ('dimensions', 'Dimensions Constraints', 'Dimensions constraints'),
                ('fixed_position', 'Fixed Position Constraints', 'Fixed position constraints'),
                ("grid","Grid Constraints","Grid constraints"),("region","Region Constraints","Region constraints"),
                ('frequency',"Frequency Constraints","Frequency constraints"), ("symmetry","Symmetry Constraints","Symmetry constraints"),
@@ -246,7 +246,6 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     prefs_migrated : bpy.props.BoolProperty(name="Preferences migrated", default = False)
 
     dim_xyz : bpy.props.IntVectorProperty(name="Dimensions",description="Dimensions of a building block.",min=1,default=PROP_DEFAULTS["dim_xyz"], update=auto_save)
-    dim_alignment : bpy.props.IntVectorProperty(name="Alignment", description="Alignment", default=PROP_DEFAULTS["dim_alignment"], update=auto_save, min=-1, max=1)
 
     fixed_position_xyz : bpy.props.IntVectorProperty(name="Fixed Position", description="Fixed Position for a building block", min=-1, default=PROP_DEFAULTS['fixed_position_xyz'], update=auto_save)
 

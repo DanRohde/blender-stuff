@@ -340,7 +340,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                     cf.label(text=f"{d.lower()}: {obj[pn]}")
                     c+=1
                 if c==0: newbox.label(text="nothing defined yet")
-        if props.edit_constraints=="dimension":
+        if props.edit_constraints=="dimensions":
             box = box.box()
             row = box.row()
             row.label(text=obj_name)
