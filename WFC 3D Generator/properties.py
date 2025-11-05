@@ -129,13 +129,18 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     )
     edit_constraints: bpy.props.EnumProperty(
         name="", description = "Select constraint type",
-        items=[("_none_","Select a Constraint Type","Select a constraint type"),("neighbor","Neighbor Constraints","Neighbor constraints"),
-               ("grid","Grid Constraints","Grid constraints"),("region","Region Constraints","Region constraints"),("probability","Probability Constraints", "Probability constraints"),
-               ("transformation","Transformations", "Transformations"),
+        items=[("_none_","Select a Constraint Type","Select a constraint type"),
+               None,
+               ("neighbor","Neighbor Constraints","Neighbor constraints"),
+               ('connector', 'Connector Constraints', 'Connector constraints'),
+               None,
+               ('dimension', 'Dimension Constraints', 'Dimension constraints'),
+               ('fixed_position', 'Fixed Position Constraints', 'Fixed position constraints'),
+               ("grid","Grid Constraints","Grid constraints"),("region","Region Constraints","Region constraints"),
                ('frequency',"Frequency Constraints","Frequency constraints"), ("symmetry","Symmetry Constraints","Symmetry constraints"),
-               ('connector','Connector Constraints','Connector constraints'),
-               ('dimension','Dimension Constraints','Dimension constraints'),
-               ('fixedposition','Fixed Position Constraints','Fixed position constraints'),
+               None,
+               ("probability", "Probability Constraints", "Probability constraints"),
+               ("transformation", "Transformations", "Transformations"),
                ],
         update = update_edit_form
     )
@@ -231,6 +236,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     conn_name: bpy.props.StringProperty(name="Connector name",description="Connector name", default="", update=auto_save)
     conn_known_names : bpy.props.EnumProperty(items=get_known_conn_names, name='Select to apply', update=take_known_conn_name)
     auto_save: bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties")
+    info_toggle: bpy.props.BoolProperty(name="Info", description="Shows constraint properties")
 
     vis_directions : bpy.props.BoolProperty(name="",description="Show directions", default = False)
 

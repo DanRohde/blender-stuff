@@ -85,17 +85,22 @@ class WFC3DGenerator:
         """Execute WFC algorithm and generate the model"""
         self.grid.initialize_grid(self.objects, self.constraints)
         self.init_target_collection()
+        collapsed = []
+        if self.use_constraints: collapsed = self.constraints.apply_pre_constraints()
         while True:
             cell = self.get_lowest_entropy_cell()
             if cell is None:
                 break    
             x, y, z = cell
-            collapsed = self.collapse(x, y, z)
+            collapsed.extend(self.collapse(x, y, z))
+
+            print(f"collapsed: {collapsed}")
 
             self.collapsed_cells.extend(collapsed)
             if self.use_constraints:
-                self.constraints.propagate(self.grid, x, y, z)
-
+                for c in collapsed:
+                    self.constraints.propagate(self.grid, c[0], c[1], c[2])
+            collapsed = []
         if self.render_delay > 0:
             bpy.context.scene.wfc_props.running_delayed_renderer = True
             bpy.app.timers.register(self.place_delayed_objects, first_interval=self.render_delay/1000)
@@ -138,7 +143,7 @@ class WFC3DGenerator:
 
         collection = self.target_collection_obj
 
-        # pick random  objects from a collection
+        # pick random objects from a collection
         if obj_name in bpy.data.collections:
             if self.constraints:
                 original_obj = self.constraints.get_random_object_from_collection(pos, bpy.data.collections[obj_name])

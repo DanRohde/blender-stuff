@@ -1,7 +1,7 @@
 import bpy
 from .helper import get_default_empty_object, get_icon_name
 from .properties import get_known_conn_names
-from .constants import DIRECTIONS, DIR_TRANSLATION
+from .constants import *
 
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
@@ -76,9 +76,12 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             obj = get_default_empty_object(props.collection_obj)
             obj_name = 'Collection Defaults'
 
-        row = box.row()
+        row = box.box().row()
+        row.operator('collection.wfc_info_toggle',icon='INFO_LARGE', depress = props.info_toggle)
         row.prop(props,"edit_constraints",icon="SETTINGS")
         row.operator('collection.wfc_auto_save_toggle',icon='IMPORT',depress = props.auto_save)
+
+        if props.info_toggle: self.draw_info_panel(layout, props, obj)
         if props.edit_constraints == "neighbor":
             box = box.box()
             row = box.row()
@@ -119,12 +122,15 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 box.row().prop(props,"allow_neighbor_constraint_violations",icon="VIEW_UNLOCKED")
 
                 if not props.auto_save: box.row().operator("object.wfc_update_neighbor_constraints")
-                if obj:
-                    newbox = box.box()
-                    newbox.label(text=f"Defined neighbor constraints:")
-                    for d in DIRECTIONS:
-                        if 'wfc_' + d.lower() not in obj: continue
-                        newbox.label(text=f"{DIR_TRANSLATION[d]}: {obj['wfc_' + d.lower()]}")
+            if obj and not props.info_toggle:
+                newbox = box.box()
+                newbox.label(text=f"Defined neighbor constraints:")
+                c=0
+                for d in DIRECTIONS:
+                    if 'wfc_' + d.lower() not in obj: continue
+                    c+=1
+                    newbox.label(text=f"{DIR_TRANSLATION[d]}: {obj['wfc_' + d.lower()]}")
+                if c==0: newbox.label(text="nothing defined yet")
         if props.edit_constraints == "grid":
             box = box.box()
             row = box.row()
@@ -323,28 +329,71 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                     box.row().label(text="Known connector names:")
                     box.row().prop(props,"conn_known_names",text="")
                 if not props.auto_save: box.row().operator("object.wfc_update_connector_constraints")
-                if obj:
-                    newbox = box.box()
-                    newbox.label(text=f"Defined connector constraints:")
-                    cf = newbox.column_flow(columns=2,align=True)
-                    for d in DIRECTIONS:
-                        pn = 'wfc_conn_' + d.lower()
-                        if pn in obj: cf.label(text=f"{d.lower()}: {obj[pn]}")
+            if obj and not props.info_toggle:
+                newbox = box.box()
+                newbox.label(text=f"Defined connector constraints:")
+                cf = newbox.column_flow(columns=2,align=True)
+                c=0
+                for d in DIRECTIONS:
+                    pn = 'wfc_conn_' + d.lower()
+                    if not pn in obj: continue
+                    cf.label(text=f"{d.lower()}: {obj[pn]}")
+                    c+=1
+                if c==0: newbox.label(text="nothing defined yet")
         if props.edit_constraints=="dimension":
             box = box.box()
             row = box.row()
             row.label(text=obj_name)
             row.operator("object.wfc_reset_constraints")
             box.row().prop(props, "dim_xyz")
-            if sum(props["dim_xyz"])>3: box.row().prop(props, "dim_alignment")
+            if sum(props.dim_xyz)>3: box.row().prop(props, "dim_alignment")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "fixedposition":
+        if props.edit_constraints == "fixed_position":
             box = box.box()
             row = box.row()
             row.label(text=obj_name)
             row.operator("object.wfc_reset_constraints")
             box.row().prop(props, "fixed_position_xyz")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
+
+
+    def draw_info_panel(self, layout, props, obj):
+        box = layout.box()
+
+        box.label(text="Constraints Information",icon="INFO_LARGE")
+
+        sbox = box.box()
+        sbox.label(text="Neighbor constraints")
+        fl = sbox.column_flow(columns=2, align=True)
+        c=0
+        for d in DIRECTIONS:
+            pn = 'wfc_'+d.lower()
+            if not pn in obj: continue
+            fl.label(text=f"{d.lower()}: {obj[pn]}")
+            c+=1
+        if c==0: sbox.label(text="nothing defined yet")
+        sbox = box.box()
+        sbox.label(text="Connector constraints")
+        fl = sbox.column_flow(columns=3, align=True)
+        c=0
+        for d in DIRECTIONS:
+            pn = 'wfc_conn_'+d.lower()
+            if not pn in obj: continue
+            fl.label(text=f"{d.lower()}: {obj[pn]}")
+            c+=1
+        if c==0: sbox.label(text="nothing defined yet")
+        sbox = box.box()
+        sbox.label(text="Grid constraints")
+        c=0
+        fl = sbox.column_flow(columns=2, align=True)
+        for g in GRID_CONSTRAINTS:
+            pn = 'wfc_' + g
+            if not pn in obj: continue
+            fl.label(text=f"{g}: {obj[pn]}")
+            c+=1
+        if c == 0: sbox.label(text="nothing defined yet")
+        sbox = box.box()
+        sbox.label(text="Region constraints")
 
 
 panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]

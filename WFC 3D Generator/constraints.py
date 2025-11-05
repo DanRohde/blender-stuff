@@ -39,7 +39,8 @@ class WFC3DConstraints:
                 if obj is None: obj = bpy.data.collections[obj_name].objects[0]
 
             # load probability, frequency, transformation, symmetry, region, neighbor
-            for p in PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
+            for p in (PROBABILITY_CONSTRAINTS + FREQUENCY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + SYMMETRY_CONSTRAINTS
+                      + REGION_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS + FREQUENCY_CONSTRAINTS + DIMENSION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS):
                 cp = "wfc_"+p
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
@@ -470,3 +471,17 @@ class WFC3DConstraints:
                     self.sympartner_obj[p[0],p[1],p[2]] = self.sympartner_obj[x, y, z]
             return self.sympartner_obj[x, y, z]
         return random.choice([o for o in collection.objects if not o.name.startswith(get_default_empty_name())])
+
+    def apply_fixed_position_constraints(self):
+        collapsed = []
+        for obj in self.objects:
+            if self.constraints[obj.name]["fixed_position_xyz"] is not None:
+                p = self.constraints[obj.name]["fixed_position_xyz"]
+                if not self.grid.within_boundaries(p[0], p[1], p[2]): continue
+                self.grid.grid[p[0], p[1], p[2]] = [ obj.name ] 
+                collapsed.extend(self.collapse(self.grid, p[0], p[1], p[2]))
+        return collapsed
+    def apply_pre_constraints(self):
+        collapsed = []
+        collapsed.extend(self.apply_fixed_position_constraints())
+        return collapsed

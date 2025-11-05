@@ -283,6 +283,17 @@ class COLLECTION_OT_WFC3DAutoSaveToggle(bpy.types.Operator):
         props.auto_save = not props.auto_save
         return {'FINISHED'}
 
+class COLLECTION_OT_WFC3DInfoToggle(bpy.types.Operator):
+    """Show/Hide Constraints Information"""
+    bl_idname = "collection.wfc_info_toggle"
+    bl_label = ""
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        props = context.scene.wfc_props
+        props.info_toggle = not props.info_toggle
+        return {'FINISHED'}
+
 class WFC3DVisDirections(bpy.types.Operator):
     """Show directions"""
     bl_idname = "object.wfc_vis_directions"
@@ -302,6 +313,7 @@ class WFC3DVisDirections(bpy.types.Operator):
         return {'FINISHED'}
 
 operators = [
+    COLLECTION_OT_WFC3DInfoToggle,
     COLLECTION_OT_WFC3DAutoSaveToggle,
     COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint,
     COLLECTION_OT_WFC3DUpdate_Connector_Constraint,

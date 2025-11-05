@@ -58,6 +58,8 @@ def get_constraints(props):
         constraints = CONNECTOR_CONSTRAINTS
     elif props.edit_constraints == 'dimension':
         constraints = DIMENSION_CONSTRAINTS
+    elif props.edit_constraints == 'fixed_position':
+        constraints = FIXED_POSITION_CONSTRAINTS
     return constraints
 
 def get_selected_items(obj_list):
