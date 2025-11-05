@@ -257,6 +257,24 @@ class WFC3DConstraints:
                 self.sympartner[nx, ny, nz] = [[x,y,z]]
         self.sympartner[x,y,z] = collapsed
         return collapsed
+
+    def _check_dimensions(self, position, dimensions):
+        if sum(dimensions) == 3: return True
+        x, y, z = position
+        fac = (1, 1, 1) if self.symflip[x, y, z] is None else self.symflip[x, y, z]
+        for nx in range(dimensions[0]):
+            for ny in range(dimensions[1]):
+                for nz in range(dimensions[2]):
+                    gx, gy, gz = x + nx * fac[0], y + ny * fac[1], z + nz * fac[2]
+                    if not self.grid.within_boundaries(gx, gy, gz) or self.grid.collapsed[gx, gy, gz]: return False
+        return True
+
+    def check_space(self, elements, position):
+        options = []
+        for element in elements:
+            if self._check_dimensions(position, self.constraints[element]["dim_xyz"]): options.append(element)
+        return options
+
     def apply_dimensions_constraints(self, x, y, z):
         collapsed = []
         obj_name = self.grid.grid[x,y,z][0]
@@ -276,12 +294,13 @@ class WFC3DConstraints:
                 collapsed.append(self.grid.mark_collapsed(c[0], c[1], c[2]))
         else:
             self.grid.grid[x, y, z] = []
+            print(f"Ooops, cell {x},{y},{z} did not collapse as expected. {obj_name} does not fit.")
         return collapsed
 
     def collapse(self, grid, x, y, z):
         """Collapse a grid cell with constraints"""
         collapsed = []
-        options = self.apply_probability_constraints(grid.grid[x,y,z])
+        options = self.apply_probability_constraints(self.check_space(grid.grid[x,y,z], (x,y,z)))
         if len(options)>0:
             grid.grid[x, y, z] = [ random.choice(options) ]
         else:

@@ -68,7 +68,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 ## Limitations and Known Issues
 * For neighbor restrictions to take effect, there must be more than one object in the source collection.
 * Region constraints don't work with all symmetry constraint variants
-* Dimensions constraints can cause empty cells
+* Dimensions constraints can cause empty cells, especially in conjunction with symmetry constraints
 
 ## Statistics: Constraint Properties per Object
 * Neighbor constraints: 28
