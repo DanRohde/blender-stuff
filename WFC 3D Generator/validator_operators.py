@@ -100,14 +100,25 @@ def check_frequency_constraints(_obj):
 
     return warn_count
 def check_dimensions_constraints(obj):
-    if 'wfc_dim_xzy' in obj and sum(obj['wfc_dim_xzy'])==3: return 0
+    if 'wfc_dim_xyz' not in obj: return 0
+    if sum(obj['wfc_dim_xyz'])==3: return 0
     warn_count = 0
     props = bpy.context.scene.wfc_props
-    x, y, z = obj['wfc_dim_xzy']
-
+    x, y, z = obj['wfc_dim_xyz']
     if props.grid_size[0] <= x or props.grid_size[1] <= y or props.grid_size[2] <= z:
         add_log_entry(1, f"The dimensions of object {obj.name} exceed the current grid size.")
         warn_count +=1
+
+    return warn_count
+def check_fixed_position_constraints(obj):
+    if 'wfc_fixed_position_xyz' not in obj: return 0
+    if sum(obj['wfc_fixed_position_xyz'])==-3: return 0
+    props = bpy.context.scene.wfc_props
+    x,y,z = obj['wfc_fixed_position_xyz']
+    warn_count = 0
+    if not (0 <= x < props.grid_size[0] and 0 <= y < props.grid_size[1] and 0 <= z < props.grid_size[2]):
+        add_log_entry(1, f"The fixed position of object {obj.name} is outside the grid.")
+        warn_count += 1
 
     return warn_count
 
@@ -123,6 +134,7 @@ def check_collection(collection):
         warn_count += check_probability_constraints(obj)
         warn_count += check_frequency_constraints(obj)
         warn_count += check_dimensions_constraints(obj)
+        warn_count += check_fixed_position_constraints(obj)
 
     warn_count += check_connector_names(conn_names, conn_obj_names)
     return warn_count, error_count
