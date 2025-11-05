@@ -215,8 +215,9 @@ class WFC3DConstraints:
     
         return generated_points
 
-    def apply_symmetry_constraints(self, grid, x, y, z):
+    def apply_symmetry_constraints(self, x, y, z):
         """Apply symmetry to collapsed cells"""
+        grid = self.grid
         if len(grid.grid[x,y,z])==0: 
             return []
         mirror_axes = self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes"]
@@ -256,6 +257,24 @@ class WFC3DConstraints:
                 self.sympartner[nx, ny, nz] = [[x,y,z]]
         self.sympartner[x,y,z] = collapsed
         return collapsed
+    def apply_dimension_constraints(self, x, y, z):
+        collapsed = []
+        obj_name = self.grid.grid[x,y,z][0]
+        if sum(self.constraints[obj_name]["dim_xyz"]) == 3: return collapsed
+        d = self.constraints[obj_name]["dim_xyz"]
+        coll = []
+        for nx in range(d[0]):
+            for ny in range(d[1]):
+                for nz in range(d[2]):
+                    if not self.grid.within_boundaries(x+nx,y+ny,z+nz) or (((nx!=0)or(ny!=0)or(nz!=0)) and self.grid.collapsed[x+nx,y+ny,z+nz]): continue
+                    coll.append([nx+x,ny+y,nz+z])
+        if len(coll) == d[0]*d[1]*d[2]:
+            for c in coll:
+                self.grid.grid[c[0], c[1], c[2]] = self.grid.grid[x, y, z]
+                collapsed.append(self.grid.mark_collapsed(c[0], c[1], c[2]))
+        else:
+            self.grid.grid[x, y, z] = []
+        return collapsed
 
     def collapse(self, grid, x, y, z):
         """Collapse a grid cell with constraints"""
@@ -266,7 +285,8 @@ class WFC3DConstraints:
         else:
             grid.grid[x, y, z] = []
         collapsed.append(grid.mark_collapsed(x, y, z))
-        collapsed.extend(self.apply_symmetry_constraints(grid, x, y, z))
+        collapsed.extend(self.apply_dimension_constraints(x, y, z))
+        collapsed.extend(self.apply_symmetry_constraints(x, y, z))
         return collapsed
 
     def apply_transformation_constraints(self, position, obj_name, target_obj):
@@ -484,3 +504,22 @@ class WFC3DConstraints:
         collapsed = []
         collapsed.extend(self.apply_fixed_position_constraints())
         return collapsed
+
+    def apply_dimension_draw_constraints(self, position, spacing, obj_name, new_obj):
+        x, y, z = position
+        if sum(self.constraints[obj_name]["dim_xyz"])==3: return
+        d = self.constraints[obj_name]["dim_xyz"]
+        # align element:
+        loc = new_obj.location
+
+        newloc = [ loc[0] + (d[0]-1)/2 * spacing[0], loc[1] + (d[1]-1)/2 * spacing[1], loc[2] + (d[2]-1)/2 * spacing[2] ]
+        new_obj.location = newloc
+        # prevent drawing:
+        for nx in range(d[0]):
+            for ny in range(d[1]):
+                for nz in range(d[2]):
+                    self.grid.grid[x+nx, y+ny, z+nz] = []
+
+    def apply_draw_constraints(self, position, spacing, obj_name, target_obj):
+        self.apply_transformation_constraints(position, obj_name, target_obj)
+        self.apply_dimension_draw_constraints(position, spacing, obj_name, target_obj)

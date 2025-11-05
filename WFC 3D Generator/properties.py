@@ -115,7 +115,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     paused_delayed_renderer: bpy.props.BoolProperty(name="Paused Delayed Renderer", description="Paused Delayed Renderer", default=False,)
     random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False,)
     random_direction: bpy.props.BoolProperty(name="Random Direction", description="Random direction", default=False,)
-    seed: bpy.props.IntProperty(name="Random Seed", description="Random seed", default=0,)
+    seed: bpy.props.IntProperty(name="Random Seed", description="Random seed", default=0, min=0)
     cherry_picking_running: bpy.props.BoolProperty(name="Cherry Picking Running", default=False,)
     link_objects: bpy.props.BoolProperty(name="Link New Objects (recommended)", description="Link new objects instead of copying them.", default = True,)
     copy_modifiers: bpy.props.BoolProperty(name="Copy Modifiers", description="Copy modifiers to linked objects.",)

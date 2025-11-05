@@ -178,6 +178,6 @@ class WFC3DGenerator:
             new_obj.location = tuple(newloc)
 
             if self.use_constraints:
-                self.constraints.apply_transformation_constraints((x, y, z), obj_name, new_obj)
+                self.constraints.apply_draw_constraints((x, y, z), self.spacing, obj_name, new_obj)
 
             collection.objects.link(new_obj)

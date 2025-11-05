@@ -346,7 +346,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.label(text=obj_name)
             row.operator("object.wfc_reset_constraints")
             box.row().prop(props, "dim_xyz")
-            if sum(props.dim_xyz)>3: box.row().prop(props, "dim_alignment")
+            # if sum(props.dim_xyz)>3: box.row().prop(props, "dim_alignment")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "fixed_position":
             box = box.box()
