@@ -39,8 +39,10 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
     Advantage: easy to define, Disadvantage: difficult to expand
   * Connector Constraints: define a connector name for any direction that match with the connector name of possible neighbors with the same connector name in the opposite direction;
     Advantage: building blocks are easily expandable, Disadvantage: not always easy to define
-* Fixed Position Constraint:
+* Fixed Position Constraints:
   * This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
+* Dimensions Constraints:
+  * This enables building blocks that are larger than a cell.
 * Grid and Region Constraints:
   * Allows you to specify where an object may be located within the grid.
 * Probability Constraints:
@@ -66,6 +68,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 ## Limitations and Known Issues
 * For neighbor restrictions to take effect, there must be more than one object in the source collection.
 * Region constraints don't work with all symmetry constraint variants
+* Dimensions constraints can cause empty cells
 
 ## Statistics: Constraint Properties per Object
 * Neighbor constraints: 28
@@ -76,10 +79,11 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Frequency constraints: 11
 * Symmetry constraints: 19
 * Connector constraints: 27
-* Fixed position constraint: 1
+* Fixed position constraints: 1
+* Dimensions constraints: 1
 
 
-* **Sum: 108**
+* **Sum: 109**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -93,6 +97,11 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 ## Fixed Position Constraints
 * This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
 * Used custom property: `wfc_fixed_position`
+* Allowed property value: an integer vector
+
+## Dimensions Constraints:
+* This enables building blocks that are larger than a cell.
+* Used custom property: `wfc_dim_xyz`
 * Allowed property value: an integer vector
 
 ## Grid Constraints
@@ -176,8 +185,6 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Allowed property value: string with a connector name
 
 ## Upcoming Features
-* dimension constraints: allows a building block to cover more than one grid cell (XYZ span and alignment)
-* improved translations: adding flipping
 * add noise to the grid (Perlin, Voronoi, ... ):  removes objects from the grid or adds objects to the grid to change the probability of an object appearing.
 * viewport constraint visualizer
 * geometry constraints: matching edges/faces
