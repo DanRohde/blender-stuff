@@ -285,6 +285,8 @@ class WFC3DConstraints:
 
     def apply_dimensions_constraints(self, x, y, z):
         collapsed = []
+        if not self.grid.within_boundaries(x,y,z): return collapsed
+        if len(self.grid.grid[x,y,z]) == 0: return collapsed
         obj_name = self.grid.grid[x,y,z][0]
         if sum(self.constraints[obj_name]["dim_xyz"]) == 3: return collapsed
         d = self.constraints[obj_name]["dim_xyz"]
