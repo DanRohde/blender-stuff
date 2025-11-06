@@ -215,6 +215,34 @@ class WFC3DConstraints:
     
         return generated_points
 
+    def get_mirror_partner_and_flipping(self, element, location, point):
+        x, y, z = location
+        nx, ny, nz = point
+        mp = element
+        flipping = (1,1,1)
+        if nx == x and ny == y and nz == z: return mp, flipping
+        if nx != x and ny == y and nz == z:
+            if self.constraints[element]["sym_mirror_axes_x"] is not None: mp = self.constraints[element]["sym_mirror_axes_x"].name
+            if self.constraints[element]["sym_mirror_flip_x"]: flipping = (-1, 1, 1)
+        elif nx == x and ny != y and nz == z:
+            if self.constraints[element]["sym_mirror_axes_y"] is not None: mp = self.constraints[element]["sym_mirror_axes_y"].name
+            if self.constraints[element]["sym_mirror_flip_y"]: flipping = (1, -1, 1)
+        elif nx == x and ny == y and nz != z:
+            if self.constraints[element]["sym_mirror_axes_z"] is not None: mp = self.constraints[element]["sym_mirror_axes_z"].name
+            if self.constraints[element]["sym_mirror_flip_z"]: flipping = (1, 1, -1)
+        elif nx != x and ny != y and nz == z:
+            if self.constraints[element]["sym_mirror_axes_xy"] is not None: mp = self.constraints[element]["sym_mirror_axes_xy"].name
+            if self.constraints[element]["sym_mirror_flip_xy"]: flipping = (-1, -1, 1)
+        elif nx != x and ny == y and nz != z:
+            if self.constraints[element]["sym_mirror_axes_xz"] is not None: mp = self.constraints[element]["sym_mirror_axes_xz"].name
+            if self.constraints[element]["sym_mirror_flip_xz"]: flipping = (-1, 1, -1)
+        elif nx == x and ny != y and nz != z:
+            if self.constraints[element]["sym_mirror_axes_yz"] is not None: mp = self.constraints[element]["sym_mirror_axes_yz"].name
+            if self.constraints[element]["sym_mirror_flip_yz"]: flipping = (1, -1, -1)
+        elif nx != x and ny != y and nz != z:
+            if self.constraints[element]["sym_mirror_axes_xyz"] is not None: mp = self.constraints[element]["sym_mirror_axes_xyz"].name
+            if self.constraints[element]["sym_mirror_flip_xyz"]: flipping = (-1, -1, -1)
+        return mp, flipping
     def apply_symmetry_constraints(self, x, y, z):
         """Apply symmetry to collapsed cells"""
         grid = self.grid
@@ -229,50 +257,30 @@ class WFC3DConstraints:
             points = self.mirror_and_rotate_3d((x,y,z), grid.grid_size, mirror_axes, rotate_axis, rotate_n)
             for point in points:
                 nx, ny, nz = point
-                if nx==x and ny==y and nz==z: continue
-                mp = grid.grid[x,y,z]
-                if nx!=x and ny==y and nz==z:
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_x"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_x"].name ]
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_x"]: self.symflip[nx, ny, nz] = (-1, 1, 1)
-                if nx==x and ny!=y and nz==z:
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_y"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_y"].name ]
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_y"]: self.symflip[nx, ny, nz] = (1, -1, 1)
-                if nx==x and ny==y and nz!=z:
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_z"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_z"].name ]
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_z"]: self.symflip[nx, ny, nz] = (1, 1, -1)
-                if nx!=x and ny!=y and nz==z:
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xy"] is not None: mp = [ self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes_xy"].name ]
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_xy"]: self.symflip[nx, ny, nz] = (-1, -1, 1)
-                if nx != x and ny == y and nz != z:
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xz"] is not None: mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xz"].name ]
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_xz"]: self.symflip[nx, ny, nz] = (-1, 1, -1)
-                if nx == x and ny != y and nz != z:
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_yz"] is not None: mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_yz"].name ]
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_yz"]: self.symflip[nx, ny, nz] = (1, -1, -1)
-                if nx != x and ny != y and nz != z:
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xyz"] is not None: mp = [ self.constraints[grid.grid[x, y, z][0]]["sym_mirror_axes_xyz"].name ]
-                    if self.constraints[grid.grid[x, y, z][0]]["sym_mirror_flip_xyz"]: self.symflip[nx, ny, nz] = (-1, -1, -1)
-                grid.grid[nx, ny, nz] = mp
+                if x==nx and y==ny and z==nz: continue
+                mp, flipping = self.get_mirror_partner_and_flipping(grid.grid[x,y,z][0], (x,y,z), point)
+                grid.grid[nx, ny, nz] = [ mp ]
                 collapsed.append(grid.mark_collapsed(nx,ny,nz))
                 self.sympartner[nx, ny, nz] = [[x,y,z]]
+                self.symflip[nx, ny, nz] = flipping
         self.sympartner[x,y,z] = collapsed
         return collapsed
 
-    def _check_dimensions(self, position, dimensions):
+    def _check_dimensions(self, position, dimensions, flipping):
         if sum(dimensions) == 3: return True
         x, y, z = position
-        fac = (1, 1, 1) if self.symflip[x, y, z] is None else self.symflip[x, y, z]
         for nx in range(dimensions[0]):
             for ny in range(dimensions[1]):
                 for nz in range(dimensions[2]):
-                    gx, gy, gz = x + nx * fac[0], y + ny * fac[1], z + nz * fac[2]
+                    gx, gy, gz = x + nx * flipping[0], y + ny * flipping[1], z + nz * flipping[2]
                     if not self.grid.within_boundaries(gx, gy, gz) or self.grid.collapsed[gx, gy, gz]: return False
         return True
 
     def check_space(self, elements, position):
+        x, y, z = position
         options = []
         for element in elements:
-            if self._check_dimensions(position, self.constraints[element]["dim_xyz"]): options.append(element)
+            if self._check_dimensions(position, self.constraints[element]["dim_xyz"], (1,1,1) if not self.symflip[x,y,z] else self.symflip[x,y,z]): options.append(element)
         return options
 
     def apply_dimensions_constraints(self, x, y, z):

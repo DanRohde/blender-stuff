@@ -99,7 +99,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Used custom property: `wfc_fixed_position`
 * Allowed property value: an integer vector
 
-## Dimensions Constraints:
+## Dimensions Constraints
 * This enables building blocks that are larger than a cell.
 * Used custom property: `wfc_dim_xyz`
 * Allowed property value: an integer vector

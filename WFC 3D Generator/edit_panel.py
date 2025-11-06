@@ -357,44 +357,79 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             if not props.auto_save: box.operator("object.wfc_update_constraints")
 
 
+    def _draw_labels(self, layout, labels):
+        for label in labels:
+            layout.label(text=label)
+
     def draw_info_panel(self, layout, props, obj):
         box = layout.box()
 
         box.label(text="Constraints Information",icon="INFO_LARGE")
 
-        sbox = box.box()
-        sbox.label(text="Neighbor constraints")
-        fl = sbox.column_flow(columns=2, align=True)
-        c=0
+        labels = []
         for d in DIRECTIONS:
             pn = 'wfc_'+d.lower()
             if not pn in obj: continue
-            fl.label(text=f"{d.lower()}: {obj[pn]}")
-            c+=1
-        if c==0: sbox.label(text="nothing defined yet")
-        sbox = box.box()
-        sbox.label(text="Connector constraints")
-        fl = sbox.column_flow(columns=3, align=True)
-        c=0
+            labels.append(f"{d.lower()}: {obj[pn]}")
+        if len(labels) > 0:
+            sbox = box.box()
+            sbox.label(text="Neighbor constraints")
+            self._draw_labels(sbox.column_flow(columns=2, align=True), labels)
+
+        labels = []
         for d in DIRECTIONS:
             pn = 'wfc_conn_'+d.lower()
             if not pn in obj: continue
-            fl.label(text=f"{d.lower()}: {obj[pn]}")
-            c+=1
-        if c==0: sbox.label(text="nothing defined yet")
-        sbox = box.box()
-        sbox.label(text="Grid constraints")
-        c=0
-        fl = sbox.column_flow(columns=2, align=True)
+            labels.append(f"{d.lower()}: {obj[pn]}")
+        if len(labels) > 0:
+            sbox = box.box()
+            sbox.label(text="Connector constraints: ")
+            self._draw_labels(sbox.column_flow(columns=3, align=True), labels)
+
+        if sum(props.dim_xyz) > 3:
+            sbox = box.box().row()
+            sbox.label(text="Dimension constraints:")
+            sbox.label(text=f"x: {props.dim_xyz[0]}, y: {props.dim_xyz[1]}, z: {props.dim_xyz[2]}")
+
+        if sum(props.fixed_position_xyz) > -3:
+            sbox = box.box().row()
+            sbox.label(text="Fixed position constraints:")
+            sbox.label(text=f"x: {props.fixed_position_xyz[0]}, y: {props.fixed_position_xyz[1]}, z: {props.fixed_position_xyz[2]}")
+
+        labels = []
         for g in GRID_CONSTRAINTS:
             pn = 'wfc_' + g
             if not pn in obj: continue
-            fl.label(text=f"{g}: {obj[pn]}")
-            c+=1
-        if c == 0: sbox.label(text="nothing defined yet")
-        sbox = box.box()
-        sbox.label(text="Region constraints")
+            labels.append(f"{g}: {obj[pn]}")
+        if len(labels) > 0:
+            sbox = box.box()
+            sbox.label(text="Grid constraints")
+            self._draw_labels(sbox.column_flow(columns=2, align=True), labels)
 
+        if sum(props.region_min) > -3 or sum(props.region_max) > -3 or sum(props.region_quadrant) < 8:
+            sbox = box.box()
+            sbox.label(text="Region constraints")
+            if sum(props.region_min) > -3 or sum(props.region_max) > -3:
+                row = sbox.row()
+                row.label(text="min:")
+                row.label(text=f"x: {props.region_min[0]}, y: {props.region_min[1]}, z: {props.region_min[2]}")
+                row = sbox.row()
+                row.label(text="max:")
+                row.label(text=f"x: {props.region_max[0]}, y: {props.region_max[1]}, z: {props.region_max[2]}")
+            row = sbox.row()
+            if sum(props.region_quadrant) < 8:
+                row.label(text="Quadrants:")
+                label = ""
+                for i in range(8): label += f"{1 if props.region_quadrant[i] else 0} "
+                row.label(text=label)
+
+        if props.weight>0 or props.probability<1 or props.auto_weight:
+            box = box.box()
+            box.label(text="Probability constraints")
+            fl = box.column_flow(columns=2, align=True)
+            if props.weight > 0: fl.label(text=f"Weight: {props.weight}")
+            if props.probability < 1: fl.label(text=f"Probability: {props.probability:.2}")
+            if props.auto_weight: fl.label(text=f"Automatic weight: {props.auto_weight}")
 
 panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
