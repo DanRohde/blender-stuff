@@ -389,12 +389,12 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         if sum(props.dim_xyz) > 3:
             sbox = box.box().row()
             sbox.label(text="Dimension constraints:")
-            sbox.label(text=f"x: {props.dim_xyz[0]}, y: {props.dim_xyz[1]}, z: {props.dim_xyz[2]}")
+            sbox.label(text=f"{props.dim_xyz[0]}      {props.dim_xyz[1]}      {props.dim_xyz[2]}")
 
         if sum(props.fixed_position_xyz) > -3:
             sbox = box.box().row()
             sbox.label(text="Fixed position constraints:")
-            sbox.label(text=f"x: {props.fixed_position_xyz[0]}, y: {props.fixed_position_xyz[1]}, z: {props.fixed_position_xyz[2]}")
+            sbox.label(text=f"{props.fixed_position_xyz[0]}      {props.fixed_position_xyz[1]}      {props.fixed_position_xyz[2]}")
 
         labels = []
         for g in GRID_CONSTRAINTS:
@@ -412,10 +412,10 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             if sum(props.region_min) > -3 or sum(props.region_max) > -3:
                 row = sbox.row()
                 row.label(text="min:")
-                row.label(text=f"x: {props.region_min[0]}, y: {props.region_min[1]}, z: {props.region_min[2]}")
+                row.label(text=f"{props.region_min[0]}      {props.region_min[1]}      {props.region_min[2]}")
                 row = sbox.row()
                 row.label(text="max:")
-                row.label(text=f"x: {props.region_max[0]}, y: {props.region_max[1]}, z: {props.region_max[2]}")
+                row.label(text=f"{props.region_max[0]}      {props.region_max[1]}      {props.region_max[2]}")
             row = sbox.row()
             if sum(props.region_quadrant) < 8:
                 row.label(text="Quadrants:")
