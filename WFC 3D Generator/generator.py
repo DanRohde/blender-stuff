@@ -22,7 +22,7 @@ class WFC3DGenerator:
         self.odd_offset = props.odd_offset
 
         random.seed(props.seed)
-        np.random.seed(props.seed)
+        np.random.seed(np.abs(props.seed))
 
         self.remove_target_collection = props.remove_target_collection
         self.objects = []
