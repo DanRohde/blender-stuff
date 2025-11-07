@@ -1,5 +1,5 @@
 import bpy
-from .helper import get_default_empty_object, get_icon_name
+from .helper import get_default_empty_object, get_icon_name, cmpall
 from .properties import get_known_conn_names
 from .constants import *
 
@@ -371,10 +371,12 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             pn = 'wfc_'+d.lower()
             if not pn in obj: continue
             labels.append(f"{d.lower()}: {obj[pn]}")
-        if len(labels) > 0:
+        if len(labels) > 0 or props.allow_neighbor_constraint_violations:
             sbox = box.box()
             sbox.label(text="Neighbor constraints")
-            self._draw_labels(sbox.column_flow(columns=2, align=True), labels)
+            if len(labels) > 0: self._draw_labels(sbox.column_flow(columns=2, align=True), labels)
+            if props.allow_neighbor_constraint_violations: sbox.prop(props, "allow_neighbor_constraint_violations", icon="VIEW_UNLOCKED")
+            sbox.enabled = False
 
         labels = []
         for d in DIRECTIONS:
@@ -387,14 +389,14 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             self._draw_labels(sbox.column_flow(columns=3, align=True), labels)
 
         if sum(props.dim_xyz) > 3:
-            sbox = box.box().row()
-            sbox.label(text="Dimension constraints:")
-            sbox.label(text=f"{props.dim_xyz[0]}      {props.dim_xyz[1]}      {props.dim_xyz[2]}")
+            row = box.box().row()
+            row.enabled = False
+            row.prop(props,"dim_xyz")
 
         if sum(props.fixed_position_xyz) > -3:
-            sbox = box.box().row()
-            sbox.label(text="Fixed position constraints:")
-            sbox.label(text=f"{props.fixed_position_xyz[0]}      {props.fixed_position_xyz[1]}      {props.fixed_position_xyz[2]}")
+            row = box.box().row()
+            row.enabled = False
+            row.prop(props,"fixed_position_xyz")
 
         labels = []
         for g in GRID_CONSTRAINTS:
@@ -411,25 +413,35 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             sbox.label(text="Region constraints")
             if sum(props.region_min) > -3 or sum(props.region_max) > -3:
                 row = sbox.row()
-                row.label(text="min:")
-                row.label(text=f"{props.region_min[0]}      {props.region_min[1]}      {props.region_min[2]}")
+                row.enabled = False
+                row.prop(props,"region_min")
                 row = sbox.row()
-                row.label(text="max:")
-                row.label(text=f"{props.region_max[0]}      {props.region_max[1]}      {props.region_max[2]}")
+                row.enabled = False
+                row.prop(props,"region_max")
             row = sbox.row()
             if sum(props.region_quadrant) < 8:
-                row.label(text="Quadrants:")
-                label = ""
-                for i in range(8): label += f"{1 if props.region_quadrant[i] else 0} "
-                row.label(text=label)
+                row.prop(props,"region_quadrant")
+                row.enabled = False
 
-        if props.weight>0 or props.probability<1 or props.auto_weight:
-            box = box.box()
-            box.label(text="Probability constraints")
-            fl = box.column_flow(columns=2, align=True)
-            if props.weight > 0: fl.label(text=f"Weight: {props.weight}")
-            if props.probability < 1: fl.label(text=f"Probability: {props.probability:.2}")
-            if props.auto_weight: fl.label(text=f"Automatic weight: {props.auto_weight}")
+        self._draw_properties(props, box, "Frequency constraints", FREQUENCY_CONSTRAINTS)
+        self._draw_properties(props, box, "Symmetry constraints", SYMMETRY_CONSTRAINTS)
+        self._draw_properties(props, box, "Transformations", TRANSFORMATION_CONSTRAINTS)
+        self._draw_properties(props, box, "Probability constraints", PROBABILITY_CONSTRAINTS)
+
+
+    def _draw_properties(self, props, layout, name, constraints):
+        f = []
+        for p in constraints:
+            if p not in props: continue
+            if cmpall(props[p], PROP_DEFAULTS[p]): continue
+            f.append(p)
+        if len(f) == 0: return
+        box = layout.box()
+        box.label(text=name)
+        for p in f:
+            row = box.row()
+            row.enabled = False
+            row.prop(props, p)
 
 panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 

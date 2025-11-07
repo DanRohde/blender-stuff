@@ -36,7 +36,6 @@ PROP_DEFAULTS = {
     #transformation constraints:
     'translation_min' : (0,0,0), 'translation_max' : (0,0,0), 'translation_steps' : (0,0,0),
     'rotation_min' : (0,0,0), 'rotation_max': (0,0,0), 'rotation_steps' : (0,0,0),
-    'rotation_grid' : (False,False,False), 'rotation_neighbor' : (False,False, False),
     'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0), 
     'scale_type' : 0, 'scale_uni': (1,1,0), 'flipping' : (0, 0, 0),
     # frequency constraints:
@@ -72,19 +71,20 @@ SYMMETRY_CONSTRAINTS = [ 'sym_mirror_axes','sym_rotate_axis', 'sym_rotate_n', 's
                          'sym_mirror_axes_x', 'sym_mirror_axes_y', 'sym_mirror_axes_z', 'sym_mirror_axes_xy',
                          'sym_mirror_axes_xz' , 'sym_mirror_axes_yz', 'sym_mirror_axes_xyz',
                          'sym_mirror_flip_x', 'sym_mirror_flip_y', 'sym_mirror_flip_z', 'sym_mirror_flip_xy',
-                         'sym_mirror_flip_xz', 'sym_mirror_flip_yz', 'sym_mirror_flip_xyz',
-                         'sym_mirror_trans', 'sym_mirror_flip_transl',
+                         'sym_mirror_flip_xz', 'sym_mirror_flip_yz', 'sym_mirror_flip_xyz', 'sym_mirror_flip_transl',
+                         'sym_mirror_trans',
                          ]
-TRANSFORMATION_CONSTRAINTS = ['scale_min','scale_max','scale_steps','scale_type', 'scale_uni',
-                                  'rotation_min','rotation_max','rotation_steps',
-                                  'translation_min','translation_max','translation_steps', 'flipping']
+TRANSFORMATION_CONSTRAINTS = [ 'translation_min', 'translation_max', 'translation_steps',
+                               'rotation_min', 'rotation_max', 'rotation_steps',
+                               'scale_type', 'scale_min', 'scale_max', 'scale_steps', 'scale_uni',
+                               'flipping']
 
-FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_neighbor', 'freq_axes', 'freq_any_neighbor', 'freq_any_axes', 
-                         'freq_neighbor_face', 'freq_neighbor_edge','freq_neighbor_corner',
-                         'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner',
+FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_neighbor', 'freq_neighbor_face', 'freq_neighbor_edge',
+                          'freq_neighbor_corner', 'freq_axes', 'freq_any_neighbor',
+                          'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner', 'freq_any_axes',
 ]
 
-PROBABILITY_CONSTRAINTS = [ 'weight', 'probability', 'auto_weight']
+PROBABILITY_CONSTRAINTS = [ 'probability', 'weight', 'auto_weight']
 
 GRID_CONSTRAINTS = [ 'faces', 'corners', 'edges', 'inside']
 

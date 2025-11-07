@@ -277,3 +277,11 @@ def handle_conn_directions_update(_self, _context):
 def get_default_empty_name():
     prefs =  bpy.context.preferences.addons[__package__].preferences
     return prefs.default_empty_name if prefs.default_empty_name != "" else DEFAULT_EMPTY_NAME
+
+def cmpall(a, b):
+    try:
+        iter(a)
+        iter(b)
+        return all(x == y for x, y in zip(a, b))
+    except TypeError:
+        return a == b
