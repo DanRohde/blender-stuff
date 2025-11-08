@@ -2,9 +2,8 @@
 # To make this add-on installable, create an extension with it:
 # https://docs.blender.org/manual/en/latest/advanced/extensions/getting_started.html
 
-from bpy import types, ops, data, utils, context, props
+import bpy
 import bmesh
-from bpy.types import Operator
 
 
 import math
@@ -42,7 +41,7 @@ def create_sierpinski_triangle(level, size):
 
     triangles = subdivide_triangle(vertices, level)
 
-    mesh = data.meshes.new("SierpinskiTriangle")
+    mesh = bpy.data.meshes.new("SierpinskiTriangle")
     bm = bmesh.new()
 
     for triangle in triangles:
@@ -52,17 +51,17 @@ def create_sierpinski_triangle(level, size):
     bm.to_mesh(mesh)
     mesh.update()
 
-    obj = data.objects.new("SierpinskiTriangle", mesh)
-    context.collection.objects.link(obj)
+    obj = bpy.data.objects.new("SierpinskiTriangle", mesh)
+    bpy.context.collection.objects.link(obj)
 
 
-class OBJECT_OT_add_sierpinski_triangle(Operator):
+class OBJECT_OT_add_sierpinski_triangle(bpy.types.Operator):
     bl_idname = "object.sierpinski_triangle"
     bl_label = "Generate Sierpinski Triangle"
     bl_options = {'REGISTER', 'UNDO'}
 
-    level: props.IntProperty(name="Level", default=3, min=0, max=10)
-    size: props.FloatProperty(name="Size", default=2.0, min=0.1, max=10.0)
+    level: bpy.props.IntProperty(name="Level", default=3, min=0, max=10)
+    size: bpy.props.FloatProperty(name="Size", default=2.0, min=0.1)
 
     def execute(self, _context):
         create_sierpinski_triangle(self.level, self.size)
@@ -92,11 +91,11 @@ def clone_obj(obj, orig_data, location):
     obj_copy = obj.copy()
     obj_copy.data = mesh_copy
     obj_copy.location = location
-    context.collection.objects.link(obj_copy)
-    context.view_layer.objects.active = obj
+    bpy.context.collection.objects.link(obj_copy)
+    bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
     obj_copy.select_set(True)
-    ops.object.join()
+    bpy.ops.object.join()
     return obj
             
 def create_pyramid(mesh, location, size):
@@ -124,98 +123,90 @@ def mult_dist_factor(f,t):
     newlist=[f*i for i in t]
     return tuple(newlist)
 
-def create_sierpinski_pyramid(self):
+def create_sierpinski_pyramid(props, context):
+
     orig_obj = context.active_object
-    if self.useselection and orig_obj and orig_obj.type == 'MESH':
+    if orig_obj is None:
+        orig_obj = context.selected_objects[0] if len(context.selected_objects) > 0 else None
+
+    if props.useselection and orig_obj and orig_obj.type == 'MESH':
         mesh = orig_obj.data.copy()
         orig_data = orig_obj.data  
     else:
-        mesh = data.meshes.new("Sierpinski Pyramid")
-        create_pyramid(mesh, Vector((0, 0, 0)), self.size)
+        mesh = bpy.data.meshes.new("Sierpinski Pyramid")
+        create_pyramid(mesh, Vector((0, 0, 0)), props.size)
         orig_data=mesh.copy()
         
     # deselect all
-    for obj in context.selected_objects:
+    for obj in bpy.context.selected_objects:
         obj.select_set(False)
     
-    obj = data.objects.new("Sierpinski Pyramid", mesh)
-    context.collection.objects.link(obj)
+    obj = bpy.data.objects.new("Sierpinski Pyramid", mesh)
+    if props.distfactor < 0:
+        obj.scale.x *= -1
+        obj.scale.y *= -1
+        obj.scale.z *= -1
+
+    bpy.context.collection.objects.link(obj)
 
     obj_size = get_obj_size(obj)
-    for i in range(self.iterations):
+    for i in range(props.iterations):
         hx=obj_size[0]/2
         hy=obj_size[1]/2
-        obj.location=mult_dist_factor(self.distfactor,(0,0,obj_size[2]))
-        clone_obj(obj,orig_data,mult_dist_factor(self.distfactor,(-hx, hy, 0)))
-        clone_obj(obj,orig_data,mult_dist_factor(self.distfactor,(hx,hy,0)))
-        clone_obj(obj,orig_data,mult_dist_factor(self.distfactor,(-hx,-hy,0)))
-        clone_obj(obj,orig_data,mult_dist_factor(self.distfactor,(hx,-hy,0)))
+        obj.location=mult_dist_factor(props.distfactor,(0,0,obj_size[2]))
+        clone_obj(obj,orig_data,mult_dist_factor(props.distfactor,(-hx, hy, 0)))
+        clone_obj(obj,orig_data,mult_dist_factor(props.distfactor,(hx,hy,0)))
+        clone_obj(obj,orig_data,mult_dist_factor(props.distfactor,(-hx,-hy,0)))
+        clone_obj(obj,orig_data,mult_dist_factor(props.distfactor,(hx,-hy,0)))
         
         obj_size=tuple([2*i for i in obj_size])
         orig_data = obj.data.copy()
     return obj
 
-class OBJECT_OT_add_sierpinski_pyramid(types.Operator):
+class OBJECT_OT_add_sierpinski_pyramid(bpy.types.Operator):
     """Add a Sierpinski Pyramid"""
     bl_idname = "mesh.add_sierpinski_pyramid"
     bl_label = "Add Sierpinski Pyramid"
     bl_options = {'REGISTER', 'UNDO'}
 
    
-    iterations: props.IntProperty(
-        name="Iterations",
-        description="Number of iterations for the Sierpinski Pyramid",
-        default=2,
-        min=0,
-        max=5,
-    )
-    size: props.FloatProperty(
-        name="Pyramid Size",
-        description="Size of the Sierpinski Pyramid",
-        default=2.0,
-        min=0.1,
-        max=10.0,
-    )
-    distfactor: props.FloatProperty(
-        name="Distance factor",
-        description="Adjust the distance between base objects",
-        default=1.0,
-    )
-    useselection: props.BoolProperty(
-        name="Use selection",
-        description="Use selection to create a Sierpinski pyramid",
-        default=True,
-    ) 
-    def execute(self, _context):
-        create_sierpinski_pyramid(self)
+    iterations: bpy.props.IntProperty(name="Iterations", description="Number of iterations for the Sierpinski Pyramid", default=2,  min=0, max=5,)
+    size: bpy.props.FloatProperty(name="Pyramid Size", description="Size of the Sierpinski Pyramid", default=2.0, min=0.1, max=10.0,)
+    distfactor: bpy.props.FloatProperty(name="Distance factor", description="Adjust the distance between base objects", default=1.0,)
+    useselection: bpy.props.BoolProperty(name="Use selection", description="Use selection to create a Sierpinski pyramid", default=True,)
+    def execute(self, context):
+        create_sierpinski_pyramid(self, context)
         return {'FINISHED'}
+
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "iterations")
+        row = layout.row()
+        row.prop(self, "size")
+        row.enabled = not self.useselection
+        layout.prop(self, "distfactor")
+        row = layout.row()
+        layout.prop(self, "useselection")
+        row.enabled = context.active_object is not None
 
 
 # Registration
 
 def add_triangle_button(self, _context):
-    self.layout.operator(
-        OBJECT_OT_add_sierpinski_triangle.bl_idname,
-        text="Sierpinski Triangle",
-        icon='PLUGIN',
-    )
+    self.layout.operator(OBJECT_OT_add_sierpinski_triangle.bl_idname, text="Sierpinski Triangle", icon='PLUGIN',)
 def add_pyramid_button(self, _context):
-    self.layout.operator(
-        OBJECT_OT_add_sierpinski_pyramid.bl_idname,
-        text="Sierpinski Pyramid",
-        icon='PLUGIN',
-    )
+    self.layout.operator(OBJECT_OT_add_sierpinski_pyramid.bl_idname, text="Sierpinski Pyramid", icon='PLUGIN',)
 def register():
-    utils.register_class(OBJECT_OT_add_sierpinski_triangle)
-    utils.register_class(OBJECT_OT_add_sierpinski_pyramid)
-    types.VIEW3D_MT_mesh_add.append(add_triangle_button)
-    types.VIEW3D_MT_mesh_add.append(add_pyramid_button)
+    bpy.utils.register_class(OBJECT_OT_add_sierpinski_triangle)
+    bpy.utils.register_class(OBJECT_OT_add_sierpinski_pyramid)
+    bpy.types.VIEW3D_MT_mesh_add.append(add_triangle_button)
+    bpy.types.VIEW3D_MT_mesh_add.append(add_pyramid_button)
 
 def unregister():
-    utils.unregister_class(OBJECT_OT_add_sierpinski_triangle)
-    utils.unregister_class(OBJECT_OT_add_sierpinski_pyramid)
-    types.VIEW3D_MT_mesh_add.remove(add_triangle_button)
-    types.VIEW3D_MT_mesh_add.remove(add_pyramid_button)
+    bpy.utils.unregister_class(OBJECT_OT_add_sierpinski_triangle)
+    bpy.utils.unregister_class(OBJECT_OT_add_sierpinski_pyramid)
+    bpy.types.VIEW3D_MT_mesh_add.remove(add_triangle_button)
+    bpy.types.VIEW3D_MT_mesh_add.remove(add_pyramid_button)
 
 
 if __name__ == "__main__":
