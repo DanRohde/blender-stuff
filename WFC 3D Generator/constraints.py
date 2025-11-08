@@ -317,6 +317,8 @@ class WFC3DConstraints:
             grid.grid[x, y, z] = []
         collapsed.append(grid.mark_collapsed(x, y, z))
         collapsed.extend(self.apply_symmetry_constraints(x, y, z))
+        self.propagate_frequency_constraints(grid, x, y, z)
+
         collapsedadd = []
         for c in collapsed:
             collapsedadd.extend(self.apply_dimensions_constraints(c[0], c[1], c[2]))
@@ -478,7 +480,6 @@ class WFC3DConstraints:
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
 
-        self.propagate_frequency_constraints(grid, x, y, z)
         # propagate neighbor constraints:
         queue = deque([(x, y, z)])
 
