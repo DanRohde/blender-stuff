@@ -105,8 +105,8 @@ def check_dimensions_constraints(obj):
     warn_count = 0
     props = bpy.context.scene.wfc_props
     x, y, z = obj['wfc_dim_xyz']
-    if props.grid_size[0] <= x or props.grid_size[1] <= y or props.grid_size[2] <= z:
-        add_log_entry(1, f"The dimensions of object {obj.name} exceed the current grid size.")
+    if x > props.grid_size[0]  or y > props.grid_size[1] or z > props.grid_size[2]:
+        add_log_entry(1, f"The dimensions of object {obj.name} exceed the current grid size {props.grid_size[0]}x{props.grid_size[1]}x{props.grid_size[2]}.")
         warn_count +=1
 
     return warn_count
