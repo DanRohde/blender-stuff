@@ -11,25 +11,25 @@ from mathutils import Vector
 
 
 def create_sierpinski_triangle(level, size):
-    def subdivide_triangle(vertices, level):
-        if level == 0:
-            return [vertices]
+    def subdivide_triangle(verts, lev):
+        if lev == 0:
+            return [verts]
 
         midpoints = [
-            ((vertices[0][0] + vertices[1][0]) / 2, (vertices[0][1] + vertices[1][1]) / 2, (vertices[0][2] + vertices[1][2]) / 2),
-            ((vertices[1][0] + vertices[2][0]) / 2, (vertices[1][1] + vertices[2][1]) / 2, (vertices[1][2] + vertices[2][2]) / 2),
-            ((vertices[2][0] + vertices[0][0]) / 2, (vertices[2][1] + vertices[0][1]) / 2, (vertices[2][2] + vertices[0][2]) / 2)
+            ((verts[0][0] + verts[1][0]) / 2, (verts[0][1] + verts[1][1]) / 2, (verts[0][2] + verts[1][2]) / 2),
+            ((verts[1][0] + verts[2][0]) / 2, (verts[1][1] + verts[2][1]) / 2, (verts[1][2] + verts[2][2]) / 2),
+            ((verts[2][0] + verts[0][0]) / 2, (verts[2][1] + verts[0][1]) / 2, (verts[2][2] + verts[0][2]) / 2)
         ]
 
-        triangles = [
-            [vertices[0], midpoints[0], midpoints[2]],
-            [vertices[1], midpoints[1], midpoints[0]],
-            [vertices[2], midpoints[2], midpoints[1]]
+        tris = [
+            [verts[0], midpoints[0], midpoints[2]],
+            [verts[1], midpoints[1], midpoints[0]],
+            [verts[2], midpoints[2], midpoints[1]]
         ]
 
         result = []
-        for triangle in triangles:
-            result.extend(subdivide_triangle(triangle, level - 1))
+        for tri in tris:
+            result.extend(subdivide_triangle(tri, lev - 1))
 
         return result
 
@@ -45,8 +45,8 @@ def create_sierpinski_triangle(level, size):
     bm = bmesh.new()
 
     for triangle in triangles:
-        verts = [bm.verts.new(v) for v in triangle]
-        bm.faces.new(verts)
+        vertices = [bm.verts.new(v) for v in triangle]
+        bm.faces.new(vertices)
 
     bm.to_mesh(mesh)
     mesh.update()
@@ -55,7 +55,7 @@ def create_sierpinski_triangle(level, size):
     bpy.context.collection.objects.link(obj)
 
 
-class OBJECT_OT_add_sierpinski_triangle(bpy.types.Operator):
+class OBJECT_OT_AddSierpinskiTriangle(bpy.types.Operator):
     bl_idname = "object.sierpinski_triangle"
     bl_label = "Generate Sierpinski Triangle"
     bl_options = {'REGISTER', 'UNDO'}
@@ -163,7 +163,7 @@ def create_sierpinski_pyramid(props, context):
         orig_data = obj.data.copy()
     return obj
 
-class OBJECT_OT_add_sierpinski_pyramid(bpy.types.Operator):
+class OBJECT_OT_AddSierpinskiPyramid(bpy.types.Operator):
     """Add a Sierpinski Pyramid"""
     bl_idname = "mesh.add_sierpinski_pyramid"
     bl_label = "Add Sierpinski Pyramid"
@@ -193,18 +193,18 @@ class OBJECT_OT_add_sierpinski_pyramid(bpy.types.Operator):
 # Registration
 
 def add_triangle_button(self, _context):
-    self.layout.operator(OBJECT_OT_add_sierpinski_triangle.bl_idname, text="Sierpinski Triangle", icon='PLUGIN',)
+    self.layout.operator(OBJECT_OT_AddSierpinskiTriangle.bl_idname, text="Sierpinski Triangle", icon='PLUGIN',)
 def add_pyramid_button(self, _context):
-    self.layout.operator(OBJECT_OT_add_sierpinski_pyramid.bl_idname, text="Sierpinski Pyramid", icon='PLUGIN',)
+    self.layout.operator(OBJECT_OT_AddSierpinskiPyramid.bl_idname, text="Sierpinski Pyramid", icon='PLUGIN',)
 def register():
-    bpy.utils.register_class(OBJECT_OT_add_sierpinski_triangle)
-    bpy.utils.register_class(OBJECT_OT_add_sierpinski_pyramid)
+    bpy.utils.register_class(OBJECT_OT_AddSierpinskiTriangle)
+    bpy.utils.register_class(OBJECT_OT_AddSierpinskiPyramid)
     bpy.types.VIEW3D_MT_mesh_add.append(add_triangle_button)
     bpy.types.VIEW3D_MT_mesh_add.append(add_pyramid_button)
 
 def unregister():
-    bpy.utils.unregister_class(OBJECT_OT_add_sierpinski_triangle)
-    bpy.utils.unregister_class(OBJECT_OT_add_sierpinski_pyramid)
+    bpy.utils.unregister_class(OBJECT_OT_AddSierpinskiTriangle)
+    bpy.utils.unregister_class(OBJECT_OT_AddSierpinskiPyramid)
     bpy.types.VIEW3D_MT_mesh_add.remove(add_triangle_button)
     bpy.types.VIEW3D_MT_mesh_add.remove(add_pyramid_button)
 
