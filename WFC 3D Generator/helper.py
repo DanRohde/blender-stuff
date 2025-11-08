@@ -79,7 +79,7 @@ def update_constraints(props, constraints):
         for c in constraints:
             if c in props:
                 prop_name = 'wfc_' +c
-                if props[c] != PROP_DEFAULTS[c] or (default_object and default_object != obj and prop_name in default_object and default_object[prop_name] != props[c]):
+                if not cmpall(props[c], PROP_DEFAULTS[c]) or (default_object and default_object != obj and prop_name in default_object and default_object[prop_name] != props[c]):
                     obj[prop_name] = props[c]
                 elif prop_name in obj:
                     del obj[prop_name]
