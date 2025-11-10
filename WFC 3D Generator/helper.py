@@ -5,8 +5,8 @@ from .vis import is_directions_geometry_nodegroup_visible
 
 
 def get_icon_name(props, item):
-    if item.name in props.collection_obj.objects:
-        icon_name = ICON_MAP[props.collection_obj.objects[item.name].type]
+    if item.obj.name in props.collection_obj.objects:
+        icon_name = ICON_MAP[item.obj.type]
     else:
         icon_name = "GROUP"
     return icon_name
@@ -63,7 +63,7 @@ def get_constraints(props):
     return constraints
 
 def get_selected_items(obj_list):
-    return [item.name for item in obj_list if item.selected]
+    return [item.obj.name for item in obj_list if item.selected]
 
 def update_constraints(props, constraints):
     items = []
@@ -131,7 +131,7 @@ def update_neighbor_constraints(props):
     if props.no_neighbor_allowed:
         neighbors = ["-"]
     else:
-        neighbors =  [item.value for item in props.neighbor_list if item.selected]
+        neighbors = get_selected_items(props.neighbor_list)
     if props.edit_type == 'objects':
         for item in get_selected_items(props.obj_list):
             obj = get_object_by_name(props, item)
@@ -246,7 +246,7 @@ def handle_edit_neighbor_constraint_update(_self, context):
     if obj and props.edit_neighbor_constraint in obj:
         vals = obj[props.edit_neighbor_constraint].split(",")
         props.no_neighbor_allowed = '-' in vals
-        for item in props.neighbor_list: item.selected = item.value in vals
+        for item in props.neighbor_list: item.selected = item.obj.name in vals
     else:
         props.no_neighbor_allowed = False
         for item in props.neighbor_list: item.selected = False

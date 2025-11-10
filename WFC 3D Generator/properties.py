@@ -1,28 +1,30 @@
 import bpy
 
 from .constants import *
-from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, get_default_empty_name
-
+from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, get_default_empty_name, get_selected_items
 
 def handle_update_collection(_self, context):
     props = context.scene.wfc_props
     if props.collection_obj is None: return
+    sel_items = get_selected_items(props.obj_list)
+    sel_n_items = get_selected_items(props.neighbor_list)
     props.obj_list.clear()
     props.neighbor_list.clear()
     for obj in props.collection_obj.objects:
         if obj.name.startswith(get_default_empty_name()): continue
         item = props.obj_list.add()
-        item.name = obj.name
+        item.obj = obj
+        item.selected = obj.name in sel_items
         item = props.neighbor_list.add()
-        item.name = obj.name
-        item.value = obj.name
+        item.obj = obj
+        item.selected = obj.name in sel_n_items
     for obj in props.collection_obj.children:
-        if len(obj.objects)>0:
-            item = props.obj_list.add()
-            item.name = obj.name
-            item = props.neighbor_list.add()
-            item.name = obj.name 
-            item.value = obj.name
+        item = props.obj_list.add()
+        item.obj = obj
+        item.selected = obj.name in sel_items
+        item = props.neighbor_list.add()
+        item.obj = obj
+        item.selected = obj.name in sel_n_items
 
 def get_direction_list(items, prefix):
     ls = ""
@@ -90,13 +92,12 @@ def take_known_conn_name(_self, _context):
     props.conn_name = props.conn_known_names
 
 class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
-    name: bpy.props.StringProperty()
+    obj: bpy.props.PointerProperty(type=bpy.types.ID)
     selected: bpy.props.BoolProperty(default=False, update=update_edit_form)
 
 class WFC3DEditPanelNeighborMultiSelItem(bpy.types.PropertyGroup):
-    name: bpy.props.StringProperty()
+    obj: bpy.props.PointerProperty(type=bpy.types.ID)
     selected: bpy.props.BoolProperty(default=False, update=auto_save)
-    value: bpy.props.StringProperty()
 
 class WFC3DValidatorOutputItem(bpy.types.PropertyGroup):
     severity: bpy.props.IntProperty()

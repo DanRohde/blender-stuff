@@ -176,7 +176,7 @@ class COLLECTION_OT_WFC3DGetSelectedObject(bpy.types.Operator):
                     if obj.name in child.objects:
                         selected_object_names.append(child.name)
             for item in props.obj_list:
-                item.selected = item.name in selected_object_names
+                item.selected = item.obj.name in selected_object_names
             props.obj_list_idx = -1
         else:
             self.report({'WARNING'}, "No active object found")
@@ -201,7 +201,7 @@ class COLLECTION_OT_WFC3DGetNeighborSelectedObject(bpy.types.Operator):
                     if obj.name in child.objects:
                         selected_object_names.append(child.name)
             for item in props.neighbor_list:
-                item.selected = item.value in selected_object_names
+                item.selected = item.obj.name in selected_object_names
             props.neighbor_list_idx = -1
         else:
             self.report({'WARNING'}, "No active object found")

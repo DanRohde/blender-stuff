@@ -1,16 +1,16 @@
 import bpy
-from .helper import get_default_empty_object, get_icon_name, cmpall
+from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items
 from .properties import get_known_conn_names
 from .constants import *
 
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
-        layout.row(align=True).prop(item, "selected", text=item.name, icon=get_icon_name(context.scene.wfc_props,item))
+        layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(context.scene.wfc_props,item))
 
 
 class WFC3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
-        layout.row(align=True).prop(item, "selected", text=item.name, icon=get_icon_name(context.scene.wfc_props,item))
+        layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(context.scene.wfc_props,item))
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
@@ -53,7 +53,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nc.operator("collection.wfc_update_collection_list",icon="FILE_REFRESH")
             nc.enabled = not props.auto_active_object
         
-            selected = [item.name for item in props.obj_list if item.selected]
+            selected =get_selected_items(props.obj_list)
             if len(selected) == 0 and props.edit_type == 'objects':
                 return
 
