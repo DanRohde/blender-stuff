@@ -59,7 +59,10 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             col = row.column()
             col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
             col.enabled = props.collection_obj is not None
-        row.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
+        col = row.column()
+        col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
+        col.enabled = not props.cherry_picking_running
+
         layout.separator(type="LINE", factor=0.2)
 
         if props.remove_target_collection and props.target_collection != "" and props.target_collection in bpy.data.collections:
