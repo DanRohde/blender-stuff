@@ -59,7 +59,7 @@ def get_constraints(props):
     return constraints
 
 def get_selected_items(obj_list):
-    return [item.obj.name for item in obj_list if item.selected]
+    return [item.obj.name for item in obj_list if item.obj is not None and item.selected]
 
 def update_constraints(props, constraints):
     items = []

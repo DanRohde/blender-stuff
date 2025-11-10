@@ -372,7 +372,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         if len(labels) > 0 or props.allow_neighbor_constraint_violations:
             sbox = box.box()
             sbox.label(text="Neighbor constraints")
-            if len(labels) > 0: self._draw_labels(sbox.column_flow(columns=2, align=True), labels)
+            if len(labels) > 0: self._draw_labels(sbox.column_flow(columns=1, align=True), labels)
             if props.allow_neighbor_constraint_violations: sbox.prop(props, "allow_neighbor_constraint_violations", icon="VIEW_UNLOCKED")
             sbox.enabled = False
 
