@@ -5,12 +5,12 @@ from .constants import *
 
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
-        layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(context.scene.wfc_props,item))
+        layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
 
 class WFC3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
     def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
-        layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(context.scene.wfc_props,item))
+        layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""

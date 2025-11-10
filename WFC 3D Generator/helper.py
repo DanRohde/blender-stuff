@@ -4,12 +4,8 @@ from .constants import *
 from .vis import is_directions_geometry_nodegroup_visible
 
 
-def get_icon_name(props, item):
-    if item.obj.name in props.collection_obj.objects:
-        icon_name = ICON_MAP[item.obj.type]
-    else:
-        icon_name = "GROUP"
-    return icon_name
+def get_icon_name(item):
+    return ICON_MAP[item.obj.type] if item.obj.id_type != 'COLLECTION' else ICON_MAP[item.obj.id_type]
 
 def get_default_empty_object(collection: object, create: object = False) -> Any | None:
     if get_default_empty_name() in collection.objects:
