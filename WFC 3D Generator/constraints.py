@@ -520,7 +520,8 @@ class WFC3DConstraints:
         x, y, z = pos
         if self.sympartner[x, y, z] is not None:
             if self.sympartner_obj[x, y, z] is None:
-                self.sympartner_obj[x, y, z] = random.choice([o for o in collection.objects if not o.name.startswith(get_default_empty_name())])
+                ol = [o for o in collection.objects if not o.name.startswith(get_default_empty_name())]
+                self.sympartner_obj[x, y, z] = random.choice(ol) if len(ol)>0 else []
                 for p in self.sympartner[x, y, z]:
                     self.sympartner_obj[p[0],p[1],p[2]] = self.sympartner_obj[x, y, z]
             return self.sympartner_obj[x, y, z]
