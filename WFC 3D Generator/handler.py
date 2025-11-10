@@ -1,5 +1,5 @@
 import bpy
-from .helper import get_default_empty_name, get_selected_items
+from .helper import get_default_empty_name, handle_update_collection
 
 def _update_list(itemlist, selected_object_names):
     # caution: any item.selected change fires an event => only do necessary updates
@@ -18,18 +18,7 @@ def update_handler(_scene, _depsgraph):
         coll_objects = [obj for obj in props.collection_obj.objects if
                         not obj.name.startswith(get_default_empty_name())]
         coll_objects.extend([child for child in props.collection_obj.children])
-        if len(coll_objects) != len(props.obj_list):
-            sel_items = get_selected_items(props.obj_list)
-            sel_n_items = get_selected_items(props.neighbor_list)
-            props.obj_list.clear()
-            props.neighbor_list.clear()
-            for obj in coll_objects:
-                item = props.obj_list.add()
-                item.obj = obj
-                item.selected = obj.name in sel_items
-                item = props.neighbor_list.add()
-                item.obj = obj
-                item.selected = obj.name in sel_n_items
+        if len(coll_objects) != len(props.obj_list): handle_update_collection(_scene)
 
     if props.collection_obj is None or (not props.auto_active_object and not props.auto_neighbor_object): return
 

@@ -281,3 +281,25 @@ def cmpall(a, b):
         return all(x == y for x, y in zip(a, b))
     except TypeError:
         return a == b
+
+def handle_update_collection(_self, context = None):
+    props = context.scene.wfc_props if context is not None else bpy.context.scene.wfc_props
+    if props.collection_obj is None: return
+    sel_items = get_selected_items(props.obj_list)
+    sel_n_items = get_selected_items(props.neighbor_list)
+    props.obj_list.clear()
+    props.neighbor_list.clear()
+    coll_objects_obj = [obj for obj in props.collection_obj.objects if
+                    not obj.name.startswith(get_default_empty_name())]
+    coll_objects_obj.sort(key=lambda x: x.name)
+    coll_objects = [child for child in props.collection_obj.children]
+    coll_objects.sort(key=lambda x: x.name)
+    coll_objects.extend(coll_objects_obj)
+    for obj in coll_objects:
+        if obj.name.startswith(get_default_empty_name()): continue
+        item = props.obj_list.add()
+        item.obj = obj
+        item.selected = obj.name in sel_items
+        item = props.neighbor_list.add()
+        item.obj = obj
+        item.selected = obj.name in sel_n_items

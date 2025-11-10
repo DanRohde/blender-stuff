@@ -1,30 +1,8 @@
 import bpy
 
 from .constants import *
-from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, get_default_empty_name, get_selected_items
+from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection
 
-def handle_update_collection(_self, context):
-    props = context.scene.wfc_props
-    if props.collection_obj is None: return
-    sel_items = get_selected_items(props.obj_list)
-    sel_n_items = get_selected_items(props.neighbor_list)
-    props.obj_list.clear()
-    props.neighbor_list.clear()
-    for obj in props.collection_obj.objects:
-        if obj.name.startswith(get_default_empty_name()): continue
-        item = props.obj_list.add()
-        item.obj = obj
-        item.selected = obj.name in sel_items
-        item = props.neighbor_list.add()
-        item.obj = obj
-        item.selected = obj.name in sel_n_items
-    for obj in props.collection_obj.children:
-        item = props.obj_list.add()
-        item.obj = obj
-        item.selected = obj.name in sel_items
-        item = props.neighbor_list.add()
-        item.obj = obj
-        item.selected = obj.name in sel_n_items
 
 def get_direction_list(items, prefix):
     ls = ""
