@@ -1,5 +1,5 @@
 import bpy
-from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items
+from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name
 from .properties import get_known_conn_names
 from .constants import *
 
@@ -61,9 +61,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         obj_name = ""
         if props.edit_type == 'objects':
             if selected[0] in props.collection_obj.children:
-                if len(props.collection_obj.children[selected[0]].objects)>0:
-                    obj = props.collection_obj.children[selected[0]].objects[0]
-                
+                obj = get_object_by_name(props, selected[0])
             elif selected[0] in props.collection_obj.objects:
                 obj = props.collection_obj.objects[selected[0]]
             else:
@@ -239,7 +237,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             newrow = newbox.row()
             newrow.prop(props,"flipping")
             if not props.auto_save: box.operator('object.wfc_update_constraints')
-        if props.edit_constraints=="frequency":
+        if props.edit_constraints == "frequency":
             box = box.box()
             row = box.row()
             row.label(text=obj_name)
@@ -340,7 +338,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                     cf.label(text=f"{d.lower()}: {obj[pn]}")
                     c+=1
                 if c==0: newbox.label(text="nothing defined yet")
-        if props.edit_constraints=="dimensions":
+        if props.edit_constraints == "dimensions":
             box = box.box()
             row = box.row()
             row.label(text=obj_name)
