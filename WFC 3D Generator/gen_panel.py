@@ -61,7 +61,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             col.enabled = props.collection_obj is not None
         col = row.column()
         col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
-        col.enabled = not props.cherry_picking_running
+        col.enabled = not props.cherry_picking_running and props.collection_obj is not None
 
         layout.separator(type="LINE", factor=0.2)
 

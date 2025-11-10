@@ -9,7 +9,7 @@ def generate_model(props):
 
 def handle_seed_change(_self, context):
     props = context.scene.wfc_props
-    if props.cherry_picking_running or not props.auto_generate: return
+    if props.cherry_picking_running or not props.auto_generate or props.collection_obj is None: return
     generate_model(props)
 
 class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
