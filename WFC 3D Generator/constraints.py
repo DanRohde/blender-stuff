@@ -560,3 +560,12 @@ class WFC3DConstraints:
     def apply_draw_constraints(self, position, spacing, obj_name, target_obj):
         self.apply_transformation_constraints(position, obj_name, target_obj)
         self.apply_dimensions_draw_constraints(position, spacing, obj_name, target_obj)
+
+    def clean(self):
+        self.grid = None
+        self.constraints = None
+        self.objects = None
+        self.auto_weights = None
+        self.sympartner_obj = None
+        self.sympartner = None
+        self.symflip =None

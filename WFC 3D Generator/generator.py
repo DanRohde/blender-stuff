@@ -181,3 +181,10 @@ class WFC3DGenerator:
                 self.constraints.apply_draw_constraints((x, y, z), self.spacing, obj_name, new_obj)
 
             collection.objects.link(new_obj)
+    def clean(self):
+        self.grid.clean()
+        self.grid = None
+        self.objects = None
+        self.collapsed_cells = None
+        if self.constraints: self.constraints.clean()
+        self.constraints = None

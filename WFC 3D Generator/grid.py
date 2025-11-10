@@ -271,3 +271,6 @@ class WFC3DGrid:
             'rb': (c['fbr'], c['bbr']),
             'rt': (c['ftr'], c['btr']),
         }
+    def clean(self):
+        self.grid = None
+        self.collapsed = None

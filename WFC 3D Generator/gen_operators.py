@@ -5,6 +5,7 @@ from .generator import WFC3DGenerator
 def generate_model(props):
     generator = WFC3DGenerator(props.collection_obj, props)
     generator.generate_model()
+    generator.clean()
 
 def handle_seed_change(_self, context):
     props = context.scene.wfc_props
