@@ -17,7 +17,7 @@ def update_handler(_scene, _depsgraph):
     if props.collection_obj is not None:
         coll_objects = [obj for obj in props.collection_obj.objects if
                         not obj.name.startswith(get_default_empty_name())]
-        coll_objects.extend([child for child in props.collection_obj.children if len(child.objects) > 0])
+        coll_objects.extend([child for child in props.collection_obj.children])
         if len(coll_objects) != len(props.obj_list):
             sel_items = get_selected_items(props.obj_list)
             sel_n_items = get_selected_items(props.neighbor_list)
