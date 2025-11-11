@@ -3,6 +3,10 @@ import bpy
 from .generator import WFC3DGenerator
 
 def generate_model(props):
+    if not props.remove_target_collection:
+        vl = bpy.context.view_layer
+        for c in vl.layer_collection.children:
+            if c.name.startswith(props.target_collection): c.hide_viewport = True
     generator = WFC3DGenerator(props.collection_obj, props)
     generator.generate_model()
     generator.clean()
@@ -68,10 +72,6 @@ class OBJECT_OT_WFC3DCherryPicking(bpy.types.Operator):
         prefs = bpy.context.preferences.addons[__package__].preferences
         if not props.cherry_picking_running: return None
         if props.running_delayed_renderer: return prefs.cherry_picking_delay
-        if not props.remove_target_collection:
-            vl = bpy.context.view_layer
-            for c in vl.layer_collection.children:
-                if c.name.startswith(props.target_collection): c.hide_viewport = True
         props.seed += 1
         generate_model(props)
         return prefs.cherry_picking_delay
