@@ -1,4 +1,4 @@
-The WFC 3D Generator add-on generates a new object from a collection of objects using a simple implementation of the Wave Function Collapse algorithm with constraints.
+The WFC 3D Generator add-on procedurally generates a new object from a collection of objects using a simple implementation of the Wave Function Collapse algorithm with constraints.
 
 Each object in the source collection can use custom properties to define the permitted neighbors. The generator randomly combines these objects in a 3D grid while adhering to the neighbor constraints. The allowed position in the grid can be defined by grid constraints. 
 
