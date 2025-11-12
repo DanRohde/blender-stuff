@@ -4,13 +4,25 @@ from .properties import get_known_conn_names
 from .constants import *
 
 class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
-    def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
 
 class WFC3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
-    def draw_item(self, context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
+
+class WFC3D_UL_RegFreqList(bpy.types.UIList):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+        row = layout.row(align=True)
+        col = row.column(align=True)
+        col.prop(item,"selected", text="")
+        col = row.column(align=True)
+        col.row().prop(item,"regfreq_min", text="min")
+        col.row().prop(item,"regfreq_max", text="max")
+        col.row().prop(item,"regfreq_freq", text=" Freqency")
+        layout.separator()
+
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
@@ -353,7 +365,18 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.operator("object.wfc_reset_constraints")
             box.row().prop(props, "fixed_position_xyz")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
-
+        if props.edit_constraints == "regfreq":
+            box = box.box()
+            row = box.row()
+            row.label(text=obj_name)
+            row.operator("object.wfc_reset_constraints")
+            row = box.row()
+            col = row.column()
+            col.template_list("WFC3D_UL_RegFreqList","", props, "regfreq_input_list", props, "regfreq_input_list_idx")
+            col = row.column()
+            col.operator("object.wfc_regfreq_add_listitem",icon="ADD",text="")
+            col.operator("object.wfc_regfreq_remove_listitems", icon="REMOVE",text="")
+            if not props.auto_save: box.operator("object.wfc_update_constraints")
 
     def _draw_labels(self, layout, labels):
         for label in labels:
@@ -441,6 +464,6 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.enabled = False
             row.prop(props, p)
 
-panels = [ WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
+panels = [ WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
         

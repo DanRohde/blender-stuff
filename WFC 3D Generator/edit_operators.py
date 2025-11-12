@@ -20,14 +20,28 @@ def _reset_constraints(props, constraints):
     auto_save = props.auto_save
     props.auto_save = False
 
+    lc = { }
     for item in items:
         obj = get_object_by_name(props, item)
         for c in constraints:
-            if "wfc_" + c in obj:
-                del obj["wfc_" + c]
+            prop_name = "wfc_" + c
+            if c in LIST_CONSTRAINTS:
+                ilname = LIST_CONSTRAINTS[c]
+                il = props.get(ilname, None)
+                if il is None: continue
+                if ilname not in lc: lc[ilname] = il
+                idx=0
+                while f"{prop_name}_{idx}" in obj:
+                    del obj[f"{prop_name}_{idx}"]
+                    idx+=1
+            elif prop_name in obj:
+                del obj[prop_name]
                 props[c] = PROP_DEFAULTS[c]
             elif c.startswith("wfc_") and c in obj:
                 del obj[c]
+    for n in lc:
+        c = getattr(props, n)
+        c.clear()
 
     props.auto_save = auto_save
 
@@ -72,9 +86,8 @@ class COLLECTION_OT_WFC3DUpdateConstraints(bpy.types.Operator):
 
     def execute(self, context):
         props = context.scene.wfc_props
-        obj_list = _get_obj_list(props)
         update_constraints(props, get_constraints(props))
-        self.report({'INFO'}, f"{props.edit_constraints.capitalize()} constraints of {obj_list} have been saved.")
+        self.report({'INFO'}, f"{props.edit_constraints.capitalize()} constraints have been saved.")
         return {'FINISHED'}
 
 
@@ -86,10 +99,9 @@ class COLLECTION_OT_WFC3DResetConstraints(bpy.types.Operator):
 
     def execute(self, context):
         props = context.scene.wfc_props
-        obj_list = _get_obj_list(props)
         _reset_constraints(props, get_constraints(props))
         update_edit_form(props, context)
-        self.report({'INFO'}, f"{props.edit_constraints.capitalize()} constraints of {obj_list} have been reset.")
+        self.report({'INFO'}, f"{props.edit_constraints.capitalize()} constraints have been reset.")
         return {'FINISHED'}
 
 
@@ -311,8 +323,35 @@ class WFC3DVisDirections(bpy.types.Operator):
                 remove_directions_geometry_nodegroup(obj)
 
         return {'FINISHED'}
+class WFC3D_OT_RegFreqAddListItem(bpy.types.Operator):
+    """Add a region to list"""
+    bl_idname = "object.wfc_regfreq_add_listitem"
+    bl_label = "Add Region Frequency"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        item = props.regfreq_input_list.add()
+        item.regfreq_min = PROP_DEFAULTS['regfreq_min']
+        item.regfreq_max = PROP_DEFAULTS['regfreq_max']
+        item.regfreq_freq = PROP_DEFAULTS['regfreq_freq']
+        return {'FINISHED'}
+
+class WFC3D_OT_RegFreqRemoveListItem(bpy.types.Operator):
+    """Remove selected region items from list"""
+    bl_idname = "object.wfc_regfreq_remove_listitems"
+    bl_label = "Remove selected region items from list"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        selected_indices = [i for i, item in enumerate(props.regfreq_input_list) if item.selected]
+        for idx in sorted(selected_indices, reverse=True):
+                props.regfreq_input_list.remove(idx)
+        update_constraints(props, REGFREQ_CONSTRAINTS)
+        return {'FINISHED'}
 
 operators = [
+    WFC3D_OT_RegFreqRemoveListItem,
+    WFC3D_OT_RegFreqAddListItem,
     COLLECTION_OT_WFC3DInfoToggle,
     COLLECTION_OT_WFC3DAutoSaveToggle,
     COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint,

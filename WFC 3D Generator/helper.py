@@ -56,6 +56,8 @@ def get_constraints(props):
         constraints = DIMENSIONS_CONSTRAINTS
     elif props.edit_constraints == 'fixed_position':
         constraints = FIXED_POSITION_CONSTRAINTS
+    elif props.edit_constraints == 'regfreq':
+        constraints = REGFREQ_CONSTRAINTS
     return constraints
 
 def get_selected_items(obj_list):
@@ -73,8 +75,16 @@ def update_constraints(props, constraints):
         obj = get_object_by_name(props, item)
 
         for c in constraints:
-            if c in props:
-                prop_name = 'wfc_' +c
+            prop_name = 'wfc_' + c
+            if c in LIST_CONSTRAINTS:
+                lc = LIST_CONSTRAINTS[c]
+                idx = len(props.get(lc,[]))
+                while f"{prop_name}_{idx}" in obj:
+                    del obj[f"{prop_name}_{idx}"]
+                    idx+=1
+                for idx, li in enumerate(props.get(lc, [])):
+                    obj[f"{prop_name}_{idx}"] = li.get(c, PROP_DEFAULTS[c])
+            elif c in props:
                 if not cmpall(props[c], PROP_DEFAULTS[c]) or (default_object and default_object != obj and prop_name in default_object and default_object[prop_name] != props[c]):
                     obj[prop_name] = props[c]
                 elif prop_name in obj:
@@ -197,9 +207,15 @@ def update_edit_form(self, _context):
         props.vis_directions = is_directions_geometry_nodegroup_visible(obj)
         props.conn_directions = props.conn_directions
     else:
+        lc = {}
         for c in GEN_CONSTRAINTS:
             cp = 'wfc_' + c.lower()
-            if cp in obj:
+            if c in LIST_CONSTRAINTS:
+                if LIST_CONSTRAINTS[c] in lc:
+                    lc[LIST_CONSTRAINTS[c]].append(c)
+                else:
+                    lc[LIST_CONSTRAINTS[c]] = [ c ]
+            elif cp in obj:
                 try:
                     props[c] = obj[cp]
                 except:
@@ -214,7 +230,15 @@ def update_edit_form(self, _context):
                     props[c] = PROP_DEFAULTS[c]
                 except:
                     pass
-
+        for l in lc:
+            li = getattr(props, l)
+            li.clear()
+            idx = 0
+            while f"wfc_{lc[l][0]}_{idx}" in obj:
+                item = li.add()
+                for c in lc[l]:
+                    setattr(item, c, obj[f"wfc_{c}_{idx}"])
+                idx += 1
     props.auto_save = auto_save
 
 

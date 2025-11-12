@@ -62,7 +62,9 @@ PROP_DEFAULTS = {
     # dimensions constraints:
     'dim_xyz' : (1,1,1),
     # fixed position constraints:
-    'fixed_position_xyz' : (-1,-1,-1)
+    'fixed_position_xyz' : (-1,-1,-1),
+    # region frequency constraints:
+    'regfreq_min' : (-1,-1,-1), 'regfreq_max' : (-1,-1,-1), 'regfreq_freq' : -1,
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
@@ -103,9 +105,15 @@ DIMENSIONS_CONSTRAINTS = [ 'dim_xyz' ]
 
 FIXED_POSITION_CONSTRAINTS = [ 'fixed_position_xyz' ]
 
+REGFREQ_CONSTRAINTS = [ 'regfreq_min', 'regfreq_max', 'regfreq_freq',]
+
+LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
+                     'regfreq_max' : 'regfreq_input_list',
+                     'regfreq_freq' : 'regfreq_input_list',
+                   }
 
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS
-                   + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS)
+                   + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS)
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
 

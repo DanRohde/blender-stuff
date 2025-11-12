@@ -41,7 +41,23 @@ class WFC3DConstraints:
             # load probability, frequency, transformation, symmetry, region, neighbor
             for p in GEN_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
                 cp = "wfc_"+p
-                if cp in obj and obj[cp] != "":
+                if p in LIST_CONSTRAINTS:
+                    if default_obj is not None:
+                        idx = 0
+                        while f"{cp}_{idx}" in default_obj:
+                            if p in self.constraints[obj_name]:
+                                self.constraints[obj_name][p].append(default_obj[f"{cp}_{idx}"])
+                            else:
+                                self.constraints[obj_name][p] = [default_obj[f"{cp}_{idx}"]]
+                            idx += 1
+                    idx = 0
+                    while f"{cp}_{idx}" in obj:
+                        if p in self.constraints[obj_name][p]:
+                            self.constraints[obj_name][p].append(obj[f"{cp}_{idx}"])
+                        else:
+                            self.constraints[obj_name][p] = [obj[f"{cp}_{idx}"]]
+                        idx += 1
+                elif cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
                 elif default_obj and cp in default_obj and default_obj[cp] != "":
                     self.constraints[obj_name][p] = default_obj[cp]
@@ -317,6 +333,7 @@ class WFC3DConstraints:
             grid.grid[x, y, z] = []
         collapsed.append(grid.mark_collapsed(x, y, z))
         collapsed.extend(self.apply_symmetry_constraints(x, y, z))
+        self.propagate_region_frequency_constraints(x, y, z)
         self.propagate_frequency_constraints(grid, x, y, z)
 
         collapsedadd = []
@@ -476,7 +493,17 @@ class WFC3DConstraints:
                 diff = max_count[i] - grid.count_axis_neighbors(x, y, z, None, axis[i])[i]
                 if diff < 0: grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i])
         return reduced_cells
-     
+    def propagate_region_frequency_constraints(self, x, y, z):
+        if len(self.grid.grid[x,y,z])==0: return
+        obj_name = self.grid.grid[x,y,z][0]
+
+        for i in range(len(self.constraints[obj_name]["regfreq_freq"])):
+            rmin = self.constraints[obj_name]["regfreq_min"][i]
+            rmax = self.constraints[obj_name]["regfreq_max"][i]
+            freq = self.constraints[obj_name]["regfreq_freq"][i]
+            if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
+                self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
+
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
 

@@ -219,6 +219,24 @@ class WFC3DGrid:
             xa, ya, za = neighbor_pos[i]
             self.grid[xa, ya, za] = []
         return []
+    def remove_max_region_neighbors(self, x, y, z, max_count, rmin, rmax):
+        if not self.within_boundaries(x,y,z) or self.grid[x,y,z] == 0: return
+        xa,ya,za = rmin
+        xb,yb,zb = rmax
+        if not self.within_boundaries(xa, ya, za) or not self.within_boundaries(xb, yb, zb): return
+        obj_name = self.grid[x,y,z][0]
+        npos = []
+        for dx in range(xb-xa+1):
+            for dy in range(yb-ya+1):
+                for dz in range(zb-za+1):
+                    if xa+dx == x and ya+dy == y and za+dz == z: continue
+                    if obj_name in self.grid[xa+dx, ya+dy, za+dz]: npos.append([xa+dx, ya+dy, za+dz])
+
+        if len(npos) < max_count: return
+        random.shuffle(npos)
+        for i in range(len(npos)-max_count+1):
+            xa, ya, za = npos[i]
+            self.grid[xa, ya, za] = [ n for n in self.grid[xa,ya,za] if n!=obj_name ]
 
     def remove_obj(self, obj_name, pos, d):
         gx, gy, gz = self.grid_size

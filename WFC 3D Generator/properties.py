@@ -83,6 +83,12 @@ class WFC3DValidatorOutputItem(bpy.types.PropertyGroup):
     logentry: bpy.props.StringProperty()
     description: bpy.props.StringProperty()
 
+class WFC3DRegionFrequencyListItem(bpy.types.PropertyGroup):
+    regfreq_min: bpy.props.IntVectorProperty(size=3, update=auto_save)
+    regfreq_max: bpy.props.IntVectorProperty(size=3, update=auto_save)
+    regfreq_freq: bpy.props.IntProperty(update=auto_save)
+    selected: bpy.props.BoolProperty(default=False)
+
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, max=100,)
@@ -119,7 +125,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ('dimensions', 'Dimensions Constraints', 'Dimensions constraints'),
                ('fixed_position', 'Fixed Position Constraints', 'Fixed position constraints'),
                ("grid","Grid Constraints","Grid constraints"),("region","Region Constraints","Region constraints"),
-               ('frequency',"Frequency Constraints","Frequency constraints"), ("symmetry","Symmetry Constraints","Symmetry constraints"),
+               ('frequency',"Frequency Constraints","Frequency constraints"), ('regfreq','Region Frequency Constraints','Region Frequency constraints'),
+               ("symmetry","Symmetry Constraints","Symmetry constraints"),
                None,
                ("probability", "Probability Constraints", "Probability constraints"),
                ("transformation", "Transformations", "Transformations"),
@@ -217,6 +224,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     conn_known_names : bpy.props.EnumProperty(items=get_known_conn_names, name='Select to apply', update=take_known_conn_name)
     auto_save: bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties")
     info_toggle: bpy.props.BoolProperty(name="Info", description="Shows constraint properties")
+    regfreq_input_list: bpy.props.CollectionProperty(type=WFC3DRegionFrequencyListItem)
+    regfreq_input_list_idx: bpy.props.IntProperty()
 
     vis_directions : bpy.props.BoolProperty(name="",description="Show directions", default = False)
 
@@ -270,4 +279,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
