@@ -93,7 +93,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     render_delay: bpy.props.FloatProperty(name="Render Delay", description="Render Delay in milliseconds", default=0, min=0,step=10,precision=2)
     running_delayed_renderer : bpy.props.BoolProperty(name="Running Delayed Renderer", description="Running Delayed Renderer", default=False,)
     paused_delayed_renderer: bpy.props.BoolProperty(name="Paused Delayed Renderer", description="Paused Delayed Renderer", default=False,)
-    random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False,)
+    random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False, update=handle_seed_change)
     random_direction: bpy.props.BoolProperty(name="Random Direction", description="Random direction", default=False,)
     seed: bpy.props.IntProperty(name="Random Seed", description="Random seed", default=0, update=handle_seed_change)
     auto_generate: bpy.props.BoolProperty(name="Automatic Model Generation when Random Seed Changes", default=False,)
