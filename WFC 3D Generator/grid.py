@@ -234,6 +234,7 @@ class WFC3DGrid:
 
         if len(npos) < max_count: return
         if max_count == 0: npos.append([x,y,z])
+        if len(npos)-max_count+1 > len(npos): max_count += 1
         random.shuffle(npos)
         for i in range(len(npos)-max_count+1):
             xa, ya, za = npos[i]
