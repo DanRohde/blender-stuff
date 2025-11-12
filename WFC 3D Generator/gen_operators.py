@@ -9,7 +9,8 @@ def generate_model(props):
             if c.name.startswith(props.target_collection): c.hide_viewport = True
     generator = WFC3DGenerator(props.collection_obj, props)
     generator.generate_model()
-    generator.clean()
+    if props.render_delay == 0: generator.clean()
+    return generator
 
 def handle_seed_change(_self, context):
     props = context.scene.wfc_props

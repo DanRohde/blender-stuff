@@ -123,6 +123,7 @@ class WFC3DGenerator:
             def draw(self, _context):
                 self.layout.label(text="WFC 3D model successfully rendered!")
             if not bpy.context.scene.wfc_props.cherry_picking_running: bpy.context.window_manager.popup_menu(draw, title="Info", icon='INFO')
+            self.clean()
         return None
 
     def init_target_collection(self):
