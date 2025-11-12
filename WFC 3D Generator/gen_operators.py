@@ -15,6 +15,7 @@ def generate_model(props):
 def handle_seed_change(_self, context):
     props = context.scene.wfc_props
     if props.cherry_picking_running or not props.auto_generate or props.collection_obj is None: return
+    if len(props.collection_obj.objects) == 0 and len(props.collection_obj.children) == 0: return
     generate_model(props)
 
 class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
@@ -39,6 +40,7 @@ class OBJECT_OT_WFC3DSearch(bpy.types.Operator):
     def execute(self, context):
         props = context.scene.wfc_props
         if props.search_iterations <= 0 or props.collection_obj is None: return {'FINISHED'}
+        if len(props.collection_obj.objects) == 0 and len(props.collection_obj.children) == 0: return {'FINISHED'}
         generator = WFC3DGenerator(props.collection_obj, props)
 
         a = props.auto_generate
@@ -117,7 +119,7 @@ class OBJECT_OT_WFC3DCherryPicking(bpy.types.Operator):
     def execute(self, context):
         props = context.scene.wfc_props
         prefs = bpy.context.preferences.addons[__package__].preferences
-
+        if props.collection_obj is None or (len(props.collection_obj.children) == 0 and len(props.collection_obj.objects) == 0): return {'FINISHED'}
         if not props.cherry_picking_running:
             props.cherry_picking_running = True
             props.seed -= 1
