@@ -99,7 +99,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 
 ## Fixed Position Constraints
 * This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
-* Used custom property: `wfc_fixed_position`
+* Used custom property: `wfc_fixed_position_[0..n]`
 * Allowed property value: an integer vector
 
 ## Dimensions Constraints
