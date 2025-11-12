@@ -89,7 +89,7 @@ class WFC3DRegionFrequencyListItem(bpy.types.PropertyGroup):
     regfreq_freq: bpy.props.IntProperty(update=auto_save, name="Frequency")
     selected: bpy.props.BoolProperty(default=False)
 class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
-    fixed_position_xyz: bpy.props.IntVectorProperty(name="Fixed Position",
+    fixed_position_xyz: bpy.props.IntVectorProperty(name="",
                                                     description="Fixed Position for a building block", min=-1,
                                                     default=PROP_DEFAULTS['fixed_position_xyz'], update=auto_save)
     selected: bpy.props.BoolProperty(default=False)
