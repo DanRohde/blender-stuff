@@ -323,35 +323,42 @@ class WFC3DVisDirections(bpy.types.Operator):
                 remove_directions_geometry_nodegroup(obj)
 
         return {'FINISHED'}
-class WFC3D_OT_RegFreqAddListItem(bpy.types.Operator):
-    """Add a region to list"""
-    bl_idname = "object.wfc_regfreq_add_listitem"
-    bl_label = "Add Region Frequency"
+
+class WFC3D_OT_GenericRemoveListItems(bpy.types.Operator):
+    """Remove selected constraint items from list"""
+    bl_idname = "object.wfc_generic_remove_list_items"
+    bl_label = "Remove selected constraints"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
-        item = props.regfreq_input_list.add()
-        item.regfreq_min = PROP_DEFAULTS['regfreq_min']
-        item.regfreq_max = PROP_DEFAULTS['regfreq_max']
-        item.regfreq_freq = PROP_DEFAULTS['regfreq_freq']
+        constraints = get_constraints(props)
+        lst = getattr(props, LIST_CONSTRAINTS[constraints[0]])
+        selected_indices = [i for i, item in enumerate(lst) if item.selected]
+        for idx in sorted(selected_indices, reverse=True):
+            lst.remove(idx)
+        update_constraints(props, constraints)
         return {'FINISHED'}
 
-class WFC3D_OT_RegFreqRemoveListItem(bpy.types.Operator):
-    """Remove selected region items from list"""
-    bl_idname = "object.wfc_regfreq_remove_listitems"
-    bl_label = "Remove selected region items from list"
+class WFC3D_OT_GenericAddListItem(bpy.types.Operator):
+    """Add new constraint item to list"""
+    bl_idname = "object.wfc_generic_add_list_item"
+    bl_label = "Add Constraint"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
-        selected_indices = [i for i, item in enumerate(props.regfreq_input_list) if item.selected]
-        for idx in sorted(selected_indices, reverse=True):
-                props.regfreq_input_list.remove(idx)
-        update_constraints(props, REGFREQ_CONSTRAINTS)
+        constraints = get_constraints(props)
+        item = None
+        for c in constraints:
+            if c not in LIST_CONSTRAINTS: continue
+            if item is None:
+                lst = getattr(props, LIST_CONSTRAINTS[c])
+                item = lst.add()
+            setattr(item, c, PROP_DEFAULTS[c])
         return {'FINISHED'}
 
 operators = [
-    WFC3D_OT_RegFreqRemoveListItem,
-    WFC3D_OT_RegFreqAddListItem,
+    WFC3D_OT_GenericAddListItem,
+    WFC3D_OT_GenericRemoveListItems,
     COLLECTION_OT_WFC3DInfoToggle,
     COLLECTION_OT_WFC3DAutoSaveToggle,
     COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint,

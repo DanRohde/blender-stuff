@@ -84,9 +84,9 @@ class WFC3DValidatorOutputItem(bpy.types.PropertyGroup):
     description: bpy.props.StringProperty()
 
 class WFC3DRegionFrequencyListItem(bpy.types.PropertyGroup):
-    regfreq_min: bpy.props.IntVectorProperty(size=3, update=auto_save)
-    regfreq_max: bpy.props.IntVectorProperty(size=3, update=auto_save)
-    regfreq_freq: bpy.props.IntProperty(update=auto_save)
+    regfreq_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min")
+    regfreq_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max")
+    regfreq_freq: bpy.props.IntProperty(update=auto_save, name="Frequency")
     selected: bpy.props.BoolProperty(default=False)
 
 class WFC3DProperties(bpy.types.PropertyGroup):

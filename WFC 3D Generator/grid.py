@@ -233,6 +233,7 @@ class WFC3DGrid:
                     if obj_name in self.grid[xa+dx, ya+dy, za+dz]: npos.append([xa+dx, ya+dy, za+dz])
 
         if len(npos) < max_count: return
+        if max_count == 0: npos.append([x,y,z])
         random.shuffle(npos)
         for i in range(len(npos)-max_count+1):
             xa, ya, za = npos[i]

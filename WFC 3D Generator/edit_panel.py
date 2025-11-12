@@ -374,8 +374,8 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             col = row.column()
             col.template_list("WFC3D_UL_RegFreqList","", props, "regfreq_input_list", props, "regfreq_input_list_idx")
             col = row.column()
-            col.operator("object.wfc_regfreq_add_listitem",icon="ADD",text="")
-            col.operator("object.wfc_regfreq_remove_listitems", icon="REMOVE",text="")
+            col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
+            col.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
 
     def _draw_labels(self, layout, labels):
@@ -445,10 +445,23 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 row.enabled = False
 
         self._draw_properties(props, box, "Frequency constraints", FREQUENCY_CONSTRAINTS)
+        self._draw_list_properties(props, box, "Region frequency constraints", REGFREQ_CONSTRAINTS)
         self._draw_properties(props, box, "Symmetry constraints", SYMMETRY_CONSTRAINTS)
         self._draw_properties(props, box, "Transformations", TRANSFORMATION_CONSTRAINTS)
         self._draw_properties(props, box, "Probability constraints", PROBABILITY_CONSTRAINTS)
 
+
+    def _draw_list_properties(self, props, layout, name, constraints):
+        p = constraints[0]
+        lst = getattr(props, LIST_CONSTRAINTS[p])
+        if len(lst) == 0: return
+        box = layout.box()
+        box.label(text=name)
+        for i in range(len(lst)):
+            for p in constraints:
+                row = box.row()
+                row.enabled = False
+                row.prop(lst[i], p)
 
     def _draw_properties(self, props, layout, name, constraints):
         f = []
