@@ -23,6 +23,11 @@ class WFC3D_UL_RegFreqList(bpy.types.UIList):
         col.row().prop(item,"regfreq_freq", text=" Freqency")
         layout.separator()
 
+class WFC3D_UL_FixedPositionList(bpy.types.UIList):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+        row = layout.row(align=True)
+        row.prop(item,"selected", text="")
+        row.prop(item,"fixed_position_xyz")
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
@@ -363,7 +368,12 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             row.label(text=obj_name)
             row.operator("object.wfc_reset_constraints")
-            box.row().prop(props, "fixed_position_xyz")
+            row = box.row()
+            col = row.column()
+            col.template_list("WFC3D_UL_FixedPositionList", "", props, "fixed_position_input_list", props, "fixed_position_input_list_idx")
+            col = row.column()
+            col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
+            col.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "regfreq":
             box = box.box()
@@ -414,10 +424,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.enabled = False
             row.prop(props,"dim_xyz")
 
-        if sum(props.fixed_position_xyz) > -3:
-            row = box.box().row()
-            row.enabled = False
-            row.prop(props,"fixed_position_xyz")
+        self._draw_list_properties(props, box, "Fixed position constraints", FIXED_POSITION_CONSTRAINTS)
 
         labels = []
         for g in GRID_CONSTRAINTS:
@@ -477,6 +484,6 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.enabled = False
             row.prop(props, p)
 
-panels = [ WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
+panels = [ WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
         

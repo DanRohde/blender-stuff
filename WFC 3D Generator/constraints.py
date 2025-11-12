@@ -42,21 +42,18 @@ class WFC3DConstraints:
             for p in GEN_CONSTRAINTS + ADD_NEIGHBOR_CONSTRAINTS:
                 cp = "wfc_"+p
                 if p in LIST_CONSTRAINTS:
+                    self.constraints[obj_name][p] = []
+                    if cp in obj: self.constraints[obj_name][p].append(obj[cp]) # backward compatibility
                     if default_obj is not None:
                         idx = 0
                         while f"{cp}_{idx}" in default_obj:
-                            if p in self.constraints[obj_name]:
-                                self.constraints[obj_name][p].append(default_obj[f"{cp}_{idx}"])
-                            else:
-                                self.constraints[obj_name][p] = [default_obj[f"{cp}_{idx}"]]
+                            self.constraints[obj_name][p].append(default_obj[f"{cp}_{idx}"])
                             idx += 1
                     idx = 0
                     while f"{cp}_{idx}" in obj:
-                        if p in self.constraints[obj_name][p]:
-                            self.constraints[obj_name][p].append(obj[f"{cp}_{idx}"])
-                        else:
-                            self.constraints[obj_name][p] = [obj[f"{cp}_{idx}"]]
+                        self.constraints[obj_name][p].append(obj[f"{cp}_{idx}"])
                         idx += 1
+                    if cp in obj and len(self.constraints[obj_name][p])==0: self.constraints[obj_name][p].append(obj[cp]) # backward compatibility
                 elif cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
                 elif default_obj and cp in default_obj and default_obj[cp] != "":
@@ -558,10 +555,10 @@ class WFC3DConstraints:
         collapsed = []
         for obj in self.objects:
             if self.constraints[obj.name]["fixed_position_xyz"] is not None:
-                p = self.constraints[obj.name]["fixed_position_xyz"]
-                if not self.grid.within_boundaries(p[0], p[1], p[2]): continue
-                self.grid.grid[p[0], p[1], p[2]] = [ obj.name ]
-                collapsed.extend(self.collapse(self.grid, p[0], p[1], p[2]))
+                for p in self.constraints[obj.name]["fixed_position_xyz"]:
+                    if not self.grid.within_boundaries(p[0], p[1], p[2]): continue
+                    self.grid.grid[p[0], p[1], p[2]] = [ obj.name ]
+                    collapsed.extend(self.collapse(self.grid, p[0], p[1], p[2]))
         return collapsed
     def apply_pre_constraints(self):
         collapsed = []

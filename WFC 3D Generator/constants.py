@@ -110,6 +110,7 @@ REGFREQ_CONSTRAINTS = [ 'regfreq_min', 'regfreq_max', 'regfreq_freq',]
 LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'regfreq_max' : 'regfreq_input_list',
                      'regfreq_freq' : 'regfreq_input_list',
+                     'fixed_position_xyz' : 'fixed_position_input_list',
                    }
 
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS

@@ -88,6 +88,11 @@ class WFC3DRegionFrequencyListItem(bpy.types.PropertyGroup):
     regfreq_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max")
     regfreq_freq: bpy.props.IntProperty(update=auto_save, name="Frequency")
     selected: bpy.props.BoolProperty(default=False)
+class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
+    fixed_position_xyz: bpy.props.IntVectorProperty(name="Fixed Position",
+                                                    description="Fixed Position for a building block", min=-1,
+                                                    default=PROP_DEFAULTS['fixed_position_xyz'], update=auto_save)
+    selected: bpy.props.BoolProperty(default=False)
 
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
@@ -236,7 +241,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
     dim_xyz : bpy.props.IntVectorProperty(name="Dimensions",description="Dimensions of a building block.",min=1,default=PROP_DEFAULTS["dim_xyz"], update=auto_save)
 
-    fixed_position_xyz : bpy.props.IntVectorProperty(name="Fixed Position", description="Fixed Position for a building block", min=-1, default=PROP_DEFAULTS['fixed_position_xyz'], update=auto_save)
+    fixed_position_input_list: bpy.props.CollectionProperty(type=WFC3DFixedPositionListItem)
+    fixed_position_input_list_idx: bpy.props.IntProperty()
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
@@ -279,4 +285,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
