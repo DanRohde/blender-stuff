@@ -49,6 +49,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * These constraints increase or decrease the probability of an object being selected at random.
 * Frequency Constraints:
   * Define how often the same object or any other object may occur in the immediate vicinity or on one of the 3 axes XYZ.
+* Region Frequency Constraints:
+  * Define how often the same object may occur in a specific region.
 * Symmetry Constraints:
   * These constraints allow mirror-symmetric and/or rotation-symmetric objects to be generated.
   * It is possible to transfer random transformations to mirror partners, flip mirror partners accordingly,
@@ -77,13 +79,14 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Probability constraints: 3
 * Transformations: 12
 * Frequency constraints: 11
+* Region frequency constraints: 3
 * Symmetry constraints: 19
 * Connector constraints: 27
 * Fixed position constraints: 1
 * Dimensions constraints: 1
 
 
-* **Sum: 109**
+* **Sum: 112**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -167,6 +170,11 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
    * wfc_grid, wfc_freq_[any_]neighbor[_face|_edge|_corner]: an integer
    * wfc_[_any]_axes: an integer vector
 
+## Region Frequency Constraints:
+* Used custom properties: `wfc_regfreq_min_[0..n],wfc_regfreq_max_[0..n],wfc_regfreq_freq_[0..n]`
+* Allowed property values:
+  * `wfc_regfreq_min_[0..n], wfc_regfreq_max_[0..n]`: an integer vector (x,y,z)
+  * `wfc_regfreq_freq`: an integer
 
 ## Symmetry Constraints
 * Used custom properties: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n,wfc_sym_mirror_axes_[x|y|z|xy|xz|yz|xyz],wfc_sym_mirror_flip_[x|y|z|xy|xz|yz|xyz],wfc_sym_mirror_flip_transl, wfc_sym_mirror_trans`
