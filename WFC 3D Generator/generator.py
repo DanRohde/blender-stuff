@@ -21,8 +21,7 @@ class WFC3DGenerator:
         self.collapsed_cells = []
         self.odd_offset = props.odd_offset
 
-        random.seed(props.seed)
-        np.random.seed(np.abs(props.seed))
+        self.set_seed(props.seed)
 
         self.remove_target_collection = props.remove_target_collection
         self.objects = []
@@ -35,6 +34,9 @@ class WFC3DGenerator:
             self.constraints = WFC3DConstraints()
             self.constraints.initialize_constraints(self.grid, self.collection, self.objects)
                     
+    def set_seed(self, seed):
+        random.seed(seed)
+        np.random.seed(np.abs(seed))
 
     def load_objects(self):
         """Loads objects from the collection"""
@@ -81,10 +83,10 @@ class WFC3DGenerator:
             collapsed = [ self.grid.mark_collapsed(x, y, z) ]
         return collapsed
 
-    def generate_model(self):
+    def generate_model(self, render=True):
         """Execute WFC algorithm and generate the model"""
         self.grid.initialize_grid(self.objects, self.constraints)
-        self.init_target_collection()
+        if render: self.init_target_collection()
         collapsed = []
         if self.use_constraints: collapsed = self.constraints.apply_pre_constraints()
         while True:
@@ -99,6 +101,7 @@ class WFC3DGenerator:
                 for c in collapsed:
                     self.constraints.propagate(self.grid, c[0], c[1], c[2])
             collapsed = []
+        if not render: return
         if self.render_delay > 0:
             bpy.context.scene.wfc_props.running_delayed_renderer = True
             bpy.app.timers.register(self.place_delayed_objects, first_interval=self.render_delay/1000)

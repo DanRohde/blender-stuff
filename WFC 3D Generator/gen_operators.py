@@ -29,6 +29,43 @@ class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class OBJECT_OT_WFC3DSearch(bpy.types.Operator):
+    """Search for a result with maximum grid occupancy"""
+    bl_idname = "object.wfc_3d_search"
+    bl_label = "Search"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        props = context.scene.wfc_props
+        if props.search_iterations <= 0 or props.collection_obj is None: return {'FINISHED'}
+        generator = WFC3DGenerator(props.collection_obj, props)
+
+        a = props.auto_generate
+        props.auto_generate = False
+        i=0
+        mincount = 2**63 - 1
+        minseed = props.seed
+        while i < props.search_iterations:
+            generator.generate_model(False)
+            c = generator.grid.count_empty_cells()
+            if c < mincount:
+                minseed = props.seed
+                mincount = c
+            if mincount == 0: break
+            props.seed += 1
+            i += 1
+            generator.set_seed(props.seed)
+
+        generator.clean()
+        props.auto_generate = a
+        props.seed = minseed
+        if not props.auto_generate: generate_model(props)
+        if mincount == 0:
+            self.report({'INFO'}, "Found a result with full grid occupancy!")
+        else:
+            self.report({'INFO'}, "Found a result with maximum grid occupancy!")
+        return {'FINISHED'}
+
 class OBJECT_OT_WFC3DGenerateStopDelayedRenderer(bpy.types.Operator):
     """Stops running delayed WFC 3D model renderer"""
     bl_idname = "object.wfc_3d_generate_stop_delayed_renderer"
@@ -90,4 +127,4 @@ class OBJECT_OT_WFC3DCherryPicking(bpy.types.Operator):
         return {'FINISHED'}
 
 
-operators = [ OBJECT_OT_WFC3DAutoGenerateToggle, OBJECT_OT_WFC3DCherryPicking, OBJECT_OT_WFC3DGenerateTogglePauseDelayedRenderer, OBJECT_OT_WFC3DGenerateStopDelayedRenderer, OBJECT_OT_WFC3DGenerate ]
+operators = [ OBJECT_OT_WFC3DSearch, OBJECT_OT_WFC3DAutoGenerateToggle, OBJECT_OT_WFC3DCherryPicking, OBJECT_OT_WFC3DGenerateTogglePauseDelayedRenderer, OBJECT_OT_WFC3DGenerateStopDelayedRenderer, OBJECT_OT_WFC3DGenerate ]

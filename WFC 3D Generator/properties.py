@@ -101,6 +101,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     link_objects: bpy.props.BoolProperty(name="Link New Objects (recommended)", description="Link new objects instead of copying them.", default = True,)
     copy_modifiers: bpy.props.BoolProperty(name="Copy Modifiers", description="Copy modifiers to linked objects.",)
     remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove existing target collection",)
+    search_iterations: bpy.props.IntProperty(name="Search Iterations", description="Search iterations", min=1, default=10)
    
     obj_list: bpy.props.CollectionProperty(type=WFC3DEditPanelMultiSelItem)
     obj_list_idx: bpy.props.IntProperty()
