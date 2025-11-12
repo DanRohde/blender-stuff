@@ -30,7 +30,7 @@ class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
 
 
 class OBJECT_OT_WFC3DSearch(bpy.types.Operator):
-    """Search for a result with maximum grid occupancy"""
+    """Search for a random seed with maximum grid occupancy"""
     bl_idname = "object.wfc_3d_search"
     bl_label = "Search"
     bl_options = {'REGISTER', 'UNDO'}

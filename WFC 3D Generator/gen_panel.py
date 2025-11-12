@@ -55,7 +55,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         box.prop(props, "random_start_cell")
         row = box.row()
         row.prop(props, "search_iterations",text="Iterations")
-        row.operator("object.wfc_3d_search",text="Search")
+        row.operator("object.wfc_3d_search",text="Search Seed")
         row.enabled = props.collection_obj is not None and not props.cherry_picking_running
         row = box.row()
         row.prop(props, "seed")
