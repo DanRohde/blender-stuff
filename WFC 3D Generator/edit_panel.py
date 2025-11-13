@@ -18,10 +18,9 @@ class WFC3D_UL_RegFreqList(bpy.types.UIList):
         col = row.column(align=True)
         col.prop(item,"selected", text="")
         col = row.column(align=True)
-        col.row().prop(item,"regfreq_min", text="min")
-        col.row().prop(item,"regfreq_max", text="max")
-        col.row().prop(item,"regfreq_freq", text=" Freqency")
-        layout.separator()
+        col.row().prop(item,"regfreq_min")
+        col.row().prop(item,"regfreq_max")
+        col.row().prop(item,"regfreq_freq")
 
 class WFC3D_UL_FixedPositionList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
