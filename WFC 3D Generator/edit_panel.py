@@ -13,9 +13,10 @@ class WFC3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
 class WFC3D_UL_RegFreqList(bpy.types.UIList):
-    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
+        col.label(text=f"{index}.")
         col.prop(item,"selected", text="")
         col = row.column(align=True)
         col.row().prop(item,"regfreq_min")
