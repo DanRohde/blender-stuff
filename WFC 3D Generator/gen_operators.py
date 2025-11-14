@@ -72,7 +72,15 @@ class OBJECT_OT_WFC3DSearch(bpy.types.Operator):
         else:
             self.report({'INFO'}, f"Found a result with maximum grid occupancy after {i} iteration(s)!")
         return {'FINISHED'}
-
+class WFC3D_OT_ResetSearchResult(bpy.types.Operator):
+    """Reset search result"""
+    bl_idname = "object.wfc_3d_reset_search_result"
+    bl_label = ""
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        props.search_result = (-1, -1, -1)
+        return {'FINISHED'}
 class OBJECT_OT_WFC3DGenerateStopDelayedRenderer(bpy.types.Operator):
     """Stops running delayed WFC 3D model renderer"""
     bl_idname = "object.wfc_3d_generate_stop_delayed_renderer"
@@ -134,4 +142,4 @@ class OBJECT_OT_WFC3DCherryPicking(bpy.types.Operator):
         return {'FINISHED'}
 
 
-operators = [ OBJECT_OT_WFC3DSearch, OBJECT_OT_WFC3DAutoGenerateToggle, OBJECT_OT_WFC3DCherryPicking, OBJECT_OT_WFC3DGenerateTogglePauseDelayedRenderer, OBJECT_OT_WFC3DGenerateStopDelayedRenderer, OBJECT_OT_WFC3DGenerate ]
+operators = [ WFC3D_OT_ResetSearchResult, OBJECT_OT_WFC3DSearch, OBJECT_OT_WFC3DAutoGenerateToggle, OBJECT_OT_WFC3DCherryPicking, OBJECT_OT_WFC3DGenerateTogglePauseDelayedRenderer, OBJECT_OT_WFC3DGenerateStopDelayedRenderer, OBJECT_OT_WFC3DGenerate ]

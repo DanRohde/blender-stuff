@@ -60,6 +60,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         if props.search_result[0] > -1:
             row = box.row()
             row.label(text=f"Seed {props.search_result[0]} found in {props.search_result[1]} steps with {props.search_result[2]} empty cell(s).")
+            row.operator("object.wfc_3d_reset_search_result",icon="PANEL_CLOSE")
         row = box.row()
         row.prop(props, "seed")
         if prefs.cherry_picking_delay > 0:
