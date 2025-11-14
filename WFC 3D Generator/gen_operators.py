@@ -30,7 +30,6 @@ class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
         self.report({'INFO'}, "WFC 3D model successfully generated!")
         return {'FINISHED'}
 
-
 class OBJECT_OT_WFC3DSearch(bpy.types.Operator):
     """Search for a random seed with maximum grid occupancy"""
     bl_idname = "object.wfc_3d_search"
@@ -42,12 +41,13 @@ class OBJECT_OT_WFC3DSearch(bpy.types.Operator):
         if props.search_iterations <= 0 or props.collection_obj is None: return {'FINISHED'}
         if len(props.collection_obj.objects) == 0 and len(props.collection_obj.children) == 0: return {'FINISHED'}
         generator = WFC3DGenerator(props.collection_obj, props)
-
+        props.search_result = (-1, -1, -1)
         a = props.auto_generate
         props.auto_generate = False
         i=0
         mincount = 2**63 - 1
         minseed = props.seed
+        context.window_manager.progress_begin(0, 100)
         while i < props.search_iterations:
             generator.set_seed(props.seed)
             generator.generate_model(False)
@@ -58,10 +58,14 @@ class OBJECT_OT_WFC3DSearch(bpy.types.Operator):
             if mincount == 0: break
             props.seed += 1
             i += 1
+            context.window_manager.progress_update(100*i/props.search_iterations)
 
+        context.window_manager.progress_end()
         generator.clean()
         props.auto_generate = a
         props.seed = minseed
+        props.search_result = (minseed, i, mincount )
+
         if not props.auto_generate: generate_model(props)
         if mincount == 0:
             self.report({'INFO'}, f"Found a result with full grid occupancy after {i} iteration(s)!")

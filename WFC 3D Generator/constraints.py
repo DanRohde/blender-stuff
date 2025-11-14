@@ -126,6 +126,10 @@ class WFC3DConstraints:
                 if f == '-' or f == 'None' or f == 'False': return False
                 if self.grid.is_on_specific_face(pos, f): return True
             return False
+        if 'regfreq_freq' in self.constraints[name]:
+            for i in range(len(self.constraints[name]['regfreq_freq'])):
+                if self.constraints[name]['regfreq_freq'][i] != 0: continue
+                if self.grid.is_inside_region(pos, self.constraints[name]['regfreq_min'][i], self.constraints[name]['regfreq_max'][i]): return False
         ret = True
         if 'region_min' in self.constraints[name] or 'region_max' in self.constraints[name]:
             ret = ret and self.grid.is_inside_region(pos, self.constraints[name].get('region_min', None),
