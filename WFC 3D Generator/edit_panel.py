@@ -396,6 +396,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.row().prop(props, "noise_prob_basis")
             if props.noise_prob_basis != "_NONE_":
                 box.row().prop(props, "noise_prob_threshold")
+                box.row().prop(props, "noise_prob_scale")
             box.row().label(text="Noise on transformations:")
             box.row().prop(props, "noise_transf_basis")
             if props.noise_transf_basis != "_NONE_":

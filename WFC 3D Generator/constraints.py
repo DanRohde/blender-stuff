@@ -107,7 +107,7 @@ class WFC3DConstraints:
                 nb = get_noise_basis(self)
                 basis = self.constraints[name]['noise_prob_basis']
                 if basis == 0: return True
-                sc = .01
+                sc = self.constraints[name]['noise_prob_scale']
                 th = self.constraints[name]['noise_prob_threshold']
                 v = Vector(((1 + pos[0]) * sc, (1 + pos[1]) * sc, (1 + pos[2]) * sc))
                 n = remap( noise.noise(v, noise_basis=nb[basis][0]), -1, 1, 0, 1)

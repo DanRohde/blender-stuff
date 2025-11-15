@@ -66,7 +66,7 @@ PROP_DEFAULTS = {
     # region frequency constraints:
     'regfreq_min' : (-1,-1,-1), 'regfreq_max' : (-1,-1,-1), 'regfreq_freq' : -1,
     # noise constraints:
-    'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0,
+    'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : .1,
     'noise_transf_basis' : 0, 'noise_transf_scale' : .1,
 }
 
@@ -116,7 +116,7 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'fixed_position_xyz' : 'fixed_position_input_list',
                    }
 
-NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold',
+NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_scale',
                       'noise_transf_basis', 'noise_transf_scale',
                     ]
 
