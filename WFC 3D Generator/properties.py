@@ -274,7 +274,7 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
     link_objects : bpy.props.BoolProperty(name="Link Objects",description="Link objects", default=True, update=handle_update_pref)
     copy_modifiers: bpy.props.BoolProperty(name="Copy Modifiers",description="Copy modifiers", default=False, update=handle_update_pref)
-    remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove target collection", default=False, update=handle_update_pref)
+    remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove target collection", default=True, update=handle_update_pref)
     cherry_picking_delay: bpy.props.IntProperty(name="Cherry Picking Delay", description="Cherry picking delay in seconds", min=0, default=CHERRY_PICKING_DELAY, update=handle_update_pref)
     auto_save:   bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties", default=True, update=handle_update_pref)
     default_empty_name : bpy.props.StringProperty(name="Default Empty Name", description="Default Empty Name", default=DEFAULT_EMPTY_NAME, update=handle_update_pref)
