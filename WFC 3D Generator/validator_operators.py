@@ -111,17 +111,38 @@ def check_dimensions_constraints(obj):
 
     return warn_count
 def check_fixed_position_constraints(obj):
-    if 'wfc_fixed_position_xyz' not in obj: return 0
-    if sum(obj['wfc_fixed_position_xyz'])==-3: return 0
-    props = bpy.context.scene.wfc_props
-    x,y,z = obj['wfc_fixed_position_xyz']
     warn_count = 0
-    if not (0 <= x < props.grid_size[0] and 0 <= y < props.grid_size[1] and 0 <= z < props.grid_size[2]):
-        add_log_entry(1, f"The fixed position of object {obj.name} is outside the grid.")
-        warn_count += 1
+    props = bpy.context.scene.wfc_props
+    idx = 0
+    while f'wfc_fixed_position_xyz_{idx}' in obj:
+        pn  = f"wfc_fixed_position_xyz_{idx}"
+        x, y, z = obj[pn]
+        if not (0 <= x < props.grid_size[0] and 0 <= y < props.grid_size[1] and 0 <= z < props.grid_size[2]):
+            add_log_entry(1, f"The fixed position {idx} ({x},{y},{z}) of object {obj.name} is outside the grid.")
+            warn_count += 1
+        idx += 1
+    return warn_count
+def check_region_frequency_constraints(obj):
+    warn_count = 0
+    gs = bpy.context.scene.wfc_props.grid_size
+    idx = 0
+    while f'wfc_regfreq_freq_{idx}' in obj:
+        minx, miny, minz = obj[f"wfc_regfreq_min_{idx}"]
+        maxx, maxy, maxz = obj[f"wfc_regfreq_max_{idx}"]
+        rsize = (maxx-minx+1) * (maxy-miny+1) * (maxz-minz+1)
+        freq = obj[f"wfc_regfreq_freq_{idx}"]
+        if freq < 0 or freq > rsize:
+            add_log_entry(1,f"The frequency {freq} of the region frequency constraint {idx} of object {obj.name} is out of range 0..{rsize}.")
+            warn_count += 1
+        if not (0 <= minx < gs[0] and 0 <= miny < gs[1] and 0 <= minz < gs[2]):
+            add_log_entry(1, f"The min value of the region frequency constraint {idx} of object {obj.name} is outside the grid boundaries.")
+            warn_count += 1
+        if not (0 <= maxx < gs[0] and 0 <= maxy < gs[1] and 0 <= maxz < gs[2]):
+            add_log_entry(1, f"The max value of the region frequency constraint {idx} of object {obj.name} is outside the grid boundaries.")
+            warn_count += 1
+        idx += 1
 
     return warn_count
-
 def check_collection(collection):
     warn_count, error_count = 0, 0
     conn_names = {}
@@ -135,7 +156,7 @@ def check_collection(collection):
         warn_count += check_frequency_constraints(obj)
         warn_count += check_dimensions_constraints(obj)
         warn_count += check_fixed_position_constraints(obj)
-
+        warn_count += check_region_frequency_constraints(obj)
     warn_count += check_connector_names(conn_names, conn_obj_names)
     return warn_count, error_count
 
