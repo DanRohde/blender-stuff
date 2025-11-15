@@ -58,6 +58,8 @@ def get_constraints(props):
         constraints = FIXED_POSITION_CONSTRAINTS
     elif props.edit_constraints == 'regfreq':
         constraints = REGFREQ_CONSTRAINTS
+    elif props.edit_constraints == 'noise':
+        constraints = NOISE_CONSTRAINTS
     return constraints
 
 def get_selected_items(obj_list):
@@ -327,3 +329,12 @@ def handle_update_collection(_self, context = None):
         item = props.neighbor_list.add()
         item.obj = obj
         item.selected = obj.name in sel_n_items
+
+def get_noise_basis(_self, _context = None):
+    ret = [('_NONE_','Please select a noise basis','Please select a noise basis'),None]
+    for nb in ['BLENDER', 'PERLIN_ORIGINAL', 'PERLIN_NEW', 'VORONOI_F1', 'VORONOI_F2', 'VORONOI_F3', 'VORONOI_F4', 'VORONOI_F2F1', 'VORONOI_CRACKLE', 'CELLNOISE']:
+        ret.append((nb,nb,nb))
+    return ret
+
+def remap(x, in_min, in_max, out_min, out_max):
+    return out_min + (float(x - in_min) / (in_max - in_min)) * (out_max - out_min)

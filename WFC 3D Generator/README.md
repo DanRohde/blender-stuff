@@ -57,6 +57,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
     or define other building blocks as mirror partners.
 * Transformations:
   * These are not really restrictions. This allows you to randomize the position, size, rotation, and flipping of building blocks.
+* Noise Constraints:
+  * Noise constraints either influence the probability of an object occurring or replace random values in transformations with noise values. 
 
 ## How the WFC 3D Generator algorithm works
 1. **Initializes** each cell of the grid with a list of permitted building blocks. Grid and region constraints are taken into account.
@@ -84,9 +86,10 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Connector constraints: 27
 * Fixed position constraints: 1
 * Dimensions constraints: 1
+* Noise constraints: 4
 
 
-* **Sum: 112**
+* **Sum: 116**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -186,14 +189,19 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
     * wfc_sym_mirror_trans: a boolean that allows a transfer of random transformations to mirror partners
     * wfc_sym_rotate_axis: a float vector
     * wfc_sym_rotate_n: an integer (number of rotations: n=4 => 90° rotation)
-    
 
 ## Connector Constraints
 * Used custom properties: `wfc_conn_[any|front|back|left|right|top|bottom|cn_(fbl|fbr|ftl|ftr|bbl|bbr|btl|btr)|en_(fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb)]`
 * Allowed property value: string with a connector name
 
+## Noise Constraints
+* Used custom properties: `wfc_noise_[prob|transf]_basis, wfc_noise_prob_threshold, wfc_noise_transf_scale`
+* Allowed property values:
+  * wfc_noise_[prob|transf]_basis: integer value between 2 - 11
+  * wfc_noise_prob_threshold: float value between 0 and 1
+  * wfc_noise_transf_scale: float value 0..inf
+
 ## Upcoming Features
-* add noise to the grid (Perlin, Voronoi, ... ):  removes objects from the grid or adds objects to the grid to change the probability of an object appearing.
 * viewport constraint visualizer
 * geometry constraints: matching edges/faces
 * maybe various grid shapes: cubic, spherical, and cylindrical

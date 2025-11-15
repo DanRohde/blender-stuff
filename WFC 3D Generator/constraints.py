@@ -1,12 +1,12 @@
 import bpy
 import numpy as np
 from itertools import product
-from mathutils import Vector, Matrix
+from mathutils import Vector, Matrix, noise
 import random
 from collections import deque
 
 from .constants import *
-from .helper import get_default_empty_object, get_default_empty_name
+from .helper import get_default_empty_object, get_default_empty_name, get_noise_basis, remap
 
 class WFC3DConstraints:
     def __init__(self):
@@ -103,6 +103,15 @@ class WFC3DConstraints:
                     self.constraints[obj_name][direction] = allobjects
 
     def are_grid_constraints_satisfied(self, name, pos):
+        if 'noise_prob_basis' in self.constraints[name] and self.constraints[name]['noise_prob_basis'] > 1:
+                nb = get_noise_basis(self)
+                basis = self.constraints[name]['noise_prob_basis']
+                if basis == 0: return True
+                sc = .01
+                th = self.constraints[name]['noise_prob_threshold']
+                v = Vector(((1 + pos[0]) * sc, (1 + pos[1]) * sc, (1 + pos[2]) * sc))
+                n = remap( noise.noise(v, noise_basis=nb[basis][0]), -1, 1, 0, 1)
+                return n >= th
         if 'corners' in self.constraints[name] and self.grid.is_corner(pos):
             for c in self.constraints[name]['corners']:
                 if c == '' and len(self.constraints[name]['corners']) == 1: return True
@@ -382,6 +391,14 @@ class WFC3DConstraints:
             target_obj.scale.z *= fmat[2]
             return
         symtransmat = []
+        noisefactor = 1
+        if constraints["noise_transf_basis"] > 1:
+            b = constraints["noise_transf_basis"]
+            s = constraints["noise_transf_scale"]
+            v = Vector(( (1+x)*s, (1+y)*s, (1+z)*s ))
+            nb = get_noise_basis(self)
+            noisefactor = noise.noise(v, noise_basis=nb[b][0])
+
         if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
             tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
             tmax = constraints.get("translation_max",PROP_DEFAULTS["translation_max"])
@@ -389,7 +406,8 @@ class WFC3DConstraints:
             loc = target_obj.location
             newloc = [0.0, 0.0, 0.0]
             for i in range(3):
-                newloc[i] =_get_mapped_random_values(tmin[i], tmax[i], ts[i])
+                newloc[i] = _get_mapped_random_values(tmin[i], tmax[i], ts[i])
+                if tmin[i]!=tmax[i] and noisefactor!=1: newloc[i] = remap(noisefactor, -1, 1, tmin[i], tmax[i])
                 loc[i] += newloc[i] if self.symflip[x, y, z] is None or not constraints['sym_mirror_flip_transl'] else newloc[i] * self.symflip[x, y, z][i]
             target_obj.location = loc
             symtransmat.extend(newloc)
@@ -398,13 +416,20 @@ class WFC3DConstraints:
         if constraints["scale_type"] is not None and constraints["scale_type"] > 0:
             sm = [0.0, 0.0, 0.0]
             if constraints["scale_type"] == 1 and constraints["scale_uni"] is not None:
-                s = _get_mapped_random_values(constraints["scale_uni"][0], constraints["scale_uni"][1], constraints["scale_uni"][2])
+                if noisefactor == 1:
+                    s = _get_mapped_random_values(constraints["scale_uni"][0], constraints["scale_uni"][1], constraints["scale_uni"][2])
+                else:
+                    s = remap(noisefactor, -1, 1, constraints["scale_uni"][0], constraints["scale_uni"][1])
                 sm = [s,s,s]
             if constraints["scale_type"] == 2 and constraints["scale_min"] is not None and constraints["scale_max"] is not None and constraints["scale_steps"] is not None:
                 smin = constraints["scale_min"]
                 smax = constraints["scale_max"]
                 ss = constraints["scale_steps"]
-                sm = [ _get_mapped_random_values(smin[0], smax[0], ss[0]), _get_mapped_random_values(smin[1], smax[1], ss[1]), _get_mapped_random_values(smin[2], smax[2], ss[2]) ]
+                sm = [_get_mapped_random_values(smin[0], smax[0], ss[0]), _get_mapped_random_values(smin[1], smax[1], ss[1]), _get_mapped_random_values(smin[2], smax[2], ss[2])]
+                if noisefactor !=1:
+                    if smin[0] != smax[0]: sm[0] = remap(noisefactor, -1, 1, smin[0], smax[0])
+                    if smin[1] != smax[1]: sm[1] = remap(noisefactor, -1, 1, smin[1], smax[1])
+                    if smin[2] != smax[2]: sm[2] = remap(noisefactor, -1, 1, smin[2], smax[2])
             target_obj.scale.x = sm[0]
             target_obj.scale.y = sm[1]
             target_obj.scale.z = sm[2]
@@ -424,7 +449,10 @@ class WFC3DConstraints:
             axis=['X','Y','Z']
             rotmat = [0.0, 0.0, 0.0]
             for i in range(3):
-                a = _get_mapped_random_values(rmin[i], rmax[i], rs[i])
+                if noisefactor == 1:
+                    a = _get_mapped_random_values(rmin[i], rmax[i], rs[i])
+                else:
+                    a = remap(noisefactor, -1, 1, rmin[i], rmax[i])
                 rotmat[i] = a
                 if a!=0: target_obj.rotation_euler.rotate_axis(axis[i], a)
             symtransmat.extend(rotmat)

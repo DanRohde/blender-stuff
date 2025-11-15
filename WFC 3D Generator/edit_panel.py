@@ -387,6 +387,20 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
             col.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if props.edit_constraints == "noise":
+            box = box.box()
+            row = box.row()
+            row.label(text=obj_name)
+            row.operator("object.wfc_reset_constraints")
+            box.row().label(text="Noise on probability of occurrence:")
+            box.row().prop(props, "noise_prob_basis")
+            if props.noise_prob_basis != "_NONE_":
+                box.row().prop(props, "noise_prob_threshold")
+            box.row().label(text="Noise on transformations:")
+            box.row().prop(props, "noise_transf_basis")
+            if props.noise_transf_basis != "_NONE_":
+                box.row().prop(props, "noise_transf_scale")
+            if not props.auto_save: box.operator("object.wfc_update_constraints")
 
     def _draw_labels(self, layout, labels):
         for label in labels:

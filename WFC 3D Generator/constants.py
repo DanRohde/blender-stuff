@@ -65,6 +65,9 @@ PROP_DEFAULTS = {
     'fixed_position_xyz' : (-1,-1,-1),
     # region frequency constraints:
     'regfreq_min' : (-1,-1,-1), 'regfreq_max' : (-1,-1,-1), 'regfreq_freq' : -1,
+    # noise constraints:
+    'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0,
+    'noise_transf_basis' : 0, 'noise_transf_scale' : .1,
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
@@ -113,8 +116,13 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'fixed_position_xyz' : 'fixed_position_input_list',
                    }
 
+NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold',
+                      'noise_transf_basis', 'noise_transf_scale',
+                    ]
+
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS
-                   + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS)
+                   + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS
+                   + NOISE_CONSTRAINTS)
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
 

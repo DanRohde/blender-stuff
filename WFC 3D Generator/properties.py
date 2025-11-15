@@ -1,7 +1,7 @@
 import bpy
 
 from .constants import *
-from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection
+from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection, get_noise_basis
 from .gen_operators import  handle_seed_change
 
 
@@ -136,6 +136,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                None,
                ("probability", "Probability Constraints", "Probability constraints"),
                ("transformation", "Transformations", "Transformations"),
+               ("noise","Noise Constraints","Noise constraints"),
                ],
         update = update_edit_form
     )
@@ -244,6 +245,11 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
     fixed_position_input_list: bpy.props.CollectionProperty(type=WFC3DFixedPositionListItem)
     fixed_position_input_list_idx: bpy.props.IntProperty()
+
+    noise_prob_basis: bpy.props.EnumProperty(name="Noise Basis", description="Select a noise basis", items=get_noise_basis, update=auto_save, )
+    noise_prob_threshold : bpy.props.FloatProperty(name="Threshold", description="Threshold", min=0.0, max=1.0, default=PROP_DEFAULTS['noise_prob_threshold'], update=auto_save)
+    noise_transf_basis: bpy.props.EnumProperty(name="Noise Basis", description="Select a noise basis", items=get_noise_basis, update=auto_save, )
+    noise_transf_scale: bpy.props.FloatProperty(name="Scale", description="Scale", min=0, default=PROP_DEFAULTS['noise_transf_scale'], update=auto_save)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
