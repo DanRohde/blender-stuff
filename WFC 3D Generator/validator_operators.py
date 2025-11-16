@@ -143,6 +143,17 @@ def check_region_frequency_constraints(obj):
         idx += 1
 
     return warn_count
+def check_noise_constraints(obj):
+    warn_count = 0
+    if "wfc_noise_prob_scale" in obj:
+        if int(obj["wfc_noise_prob_scale"]) == obj["wfc_noise_prob_scale"]:
+            add_log_entry(1, f"An integer scale value such as {int(obj['wfc_noise_transf_scale'])} from {obj.name} prevents the effect of noise.")
+            warn_count += 1
+    if "wfc_noise_transf_scale" in obj:
+        if int(obj["wfc_noise_transf_scale"]) == obj["wfc_noise_transf_scale"]:
+            add_log_entry(1, f"An integer scale value such as {int(obj['wfc_noise_transf_scale'])} from {obj.name} prevents the effect of noise.")
+            warn_count += 1
+    return warn_count
 def check_collection(collection):
     warn_count, error_count = 0, 0
     conn_names = {}
@@ -157,6 +168,7 @@ def check_collection(collection):
         warn_count += check_dimensions_constraints(obj)
         warn_count += check_fixed_position_constraints(obj)
         warn_count += check_region_frequency_constraints(obj)
+        warn_count += check_noise_constraints(obj)
     warn_count += check_connector_names(conn_names, conn_obj_names)
     return warn_count, error_count
 
