@@ -254,7 +254,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     noise_transf_basis: bpy.props.EnumProperty(name="Noise Basis", description="Select a noise basis", items=get_noise_basis, update=auto_save, )
     noise_transf_scale: bpy.props.FloatProperty(name="Scale", description="Scale", min=0, default=PROP_DEFAULTS['noise_transf_scale'], update=auto_save)
 
-    geo_faces: bpy.props.BoolVectorProperty(name="Faces", description="Front, Back, Bottom, Top, Left, Right", size=6, default=PROP_DEFAULTS["geo_faces"], update=auto_save)
+    geo_faces: bpy.props.BoolVectorProperty(name="Faces", description="Top, Bottom, Front, Back, Left, Right", size=6, default=PROP_DEFAULTS["geo_faces"], update=auto_save)
     geo_match_edges: bpy.props.BoolProperty(name="Match Edges", description="Match edges", default=PROP_DEFAULTS["geo_match_edges"], update=auto_save)
     geo_match_faces: bpy.props.BoolProperty(name="Match Faces", description="Match faces", default=PROP_DEFAULTS["geo_match_faces"], update=auto_save)
     geo_epsilon: bpy.props.FloatProperty(name="Epsilon", description="Maximum deviation", default=PROP_DEFAULTS["geo_epsilon"], update=auto_save)
