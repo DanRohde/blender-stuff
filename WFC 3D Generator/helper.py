@@ -1,5 +1,6 @@
 from typing import Any
 import bpy
+from mathutils import noise, Vector
 from .constants import *
 from .vis import is_directions_geometry_nodegroup_visible
 
@@ -7,7 +8,7 @@ from .vis import is_directions_geometry_nodegroup_visible
 def get_icon_name(item):
     return ICON_MAP[item.obj.type] if item.obj.id_type != 'COLLECTION' else ICON_MAP[item.obj.id_type]
 
-def get_default_empty_object(collection: object, create: object = False) -> Any | None:
+def get_default_empty_object(collection, create = False) -> Any | None:
     if get_default_empty_name() in collection.objects:
         return collection.objects[get_default_empty_name()]
     else:
@@ -166,7 +167,7 @@ def auto_save(_self, context):
 
     update_constraints(props, get_constraints(props))
 
-def update_edit_form(self, _context):
+def update_edit_form(_self, _context):
     props = bpy.context.scene.wfc_props
     default_obj = None
     obj = None
@@ -338,3 +339,11 @@ def get_noise_basis(_self, _context = None):
 
 def remap(x, in_min, in_max, out_min, out_max):
     return out_min + (float(x - in_min) / (in_max - in_min)) * (out_max - out_min)
+
+def get_noise(pos, basis, scale, minv = None, maxv = None):
+    nb = get_noise_basis(None)
+    if basis < 2 or basis >= len(nb): basis = 3
+    v = Vector(((pos[0]+1) * scale, (pos[1]+1) * scale, (pos[2]+1) * scale))
+    n = noise.noise(v, noise_basis=nb[basis][0])
+    if minv is None or maxv is None: return n
+    return remap(n, -1, 1, minv, maxv)

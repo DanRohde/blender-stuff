@@ -6,7 +6,7 @@ import random
 from collections import deque
 
 from .constants import *
-from .helper import get_default_empty_object, get_default_empty_name, get_noise_basis, remap
+from .helper import get_default_empty_object, get_default_empty_name, get_noise, remap
 
 class WFC3DConstraints:
     def __init__(self):
@@ -104,14 +104,8 @@ class WFC3DConstraints:
 
     def are_grid_constraints_satisfied(self, name, pos):
         if 'noise_prob_basis' in self.constraints[name] and self.constraints[name]['noise_prob_basis'] > 1:
-                nb = get_noise_basis(self)
-                basis = self.constraints[name]['noise_prob_basis']
-                if basis == 0: return True
-                sc = self.constraints[name]['noise_prob_scale']
-                th = self.constraints[name]['noise_prob_threshold']
-                v = Vector(((1 + pos[0]) * sc, (1 + pos[1]) * sc, (1 + pos[2]) * sc))
-                n = remap( noise.noise(v, noise_basis=nb[basis][0]), -1, 1, 0, 1)
-                return n >= th
+                n = get_noise(pos, self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
+                return n >= self.constraints[name]['noise_prob_threshold']
         if 'corners' in self.constraints[name] and self.grid.is_corner(pos):
             for c in self.constraints[name]['corners']:
                 if c == '' and len(self.constraints[name]['corners']) == 1: return True
@@ -391,13 +385,7 @@ class WFC3DConstraints:
             target_obj.scale.z *= fmat[2]
             return
         symtransmat = []
-        noisefactor = 1
-        if constraints["noise_transf_basis"] > 1:
-            b = constraints["noise_transf_basis"]
-            s = constraints["noise_transf_scale"]
-            v = Vector(( (1+x)*s, (1+y)*s, (1+z)*s ))
-            nb = get_noise_basis(self)
-            noisefactor = noise.noise(v, noise_basis=nb[b][0])
+        noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_noise(position, constraints["noise_transf_basis"], constraints["noise_transf_scale"])
 
         if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
             tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
