@@ -402,6 +402,17 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             if props.noise_transf_basis != "_NONE_":
                 box.row().prop(props, "noise_transf_scale")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if props.edit_constraints == "geometry":
+            box = box.box()
+            row = box.row()
+            row.label(text=obj_name)
+            row.operator("object.wfc_reset_constraints")
+            box.row().prop(props, "geo_faces")
+            if sum(props.geo_faces) > 0:
+                box.row().prop(props, "geo_match_edges")
+                box.row().prop(props, "geo_match_faces")
+                box.row().prop(props, "geo_epsilon")
+            if not props.auto_save: box.operator("object.wfc_update_constraints")
 
     def _draw_labels(self, layout, labels):
         for label in labels:

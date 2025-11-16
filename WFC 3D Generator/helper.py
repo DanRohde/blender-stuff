@@ -61,6 +61,8 @@ def get_constraints(props):
         constraints = REGFREQ_CONSTRAINTS
     elif props.edit_constraints == 'noise':
         constraints = NOISE_CONSTRAINTS
+    elif props.edit_constraints == 'geometry':
+        constraints = GEOMETRY_CONSTRAINTS
     return constraints
 
 def get_selected_items(obj_list):

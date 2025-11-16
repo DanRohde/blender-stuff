@@ -68,6 +68,9 @@ PROP_DEFAULTS = {
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : .1,
     'noise_transf_basis' : 0, 'noise_transf_scale' : .1,
+    # geo constraints:
+    'geo_faces' : (False, False, False, False, False, False), 'geo_match_edges': False, 'geo_match_faces': False,
+    'geo_epsilon' : 0,
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
@@ -93,7 +96,7 @@ PROBABILITY_CONSTRAINTS = [ 'probability', 'weight', 'auto_weight']
 
 GRID_CONSTRAINTS = [ 'faces', 'corners', 'edges', 'inside']
 
-REGION_CONSTRAINTS = [ 'region_min', 'region_max','region_quadrant']
+REGION_CONSTRAINTS = [ 'region_min', 'region_max', 'region_quadrant']
 
 CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn_top','conn_bottom',
                         'conn_en_fl','conn_en_fr','conn_en_ft','conn_en_fb',
@@ -120,9 +123,11 @@ NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_s
                       'noise_transf_basis', 'noise_transf_scale',
                     ]
 
+GEOMETRY_CONSTRAINTS = [ 'geo_faces', 'geo_match_edges', 'geo_match_faces', 'geo_epsilon',]
+
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS
                    + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS
-                   + NOISE_CONSTRAINTS)
+                   + NOISE_CONSTRAINTS + GEOMETRY_CONSTRAINTS )
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
 
