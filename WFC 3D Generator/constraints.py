@@ -624,4 +624,5 @@ class WFC3DConstraints:
         self.auto_weights = None
         self.sympartner_obj = None
         self.sympartner = None
-        self.symflip =None
+        self.symflip = None
+        self.symtransform = None

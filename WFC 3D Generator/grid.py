@@ -301,3 +301,4 @@ class WFC3DGrid:
     def clean(self):
         self.grid = None
         self.collapsed = None
+        self.grid_size = None
