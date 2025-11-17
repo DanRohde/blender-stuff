@@ -58,9 +58,9 @@ license = [
 # # Keep this a single short sentence without a period (.) at the end.
 # # For longer explanations use the documentation or detail page.
 #
-# [permissions]
+[permissions]
 # network = "Need to sync motion-capture data to server"
-# files = "Import/export FBX from/to disk"
+files = "Import/export constraints (JSON) from/to disk"
 # clipboard = "Copy and paste bone transforms"
 
 # # Optional: advanced build settings.
