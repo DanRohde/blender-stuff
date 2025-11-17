@@ -18,7 +18,7 @@ def handle_seed_change(_self, context):
     if len(props.collection_obj.objects) == 0 and len(props.collection_obj.children) == 0: return
     generate_model(props)
 
-class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
+class WFC3D_OT_Generate(bpy.types.Operator):
     """Generates a 3D model with Wave Function Collapse"""
     bl_idname = "object.wfc_3d_generate"
     bl_label = "Generate WFC 3D Model"
@@ -30,7 +30,7 @@ class OBJECT_OT_WFC3DGenerate(bpy.types.Operator):
         self.report({'INFO'}, "WFC 3D model successfully generated!")
         return {'FINISHED'}
 
-class OBJECT_OT_WFC3DSearch(bpy.types.Operator):
+class WFC3D_OT_Search(bpy.types.Operator):
     """Search for a random seed with maximum grid occupancy"""
     bl_idname = "object.wfc_3d_search"
     bl_label = "Search"
@@ -81,7 +81,7 @@ class WFC3D_OT_ResetSearchResult(bpy.types.Operator):
         props = context.scene.wfc_props
         props.search_result = (-1, -1, -1)
         return {'FINISHED'}
-class OBJECT_OT_WFC3DGenerateStopDelayedRenderer(bpy.types.Operator):
+class WFC3D_OT_GenerateStopDelayedRenderer(bpy.types.Operator):
     """Stops running delayed WFC 3D model renderer"""
     bl_idname = "object.wfc_3d_generate_stop_delayed_renderer"
     bl_label = ""
@@ -93,7 +93,7 @@ class OBJECT_OT_WFC3DGenerateStopDelayedRenderer(bpy.types.Operator):
         props.paused_delayed_renderer = False
         return {'FINISHED'}
 
-class OBJECT_OT_WFC3DGenerateTogglePauseDelayedRenderer(bpy.types.Operator):
+class WFC3D_OT_GenerateTogglePauseDelayedRenderer(bpy.types.Operator):
     """Toggle pause for running delayed WFC 3D model renderer"""
     bl_idname = "object.wfc_3d_generate_toggle_pause_delayed_renderer"
     bl_label = ""
@@ -104,7 +104,7 @@ class OBJECT_OT_WFC3DGenerateTogglePauseDelayedRenderer(bpy.types.Operator):
         props.paused_delayed_renderer = not props.paused_delayed_renderer
         return {'FINISHED'}
 
-class OBJECT_OT_WFC3DAutoGenerateToggle(bpy.types.Operator):
+class WFC3D_OT_AutoGenerateToggle(bpy.types.Operator):
     """Automatic Model Generation when Random Seed changes."""
     bl_idname = "object.wfc_3d_auto_generate_toggle"
     bl_label = ""
@@ -114,7 +114,7 @@ class OBJECT_OT_WFC3DAutoGenerateToggle(bpy.types.Operator):
         props.auto_generate = not props.auto_generate
         return {'FINISHED'}
 
-class OBJECT_OT_WFC3DCherryPicking(bpy.types.Operator):
+class WFC3D_OT_CherryPicking(bpy.types.Operator):
     """Start/Pause cherry picking """
     bl_idname = "object.wfc_3d_cherry_picking"
     bl_label = ""
@@ -142,4 +142,4 @@ class OBJECT_OT_WFC3DCherryPicking(bpy.types.Operator):
         return {'FINISHED'}
 
 
-operators = [ WFC3D_OT_ResetSearchResult, OBJECT_OT_WFC3DSearch, OBJECT_OT_WFC3DAutoGenerateToggle, OBJECT_OT_WFC3DCherryPicking, OBJECT_OT_WFC3DGenerateTogglePauseDelayedRenderer, OBJECT_OT_WFC3DGenerateStopDelayedRenderer, OBJECT_OT_WFC3DGenerate ]
+operators = [ WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_CherryPicking, WFC3D_OT_GenerateTogglePauseDelayedRenderer, WFC3D_OT_GenerateStopDelayedRenderer, WFC3D_OT_Generate ]

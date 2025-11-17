@@ -1,6 +1,6 @@
 import bpy
 
-class WFC3DValidatorPanel(bpy.types.Panel):
+class WFC3D_PT_ValidatorPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Validator"
     bl_idname = "VIEW3D_PT_wfc_3d_validator"
@@ -22,4 +22,4 @@ class WFC3D_UL_ValidatorOutputList(bpy.types.UIList):
         icon_map = { 0 : 'INFO_LARGE', 1: 'WARNING_LARGE', 2: 'ERROR'}
         layout.label(text=item.logentry,icon=icon_map[item.severity])
 
-panels = [WFC3D_UL_ValidatorOutputList, WFC3DValidatorPanel]
+panels = [WFC3D_UL_ValidatorOutputList, WFC3D_PT_ValidatorPanel]

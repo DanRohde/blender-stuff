@@ -2,10 +2,10 @@
 
 import bpy
 
-from . import properties, edit_operators, edit_panel, gen_operators, gen_panel, handler, validator_panel, validator_operators
+from . import properties, edit_operators, edit_panel, gen_operators, gen_panel, handler, validator_panel, validator_operators, backup_panel, backup_operators
 
 
-classes = properties.properties + edit_operators.operators + edit_panel.panels + gen_operators.operators + gen_panel.panels + validator_panel.panels + validator_operators.operators
+classes = properties.properties + edit_operators.operators + edit_panel.panels + gen_operators.operators + gen_panel.panels + validator_panel.panels + validator_operators.operators + backup_panel.panels + backup_operators.operators
 
 def register():
     for cls in classes:

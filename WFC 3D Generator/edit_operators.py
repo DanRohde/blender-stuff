@@ -45,7 +45,7 @@ def _reset_constraints(props, constraints):
 
     props.auto_save = auto_save
 
-class COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint(bpy.types.Operator):
+class WFC3D_OT_Update_Neighbor_Constraint(bpy.types.Operator):
     """Save neighbor constraints"""
     bl_idname = "object.wfc_update_neighbor_constraints"
     bl_label = "Save Neighbor(s)"
@@ -55,7 +55,7 @@ class COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint(bpy.types.Operator):
         self.report({'INFO'}, f"Neighbor constraints have been updated.")
         return {'FINISHED'}
 
-class COLLECTION_OT_WFC3DUpdate_Connector_Constraint(bpy.types.Operator):
+class WFC3D_OT_Update_Connector_Constraint(bpy.types.Operator):
     """Save connector constraints"""
     bl_idname = "object.wfc_update_connector_constraints"
     bl_label = "Save Connector"
@@ -66,7 +66,7 @@ class COLLECTION_OT_WFC3DUpdate_Connector_Constraint(bpy.types.Operator):
         self.report({'INFO'}, f"Connector constraints has been updated.")
         return {'FINISHED'}
 
-class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
+class WFC3D_OT_Update_Grid_Constraints(bpy.types.Operator):
     """Save grid constraints"""
     bl_idname = "object.wfc_update_grid_constraints"
     bl_label = "Save Grid Constraints"
@@ -78,7 +78,7 @@ class COLLECTION_OT_WFC3DUpdate_Grid_Constraints(bpy.types.Operator):
         self.report({'INFO'}, f"Grid constraints of object(s) {obj_name} have been saved.")
         return {'FINISHED'}
 
-class COLLECTION_OT_WFC3DUpdateConstraints(bpy.types.Operator):
+class WFC3D_OT_UpdateConstraints(bpy.types.Operator):
     """Update constraints"""
     bl_idname = "object.wfc_update_constraints"
     bl_label = "Save Constraints"
@@ -91,7 +91,7 @@ class COLLECTION_OT_WFC3DUpdateConstraints(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class COLLECTION_OT_WFC3DResetConstraints(bpy.types.Operator):
+class WFC3D_OT_ResetConstraints(bpy.types.Operator):
     """Reset constraints"""
     bl_idname = "object.wfc_reset_constraints"
     bl_label = "Reset"
@@ -105,7 +105,7 @@ class COLLECTION_OT_WFC3DResetConstraints(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
+class WFC3D_OT_SelectDropdownObject(bpy.types.Operator):
     """Select objects in 3D Viewport"""
     bl_idname = "collection.wfc_select_dropdown_object"
     bl_label = ""
@@ -138,7 +138,7 @@ class COLLECTION_OT_WFC3DSelectDropdownObject(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class COLLECTION_OT_WFC3DSelectNeighborObject(bpy.types.Operator):
+class WFC3D_OT_SelectNeighborObject(bpy.types.Operator):
     """Select objects in 3D Viewport"""
     bl_idname = "collection.wfc_select_neighbor_object"
     bl_label = ""
@@ -171,7 +171,7 @@ class COLLECTION_OT_WFC3DSelectNeighborObject(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class COLLECTION_OT_WFC3DGetSelectedObject(bpy.types.Operator):
+class WFC3D_OT_GetSelectedObject(bpy.types.Operator):
     """Select objects selected in 3D Viewport"""
     bl_idname = "collection.wfc_get_selected_object"
     bl_label = ""
@@ -196,7 +196,7 @@ class COLLECTION_OT_WFC3DGetSelectedObject(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class COLLECTION_OT_WFC3DGetNeighborSelectedObject(bpy.types.Operator):
+class WFC3D_OT_GetNeighborSelectedObject(bpy.types.Operator):
     """Select objects selected in 3D Viewport"""
     bl_idname = "collection.wfc_get_neighbor_selected_object"
     bl_label = ""
@@ -221,7 +221,7 @@ class COLLECTION_OT_WFC3DGetNeighborSelectedObject(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class COLLECTION_OT_WFC3DUpdateCollectionList(bpy.types.Operator):
+class WFC3D_OT_UpdateCollectionList(bpy.types.Operator):
     """Reload object list"""
     bl_idname = "collection.wfc_update_collection_list"
     bl_label = ""
@@ -237,7 +237,7 @@ def set_select_all_list_items(itemlist, selected):
         item.selected = selected
 
 
-class COLLECTION_OT_WFC3DCollectionListSelectAll(bpy.types.Operator):
+class WFC3D_OT_CollectionListSelectAll(bpy.types.Operator):
     """Select all objects in list"""
     bl_idname = "collection.wfc_collection_list_select_all"
     bl_label = ""
@@ -249,7 +249,7 @@ class COLLECTION_OT_WFC3DCollectionListSelectAll(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class COLLECTION_OT_WFC3DCollectionListSelectNone(bpy.types.Operator):
+class WFC3D_OT_CollectionListSelectNone(bpy.types.Operator):
     """Deselect all objects in list"""
     bl_idname = "collection.wfc_collection_list_select_none"
     bl_label = ""
@@ -261,7 +261,7 @@ class COLLECTION_OT_WFC3DCollectionListSelectNone(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class COLLECTION_OT_WFC3DNeighborListSelectAll(bpy.types.Operator):
+class WFC3D_OT_NeighborListSelectAll(bpy.types.Operator):
     """Select all objects in list"""
     bl_idname = "collection.wfc_neighbor_list_select_all"
     bl_label = ""
@@ -273,7 +273,7 @@ class COLLECTION_OT_WFC3DNeighborListSelectAll(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class COLLECTION_OT_WFC3DNeighborListSelectNone(bpy.types.Operator):
+class WFC3D_OT_NeighborListSelectNone(bpy.types.Operator):
     """Deselect all objects in list"""
     bl_idname = "collection.wfc_neighbor_list_select_none"
     bl_label = ""
@@ -284,7 +284,7 @@ class COLLECTION_OT_WFC3DNeighborListSelectNone(bpy.types.Operator):
         set_select_all_list_items(props.neighbor_list, False)
         return {'FINISHED'}
 
-class COLLECTION_OT_WFC3DAutoSaveToggle(bpy.types.Operator):
+class WFC3D_OT_AutoSaveToggle(bpy.types.Operator):
     """Auto save toggle"""
     bl_idname = "collection.wfc_auto_save_toggle"
     bl_label = ""
@@ -295,7 +295,7 @@ class COLLECTION_OT_WFC3DAutoSaveToggle(bpy.types.Operator):
         props.auto_save = not props.auto_save
         return {'FINISHED'}
 
-class COLLECTION_OT_WFC3DInfoToggle(bpy.types.Operator):
+class WFC3D_OT_InfoToggle(bpy.types.Operator):
     """Show/Hide Constraints Information"""
     bl_idname = "collection.wfc_info_toggle"
     bl_label = ""
@@ -359,21 +359,21 @@ class WFC3D_OT_GenericAddListItem(bpy.types.Operator):
 operators = [
     WFC3D_OT_GenericAddListItem,
     WFC3D_OT_GenericRemoveListItems,
-    COLLECTION_OT_WFC3DInfoToggle,
-    COLLECTION_OT_WFC3DAutoSaveToggle,
-    COLLECTION_OT_WFC3DUpdate_Neighbor_Constraint,
-    COLLECTION_OT_WFC3DUpdate_Connector_Constraint,
-    COLLECTION_OT_WFC3DUpdate_Grid_Constraints,
-    COLLECTION_OT_WFC3DUpdateConstraints,
-    COLLECTION_OT_WFC3DResetConstraints,
-    COLLECTION_OT_WFC3DSelectDropdownObject,
-    COLLECTION_OT_WFC3DGetSelectedObject,
-    COLLECTION_OT_WFC3DGetNeighborSelectedObject,
-    COLLECTION_OT_WFC3DSelectNeighborObject,
-    COLLECTION_OT_WFC3DUpdateCollectionList,
-    COLLECTION_OT_WFC3DCollectionListSelectAll,
-    COLLECTION_OT_WFC3DCollectionListSelectNone,
-    COLLECTION_OT_WFC3DNeighborListSelectAll,
-    COLLECTION_OT_WFC3DNeighborListSelectNone,
+    WFC3D_OT_InfoToggle,
+    WFC3D_OT_AutoSaveToggle,
+    WFC3D_OT_Update_Neighbor_Constraint,
+    WFC3D_OT_Update_Connector_Constraint,
+    WFC3D_OT_Update_Grid_Constraints,
+    WFC3D_OT_UpdateConstraints,
+    WFC3D_OT_ResetConstraints,
+    WFC3D_OT_SelectDropdownObject,
+    WFC3D_OT_GetSelectedObject,
+    WFC3D_OT_GetNeighborSelectedObject,
+    WFC3D_OT_SelectNeighborObject,
+    WFC3D_OT_UpdateCollectionList,
+    WFC3D_OT_CollectionListSelectAll,
+    WFC3D_OT_CollectionListSelectNone,
+    WFC3D_OT_NeighborListSelectAll,
+    WFC3D_OT_NeighborListSelectNone,
     WFC3DVisDirections,
 ]
