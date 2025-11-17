@@ -70,7 +70,7 @@ PROP_DEFAULTS = {
     'noise_transf_basis' : 0, 'noise_transf_scale' : .1,
     # geo constraints:
     'geo_faces' : (False, False, False, False, False, False), 'geo_match_edges': False, 'geo_match_faces': False,
-    'geo_epsilon' : 0,
+    'geo_tolerance' : 0,
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
@@ -123,7 +123,7 @@ NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_s
                       'noise_transf_basis', 'noise_transf_scale',
                     ]
 
-GEOMETRY_CONSTRAINTS = [ 'geo_faces', 'geo_match_edges', 'geo_match_faces', 'geo_epsilon',]
+GEOMETRY_CONSTRAINTS = [ 'geo_faces', 'geo_match_edges', 'geo_match_faces', 'geo_tolerance',]
 
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS
                    + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS

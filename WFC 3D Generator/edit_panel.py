@@ -409,9 +409,12 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.operator("object.wfc_reset_constraints")
             box.row().prop(props, "geo_faces")
             if sum(props.geo_faces) > 0:
+                fl = ", ".join([f.lower() for f,s in zip(FACE_DIRECTIONS,props.geo_faces) if s])
+                box.row().label(text="Selected face(s):")
+                box.row().label(text=f"{fl}")
                 box.row().prop(props, "geo_match_edges")
                 box.row().prop(props, "geo_match_faces")
-                box.row().prop(props, "geo_epsilon")
+                box.row().prop(props, "geo_tolerance")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
 
     def _draw_labels(self, layout, labels):

@@ -257,7 +257,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     geo_faces: bpy.props.BoolVectorProperty(name="Faces", description="Top, Bottom, Front, Back, Left, Right", size=6, default=PROP_DEFAULTS["geo_faces"], update=auto_save)
     geo_match_edges: bpy.props.BoolProperty(name="Match Edges", description="Match edges", default=PROP_DEFAULTS["geo_match_edges"], update=auto_save)
     geo_match_faces: bpy.props.BoolProperty(name="Match Faces", description="Match faces", default=PROP_DEFAULTS["geo_match_faces"], update=auto_save)
-    geo_epsilon: bpy.props.FloatProperty(name="Epsilon", description="Maximum deviation", default=PROP_DEFAULTS["geo_epsilon"], update=auto_save)
+    geo_tolerance: bpy.props.FloatProperty(name="Tolerance", description="Tolerance", default=PROP_DEFAULTS["geo_tolerance"], update=auto_save)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
