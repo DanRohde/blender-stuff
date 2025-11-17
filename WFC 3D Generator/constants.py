@@ -64,7 +64,7 @@ PROP_DEFAULTS = {
     # fixed position constraints:
     'fixed_position_xyz' : (-1,-1,-1),
     # region frequency constraints:
-    'regfreq_min' : (-1,-1,-1), 'regfreq_max' : (-1,-1,-1), 'regfreq_freq' : -1,
+    'regfreq_name' : '', 'regfreq_min' : (-1,-1,-1), 'regfreq_max' : (-1,-1,-1), 'regfreq_freq' : -1,
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : .1,
     'noise_transf_basis' : 0, 'noise_transf_scale' : .1,
@@ -111,11 +111,12 @@ DIMENSIONS_CONSTRAINTS = [ 'dim_xyz' ]
 
 FIXED_POSITION_CONSTRAINTS = [ 'fixed_position_xyz' ]
 
-REGFREQ_CONSTRAINTS = [ 'regfreq_min', 'regfreq_max', 'regfreq_freq',]
+REGFREQ_CONSTRAINTS = [ 'regfreq_name', 'regfreq_min', 'regfreq_max', 'regfreq_freq',]
 
 LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'regfreq_max' : 'regfreq_input_list',
                      'regfreq_freq' : 'regfreq_input_list',
+                     'regfreq_name' : 'regfreq_input_list',
                      'fixed_position_xyz' : 'fixed_position_input_list',
                    }
 

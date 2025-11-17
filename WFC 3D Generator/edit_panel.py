@@ -19,6 +19,7 @@ class WFC3D_UL_RegFreqList(bpy.types.UIList):
         col.label(text=f"{index}.")
         col.prop(item,"selected", text="")
         col = row.column(align=True)
+        col.row().prop(item,"regfreq_name")
         col.row().prop(item,"regfreq_min")
         col.row().prop(item,"regfreq_max")
         col.row().prop(item,"regfreq_freq")
@@ -447,6 +448,8 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             sbox = box.box()
             sbox.label(text="Connector constraints: ")
             self._draw_labels(sbox.column_flow(columns=3, align=True), labels)
+
+        self._draw_properties(props, box, "Geometry constraints", GEOMETRY_CONSTRAINTS)
 
         if sum(props.dim_xyz) > 3:
             row = box.box().row()
