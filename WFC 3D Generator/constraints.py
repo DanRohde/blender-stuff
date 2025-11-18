@@ -1,7 +1,7 @@
 import bpy
 import numpy as np
 from itertools import product
-from mathutils import Vector, Matrix, noise
+from mathutils import Vector, Matrix
 import random
 from collections import deque
 
@@ -129,6 +129,10 @@ class WFC3DConstraints:
                 if f == '-' or f == 'None' or f == 'False': return False
                 if self.grid.is_on_specific_face(pos, f): return True
             return False
+        if 'regprob_probability' in self.constraints[name]:
+            for i in range(len(self.constraints[name]['regprob_probability'])):
+                if self.constraints[name]['regprob_probability'][i] != 0 and self.constraints[name]['regprob_weight'][i] != 0: continue
+                if self.grid.is_inside_region(pos, self.constraints[name]['regprob_min'][i], self.constraints[name]['regprob_max'][i]): return False
         if 'regfreq_freq' in self.constraints[name]:
             for i in range(len(self.constraints[name]['regfreq_freq'])):
                 if self.constraints[name]['regfreq_freq'][i] != 0: continue
@@ -172,10 +176,18 @@ class WFC3DConstraints:
         self.auto_weights[name] = weight
         return weight
 
-    def get_weighted_options(self, elements):
+    def get_region_weight(self, position, element):
+        if 'regprob_weight' not in self.constraints[element]: return -1
+        for r in range(len(self.constraints[element]['regprob_weight'])):
+            if self.grid.is_inside_region(position, self.constraints[element]['regprob_min'][r], self.constraints[element]['regprob_max'][r]): return self.constraints[element]['regprob_weight'][r]
+        return -1
+
+    def get_weighted_options(self, position, elements):
         options = []
         for name in elements:
             weight = self.get_auto_weight(name)
+            region_weight = self.get_region_weight(position, name)
+            if region_weight != -1: weight = region_weight
             if self.constraints[name].get('weight',-1) > -1 or weight > 0:
                 weight += self.constraints[name].get('weight',1)
                 option = [name for _ in range(weight)]
@@ -183,20 +195,28 @@ class WFC3DConstraints:
             else:
                 options.extend(elements)
         return options
-    
-    def apply_probability_constraints(self, elements):
+
+    def get_region_probability(self, position, element):
+        if 'regprob_probability' not in self.constraints[element]: return -1
+        for r in range(len(self.constraints[element]['regprob_probability'])):
+            if self.grid.is_inside_region(position, self.constraints[element]['regprob_min'][r], self.constraints[element]['regprob_max'][r]): return self.constraints[element]['regprob_probability'][r]
+        return -1
+
+    def apply_probability_constraints(self, position, elements):
         options= []
         rand = random.random()
         random.shuffle(elements)
         for name in elements:
             p = self.constraints[name]['probability']
+            rp = self.get_region_probability(position, name)
+            if rp != -1: p = rp
             if p is not None and p < 1:
                 if rand < p:
                     options = [name]
                     break
             else:
                 options.append(name)
-        return self.get_weighted_options(options)
+        return self.get_weighted_options(position, options)
 
     @staticmethod
     def mirror_and_rotate_3d(coords, shape, mirror_axes=(False, False, False), rotate_axis=None, n_rotations=1):
@@ -330,7 +350,7 @@ class WFC3DConstraints:
     def collapse(self, grid, x, y, z):
         """Collapse a grid cell with constraints"""
         collapsed = []
-        options = self.apply_probability_constraints(self.check_space(grid.grid[x,y,z], (x,y,z)))
+        options = self.apply_probability_constraints((x,y,z), self.check_space(grid.grid[x,y,z], (x,y,z)))
         if len(options)>0:
             grid.grid[x, y, z] = [ random.choice(options) ]
         else:
