@@ -129,16 +129,34 @@ def check_region_frequency_constraints(obj):
     while f'wfc_regfreq_freq_{idx}' in obj:
         minx, miny, minz = obj[f"wfc_regfreq_min_{idx}"]
         maxx, maxy, maxz = obj[f"wfc_regfreq_max_{idx}"]
+        name = obj[f"wfc_regpfreq_name_{idx}"] if f"wfc_regfreq_name_{idx}" in obj else ""
         rsize = (maxx-minx+1) * (maxy-miny+1) * (maxz-minz+1)
         freq = obj[f"wfc_regfreq_freq_{idx}"]
         if freq < 0 or freq > rsize:
-            add_log_entry(1,f"The frequency {freq} of the region frequency constraint {idx} of object {obj.name} is out of range 0..{rsize}.")
+            add_log_entry(1,f"The frequency {freq} of the region frequency constraint {idx} (name: {name}) of object {obj.name} is out of range 0..{rsize}.")
             warn_count += 1
         if not (0 <= minx < gs[0] and 0 <= miny < gs[1] and 0 <= minz < gs[2]):
-            add_log_entry(1, f"The min value of the region frequency constraint {idx} of object {obj.name} is outside the grid boundaries.")
+            add_log_entry(1, f"The min value of the region frequency constraint {idx} (name: {name})of object {obj.name} is outside the grid boundaries.")
             warn_count += 1
         if not (0 <= maxx < gs[0] and 0 <= maxy < gs[1] and 0 <= maxz < gs[2]):
-            add_log_entry(1, f"The max value of the region frequency constraint {idx} of object {obj.name} is outside the grid boundaries.")
+            add_log_entry(1, f"The max value of the region frequency constraint {idx} (name: {name}) of object {obj.name} is outside the grid boundaries.")
+            warn_count += 1
+        idx += 1
+
+    return warn_count
+def check_region_probability_constraints(obj):
+    warn_count = 0
+    gs = bpy.context.scene.wfc_props.grid_size
+    idx = 0
+    while f'wfc_regprob_probability_{idx}' in obj:
+        minx, miny, minz = obj[f"wfc_regprob_min_{idx}"]
+        maxx, maxy, maxz = obj[f"wfc_regprob_max_{idx}"]
+        name = obj[f"wfc_regprob_name_{idx}"] if f"wfc_regprob_name_{idx}" in obj else ""
+        if not (0 <= minx < gs[0] and 0 <= miny < gs[1] and 0 <= minz < gs[2]):
+            add_log_entry(1, f"The min value of the region probability constraint {idx} (name: {name}) of object {obj.name} is outside the grid boundaries.")
+            warn_count += 1
+        if not (0 <= maxx < gs[0] and 0 <= maxy < gs[1] and 0 <= maxz < gs[2]):
+            add_log_entry(1, f"The max value of the region frequency constraint {idx} (name: {name}) of object {obj.name} is outside the grid boundaries.")
             warn_count += 1
         idx += 1
 
@@ -164,6 +182,7 @@ def check_collection(collection):
         warn_count += check_grid_constraints(obj)
         warn_count += check_region_constraints(obj)
         warn_count += check_probability_constraints(obj)
+        warn_count += check_region_probability_constraints(obj)
         warn_count += check_frequency_constraints(obj)
         warn_count += check_dimensions_constraints(obj)
         warn_count += check_fixed_position_constraints(obj)
