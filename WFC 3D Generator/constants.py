@@ -71,6 +71,8 @@ PROP_DEFAULTS = {
     # geo constraints:
     'geo_faces' : (False, False, False, False, False, False), 'geo_match_edges': False, 'geo_match_faces': False,
     'geo_tolerance' : 0,
+    # region probability constraints:
+    'regprob_name' : '', 'regprob_min' : (-1,-1,-1), 'regprob_max' : (-1,-1,-1), 'regprob_weight' : 1, 'regprob_probability' : 1,
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
@@ -113,11 +115,18 @@ FIXED_POSITION_CONSTRAINTS = [ 'fixed_position_xyz' ]
 
 REGFREQ_CONSTRAINTS = [ 'regfreq_name', 'regfreq_min', 'regfreq_max', 'regfreq_freq',]
 
+REGPROB_CONSTRAINTS = [ 'regprob_name', 'regprob_min', 'regprob_max', 'regprob_weight', 'regprob_probability']
+
 LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'regfreq_max' : 'regfreq_input_list',
                      'regfreq_freq' : 'regfreq_input_list',
                      'regfreq_name' : 'regfreq_input_list',
                      'fixed_position_xyz' : 'fixed_position_input_list',
+                     'regprob_name' : 'regprob_input_list',
+                     'regprob_min' : 'regprob_input_list',
+                     'regprob_max' : 'regprob_input_list',
+                     'regprob_weight' : 'regprob_input_list',
+                     'regprob_probability' : 'regprob_input_list',
                    }
 
 NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_scale',

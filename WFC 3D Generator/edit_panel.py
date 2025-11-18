@@ -30,6 +30,20 @@ class WFC3D_UL_FixedPositionList(bpy.types.UIList):
         row.prop(item,"selected", text="")
         row.prop(item,"fixed_position_xyz")
 
+class WFC3D_UL_RegProbList(bpy.types.UIList):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
+        row = layout.row(align=True)
+        col = row.column(align=True)
+        col.label(text=f"{index}.")
+        col.prop(item,"selected", text="")
+        col = row.column(align=True)
+        col.row().prop(item,"regprob_name")
+        col.row().prop(item,"regprob_min")
+        col.row().prop(item,"regprob_max")
+        nr = col.row()
+        nr.prop(item, "regprob_probability")
+        nr.prop(item, "regprob_weight")
+
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Constraint Editor"
@@ -208,10 +222,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row=box.row()
             row.prop(props,"region_max")
 
-            
-            box.row().label(text="Quadrant")
-            box.row().prop(props, "region_quadrant",text="")
-
+            row = box.row()
+            row.label(text="Quadrant:")
+            row.prop(props, "region_quadrant",text="")
+            ql = ", ".join([l for q,l in zip(props.region_quadrant,['fbl','fbr','ftl','ftr','bbl','bbr','btl','btr']) if q ])
+            box.row().label(text=f"Selected quadrant: {ql}")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "probability":
             box = box.box()
@@ -417,7 +432,18 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 box.row().prop(props, "geo_match_faces")
                 box.row().prop(props, "geo_tolerance")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
-
+        if props.edit_constraints == "regprob":
+            box = box.box()
+            row = box.row()
+            row.label(text=obj_name)
+            row.operator("object.wfc_reset_constraints")
+            row = box.row()
+            col = row.column()
+            col.template_list("WFC3D_UL_RegProbList", "", props, "regprob_input_list", props, "regprob_input_list_idx")
+            col = row.column()
+            col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
+            col.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+            if not props.auto_save: box.operator("object.wfc_update_constraints")
     def _draw_labels(self, layout, labels):
         for label in labels:
             layout.label(text=label)
@@ -488,19 +514,20 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         self._draw_properties(props, box, "Symmetry constraints", SYMMETRY_CONSTRAINTS)
         self._draw_properties(props, box, "Transformations", TRANSFORMATION_CONSTRAINTS)
         self._draw_properties(props, box, "Probability constraints", PROBABILITY_CONSTRAINTS)
+        self._draw_list_properties(props, box, "Region probability constraints", REGPROB_CONSTRAINTS)
 
 
     def _draw_list_properties(self, props, layout, name, constraints):
-        p = constraints[0]
-        lst = getattr(props, LIST_CONSTRAINTS[p])
+        lst = getattr(props, LIST_CONSTRAINTS[constraints[0]])
         if len(lst) == 0: return
         box = layout.box()
         box.label(text=name)
         for i in range(len(lst)):
-            for p in constraints:
+            for j in range(len(constraints)):
                 row = box.row()
                 row.enabled = False
-                row.prop(lst[i], p)
+                if j == 0: row.label(text=f"{i}.")
+                row.prop(lst[i], constraints[j])
 
     def _draw_properties(self, props, layout, name, constraints):
         f = []
@@ -516,6 +543,6 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.enabled = False
             row.prop(props, p)
 
-panels = [ WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
+panels = [ WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
         

@@ -96,6 +96,14 @@ class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
                                                     default=PROP_DEFAULTS['fixed_position_xyz'], update=auto_save)
     selected: bpy.props.BoolProperty(default=False)
 
+class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
+    regprob_name: bpy.props.StringProperty(name='Name', description='Optional name of the region', default=PROP_DEFAULTS['regprob_name'], update=auto_save)
+    regprob_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", min=-1)
+    regprob_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", min=-1)
+    regprob_weight: bpy.props.IntProperty(update=auto_save, name="Weight", description="Region weight", min=0)
+    regprob_probability: bpy.props.FloatProperty(update=auto_save, name="Probability", description="Region probability", min=0, max=1)
+    selected: bpy.props.BoolProperty(default=False)
+
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, max=100,)
@@ -138,6 +146,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ("symmetry","Symmetry Constraints","Symmetry constraints"),
                None,
                ("probability", "Probability Constraints", "Probability constraints"),
+               ("regprob", "Region Probability Constraints", "Region Probability constraints"),
+               None,
                ("transformation", "Transformations", "Transformations"),
                ("noise","Noise Constraints","Noise constraints"),
                ],
@@ -261,6 +271,9 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     geo_match_faces: bpy.props.BoolProperty(name="Match Faces", description="Match faces", default=PROP_DEFAULTS["geo_match_faces"], update=auto_save)
     geo_tolerance: bpy.props.FloatProperty(name="Tolerance", description="Tolerance", default=PROP_DEFAULTS["geo_tolerance"], update=auto_save)
 
+    regprob_input_list: bpy.props.CollectionProperty(type=WFC3DRegionProbabilityListItem)
+    regprob_input_list_idx: bpy.props.IntProperty()
+
     backup_import_overwrite: bpy.props.BoolProperty(name="Overwrite", description="Overwrite existing properties", default=True)
     backup_import_replace: bpy.props.BoolProperty(name="Replace", description="Replace existing properties", default=False)
 
@@ -305,4 +318,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
