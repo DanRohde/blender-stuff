@@ -360,6 +360,18 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                     box.row().label(text="Known connector names:")
                     box.row().prop(props,"conn_known_names",text="")
                 if not props.auto_save: box.row().operator("object.wfc_update_connector_constraints")
+            rbox = box.box()
+            rbox.row().label(text="Allow Rotation")
+            rbox.row().prop(props,"conn_rotation_axes")
+            if sum(props.conn_rotation_axes) > 0:
+                row = rbox.row()
+                row.column().label(text="Angles")
+                row.column().label(text="90°")
+                row.column().label(text="180°")
+                row.column().label(text="270°")
+                if props.conn_rotation_axes[0]: rbox.row().prop(props,"conn_rotation_x")
+                if props.conn_rotation_axes[1]: rbox.row().prop(props,"conn_rotation_y")
+                if props.conn_rotation_axes[2]: rbox.row().prop(props,"conn_rotation_z")
             if obj and not props.info_toggle:
                 newbox = box.box()
                 newbox.label(text=f"Defined connector constraints:")
@@ -474,6 +486,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             sbox = box.box()
             sbox.label(text="Connector constraints: ")
             self._draw_labels(sbox.column_flow(columns=3, align=True), labels)
+        self._draw_properties(props, box, "", ADD_CONNECTOR_CONSTRAINTS)
 
         self._draw_properties(props, box, "Geometry constraints", GEOMETRY_CONSTRAINTS)
 

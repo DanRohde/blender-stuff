@@ -52,7 +52,7 @@ def get_constraints(props):
     elif props.edit_constraints == 'neighbor':
         constraints = [props.edit_neighbor_constraint] + ADD_NEIGHBOR_CONSTRAINTS
     elif props.edit_constraints == 'connector':
-        constraints = CONNECTOR_CONSTRAINTS
+        constraints = CONNECTOR_CONSTRAINTS + ADD_CONNECTOR_CONSTRAINTS
     elif props.edit_constraints == 'dimensions':
         constraints = DIMENSIONS_CONSTRAINTS
     elif props.edit_constraints == 'fixed_position':
@@ -100,6 +100,7 @@ def update_constraints(props, constraints):
 def update_connector_constraints(props):
     prop_name = props.conn_directions
     connector = props.conn_name
+    update_constraints(props, ADD_CONNECTOR_CONSTRAINTS)
     if prop_name == '_NONE_': return
     if props.edit_type == 'objects':
         for item in get_selected_items(props.obj_list):
@@ -148,12 +149,12 @@ def update_neighbor_constraints(props):
     if props.edit_type == 'objects':
         for item in get_selected_items(props.obj_list):
             obj = get_object_by_name(props, item)
-            update_constraints(props, ADD_NEIGHBOR_CONSTRAINTS)
             _set_neighbors(obj, prop_name, neighbors)
     elif props.edit_type == 'defaults':
         obj = get_object_by_name(props, get_default_empty_name())
-        update_constraints(props, ADD_NEIGHBOR_CONSTRAINTS)
         _set_neighbors(obj, prop_name, neighbors)
+    update_constraints(props, ADD_NEIGHBOR_CONSTRAINTS)
+
 
 def auto_save(_self, context):
     props = context.scene.wfc_props
@@ -213,6 +214,9 @@ def update_edit_form(_self, _context):
     elif props.edit_constraints == 'connector':
         props.vis_directions = is_directions_geometry_nodegroup_visible(obj)
         props.conn_directions = props.conn_directions
+        for p in ADD_CONNECTOR_CONSTRAINTS:
+            cp = f"wfc_{p}"
+            props[p] = obj.get(cp, default_obj.get(cp, PROP_DEFAULTS[p]) if default_obj else PROP_DEFAULTS[p])
     else:
         lc = {}
         for c in GEN_CONSTRAINTS:
