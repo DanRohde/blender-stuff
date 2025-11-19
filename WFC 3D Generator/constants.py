@@ -22,30 +22,24 @@ OPPOSITE_DIRECTIONS = { 'TOP':'BOTTOM', 'BOTTOM':'TOP', 'FRONT':'BACK', 'BACK':'
                        'ANY':'ANY',
 }
 ROTATE_DIRECTIONS = {
-    'X' : {
-        1 : { 'TOP' : 'BACK', 'BOTTOM' :'FRONT', 'FRONT' : 'TOP', 'BACK': 'BOTTOM', 'LEFT' : 'LEFT', 'RIGHT' : 'RIGHT',
+    'X' :  { 'TOP' : 'BACK', 'BOTTOM' :'FRONT', 'FRONT' : 'TOP', 'BACK': 'BOTTOM', 'LEFT' : 'LEFT', 'RIGHT' : 'RIGHT',
               'CN_FBL' : 'CN_FTL', 'CN_BTR' : 'CN_BBR', 'CN_FBR' : 'CN_FTR', 'CN_BTL' : 'CN_BBL',
               'CN_FTL' : 'CN_BTL', 'CN_BBR' : 'CN_FBR', 'CN_FTR' : 'CN_BTR', 'CN_BBL' : 'CN_FBL',
               'EN_FL' : 'EN_LT', 'EN_BR' : 'EN_RB', 'EN_FR' : 'EN_RT', 'EN_BL' : 'EN_LB', 'EN_FT' : 'EN_BT','EN_BB':'EN_FB', 'EN_FB':'EN_FT','EN_BT':'EN_BB',
               'EN_LT' : 'EN_BL', 'EN_RB' : 'EN_FR', 'EN_LB' : 'EN_FL', 'EN_RT' : 'EN_BR', 'ANY' : 'ANY',
-        },
     },
-    'Y' : {
-        1 : { 'TOP' : 'LEFT', 'BOTTOM' : 'RIGHT', 'FRONT' : 'FRONT', 'BACK' : 'BACK', 'LEFT' : 'BOTTOM', 'RIGHT' : 'TOP',
+    'Y' :  { 'TOP' : 'LEFT', 'BOTTOM' : 'RIGHT', 'FRONT' : 'FRONT', 'BACK' : 'BACK', 'LEFT' : 'BOTTOM', 'RIGHT' : 'TOP',
               'CN_FBL' : 'CN_FBR', 'CN_BTR' : 'CN_BTL', 'CN_FBR' : 'CN_FTR', 'CN_BTL' : 'CN_BBL',
               'CN_FTL' : 'CN_FBL', 'CN_BBR' : 'CN_BTR', 'CN_FTR' : 'CN_FTL', 'CN_BBL' : 'CN_BBR',
               'EN_FL' : 'EN_FB', 'EN_BR' : 'EN_BT', 'EN_FR' : 'EN_FT', 'EN_BL' : 'EN_BB', 'EN_FT' : 'EN_FL','EN_BB':'EN_BR', 'EN_FB':'EN_FR','EN_BT':'EN_BL',
               'EN_LT' : 'EN_LB', 'EN_RB' : 'EN_RT', 'EN_LB' : 'EN_RB', 'EN_RT' : 'EN_LT', 'ANY' : 'ANY',
-        }
     },
-    'Z' : {
-        1 : { 'TOP' : 'TOP', 'BOTTOM' : 'BOTTOM', 'FRONT' : 'LEFT', 'BACK' : 'RIGHT', 'LEFT' : 'BACK', 'RIGHT' : 'FRONT',
+    'Z' : { 'TOP' : 'TOP', 'BOTTOM' : 'BOTTOM', 'FRONT' : 'LEFT', 'BACK' : 'RIGHT', 'LEFT' : 'BACK', 'RIGHT' : 'FRONT',
               'CN_FBL' : 'CN_BBL', 'CN_BTR' : 'CN_FTR', 'CN_FBR' : 'CN_FBL', 'CN_BTL' : 'CN_BTR',
               'CN_FTL' : 'CN_BTL', 'CN_BBR' : 'CN_FBR', 'CN_FTR' : 'CN_FTL', 'CN_BBL' : 'CN_BBR',
               'EN_FL' : 'EN_BL', 'EN_BR' : 'EN_FR', 'EN_FR' : 'EN_FL', 'EN_BL' : 'EN_BR', 'EN_FT' : 'EN_LT','EN_BB':'EN_RB', 'EN_FB':'EN_LB','EN_BT':'EN_RT',
               'EN_LT' : 'EN_BT', 'EN_RB' : 'EN_FB', 'EN_LB' : 'EN_BB', 'EN_RT' : 'EN_FT', 'ANY' : 'ANY',
-        }
-    }
+    },
 }
 
 PROP_DEFAULTS = {
