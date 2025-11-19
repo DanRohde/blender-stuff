@@ -75,7 +75,6 @@ class WFC3DConstraints:
                 self.constraints[obj_name][c] = obj.get(cp, default_obj.get(cp, PROP_DEFAULTS[c]) if default_obj else  PROP_DEFAULTS[c])
             for c in CONNECTOR_CONSTRAINTS:
                 cp = "wfc_"+c
-                direction = c.split("_",1)[1].upper()
                 any_cp = "wfc_conn_any"
                 if cp in obj and obj[cp] != "":
                     self.constraints[obj_name][c] = {None : obj[cp]  }
@@ -90,16 +89,18 @@ class WFC3DConstraints:
                         self.constraints[obj_name][c] = {None: PROP_DEFAULTS[c] }
                 else:
                     self.constraints[obj_name][c] = {None: PROP_DEFAULTS[c] }
-
-                for a_idx, a in enumerate(['X', 'Y', 'Z']):
-                    if not self.constraints[obj_name]['conn_rotation_axes'][a_idx]: continue
-                    for i in range(4):
-                        if not self.constraints[obj_name][f"conn_rotation_{a.lower()}"]: continue
+            for a_idx, a in enumerate(['X', 'Y', 'Z']):
+                if not self.constraints[obj_name]['conn_rotation_axes'][a_idx]: continue
+                for i in range(4):
+                    for c in CONNECTOR_CONSTRAINTS:
+                        direction = c.split("_",1)[1].upper()
+                        # if not self.constraints[obj_name][f"conn_rotation_{a.lower()}"]: continue ## removed because other rotations need initialization
                         if i == 0:
                             self.constraints[obj_name][c][a]  = { 0 : self.constraints[obj_name][c][None] }
                         else:
                             rd = f"conn_{ROTATE_DIRECTIONS[a][direction].lower()}"
-                            self.constraints[obj_name][c][a][i] = self.constraints[obj_name][rd][a][i-1] if c in self.constraints[obj_name] and rd in self.constraints[obj_name] else ""
+                            self.constraints[obj_name][c][a][i] = self.constraints[obj_name][rd][a][i-1] if a in self.constraints[obj_name][rd] else ''
+
             # load neighbor constraints
             for direction in DIRECTIONS:
                 prop_name = f"wfc_{direction.lower()}"
