@@ -542,12 +542,12 @@ class WFC3DConstraints:
             if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
 
-    def check_connector_constraints(self, orig_position, position, direction, current_obj, options):
-        x, y, z = orig_position
+    def check_connector_constraints(self, direction, current_obj, options):
         prop_name = 'conn_' + direction.lower()
         opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
         new_options = [obj for obj in options if self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name] or self.constraints[obj][opp_prop_name] == "" ]
         return new_options
+
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
 
@@ -577,7 +577,7 @@ class WFC3DConstraints:
 
                 # Filter disallowed connector options:
                 if self.constraints[current_obj].get('conn_'+direction.lower(),"") != "":
-                    new_options = self.check_connector_constraints((cx, cy, cz),(nx,ny,nz), direction, current_obj, new_options)
+                    new_options = self.check_connector_constraints( direction, current_obj, new_options)
 
                 if len(new_options) >= len(neighbor_options): continue
                 grid.grid[nx, ny, nz] = new_options
