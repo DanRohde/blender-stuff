@@ -70,22 +70,36 @@ class WFC3DConstraints:
                     self.constraints[obj_name][c] = default_obj[cp].split(",")
 
             # load connector constraints
+            for c in ADD_CONNECTOR_CONSTRAINTS:
+                cp = "wfc_" + c
+                self.constraints[obj_name][c] = obj.get(cp, default_obj.get(cp, PROP_DEFAULTS[c]) if default_obj else  PROP_DEFAULTS[c])
             for c in CONNECTOR_CONSTRAINTS:
                 cp = "wfc_"+c
+                direction = c.split("_",1)[1].upper()
                 any_cp = "wfc_conn_any"
                 if cp in obj and obj[cp] != "":
-                    self.constraints[obj_name][c] = obj[cp]
+                    self.constraints[obj_name][c] = {None : obj[cp]  }
                 elif any_cp in obj and obj[any_cp] != "":
-                    self.constraints[obj_name][c] = obj[any_cp]
+                    self.constraints[obj_name][c] = {None : obj[any_cp]  }
                 elif default_obj:
                     if cp in default_obj and default_obj[cp] != "":
-                        self.constraints[obj_name][c] = default_obj[cp]
+                        self.constraints[obj_name][c] = {None: default_obj[cp] }
                     elif any_cp in default_obj and default_obj[any_cp] != "":
-                        self.constraints[obj_name][c] = default_obj[any_cp]
+                        self.constraints[obj_name][c] = {None: default_obj[any_cp] }
                     else:
-                        self.constraints[obj_name][c] = PROP_DEFAULTS[c]
+                        self.constraints[obj_name][c] = {None: PROP_DEFAULTS[c] }
                 else:
-                    self.constraints[obj_name][c] = PROP_DEFAULTS[c]
+                    self.constraints[obj_name][c] = {None: PROP_DEFAULTS[c] }
+
+                for a_idx, a in enumerate(['X', 'Y', 'Z']):
+                    if not self.constraints[obj_name]['conn_rotation_axes'][a_idx]: continue
+                    for i in range(4):
+                        if not self.constraints[obj_name][f"conn_rotation_{a.lower()}"]: continue
+                        if i == 0:
+                            self.constraints[obj_name][c][a]  = { 0 : self.constraints[obj_name][c][None] }
+                        else:
+                            rd = f"conn_{ROTATE_DIRECTIONS[a][direction].lower()}"
+                            self.constraints[obj_name][c][a][i] = self.constraints[obj_name][rd][a][i-1] if c in self.constraints[obj_name] and rd in self.constraints[obj_name] else ""
             # load neighbor constraints
             for direction in DIRECTIONS:
                 prop_name = f"wfc_{direction.lower()}"
@@ -466,6 +480,9 @@ class WFC3DConstraints:
             symtransmat.extend(rotmat)
         else:
             symtransmat.extend([0.0, 0.0, 0.0])
+        ## apply grit element rotation
+        if obj_name in self.grid.element_rotation[x,y,z] and self.grid.element_rotation[x, y, z][obj_name]['axis'] is not None and self.grid.element_rotation[x, y, z][obj_name]['angle'] != 0:
+            target_obj.rotation_euler.rotate_axis(self.grid.element_rotation[x, y, z][obj_name]['axis'], -np.pi/2 * self.grid.element_rotation[x, y, z][obj_name]['angle'])
 
         if constraints["flipping"] is not None and sum(constraints["flipping"]) > 0:
             rv = np.random.rand(3)
@@ -574,8 +591,8 @@ class WFC3DConstraints:
                     opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
                     new_options = [obj
                                    for obj in new_options
-                                   if self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name]
-                                   or self.constraints[obj][opp_prop_name] == ""
+                                   if self.constraints[current_obj][prop_name][None] == self.constraints[obj][opp_prop_name][None]
+                                   or self.constraints[obj][opp_prop_name][None] == ""
                                    ]
                 if len(new_options) >= len(neighbor_options): continue
                 grid.grid[nx, ny, nz] = new_options
