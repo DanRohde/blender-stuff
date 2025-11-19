@@ -559,6 +559,38 @@ class WFC3DConstraints:
             if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
 
+    def check_rotated_connector_constraints(self, position, direction, current_obj_value, obj):
+        x, y, z = position
+        opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
+        print(f"rot: {position}: Start checking {direction} <=> {opp_prop_name} for {obj}")
+        for idx, a in enumerate(['X', 'Y', 'Z']):
+            if not self.constraints[obj]['conn_rotation_axes'][idx]: continue
+            for r in range(3):
+                if not self.constraints[obj][f"conn_rotation_{a.lower()}"][r]: continue
+                print(f"rot: {position}: check for object {obj} rotation on axis {a} and angle {r+1}: {self.constraints[obj][opp_prop_name][a][r+1]} vs. {current_obj_value}")
+                if self.constraints[obj][opp_prop_name][a][r+1] == "" or self.constraints[obj][opp_prop_name][a][r+1] == current_obj_value:
+                    print(f"rot: {position}: match => save element position on {position} for object {obj} axis {a} and angle {r+1}")
+                    self.grid.element_rotation[x, y, z] = { obj: { 'axis' : a, 'angle' : r + 1 }}
+                    return True
+        return False
+    def check_connector_constraints(self, orig_position, position, direction, current_obj, options):
+        x, y, z = orig_position
+        prop_name = 'conn_' + direction.lower()
+        opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
+        current_obj_er = self.grid.element_rotation[x, y, z][current_obj] if current_obj in self.grid.element_rotation[x, y, z] else { 'axis' : None, 'angle': 0}
+        current_obj_er_axis = current_obj_er['axis']
+        current_obj_er_angle = current_obj_er['angle']
+        current_obj_value = self.constraints[current_obj][prop_name][current_obj_er_axis][current_obj_er_angle] if current_obj_er_axis is not None else self.constraints[current_obj][prop_name][current_obj_er_axis]
+        print(f"con: {current_obj} ({current_obj_er_axis}, {current_obj_er_angle}): {prop_name} = {current_obj_value}")
+
+        new_options = [obj
+                       for obj in options
+                       if current_obj_value == self.constraints[obj][opp_prop_name][None]
+                       or current_obj_value == ""
+                       or self.check_rotated_connector_constraints(position, direction, current_obj_value, obj)
+                       ]
+        print(f"con: {orig_position}: Result: {new_options} on {position}")
+        return new_options
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
 
@@ -588,13 +620,8 @@ class WFC3DConstraints:
 
                 # Filter disallowed connector options:
                 if self.constraints[current_obj].get('conn_'+direction.lower(),"") != "":
-                    prop_name = 'conn_' + direction.lower()
-                    opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
-                    new_options = [obj
-                                   for obj in new_options
-                                   if self.constraints[current_obj][prop_name][None] == self.constraints[obj][opp_prop_name][None]
-                                   or self.constraints[obj][opp_prop_name][None] == ""
-                                   ]
+                    new_options = self.check_connector_constraints((cx, cy, cz),(nx,ny,nz), direction, current_obj, new_options)
+
                 if len(new_options) >= len(neighbor_options): continue
                 grid.grid[nx, ny, nz] = new_options
                 if len(new_options) == 1: queue.append((nx, ny, nz))
