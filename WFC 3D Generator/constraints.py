@@ -70,36 +70,22 @@ class WFC3DConstraints:
                     self.constraints[obj_name][c] = default_obj[cp].split(",")
 
             # load connector constraints
-            for c in ADD_CONNECTOR_CONSTRAINTS:
-                cp = "wfc_" + c
-                self.constraints[obj_name][c] = obj.get(cp, default_obj.get(cp, PROP_DEFAULTS[c]) if default_obj else  PROP_DEFAULTS[c])
             for c in CONNECTOR_CONSTRAINTS:
                 cp = "wfc_"+c
                 any_cp = "wfc_conn_any"
                 if cp in obj and obj[cp] != "":
-                    self.constraints[obj_name][c] = {None : obj[cp]  }
+                    self.constraints[obj_name][c] = obj[cp]
                 elif any_cp in obj and obj[any_cp] != "":
-                    self.constraints[obj_name][c] = {None : obj[any_cp]  }
+                    self.constraints[obj_name][c] = obj[any_cp]
                 elif default_obj:
                     if cp in default_obj and default_obj[cp] != "":
-                        self.constraints[obj_name][c] = {None: default_obj[cp] }
+                        self.constraints[obj_name][c] = default_obj[cp]
                     elif any_cp in default_obj and default_obj[any_cp] != "":
-                        self.constraints[obj_name][c] = {None: default_obj[any_cp] }
+                        self.constraints[obj_name][c] = default_obj[any_cp]
                     else:
-                        self.constraints[obj_name][c] = {None: PROP_DEFAULTS[c] }
+                        self.constraints[obj_name][c] = PROP_DEFAULTS[c]
                 else:
-                    self.constraints[obj_name][c] = {None: PROP_DEFAULTS[c] }
-            for a_idx, a in enumerate(['X', 'Y', 'Z']):
-                if not self.constraints[obj_name]['conn_rotation_axes'][a_idx]: continue
-                for i in range(4):
-                    for c in CONNECTOR_CONSTRAINTS:
-                        direction = c.split("_",1)[1].upper()
-                        # if not self.constraints[obj_name][f"conn_rotation_{a.lower()}"]: continue ## removed because other rotations need initialization
-                        if i == 0:
-                            self.constraints[obj_name][c][a]  = { 0 : self.constraints[obj_name][c][None] }
-                        else:
-                            rd = f"conn_{ROTATE_DIRECTIONS[a][direction].lower()}"
-                            self.constraints[obj_name][c][a][i] = self.constraints[obj_name][rd][a][i-1] if a in self.constraints[obj_name][rd] else ''
+                    self.constraints[obj_name][c] = PROP_DEFAULTS[c]
 
             # load neighbor constraints
             for direction in DIRECTIONS:
@@ -481,9 +467,6 @@ class WFC3DConstraints:
             symtransmat.extend(rotmat)
         else:
             symtransmat.extend([0.0, 0.0, 0.0])
-        ## apply grit element rotation
-        if obj_name in self.grid.element_rotation[x,y,z] and self.grid.element_rotation[x, y, z][obj_name]['axis'] is not None and self.grid.element_rotation[x, y, z][obj_name]['angle'] != 0:
-            target_obj.rotation_euler.rotate_axis(self.grid.element_rotation[x, y, z][obj_name]['axis'], -np.pi/2 * self.grid.element_rotation[x, y, z][obj_name]['angle'])
 
         if constraints["flipping"] is not None and sum(constraints["flipping"]) > 0:
             rv = np.random.rand(3)
@@ -559,37 +542,11 @@ class WFC3DConstraints:
             if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
 
-    def check_rotated_connector_constraints(self, position, direction, current_obj_value, obj):
-        x, y, z = position
-        opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
-        print(f"rot: {position}: Start checking {direction} <=> {opp_prop_name} for {obj}")
-        for idx, a in enumerate(['X', 'Y', 'Z']):
-            if not self.constraints[obj]['conn_rotation_axes'][idx]: continue
-            for r in range(3):
-                if not self.constraints[obj][f"conn_rotation_{a.lower()}"][r]: continue
-                print(f"rot: {position}: check for object {obj} rotation on axis {a} and angle {r+1}: {self.constraints[obj][opp_prop_name][a][r+1]} vs. {current_obj_value}")
-                if self.constraints[obj][opp_prop_name][a][r+1] == "" or self.constraints[obj][opp_prop_name][a][r+1] == current_obj_value:
-                    print(f"rot: {position}: match => save element position on {position} for object {obj} axis {a} and angle {r+1}")
-                    self.grid.element_rotation[x, y, z] = { obj: { 'axis' : a, 'angle' : r + 1 }}
-                    return True
-        return False
     def check_connector_constraints(self, orig_position, position, direction, current_obj, options):
         x, y, z = orig_position
         prop_name = 'conn_' + direction.lower()
         opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
-        current_obj_er = self.grid.element_rotation[x, y, z][current_obj] if current_obj in self.grid.element_rotation[x, y, z] else { 'axis' : None, 'angle': 0}
-        current_obj_er_axis = current_obj_er['axis']
-        current_obj_er_angle = current_obj_er['angle']
-        current_obj_value = self.constraints[current_obj][prop_name][current_obj_er_axis][current_obj_er_angle] if current_obj_er_axis is not None else self.constraints[current_obj][prop_name][current_obj_er_axis]
-        print(f"con: {current_obj} ({current_obj_er_axis}, {current_obj_er_angle}): {prop_name} = {current_obj_value}")
-
-        new_options = [obj
-                       for obj in options
-                       if current_obj_value == self.constraints[obj][opp_prop_name][None]
-                       or current_obj_value == ""
-                       or self.check_rotated_connector_constraints(position, direction, current_obj_value, obj)
-                       ]
-        print(f"con: {orig_position}: Result: {new_options} on {position}")
+        new_options = [obj for obj in options if self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name] or self.constraints[obj][opp_prop_name] == "" ]
         return new_options
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""

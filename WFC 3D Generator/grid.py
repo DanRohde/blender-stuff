@@ -6,7 +6,6 @@ class WFC3DGrid:
     def __init__(self, grid_size):
         self.grid_size = grid_size
         self.grid = None
-        self.element_rotation = None
         self.collapsed = np.empty(self.grid_size)
         self._init_corners()
         self._init_edges()
@@ -14,7 +13,6 @@ class WFC3DGrid:
     def initialize_grid(self, objects, constraints):
         """Initializes the 3D grid"""
         self.grid = np.empty(self.grid_size, dtype=object)
-        self.element_rotation = np.empty(self.grid_size, dtype=object)
         for x in range(self.grid_size[0]):
             for y in range(self.grid_size[1]):
                 for z in range(self.grid_size[2]):
@@ -22,7 +20,6 @@ class WFC3DGrid:
                     for obj in objects:
                         if constraints is None or constraints.are_grid_constraints_satisfied(obj.name, (x, y, z)):
                             cell.append(obj.name)
-                            self.element_rotation[x, y, z] = {obj.name: {'axis': None, 'angle': 0}}
 
                     self.grid[x, y, z] = cell
                     self.collapsed[x, y, z] = False
@@ -305,4 +302,3 @@ class WFC3DGrid:
         self.grid = None
         self.collapsed = None
         self.grid_size = None
-        self.element_rotation = None

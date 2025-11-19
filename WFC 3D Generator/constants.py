@@ -79,8 +79,6 @@ PROP_DEFAULTS = {
     'conn_cn_fbl':'','conn_cn_fbr':'','conn_cn_ftl':'','conn_cn_ftr':'',
     'conn_cn_bbl':'','conn_cn_bbr':'','conn_cn_btl':'','conn_cn_btr':'',
     'conn_any':'',
-    'conn_rotation_axes' : (False, False, False),
-    'conn_rotation_x' : (False, False, False), 'conn_rotation_y' : (False, False, False), 'conn_rotation_z' : (False, False, False),
     # dimensions constraints:
     'dim_xyz' : (1,1,1),
     # fixed position constraints:
@@ -130,7 +128,6 @@ CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn
                          'conn_cn_bbl','conn_cn_bbr','conn_cn_btl','conn_cn_btr',
                          'conn_any',
 ]
-ADD_CONNECTOR_CONSTRAINTS = [ 'conn_rotation_axes' , 'conn_rotation_x', 'conn_rotation_y', 'conn_rotation_z',]
 
 DIMENSIONS_CONSTRAINTS = [ 'dim_xyz' ]
 
