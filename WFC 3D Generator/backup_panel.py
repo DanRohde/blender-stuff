@@ -20,7 +20,7 @@ class WFC3D_PT_BackupPanel(bpy.types.Panel):
         col = row.column()
         col.prop(props, "backup_import_overwrite")
         col.enabled = not props.backup_import_replace
-        row.prop(props, "backup_import_replace")
+        # row.prop(props, "backup_import_replace")
         if props.backup_import_replace: box.label(text="All existing constraints of an object will be deleted!",
                                                      icon="WARNING_LARGE")
         elif props.backup_import_overwrite: box.label(text="Existing constraints of an object will be overwritten!",
