@@ -7,6 +7,7 @@ class WFC3D_PT_ValidatorPanel(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'WFC 3D Edit'
+    bl_options = {'DEFAULT_CLOSED'}
     def draw(self, context):
         layout = self.layout
         props = context.scene.wfc_props

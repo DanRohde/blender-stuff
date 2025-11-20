@@ -242,10 +242,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     conn_directions: bpy.props.EnumProperty(name="", description="Select a direction", items=get_conn_directions, update=handle_conn_directions_update)
     conn_name: bpy.props.StringProperty(name="Connector name",description="Connector name", default="", update=auto_save)
     conn_known_names : bpy.props.EnumProperty(items=get_known_conn_names, name='Select to apply', update=take_known_conn_name)
-    conn_rotation_axes : bpy.props.BoolVectorProperty(size=3, name="Rotation Axes", description="X, Y, Z", update=auto_save)
-    conn_rotation_x : bpy.props.BoolVectorProperty(size=3, name="X Rotation", description="90°, 180°, 270°", update=auto_save)
-    conn_rotation_y : bpy.props.BoolVectorProperty(size=3, name="Y Rotation", description="90°, 180°, 270°", update=auto_save)
-    conn_rotation_z : bpy.props.BoolVectorProperty(size=3, name="Z Rotation", description="90°, 180°, 270°", update=auto_save)
+
     auto_save: bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties")
     info_toggle: bpy.props.BoolProperty(name="Info", description="Shows constraint properties")
     regfreq_input_list: bpy.props.CollectionProperty(type=WFC3DRegionFrequencyListItem)
@@ -280,6 +277,12 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
     backup_import_overwrite: bpy.props.BoolProperty(name="Overwrite", description="Overwrite existing properties", default=True)
     backup_import_replace: bpy.props.BoolProperty(name="Replace", description="Replace existing properties", default=False)
+
+    rt_rotation_axes: bpy.props.BoolVectorProperty(size=3, name="Rotation Axes", description="X, Y, Z")
+    rt_rotation_x: bpy.props.BoolVectorProperty(size=3, name="X Rotation", description="90°, 180°, 270°")
+    rt_rotation_y: bpy.props.BoolVectorProperty(size=3, name="Y Rotation", description="90°, 180°, 270°")
+    rt_rotation_z: bpy.props.BoolVectorProperty(size=3, name="Z Rotation", description="90°, 180°, 270°")
+    rt_combine: bpy.props.BoolProperty(name="Combine Rotations", description="Combine rotations", default=True)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
