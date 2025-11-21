@@ -22,7 +22,7 @@ def update_handler(_scene, _depsgraph):
         coll_objects.extend([child for child in props.collection_obj.children])
         if len(coll_objects) != len(props.obj_list): handle_update_collection(_scene)
 
-    if props.collection_obj is None or (not props.auto_active_object and not props.auto_neighbor_object): return
+    if props.collection_obj is None or (not props.auto_active_object and not props.auto_neighbor_object and not props.rt_auto_active_object): return
 
     # handle selections:
     view_layer = bpy.context.view_layer
