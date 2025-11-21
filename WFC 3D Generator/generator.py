@@ -1,6 +1,7 @@
 import bpy
 import random
 import numpy as np
+import gc
 
 from .constraints import WFC3DConstraints
 from .grid import WFC3DGrid
@@ -124,6 +125,7 @@ class WFC3DGenerator:
                 self.layout.label(text="WFC 3D model successfully rendered!")
             if not bpy.context.scene.wfc_props.cherry_picking_running: bpy.context.window_manager.popup_menu(draw, title="Info", icon='INFO')
             self.clean()
+            gc.collect()
         return None
 
     def init_target_collection(self):

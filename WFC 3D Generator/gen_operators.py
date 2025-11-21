@@ -1,5 +1,5 @@
 import bpy
-
+import gc
 from .generator import WFC3DGenerator
 
 def generate_model(props):
@@ -9,7 +9,9 @@ def generate_model(props):
             if c.name.startswith(props.target_collection): c.hide_viewport = True
     generator = WFC3DGenerator(props.collection_obj, props)
     generator.generate_model()
-    if props.render_delay == 0: generator.clean()
+    if props.render_delay == 0:
+        generator.clean()
+        gc.collect()
     return generator
 
 def handle_seed_change(_self, context):
@@ -62,6 +64,7 @@ class WFC3D_OT_Search(bpy.types.Operator):
 
         context.window_manager.progress_end()
         generator.clean()
+        gc.collect()
         props.auto_generate = a
         props.seed = minseed
         props.search_result = (minseed, i, mincount )

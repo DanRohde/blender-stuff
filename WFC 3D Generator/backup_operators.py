@@ -47,7 +47,7 @@ def import_data(props, data):
 class WFC3D_OT_ImportJson(bpy.types.Operator, ImportHelper):
     bl_idname = "wfc3d.import_json"
     bl_label = "Import Constraints"
-    bl_description = "Import constraints from json file"
+    bl_description = "Import constraints from a JSON file"
     bl_options = {'UNDO'}
     filename_ext = ".json"
     filter_glob = StringProperty(default="*.json", options={'HIDDEN'})
@@ -94,7 +94,7 @@ def get_export_data(props):
 class WFC3D_OT_ExportJson(bpy.types.Operator, ExportHelper):
     bl_idname = "wfc3d.export_json"
     bl_label = "Export Constraints"
-    bl_description = "Export constraints to json file"
+    bl_description = "Export constraints to a JSON file"
     bl_options = {'UNDO'}
     filename_ext = ".json"
     filter_glob = StringProperty(default="*.json", options={'HIDDEN'})
