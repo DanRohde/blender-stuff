@@ -291,6 +291,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
     rt_list: bpy.props.CollectionProperty(type=WFC3DRotationPanelMultiSelItem)
     rt_list_idx: bpy.props.IntProperty()
+    rt_auto_active_object: bpy.props.BoolProperty(name="", description="Automatically select objects selected in 3D Viewport.", default=False,)
     rt_rotation_x: bpy.props.BoolVectorProperty(size=3, name="X Rotation", description="90°, 180°, 270°")
     rt_rotation_y: bpy.props.BoolVectorProperty(size=3, name="Y Rotation", description="90°, 180°, 270°", default=(True, True, True))
     rt_rotation_z: bpy.props.BoolVectorProperty(size=3, name="Z Rotation", description="90°, 180°, 270°")

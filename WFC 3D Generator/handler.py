@@ -1,5 +1,7 @@
 import bpy
+from bpy.app.handlers import persistent
 from .helper import get_default_empty_name, handle_update_collection
+
 
 def _update_list(itemlist, selected_object_names):
     # caution: any item.selected change fires an event => only do necessary updates
@@ -10,7 +12,7 @@ def _update_list(itemlist, selected_object_names):
         elif item.selected:
             item.selected = False
 
-
+@persistent
 def update_handler(_scene, _depsgraph):
     props = bpy.context.scene.wfc_props
     # handle collection changes:
@@ -36,3 +38,5 @@ def update_handler(_scene, _depsgraph):
             _update_list(props.obj_list, selected_object_names)
         elif props.auto_neighbor_object:
             _update_list(props.neighbor_list, selected_object_names)
+        if props.rt_auto_active_object:
+            _update_list(props.rt_list, selected_object_names)

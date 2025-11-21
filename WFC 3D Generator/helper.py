@@ -357,3 +357,7 @@ def get_noise(pos, basis, scale, minv = None, maxv = None):
     n = noise.noise(v, noise_basis=nb[basis][0])
     if minv is None or maxv is None: return n
     return remap(n, -1, 1, minv, maxv)
+
+def set_select_all_list_items(itemlist, selected):
+    for item in itemlist:
+        item.selected = selected

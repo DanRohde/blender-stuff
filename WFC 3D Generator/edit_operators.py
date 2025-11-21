@@ -232,9 +232,6 @@ class WFC3D_OT_UpdateCollectionList(bpy.types.Operator):
         return {'FINISHED'}
 
 
-def set_select_all_list_items(itemlist, selected):
-    for item in itemlist:
-        item.selected = selected
 
 
 class WFC3D_OT_CollectionListSelectAll(bpy.types.Operator):
