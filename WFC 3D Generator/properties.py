@@ -296,9 +296,10 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     rt_rotation_y: bpy.props.BoolVectorProperty(size=3, name="Y Rotation", description="90°, 180°, 270°", default=(True, True, True))
     rt_rotation_z: bpy.props.BoolVectorProperty(size=3, name="Z Rotation", description="90°, 180°, 270°")
     rt_offset: bpy.props.FloatVectorProperty(size=3, name="Offset", description="Offset location for the created building blocks", subtype="TRANSLATION", default=(0,0,2))
-    rt_neighbor : bpy.props.BoolProperty(name="neighbor", description="Rotate neighbor constraints", default=True)
-    rt_connector: bpy.props.BoolProperty(name="connector", description="Rotate connector constraints", default=True)
-    rt_geometry: bpy.props.BoolProperty(name="geometry", description="Rotate geometry constraints", default=True)
+    rt_neighbor : bpy.props.BoolProperty(name="Neighbor", description="Rotate neighbor constraints", default=True)
+    rt_connector: bpy.props.BoolProperty(name="Connector", description="Rotate connector constraints", default=True)
+    rt_geometry: bpy.props.BoolProperty(name="Geometry", description="Rotate geometry constraints", default=True)
+    rt_dimension: bpy.props.BoolProperty(name="Dimension", description="Rotate dimension constraints", default=True)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
