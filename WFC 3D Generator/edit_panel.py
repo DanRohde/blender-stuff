@@ -424,14 +424,14 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             row.label(text=obj_name)
             row.operator("object.wfc_reset_constraints")
-            box.row().prop(props, "geo_faces")
-            if sum(props.geo_faces) > 0:
-                fl = ", ".join([f.lower() for f,s in zip(FACE_DIRECTIONS,props.geo_faces) if s])
-                box.row().label(text="Selected face(s):")
-                box.row().label(text=f"{fl}")
-                box.row().prop(props, "geo_match_edges")
-                box.row().prop(props, "geo_match_faces")
-                box.row().prop(props, "geo_tolerance")
+            row = box.row()
+            row.column().label(text="Faces:")
+            for i,d in enumerate(FACE_DIRECTIONS):
+                if i % 2 == 0: col = row.column()
+                col.prop(props, f"geo_{d.lower()}")
+            box.row().prop(props, "geo_match_edges")
+            box.row().prop(props, "geo_match_faces")
+            box.row().prop(props, "geo_tolerance")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "regprob":
             box = box.box()

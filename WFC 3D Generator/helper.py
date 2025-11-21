@@ -319,8 +319,10 @@ def handle_update_collection(_self, context = None):
     if props.collection_obj is None: return
     sel_items = get_selected_items(props.obj_list)
     sel_n_items = get_selected_items(props.neighbor_list)
+    sel_rt_items = get_selected_items(props.rt_list)
     props.obj_list.clear()
     props.neighbor_list.clear()
+    props.rt_list.clear()
     coll_objects_obj = [obj for obj in props.collection_obj.objects if
                     not obj.name.startswith(get_default_empty_name())]
     coll_objects_obj.sort(key=lambda x: x.name)
@@ -335,6 +337,9 @@ def handle_update_collection(_self, context = None):
         item = props.neighbor_list.add()
         item.obj = obj
         item.selected = obj.name in sel_n_items
+        item = props.rt_list.add()
+        item.obj = obj
+        item.selected = obj.name in sel_rt_items
 
 def get_noise_basis(_self, _context = None):
     ret = [('_NONE_','Please select a noise basis','Please select a noise basis'),None]

@@ -80,6 +80,10 @@ class WFC3DEditPanelNeighborMultiSelItem(bpy.types.PropertyGroup):
     obj: bpy.props.PointerProperty(type=bpy.types.ID)
     selected: bpy.props.BoolProperty(default=False, update=auto_save)
 
+class WFC3DRotationPanelMultiSelItem(bpy.types.PropertyGroup):
+    obj: bpy.props.PointerProperty(type=bpy.types.ID)
+    selected: bpy.props.BoolProperty(default=False)
+
 class WFC3DValidatorOutputItem(bpy.types.PropertyGroup):
     severity: bpy.props.IntProperty()
     logentry: bpy.props.StringProperty()
@@ -269,7 +273,12 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     noise_transf_basis: bpy.props.EnumProperty(name="Noise Basis", description="Select a noise basis", items=get_noise_basis, update=auto_save, )
     noise_transf_scale: bpy.props.FloatProperty(name="Scale", description="Scale", min=0, default=PROP_DEFAULTS['noise_transf_scale'], update=auto_save)
 
-    geo_faces: bpy.props.BoolVectorProperty(name="Faces", description="Top, Bottom, Front, Back, Left, Right", size=6, default=PROP_DEFAULTS["geo_faces"], update=auto_save)
+    geo_front: bpy.props.BoolProperty(name="front", description="Front face", default=PROP_DEFAULTS["geo_front"], update=auto_save)
+    geo_back: bpy.props.BoolProperty(name="back", description="Back face", default=PROP_DEFAULTS["geo_back"], update=auto_save)
+    geo_left: bpy.props.BoolProperty(name="left", description="Left face", default=PROP_DEFAULTS["geo_left"], update=auto_save)
+    geo_right: bpy.props.BoolProperty(name="right", description="Right face", default=PROP_DEFAULTS["geo_right"], update=auto_save)
+    geo_top: bpy.props.BoolProperty(name="top", description="Top face", default=PROP_DEFAULTS["geo_top"], update=auto_save)
+    geo_bottom: bpy.props.BoolProperty(name="bottom", description="Bottom face", default=PROP_DEFAULTS["geo_bottom"], update=auto_save)
     geo_match_edges: bpy.props.BoolProperty(name="Match Edges", description="Match edges", default=PROP_DEFAULTS["geo_match_edges"], update=auto_save)
     geo_match_faces: bpy.props.BoolProperty(name="Match Faces", description="Match faces", default=PROP_DEFAULTS["geo_match_faces"], update=auto_save)
     geo_tolerance: bpy.props.FloatProperty(name="Tolerance", description="Tolerance", default=PROP_DEFAULTS["geo_tolerance"], update=auto_save)
@@ -280,11 +289,15 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     backup_import_overwrite: bpy.props.BoolProperty(name="Overwrite", description="Overwrite existing properties", default=True)
     backup_import_replace: bpy.props.BoolProperty(name="Replace", description="Replace existing properties", default=False)
 
-    rt_rotation_axes: bpy.props.BoolVectorProperty(size=3, name="Rotation Axes", description="X, Y, Z")
+    rt_list: bpy.props.CollectionProperty(type=WFC3DRotationPanelMultiSelItem)
+    rt_list_idx: bpy.props.IntProperty()
     rt_rotation_x: bpy.props.BoolVectorProperty(size=3, name="X Rotation", description="90°, 180°, 270°")
-    rt_rotation_y: bpy.props.BoolVectorProperty(size=3, name="Y Rotation", description="90°, 180°, 270°")
+    rt_rotation_y: bpy.props.BoolVectorProperty(size=3, name="Y Rotation", description="90°, 180°, 270°", default=(True, True, True))
     rt_rotation_z: bpy.props.BoolVectorProperty(size=3, name="Z Rotation", description="90°, 180°, 270°")
-    rt_combine: bpy.props.BoolProperty(name="Combine Rotations", description="Combine rotations", default=True)
+    rt_offset: bpy.props.FloatVectorProperty(size=3, name="Offset", description="Offset location for the created building blocks", subtype="TRANSLATION", default=(0,0,2))
+    rt_neighbor : bpy.props.BoolProperty(name="neighbor", description="Rotate neighbor constraints", default=True)
+    rt_connector: bpy.props.BoolProperty(name="connector", description="Rotate connector constraints", default=True)
+    rt_geometry: bpy.props.BoolProperty(name="geometry", description="Rotate geometry constraints", default=True)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
@@ -327,4 +340,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

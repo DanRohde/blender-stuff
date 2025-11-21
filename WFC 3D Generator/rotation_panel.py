@@ -1,4 +1,9 @@
 import bpy
+from .helper import get_icon_name
+
+class WFC3D_UL_RotationPanelMultiSelList(bpy.types.UIList):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+        layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
 class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
@@ -13,17 +18,28 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
         props = context.scene.wfc_props
         layout.prop(props, "collection_obj")
         if props.collection_obj:
-            layout.separator()
-            layout.prop(props, "rt_rotation_axes")
-            if sum(props.rt_rotation_axes) > 0:
-                row = layout.row(align=True)
-                row.column(align=True).label(text="Angles")
-                row.column(align=True).label(text="90°")
-                row.column(align=True).label(text="180°")
-                row.column(align=True).label(text="270°")
-                if props.rt_rotation_axes[0]: layout.prop(props, "rt_rotation_x")
-                if props.rt_rotation_axes[1]: layout.prop(props, "rt_rotation_y")
-                if props.rt_rotation_axes[2]: layout.prop(props, "rt_rotation_z")
-                if sum(props.rt_rotation_axes) > 1: layout.prop(props, "rt_combine")
+            layout.template_list("WFC3D_UL_RotationPanelMultiSelList","", props, "rt_list", props, "rt_list_idx")
 
-panels = [ WFC3D_PT_RotationToolPanel ]
+            layout.separator()
+
+            row = layout.row(align=True)
+            row.column(align=True).label(text="Angles:")
+            row.column(align=True).label(text="90°")
+            row.column(align=True).label(text="180°")
+            row.column(align=True).label(text="270°")
+            layout.prop(props, "rt_rotation_x")
+            layout.prop(props, "rt_rotation_y")
+            layout.prop(props, "rt_rotation_z")
+
+            layout.row().label(text="Rotate constraints:")
+            row = layout.row(align=True)
+
+            row.column(align=True)
+            row.column(align=True).prop(props, "rt_neighbor")
+            row.column(align=True).prop(props, "rt_connector")
+            row.column(align=True).prop(props, "rt_geometry")
+
+            layout.separator()
+            layout.row(align=True).prop(props, "rt_offset")
+
+panels = [ WFC3D_UL_RotationPanelMultiSelList, WFC3D_PT_RotationToolPanel ]
