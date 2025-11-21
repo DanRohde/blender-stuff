@@ -1,6 +1,16 @@
 import bpy
 from .helper import get_selected_items, get_object_by_name, set_select_all_list_items
 
+class WFC3D_OT_Rotation(bpy.types.Operator):
+    """Create rotated copies."""
+    bl_idname = "rotation.wfc_rotation"
+    bl_label = "Create Rotated Copies"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        selected_objects = get_selected_items(props.rt_list)
+
+        return {'FINISHED'}
 class WFC3D_OT_RotationGetSelectedObject(bpy.types.Operator):
     """Select objects selected in 3D Viewport"""
     bl_idname = "rotation.wfc_get_selected_object"
@@ -78,4 +88,4 @@ class WFC3D_OT_RotationCollectionListSelectNone(bpy.types.Operator):
         set_select_all_list_items(props.rt_list, False)
         return {'FINISHED'}
 
-operators = [ WFC3D_OT_RotationCollectionListSelectAll, WFC3D_OT_RotationCollectionListSelectNone, WFC3D_OT_RotationGetSelectedObject, WFC3D_OT_RotationSelectDropdownObject ]
+operators = [ WFC3D_OT_Rotation, WFC3D_OT_RotationCollectionListSelectAll, WFC3D_OT_RotationCollectionListSelectNone, WFC3D_OT_RotationGetSelectedObject, WFC3D_OT_RotationSelectDropdownObject ]
