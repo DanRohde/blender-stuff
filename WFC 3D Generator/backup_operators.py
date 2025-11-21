@@ -25,12 +25,14 @@ def put_data_into_object(data, p, obj):
 
 def import_data(props, data):
     collection = props.collection_obj
-    default_obj = get_default_empty_object(collection, True)
 
-    #if props.backup_import_replace: remove_existing_constraints(default_obj)
-    for p in data["defaults"]:
-        if p in default_obj and not props.backup_import_overwrite: continue
-        put_data_into_object(data["defaults"][p], p, default_obj)
+    if len(data["defaults"]) > 0:
+        default_obj = get_default_empty_object(collection, True)
+
+        #if props.backup_import_replace: remove_existing_constraints(default_obj)
+        for p in data["defaults"]:
+            if p in default_obj and not props.backup_import_overwrite: continue
+            put_data_into_object(data["defaults"][p], p, default_obj)
 
     for o in data["objects"]:
         if o in collection.objects:
