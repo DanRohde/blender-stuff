@@ -10,9 +10,9 @@ EDGE_DIRECTIONS = {
     'EN_BL' : (-1,1,0), 'EN_BR' : (1,1,0), 'EN_BB' : (0,1,-1), 'EN_BT' : (0,1,1),
     'EN_LB' : (-1,0,-1), 'EN_LT' : (-1,0,1), 'EN_RB' : (1,0,-1), 'EN_RT' : (1,0,1),
 }
-ANY_DIRECTION = { 'ANY' : (0,0,0) }
+ANY_DIRECTIONS = { 'ANY_FACE' : (0,0,0), 'ANY_EDGE' : (0,0,0), 'ANY_CORNER' : (0,0,0), 'ANY' : (0,0,0),  }
 
-DIRECTIONS = { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS, **ANY_DIRECTION }
+DIRECTIONS = { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS, **ANY_DIRECTIONS }
 
 OPPOSITE_DIRECTIONS = { 'TOP':'BOTTOM', 'BOTTOM':'TOP', 'FRONT':'BACK', 'BACK':'FRONT', 'LEFT':'RIGHT', 'RIGHT':'LEFT', 
                        'CN_FBL':'CN_BTR', 'CN_BTR':'CN_FBL', 'CN_FBR':'CN_BTL', 'CN_BTL':'CN_FBR',
@@ -26,19 +26,19 @@ ROTATE_DIRECTIONS = {
               'CN_FBL' : 'CN_FTL', 'CN_BTR' : 'CN_BBR', 'CN_FBR' : 'CN_FTR', 'CN_BTL' : 'CN_BBL',
               'CN_FTL' : 'CN_BTL', 'CN_BBR' : 'CN_FBR', 'CN_FTR' : 'CN_BTR', 'CN_BBL' : 'CN_FBL',
               'EN_FL' : 'EN_LT', 'EN_BR' : 'EN_RB', 'EN_FR' : 'EN_RT', 'EN_BL' : 'EN_LB', 'EN_FT' : 'EN_BT','EN_BB':'EN_FB', 'EN_FB':'EN_FT','EN_BT':'EN_BB',
-              'EN_LT' : 'EN_BL', 'EN_RB' : 'EN_FR', 'EN_LB' : 'EN_FL', 'EN_RT' : 'EN_BR', 'ANY' : 'ANY',
+              'EN_LT' : 'EN_BL', 'EN_RB' : 'EN_FR', 'EN_LB' : 'EN_FL', 'EN_RT' : 'EN_BR', 'ANY' : 'ANY', 'ANY_FACE':'ANY_FACE', 'ANY_EDGE':'ANY_EDGE', 'ANY_CORNER':'ANY_CORNER',
     },
     'Y' :  { 'TOP' : 'LEFT', 'BOTTOM' : 'RIGHT', 'FRONT' : 'FRONT', 'BACK' : 'BACK', 'LEFT' : 'BOTTOM', 'RIGHT' : 'TOP',
               'CN_FBL' : 'CN_FBR', 'CN_BTR' : 'CN_BTL', 'CN_FBR' : 'CN_FTR', 'CN_BTL' : 'CN_BBL',
               'CN_FTL' : 'CN_FBL', 'CN_BBR' : 'CN_BTR', 'CN_FTR' : 'CN_FTL', 'CN_BBL' : 'CN_BBR',
               'EN_FL' : 'EN_FB', 'EN_BR' : 'EN_BT', 'EN_FR' : 'EN_FT', 'EN_BL' : 'EN_BB', 'EN_FT' : 'EN_FL','EN_BB':'EN_BR', 'EN_FB':'EN_FR','EN_BT':'EN_BL',
-              'EN_LT' : 'EN_LB', 'EN_RB' : 'EN_RT', 'EN_LB' : 'EN_RB', 'EN_RT' : 'EN_LT', 'ANY' : 'ANY',
+              'EN_LT' : 'EN_LB', 'EN_RB' : 'EN_RT', 'EN_LB' : 'EN_RB', 'EN_RT' : 'EN_LT', 'ANY' : 'ANY', 'ANY_FACE':'ANY_FACE', 'ANY_EDGE':'ANY_EDGE', 'ANY_CORNER':'ANY_CORNER',
     },
     'Z' : { 'TOP' : 'TOP', 'BOTTOM' : 'BOTTOM', 'FRONT' : 'LEFT', 'BACK' : 'RIGHT', 'LEFT' : 'BACK', 'RIGHT' : 'FRONT',
               'CN_FBL' : 'CN_BBL', 'CN_BTR' : 'CN_FTR', 'CN_FBR' : 'CN_FBL', 'CN_BTL' : 'CN_BTR',
               'CN_FTL' : 'CN_BTL', 'CN_BBR' : 'CN_FBR', 'CN_FTR' : 'CN_FTL', 'CN_BBL' : 'CN_BBR',
               'EN_FL' : 'EN_BL', 'EN_BR' : 'EN_FR', 'EN_FR' : 'EN_FL', 'EN_BL' : 'EN_BR', 'EN_FT' : 'EN_LT','EN_BB':'EN_RB', 'EN_FB':'EN_LB','EN_BT':'EN_RT',
-              'EN_LT' : 'EN_BT', 'EN_RB' : 'EN_FB', 'EN_LB' : 'EN_BB', 'EN_RT' : 'EN_FT', 'ANY' : 'ANY',
+              'EN_LT' : 'EN_BT', 'EN_RB' : 'EN_FB', 'EN_LB' : 'EN_BB', 'EN_RT' : 'EN_FT', 'ANY' : 'ANY', 'ANY_FACE':'ANY_FACE', 'ANY_EDGE':'ANY_EDGE', 'ANY_CORNER':'ANY_CORNER',
     },
 }
 
@@ -47,7 +47,7 @@ PROP_DEFAULTS = {
     'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '',
     'en_fl':'','en_fr':'','en_ft':'','en_fb':'','en_bl':'','en_br':'','en_bt':'','en_bb':'','en_lt':'','en_lb':'','en_rt':'','en_rb':'',
     'cn_fbl':'','cn_fbr':'','cn_ftl':'','cn_ftr':'','cn_bbl':'','cn_bbr':'','cn_btl':'','cn_btr':'',
-    'any':'',
+    'any':'','any_face':'','any_edge':'','any_corner':'',
     'allow_neighbor_constraint_violations':False,
     # probability constraints:
     'weight' : 1, 'probability' : 1, 'auto_weight' : False,
@@ -78,7 +78,7 @@ PROP_DEFAULTS = {
     'conn_en_lt':'','conn_en_lb':'','conn_en_rt':'','conn_en_rb':'',
     'conn_cn_fbl':'','conn_cn_fbr':'','conn_cn_ftl':'','conn_cn_ftr':'',
     'conn_cn_bbl':'','conn_cn_bbr':'','conn_cn_btl':'','conn_cn_btr':'',
-    'conn_any':'',
+    'conn_any':'','conn_any_face':'','conn_any_edge':'','conn_any_corner':'',
     # dimensions constraints:
     'dim_xyz' : (1,1,1),
     # fixed position constraints:
@@ -126,7 +126,7 @@ CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn
                          'conn_en_lt','conn_en_lb','conn_en_rt','conn_en_rb',
                          'conn_cn_fbl','conn_cn_fbr','conn_cn_ftl','conn_cn_ftr',
                          'conn_cn_bbl','conn_cn_bbr','conn_cn_btl','conn_cn_btr',
-                         'conn_any',
+                         'conn_any','conn_any_face','conn_any_edge','conn_any_corner',
 ]
 
 DIMENSIONS_CONSTRAINTS = [ 'dim_xyz' ]
@@ -167,7 +167,7 @@ DIR_TRANSLATION = { 'TOP': 'top face', 'BOTTOM' : 'bottom face', 'LEFT' : 'left 
                  'FL':'front left edge', 'FR': 'front right edge', 'FB' : 'front bottom edge', 'FT' : 'front top edge',
                  'BL':'back left edge', 'BR': 'back right edge', 'BB' : 'back bottom edge', 'BT' : 'back top edge',
                  'LT':'left top edge', 'LB' : 'left bottom edge', 'RT' : 'right top edge', 'RB' : 'right bottom edge',
-                 'ANY': 'any direction',
+                 'ANY': 'any direction', 'ANY_FACE' : 'any face direction', 'ANY_EDGE' : 'any edge direction', 'ANY_CORNER' : 'any corner direction',
 }
 
 ICON_MAP = {

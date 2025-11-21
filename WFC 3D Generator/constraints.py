@@ -22,7 +22,6 @@ class WFC3DConstraints:
     def initialize_constraints(self, grid, collection, objects):
         """Loads constraints from custom properties"""
         self.objects = objects
-        allobjects = [o.name for o in objects]
         default_obj = get_default_empty_object(collection)
 
         self.grid = grid
@@ -69,40 +68,46 @@ class WFC3DConstraints:
                 elif default_obj and cp in default_obj and default_obj[cp] != "":
                     self.constraints[obj_name][c] = default_obj[cp].split(",")
 
-            # load connector constraints
-            for c in CONNECTOR_CONSTRAINTS:
-                cp = "wfc_"+c
-                any_cp = "wfc_conn_any"
-                if cp in obj and obj[cp] != "":
-                    self.constraints[obj_name][c] = obj[cp]
-                elif any_cp in obj and obj[any_cp] != "":
-                    self.constraints[obj_name][c] = obj[any_cp]
-                elif default_obj:
-                    if cp in default_obj and default_obj[cp] != "":
-                        self.constraints[obj_name][c] = default_obj[cp]
-                    elif any_cp in default_obj and default_obj[any_cp] != "":
-                        self.constraints[obj_name][c] = default_obj[any_cp]
-                    else:
-                        self.constraints[obj_name][c] = PROP_DEFAULTS[c]
-                else:
-                    self.constraints[obj_name][c] = PROP_DEFAULTS[c]
-
-            # load neighbor constraints
             for direction in DIRECTIONS:
-                prop_name = f"wfc_{direction.lower()}"
-                any_prop_name = "wfc_any"
-                eo = obj
-                if prop_name not in obj and any_prop_name not in obj and default_obj: eo = default_obj
-                if prop_name in eo:
-                    if eo[prop_name] == "":
-                        self.constraints[obj_name][direction] = allobjects
-                    else:
-                        self.constraints[obj_name][direction] = eo[prop_name].split(',')
-                elif any_prop_name in eo and eo[any_prop_name] != "":
-                    self.constraints[obj_name][direction] = eo[any_prop_name].split(',')
-                else:
-                    self.constraints[obj_name][direction] = allobjects
+                if direction.startswith("ANY"): continue
+                dirlower = direction.lower()
+                # load connector constraints:
+                self.constraints[obj_name]["conn_"+dirlower] = self.get_adjacency_property_value(direction, 'conn_', obj, default_obj)
+                # load neighbor constraints:
+                val  = self.get_adjacency_property_value(direction,'', obj, default_obj)
+                self.constraints[obj_name][dirlower] = None if val == '' else val.split(',')
 
+    def get_adjacency_property_value(self, direction, prefix, obj, default_obj):
+        cname = prefix + direction.lower()
+        prop_name = f"wfc_{cname}"
+        any_prop_name = f"wfc_{prefix}any"
+        any_face_prop_name = f"wfc_{prefix}any_face"
+        any_edge_prop_name = f"wfc_{prefix}any_edge"
+        any_corner_prop_name = f"wfc_{prefix}any_corner"
+
+        val = PROP_DEFAULTS[cname]
+        if prop_name in obj and obj[prop_name] != "":
+            val = obj[prop_name]
+        elif any_face_prop_name in obj and obj[any_face_prop_name] != "" and direction in FACE_DIRECTIONS:
+            val = obj[any_face_prop_name]
+        elif any_edge_prop_name in obj and obj[any_edge_prop_name] != "" and direction in EDGE_DIRECTIONS:
+            val = obj[any_edge_prop_name]
+        elif any_corner_prop_name in obj and obj[any_corner_prop_name] != "" and direction in CORNER_DIRECTIONS:
+            val = obj[any_corner_prop_name]
+        elif any_prop_name in obj and obj[any_prop_name] != "":
+            val = obj[any_prop_name]
+        elif default_obj:
+            if prop_name in default_obj and default_obj[prop_name] != "":
+                val = default_obj[prop_name]
+            elif any_face_prop_name in default_obj and default_obj[any_face_prop_name] != "" and direction in FACE_DIRECTIONS:
+                val = default_obj[any_face_prop_name]
+            elif any_edge_prop_name in default_obj and default_obj[any_edge_prop_name] != "" and direction in EDGE_DIRECTIONS:
+                val = default_obj[any_edge_prop_name]
+            elif any_corner_prop_name in default_obj and default_obj[any_corner_prop_name] != "" and direction in CORNER_DIRECTIONS:
+                val = default_obj[any_corner_prop_name]
+            elif any_prop_name in default_obj and default_obj[any_prop_name] != "":
+                val = default_obj[any_prop_name]
+        return val
     def are_grid_constraints_satisfied(self, name, pos):
         if 'noise_prob_basis' in self.constraints[name] and self.constraints[name]['noise_prob_basis'] > 1:
                 n = get_noise(pos, self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
@@ -542,12 +547,6 @@ class WFC3DConstraints:
             if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
 
-    def check_connector_constraints(self, direction, current_obj, options):
-        prop_name = 'conn_' + direction.lower()
-        opp_prop_name = 'conn_' + OPPOSITE_DIRECTIONS[direction].lower()
-        new_options = [obj for obj in options if self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name] or self.constraints[obj][opp_prop_name] == "" ]
-        return new_options
-
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
 
@@ -563,25 +562,33 @@ class WFC3DConstraints:
 
             for direction, (dx, dy, dz) in DIRECTIONS.items():
                 nx, ny, nz = cx + dx, cy + dy, cz + dz             
-                if not grid.within_boundaries(nx, ny, nz) or grid.collapsed[nx,ny,nz] or direction == 'ANY': continue
+                if not grid.within_boundaries(nx, ny, nz) or grid.collapsed[nx,ny,nz] or direction.startswith('ANY'): continue
                 neighbor_options = grid.grid[nx, ny, nz]
+
+                dirlower = direction.lower()
+                oppdirlower = OPPOSITE_DIRECTIONS[direction].lower()
 
                 # Filter disallowed neighbor options
                 new_options = [obj
                                for obj in neighbor_options
-                                if obj in self.constraints[current_obj].get(direction, [])
-                                and current_obj in self.constraints[obj].get(OPPOSITE_DIRECTIONS[direction],[])
+                                if (self.constraints[current_obj][dirlower] is None or obj in self.constraints[current_obj][dirlower])
+                                    and (self.constraints[obj][oppdirlower] is None or current_obj in self.constraints[obj][oppdirlower])
                                ]
                 if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
                     new_options= [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
 
                 # Filter disallowed connector options:
-                if self.constraints[current_obj].get('conn_'+direction.lower(),"") != "":
-                    new_options = self.check_connector_constraints( direction, current_obj, new_options)
+                if self.constraints[current_obj].get('conn_'+dirlower,"") != "":
+                    prop_name = 'conn_' + dirlower
+                    opp_prop_name = 'conn_' + oppdirlower
+                    new_options = [obj for obj in new_options if
+                                   self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name] or
+                                   self.constraints[obj][opp_prop_name] == ""]
 
                 if len(new_options) >= len(neighbor_options): continue
                 grid.grid[nx, ny, nz] = new_options
                 if len(new_options) == 1: queue.append((nx, ny, nz))
+
     def get_random_object_from_collection(self, pos, collection):
         x, y, z = pos
         if self.sympartner[x, y, z] is not None:

@@ -16,6 +16,8 @@ def get_direction_list(items, prefix):
                 items.append(None)
             if n in DIR_TRANSLATION:
                 label = DIR_TRANSLATION[n]
+            elif d in DIR_TRANSLATION:
+                label = DIR_TRANSLATION[d]
         else:
             if ls!= "":
                 ls = ""

@@ -75,7 +75,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Dimensions constraints can cause empty cells, especially in conjunction with symmetry constraints
 
 ## Statistics: Constraint Properties per Object
-* Neighbor constraints: 28
+* Neighbor constraints: 31
 * Grid constraints: 4
 * Region constraints: 3
 * Probability constraints: 3
@@ -83,18 +83,18 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Frequency constraints: 11
 * Region frequency constraints: 3
 * Symmetry constraints: 19
-* Connector constraints: 27
+* Connector constraints: 30
 * Fixed position constraints: 1
 * Dimensions constraints: 1
 * Noise constraints: 4
 
 
-* **Sum: 116**
+* **Sum: 122**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
 * Used custom properties: face neighbors: `wfc_[left|right|front|back|top|bottom]`, edge neighbors: `wfc_en_[fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb]`,
-  corner neighbors: `wfc_cn_[fbl|fbr|ftl|ftr|bbl|bbr|btl|btr]`, `wfc_allow_neighbor_constraint_violations`, `wfc_any`
+  corner neighbors: `wfc_cn_[fbl|fbr|ftl|ftr|bbl|bbr|btl|btr]`, `wfc_allow_neighbor_constraint_violations`, `wfc_any[_face|_edge|_corner]`
 * Allowed property values:
     * empty string - allows all neighbors
     * comma separated list of object names - permitted neighbor(s)
@@ -191,7 +191,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
     * wfc_sym_rotate_n: an integer (number of rotations: n=4 => 90° rotation)
 
 ## Connector Constraints
-* Used custom properties: `wfc_conn_[any|front|back|left|right|top|bottom|cn_(fbl|fbr|ftl|ftr|bbl|bbr|btl|btr)|en_(fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb)]`
+* Used custom properties: `wfc_conn_[any[_face|_edge|_corner]|front|back|left|right|top|bottom|cn_(fbl|fbr|ftl|ftr|bbl|bbr|btl|btr)|en_(fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb)]`
 * Allowed property value: string with a connector name
 
 ## Noise Constraints
