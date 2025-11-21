@@ -17,6 +17,7 @@ class WFC3D_PT_ValidatorPanel(bpy.types.Panel):
             layout.separator()
             if len(props.validator_output_list) > 0:
                 layout.template_list("WFC3D_UL_ValidatorOutputList","",props,"validator_output_list",props,"validator_output_list_idx", sort_lock = True, item_dyntip_propname="description")
+                layout.operator("object.wfc3d_validator_clear_log")
 
 class WFC3D_UL_ValidatorOutputList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
