@@ -32,6 +32,10 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * WFC 3D Validator:
   * Checks the source collection with building blocks to see whether transformations (scale, rotate) 
     have been applied and whether neighbors exist in neighbor constraints.
+* WFC 3D Backup:
+  * Import/Export all WFC 3D Generator constraints to/from a JSON file.
+* WFC 3D Rotation Tool:
+  * Copies an object, rotates the object itself along with its adjacency constraints.
 
 ## Constraints Overview
 * Adjacency Constraints: 
@@ -39,6 +43,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
     Advantage: easy to define, Disadvantage: difficult to expand
   * Connector Constraints: define a connector name for any direction that match with the connector name of possible neighbors with the same connector name in the opposite direction;
     Advantage: building blocks are easily expandable, Disadvantage: not always easy to define
+  * Geometry Constraints: Edges or faces are used to determine whether two objects can be placed next to each other.
+
 * Fixed Position Constraints:
   * This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
 * Dimensions Constraints:
@@ -79,17 +85,19 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * Grid constraints: 4
 * Region constraints: 3
 * Probability constraints: 3
+* Region probability constraints: 5
 * Transformations: 12
 * Frequency constraints: 11
-* Region frequency constraints: 3
+* Region frequency constraints: 4
 * Symmetry constraints: 19
 * Connector constraints: 30
 * Fixed position constraints: 1
 * Dimensions constraints: 1
+* Geometry constraints: 9
 * Noise constraints: 4
 
 
-* **Sum: 122**
+* **Sum: 137**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -155,6 +163,13 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
     * wfc_weight: empty string - weight of 1, 0 - object will not be used, 1..n - increases the chance of being chosen by a factor of n
     * wfc_auto_weight: boolean enables/disables automatic weight determination
 
+## Region Probability Constraints:
+* Used custom properties: `wfc_regprob_[name|min|max|weight|probability]_[0..n]`
+* Allowed property values:
+  * wfc_regprob_name_[0..n]: a string with a region name
+  * wfc_regprob_[min|max]: a float vector
+  * wfc_regprob_weight: an integer
+  * wfc_regprob_probability: a float value between 0 and 1
 
 ## Transformations
 * Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_translation_steps,wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps,wfc_scale_min,wfc_scale_max,wfc_scale_steps,wfc_scale_uni,wfc_scale_type,wfc_flipping`
@@ -174,8 +189,9 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
    * wfc_[_any]_axes: an integer vector
 
 ## Region Frequency Constraints:
-* Used custom properties: `wfc_regfreq_min_[0..n],wfc_regfreq_max_[0..n],wfc_regfreq_freq_[0..n]`
+* Used custom properties: `wfc_regfreq_name_[0..n],wfc_regfreq_min_[0..n],wfc_regfreq_max_[0..n],wfc_regfreq_freq_[0..n]`
 * Allowed property values:
+  * `wfc_regfreq_name_[0..n]`: a string with a region name 
   * `wfc_regfreq_min_[0..n], wfc_regfreq_max_[0..n]`: an integer vector (x,y,z)
   * `wfc_regfreq_freq`: an integer
 
@@ -193,6 +209,13 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 ## Connector Constraints
 * Used custom properties: `wfc_conn_[any[_face|_edge|_corner]|front|back|left|right|top|bottom|cn_(fbl|fbr|ftl|ftr|bbl|bbr|btl|btr)|en_(fl|fr|ft|fb|bl|br|bt|bb|lt|lb|rt|rb)]`
 * Allowed property value: string with a connector name
+
+## Geometry Constraints
+* Used custom properties: `wfc_geo_[top|bottom|left|right|front|back],wfc_geo_match_[edges|faces], wfc_geo_tolerance`
+* Allowed property values:
+* wfc_geo_[top|bottom|left|right|front|back]: a boolean
+* wfc_geo_match_[edges|faces]: a boolean
+* wfc_geo_tolerance: a float value
 
 ## Noise Constraints
 * Used custom properties: `wfc_noise_[prob|transf]_basis, wfc_noise_prob_threshold, wfc_noise_transf_scale`

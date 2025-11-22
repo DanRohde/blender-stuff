@@ -87,6 +87,7 @@ def get_export_data(props):
     data = {
         'version' : '1.0',
         'creator' : 'WFC 3D Generator extension for Blender',
+        'website' : 'https://extensions.blender.org/add-ons/wfc-3d-generator/',
         'defaults' : {},
         'objects' : {},
     }
