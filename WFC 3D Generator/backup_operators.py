@@ -66,6 +66,23 @@ class WFC3D_OT_ImportJson(bpy.types.Operator, ImportHelper):
             self.report({'ERROR'}, f"Import constraints from json file failed: {e}")
             return {'CANCELLED'}
 
+def get_property_data(obj):
+    prop_data = {}
+    for p in obj.keys():
+        if p.startswith("wfc_"):
+            try:
+                iter(obj[p])
+                if len(obj[p]) == 1:
+                    prop_data[p] = obj[p][0]
+                else:
+                    prop_data[p] = list(obj[p])
+            except Exception:
+                if isinstance(obj[p], bpy.types.Object):
+                    prop_data[p] = { '_object_link_' : obj[p].name }
+                else:
+                    prop_data[p] = obj[p]
+    return prop_data
+
 def get_export_data(props):
     data = {
         'version' : '1.0',
@@ -74,24 +91,16 @@ def get_export_data(props):
         'objects' : {},
     }
     for obj in props.collection_obj.objects:
-        prop_data = {}
-        for p in obj.keys():
-            if p.startswith("wfc_"):
-                try:
-                    iter(obj[p])
-                    if len(obj[p]) == 1:
-                        prop_data[p] = obj[p][0]
-                    else:
-                        prop_data[p] = list(obj[p])
-                except Exception:
-                    if isinstance(obj[p], bpy.types.Object):
-                        prop_data[p] = { '_object_link_' : obj[p].name }
-                    else:
-                        prop_data[p] = obj[p]
+        prop_data = get_property_data(obj)
         if obj.name.startswith(get_default_empty_name()):
             data['defaults'] = prop_data
         else:
             data["objects"][obj.name] = prop_data
+    for child in props.collection_obj.children:
+        for obj in child.objects:
+            if not obj.name.startswith(get_default_empty_name()): continue
+            data["objects"][child.name] = get_property_data(obj)
+
     return data
 class WFC3D_OT_ExportJson(bpy.types.Operator, ExportHelper):
     bl_idname = "wfc3d.export_json"
