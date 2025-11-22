@@ -1,5 +1,4 @@
-import bpy
-from mathutils import Matrix
+from mathutils import Matrix, Vector
 import math
 
 def get_elements_on_side(obj, face='FRONT', threshold=0.001):
@@ -80,7 +79,7 @@ def get_rotation_matrix(face):
 
 def normalize_geometry(obj, face, edges, faces):
     local_matrix = obj.matrix_world.inverted()
-    rot_matrix = get_rotation_matrix(side)
+    rot_matrix = get_rotation_matrix(face)
 
     norm_edges = []
     for edge in edges:
@@ -89,9 +88,9 @@ def normalize_geometry(obj, face, edges, faces):
         norm_edges.append((rot_matrix @ v1, rot_matrix @ v2))
     
     norm_faces = []
-    for face in faces:
+    for f in faces:
         vertices = [rot_matrix @ (local_matrix @ obj.data.vertices[i].co) 
-                   for i in face.vertices]
+                   for i in f.vertices]
         vertices = normalize_face_orientation(vertices)
         norm_faces.append(vertices)
     
