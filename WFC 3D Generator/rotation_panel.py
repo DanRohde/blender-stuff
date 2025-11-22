@@ -36,6 +36,16 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
         selected = get_selected_items(props.rt_list)
         if len(selected) == 0: return
 
+        box = layout.box()
+        box.row().label(text="Rotate constraints:")
+        row = box.row(align=True)
+
+        row.column(align=True)
+        row.column(align=True).prop(props, "rt_neighbor")
+        row.column(align=True).prop(props, "rt_connector")
+        row.column(align=True).prop(props, "rt_geometry")
+
+        if not props.rt_neighbor and not props.rt_connector and not props.rt_geometry: return
 
         layout.separator()
 
@@ -51,17 +61,6 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
 
 
         if sum(props.rt_rotation_x) == 0 and sum(props.rt_rotation_y) == 0 and sum(props.rt_rotation_z) == 0: return
-
-        box = layout.box()
-        box.row().label(text="Rotate constraints:")
-        row = box.row(align=True)
-
-        row.column(align=True)
-        row.column(align=True).prop(props, "rt_neighbor")
-        row.column(align=True).prop(props, "rt_connector")
-        row.column(align=True).prop(props, "rt_geometry")
-
-        if not props.rt_neighbor and not props.rt_connector and not props.rt_geometry: return
 
         layout.separator()
         layout.box().row(align=True).prop(props, "rt_offset")
