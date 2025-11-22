@@ -60,9 +60,8 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
         row.column(align=True).prop(props, "rt_neighbor")
         row.column(align=True).prop(props, "rt_connector")
         row.column(align=True).prop(props, "rt_geometry")
-        row.column(align=True).prop(props, "rt_dimension")
 
-        if not props.rt_neighbor and not props.rt_connector and not props.rt_geometry and not props.rt_dimension: return
+        if not props.rt_neighbor and not props.rt_connector and not props.rt_geometry: return
 
         layout.separator()
         layout.box().row(align=True).prop(props, "rt_offset")
