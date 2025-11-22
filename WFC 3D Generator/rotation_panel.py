@@ -66,6 +66,7 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
         layout.separator()
         layout.box().row(align=True).prop(props, "rt_offset")
         layout.separator()
+        layout.label(text=f"{len(selected)*(sum(props.rt_rotation_x)+sum(props.rt_rotation_y)+sum(props.rt_rotation_z))} copies will be created.", icon="INFO_LARGE")
         layout.row(align=True).operator("rotation.wfc_rotation")
 
 
