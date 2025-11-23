@@ -16,6 +16,7 @@ website = "https://extensions.blender.org/add-ons/sierpinski-triangle/"
 # # Optional: tag list defined by Blender and server, see:
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
 # tags = ["Animation", "Sequencer"]
+tags = ["Add Mesh"]
 
 blender_version_min = "4.2.0"
 # # Optional: Blender version that the extension does not support, earlier versions are supported.
