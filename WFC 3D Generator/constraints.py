@@ -550,21 +550,7 @@ class WFC3DConstraints:
             if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
 
-    def compare_geometry(self, current_obj, obj, direction):
-
-        if current_obj not in self.collection.objects or obj not in self.collection.objects: return True
-        if direction in self.cache_geometry_compare[current_obj] and obj in self.cache_geometry_compare[current_obj][direction]:
-            return self.cache_geometry_compare[current_obj][direction][obj]
-        if OPPOSITE_DIRECTIONS[direction] in self.cache_geometry_compare[obj] and current_obj in self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]]:
-            return self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]][current_obj]
-        result = True
-        cmpresult = compare_faces(self.collection.objects[current_obj], direction, self.collection.objects[obj], OPPOSITE_DIRECTIONS[direction], self.constraints[current_obj]["geo_tolerance"])
-
-        if self.constraints[current_obj]["geo_match_edges"]:
-            result = result and cmpresult["obj_a_edges_count"] == cmpresult["obj_b_edges_count"] and cmpresult["matching_edges_count"] == cmpresult["obj_a_edges_count"]
-        if self.constraints[current_obj]["geo_match_faces"]:
-            result = result and cmpresult["obj_a_faces_count"] == cmpresult["obj_b_faces_count"] and cmpresult["matching_faces_count"] == cmpresult["obj_a_faces_count"]
-
+    def set_cache_geometry_compare(self, current_obj, obj, direction, result):
         if not direction in self.cache_geometry_compare[current_obj]:
             self.cache_geometry_compare[current_obj][direction] = { obj : result }
         else:
@@ -573,6 +559,37 @@ class WFC3DConstraints:
             self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]] = { current_obj : result }
         else:
             self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]][current_obj] = result
+        return result
+
+    def exists_cache_geometry_compare(self, current_obj, obj, direction):
+        if direction in self.cache_geometry_compare[current_obj] and obj in self.cache_geometry_compare[current_obj][direction]:
+            return True
+        if OPPOSITE_DIRECTIONS[direction] in self.cache_geometry_compare[obj] and current_obj in self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]]:
+            return True
+        return False
+
+    def get_cache_geometry_compare(self, current_obj, obj, direction):
+        if direction in self.cache_geometry_compare[current_obj] and obj in self.cache_geometry_compare[current_obj][direction]:
+            return self.cache_geometry_compare[current_obj][direction][obj]
+        if OPPOSITE_DIRECTIONS[direction] in self.cache_geometry_compare[obj] and current_obj in self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]]:
+            return self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]][current_obj]
+        return True
+
+    def compare_geometry(self, current_obj, obj, direction):
+        if current_obj not in self.collection.objects or obj not in self.collection.objects: return True
+        if self.exists_cache_geometry_compare(current_obj, obj, direction): return self.get_cache_geometry_compare(current_obj, obj, direction)
+        if self.collection.objects[current_obj].type != 'MESH' or self.collection.objects[obj].type != 'MESH':
+            return self.set_cache_geometry_compare(current_obj, obj, direction, True)
+
+        result = True
+        cmpresult = compare_faces(self.collection.objects[current_obj], direction, self.collection.objects[obj], OPPOSITE_DIRECTIONS[direction], self.constraints[current_obj]["geo_tolerance"])
+
+        if self.constraints[current_obj]["geo_match_edges"]:
+            result = result and cmpresult["obj_a_edges_count"] == cmpresult["obj_b_edges_count"] and cmpresult["matching_edges_count"] == cmpresult["obj_a_edges_count"]
+        if self.constraints[current_obj]["geo_match_faces"]:
+            result = result and cmpresult["obj_a_faces_count"] == cmpresult["obj_b_faces_count"] and cmpresult["matching_faces_count"] == cmpresult["obj_a_faces_count"]
+
+        self.set_cache_geometry_compare(current_obj, obj, direction, result)
         return result
 
     def propagate(self, grid, x, y, z):
