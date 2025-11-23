@@ -14,13 +14,13 @@ def get_elements_on_side(obj, face='FRONT', threshold=0.001):
     max_z = max(v.z for v in world_bbox)
     
     if face == 'FRONT':
-        threshold_value = max_z - threshold
-        axis = 'z'
-        direction = 'max'
-    elif face == 'BACK':
-        threshold_value = min_z + threshold
-        axis = 'z'
+        threshold_value = min_y + threshold
+        axis = 'y'
         direction = 'min'
+    elif face == 'BACK':
+        threshold_value = max_y - threshold
+        axis = 'y'
+        direction = 'max'
     elif face == 'RIGHT':
         threshold_value = max_x - threshold
         axis = 'x'
@@ -30,12 +30,12 @@ def get_elements_on_side(obj, face='FRONT', threshold=0.001):
         axis = 'x'
         direction = 'min'
     elif face == 'TOP':
-        threshold_value = max_y - threshold
-        axis = 'y'
+        threshold_value = max_z - threshold
+        axis = 'z'
         direction = 'max'
     elif face == 'BOTTOM':
-        threshold_value = min_y + threshold
-        axis = 'y'
+        threshold_value = min_z + threshold
+        axis = 'z'
         direction = 'min'
     else:
         return [], []
@@ -69,9 +69,9 @@ def get_elements_on_side(obj, face='FRONT', threshold=0.001):
 def get_rotation_matrix(face):
     rotations = {
         'FRONT': Matrix.Identity(4),
-        'BACK': Matrix.Rotation(math.pi, 4, 'Y'),
-        'RIGHT': Matrix.Rotation(-math.pi/2, 4, 'Y'),
-        'LEFT': Matrix.Rotation(math.pi/2, 4, 'Y'),
+        'BACK': Matrix.Rotation(math.pi, 4, 'X'),
+        'RIGHT': Matrix.Rotation(-math.pi/2, 4, 'Z'),
+        'LEFT': Matrix.Rotation(math.pi/2, 4, 'Z'),
         'TOP': Matrix.Rotation(math.pi/2, 4, 'X'),
         'BOTTOM': Matrix.Rotation(-math.pi/2, 4, 'X')
     }
