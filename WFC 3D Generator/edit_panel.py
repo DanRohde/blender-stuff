@@ -425,7 +425,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.label(text=obj_name)
             row.operator("object.wfc_reset_constraints")
 
-            box.row().label(text="Geometry constraints are in the Beta phase.", icon="WARNING_LARGE")
+            box.row().label(text="Geometry constraints are in the Alpha phase.", icon="WARNING_LARGE")
             box.row().label(text="Applies only to mesh objects.", icon="INFO_LARGE")
             row = box.row()
             row.column().label(text="Faces:")
