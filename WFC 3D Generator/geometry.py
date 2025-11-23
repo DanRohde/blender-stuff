@@ -2,17 +2,16 @@ from mathutils import Matrix, Vector
 import math
 
 def get_elements_on_side(obj, face='FRONT', threshold=0.001):
-    bbox = obj.bound_box
-    local_bbox = [Vector(b) for b in bbox]
-    world_bbox = [obj.matrix_world @ v for v in local_bbox]
-    
+    #world_bbox = [obj.matrix_world @ Vector(v) for v in obj.bound_box]
+    world_bbox = [Vector(v) for v in obj.bound_box]
+
     min_x = min(v.x for v in world_bbox)
     max_x = max(v.x for v in world_bbox)
     min_y = min(v.y for v in world_bbox)
     max_y = max(v.y for v in world_bbox)
     min_z = min(v.z for v in world_bbox)
     max_z = max(v.z for v in world_bbox)
-    
+
     if face == 'FRONT':
         threshold_value = min_y + threshold
         axis = 'y'
@@ -44,7 +43,6 @@ def get_elements_on_side(obj, face='FRONT', threshold=0.001):
     for edge in obj.data.edges:
         vertices = [obj.data.vertices[i] for i in edge.vertices]
         world_vertices = [obj.matrix_world @ v.co for v in vertices]
-        
         if direction == 'max':
             if all(getattr(v, axis) >= threshold_value for v in world_vertices):
                 relevant_edges.append(edge)
@@ -56,26 +54,24 @@ def get_elements_on_side(obj, face='FRONT', threshold=0.001):
     for poly in obj.data.polygons:
         vertices = [obj.data.vertices[i] for i in poly.vertices]
         world_vertices = [obj.matrix_world @ v.co for v in vertices]
-        
         if direction == 'max':
             if all(getattr(v, axis) >= threshold_value for v in world_vertices):
                 relevant_faces.append(poly)
         else:
             if all(getattr(v, axis) <= threshold_value for v in world_vertices):
                 relevant_faces.append(poly)
-    
     return relevant_edges, relevant_faces
 
 def get_rotation_matrix(face):
     rotations = {
-        'FRONT': Matrix.Identity(4),
-        'BACK': Matrix.Rotation(math.pi, 4, 'X'),
-        'RIGHT': Matrix.Rotation(-math.pi/2, 4, 'Z'),
-        'LEFT': Matrix.Rotation(math.pi/2, 4, 'Z'),
-        'TOP': Matrix.Rotation(math.pi/2, 4, 'X'),
-        'BOTTOM': Matrix.Rotation(-math.pi/2, 4, 'X')
+        'FRONT': Matrix.Identity(3),
+        'BACK': Matrix.Rotation(math.pi, 3, 'X'),
+        'RIGHT': Matrix.Rotation(-math.pi/2, 3, 'Z'),
+        'LEFT': Matrix.Rotation(math.pi/2, 3, 'Z'),
+        'TOP': Matrix.Rotation(math.pi/2, 3, 'X'),
+        'BOTTOM': Matrix.Rotation(-math.pi/2, 3, 'X')
     }
-    return rotations.get(face, Matrix.Identity(4))
+    return rotations.get(face, Matrix.Identity(3))
 
 def normalize_geometry(obj, face, edges, faces):
     local_matrix = obj.matrix_world.inverted()
@@ -100,16 +96,13 @@ def vectors_equal(v1, v2, tolerance=1e-6):
     return all(abs(a - b) < tolerance for a, b in zip(v1, v2))
 
 def normalize_face_orientation(vertices):
-    if len(vertices) < 3:
-        return vertices
+    if len(vertices) < 3: return vertices
     
     v1 = vertices[1] - vertices[0]
     v2 = vertices[2] - vertices[0]
     normal = v1.cross(v2)
     
-    if normal.z < 0:
-        return vertices[::-1]
-    return vertices
+    return vertices[::-1] if normal.y < 0 else vertices
 
 def remove_duplicate_edges(edges):
     unique_edges = []
@@ -143,8 +136,7 @@ def compare_faces(obj_a, face_a, obj_b, face_b, tolerance=1e-6):
     matching_faces = []
     for face_a in norm_faces_a:
         for face_b in norm_faces_b:
-            if len(face_a) != len(face_b):
-                continue
+            if len(face_a) != len(face_b): continue
             match = True
             for vertex_a in face_a:
                 found = False
