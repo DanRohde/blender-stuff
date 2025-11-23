@@ -35,7 +35,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 * WFC 3D Backup:
   * Import/Export all WFC 3D Generator constraints to/from a JSON file.
 * WFC 3D Rotation Tool:
-  * Copies an object, rotates the object itself along with its adjacency constraints.
+  * Copies and rotates an object along with its adjacency constraints.
 
 ## Constraints Overview
 * Adjacency Constraints: 
