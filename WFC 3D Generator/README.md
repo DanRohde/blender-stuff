@@ -227,6 +227,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * wfc_noise_transf_scale: float value 0..inf
 
 ## Upcoming Features
+* Distance constraints: Rules that restrict the placement of building blocks based on their distance from a specific point or another building block
+* Improved (region) frequency constraints: Frequency in percent instead of a specific number
 * 3D Viewport constraint visualizer
 * some tutorials and documentation (thx, David-rD, for your feedback)
 * ??? I need more feedback with ideas. ???
