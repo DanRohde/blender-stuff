@@ -1,15 +1,15 @@
 from mathutils import Matrix, Vector
 import math
 
-def get_elements_on_side(obj, face='FRONT', threshold=0.001):
+def get_elements_on_side(obj, face='FRONT', threshold=0.001, spacing = None):
     world_bbox = [Vector(v) for v in obj.bound_box]
 
-    min_x = min(v.x for v in world_bbox)
-    max_x = max(v.x for v in world_bbox)
-    min_y = min(v.y for v in world_bbox)
-    max_y = max(v.y for v in world_bbox)
-    min_z = min(v.z for v in world_bbox)
-    max_z = max(v.z for v in world_bbox)
+    min_x = min(min(v.x for v in world_bbox), -spacing[0]/2)
+    max_x = max(max(v.x for v in world_bbox), spacing[0]/2)
+    min_y = min(min(v.y for v in world_bbox), -spacing[1]/2)
+    max_y = max(max(v.y for v in world_bbox), spacing[1]/2)
+    min_z = min(min(v.z for v in world_bbox), -spacing[2]/2)
+    max_z = max(max(v.z for v in world_bbox), spacing[2]/2)
 
     if face == 'FRONT':
         threshold_value = min_y + threshold
@@ -107,13 +107,13 @@ def remove_duplicate_edges(edges):
             unique_edges.append(sorted_edge)
     return unique_edges
 
-def get_normalized_elements(obj, face):
-    edges, faces = get_elements_on_side(obj, face)
+def get_normalized_elements(obj, face, spacing):
+    edges, faces = get_elements_on_side(obj, face, spacing=spacing)
     return normalize_geometry(obj, face, edges, faces)
 
-def compare_faces(obj_a, face_a, obj_b, face_b, tolerance=1e-6):
-    norm_edges_a, norm_faces_a = get_normalized_elements(obj_a, face_a)
-    norm_edges_b, norm_faces_b = get_normalized_elements(obj_b, face_b)
+def compare_faces(obj_a, face_a, obj_b, face_b, tolerance=1e-6, spacing = None):
+    norm_edges_a, norm_faces_a = get_normalized_elements(obj_a, face_a, spacing)
+    norm_edges_b, norm_faces_b = get_normalized_elements(obj_b, face_b, spacing)
 
     unique_edges_a = remove_duplicate_edges(norm_edges_a)
     unique_edges_b = remove_duplicate_edges(norm_edges_b)

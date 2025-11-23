@@ -128,7 +128,7 @@ class WFC3D_OT_Rotation(bpy.types.Operator):
         offset = props.rt_offset
         for so in selected_objects:
             if so in props.collection_obj.children: continue
-            obj = get_object_by_name(props, so)
+            obj = props.collection_obj.objects[so]
             offset = rotate_object(props, obj, offset)
 
         return {'FINISHED'}

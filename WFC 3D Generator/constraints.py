@@ -21,8 +21,9 @@ class WFC3DConstraints:
         self.grid = None
         self.cache_geometry_compare = {}
         self.collection = None
+        self.spacing = None
     
-    def initialize_constraints(self, grid, collection, objects):
+    def initialize_constraints(self, grid, collection, objects, spacing):
         """Loads constraints from custom properties"""
         self.objects = objects
         default_obj = get_default_empty_object(collection)
@@ -32,6 +33,7 @@ class WFC3DConstraints:
         self.sympartner_obj = np.empty(grid.grid_size, dtype=object)
         self.symtransform = np.empty(grid.grid_size, dtype=object)
         self.symflip = np.empty(grid.grid_size, dtype=object)
+        self.spacing = spacing
         for obj in objects:
             obj_name = obj.name
             self.constraints[obj_name] = {}
@@ -582,7 +584,7 @@ class WFC3DConstraints:
             return self.set_cache_geometry_compare(current_obj, obj, direction, True)
 
         result = True
-        cmpresult = compare_faces(self.collection.objects[current_obj], direction, self.collection.objects[obj], OPPOSITE_DIRECTIONS[direction], self.constraints[current_obj]["geo_tolerance"])
+        cmpresult = compare_faces(self.collection.objects[current_obj], direction, self.collection.objects[obj], OPPOSITE_DIRECTIONS[direction], tolerance=self.constraints[current_obj]["geo_tolerance"], spacing=self.spacing)
 
         if self.constraints[current_obj]["geo_match_edges"]:
             result = result and cmpresult["obj_a_edges_count"] == cmpresult["obj_b_edges_count"] and cmpresult["matching_edges_count"] == cmpresult["obj_a_edges_count"]
@@ -695,3 +697,4 @@ class WFC3DConstraints:
         self.symtransform = None
         self.cache_geometry_compare = None
         self.collection = None
+        self.spacing = None

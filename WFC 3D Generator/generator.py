@@ -33,7 +33,7 @@ class WFC3DGenerator:
 
         if self.use_constraints:
             self.constraints = WFC3DConstraints()
-            self.constraints.initialize_constraints(self.grid, self.collection, self.objects)
+            self.constraints.initialize_constraints(self.grid, self.collection, self.objects, self.spacing)
                     
     def set_seed(self, seed):
         random.seed(seed)
