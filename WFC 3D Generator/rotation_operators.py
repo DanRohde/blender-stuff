@@ -67,7 +67,7 @@ def rotate_object(props, obj, offset):
     for sel,angle in zip(props.rt_rotation_x, angles):
         if not sel: continue
         new_obj = obj.copy()
-        new_obj.data = obj.data.copy()
+        if hasattr(obj, "data") and obj.data is not None: new_obj.data = obj.data.copy()
         new_obj.rotation_euler[0] = -math.radians(angle)
         new_obj.location = ( o.location[0] + offset[0], o.location[1] + offset[1], o.location[2] + offset[2] )
         props.collection_obj.objects.link(new_obj)
@@ -80,7 +80,7 @@ def rotate_object(props, obj, offset):
     for sel,angle in zip(props.rt_rotation_y, angles):
         if not sel: continue
         new_obj = obj.copy()
-        new_obj.data = obj.data.copy()
+        if hasattr(obj, "data") and obj.data is not None: new_obj.data = obj.data.copy()
         new_obj.rotation_euler[1] = -math.radians(angle)
         new_obj.location = ( o.location[0] + offset[0], o.location[1] + offset[1], o.location[2] + offset[2] )
         props.collection_obj.objects.link(new_obj)
@@ -93,7 +93,7 @@ def rotate_object(props, obj, offset):
     for sel,angle in zip(props.rt_rotation_z, angles):
         if not sel: continue
         new_obj = obj.copy()
-        new_obj.data = obj.data.copy()
+        if hasattr(obj, "data") and obj.data is not None: new_obj.data = obj.data.copy()
         new_obj.rotation_euler[2] = -math.radians(angle)
         new_obj.location = ( o.location[0] + offset[0], o.location[1] + offset[1], o.location[2] + offset[2] )
         props.collection_obj.objects.link(new_obj)
@@ -108,8 +108,12 @@ def rotate_object(props, obj, offset):
     for o in created_objects:
         o.select_set(True)
         bpy.context.view_layer.objects.active = o
-        bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+        try:
+            bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+        except Exception as e:
+            pass
         o.select_set(False)
+        bpy.context.view_layer.objects.active = None
 
     return offset
 class WFC3D_OT_Rotation(bpy.types.Operator):
