@@ -53,6 +53,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * Allows you to specify where an object may be located within the grid.
 * Probability Constraints:
   * These constraints increase or decrease the probability of an object being selected at random.
+* Region Probability Constraints:
+  * These constraints increase or decrease the probability of an object being selected at random in a specific region.
 * Frequency Constraints:
   * Define how often the same object or any other object may occur in the immediate vicinity or on one of the 3 axes XYZ.
 * Region Frequency Constraints:
