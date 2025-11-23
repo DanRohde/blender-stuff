@@ -2,7 +2,6 @@ from mathutils import Matrix, Vector
 import math
 
 def get_elements_on_side(obj, face='FRONT', threshold=0.001):
-    #world_bbox = [obj.matrix_world @ Vector(v) for v in obj.bound_box]
     world_bbox = [Vector(v) for v in obj.bound_box]
 
     min_x = min(v.x for v in world_bbox)
@@ -42,23 +41,21 @@ def get_elements_on_side(obj, face='FRONT', threshold=0.001):
     relevant_edges = []
     for edge in obj.data.edges:
         vertices = [obj.data.vertices[i] for i in edge.vertices]
-        world_vertices = [obj.matrix_world @ v.co for v in vertices]
         if direction == 'max':
-            if all(getattr(v, axis) >= threshold_value for v in world_vertices):
+            if all(getattr(v.co, axis) >= threshold_value for v in vertices):
                 relevant_edges.append(edge)
         else:
-            if all(getattr(v, axis) <= threshold_value for v in world_vertices):
+            if all(getattr(v.co, axis) <= threshold_value for v in vertices):
                 relevant_edges.append(edge)
     
     relevant_faces = []
     for poly in obj.data.polygons:
         vertices = [obj.data.vertices[i] for i in poly.vertices]
-        world_vertices = [obj.matrix_world @ v.co for v in vertices]
         if direction == 'max':
-            if all(getattr(v, axis) >= threshold_value for v in world_vertices):
+            if all(getattr(v.co, axis) >= threshold_value for v in vertices):
                 relevant_faces.append(poly)
         else:
-            if all(getattr(v, axis) <= threshold_value for v in world_vertices):
+            if all(getattr(v.co, axis) <= threshold_value for v in vertices):
                 relevant_faces.append(poly)
     return relevant_edges, relevant_faces
 
@@ -74,19 +71,17 @@ def get_rotation_matrix(face):
     return rotations.get(face, Matrix.Identity(3))
 
 def normalize_geometry(obj, face, edges, faces):
-    local_matrix = obj.matrix_world.inverted()
     rot_matrix = get_rotation_matrix(face)
 
     norm_edges = []
     for edge in edges:
-        v1 = local_matrix @ obj.data.vertices[edge.vertices[0]].co
-        v2 = local_matrix @ obj.data.vertices[edge.vertices[1]].co
+        v1 = obj.data.vertices[edge.vertices[0]].co
+        v2 = obj.data.vertices[edge.vertices[1]].co
         norm_edges.append((rot_matrix @ v1, rot_matrix @ v2))
     
     norm_faces = []
     for f in faces:
-        vertices = [rot_matrix @ (local_matrix @ obj.data.vertices[i].co) 
-                   for i in f.vertices]
+        vertices = [rot_matrix @ obj.data.vertices[i].co for i in f.vertices]
         vertices = normalize_face_orientation(vertices)
         norm_faces.append(vertices)
     
@@ -102,7 +97,7 @@ def normalize_face_orientation(vertices):
     v2 = vertices[2] - vertices[0]
     normal = v1.cross(v2)
     
-    return vertices[::-1] if normal.y < 0 else vertices
+    return vertices[::-1] if normal.y > 0 else vertices
 
 def remove_duplicate_edges(edges):
     unique_edges = []
