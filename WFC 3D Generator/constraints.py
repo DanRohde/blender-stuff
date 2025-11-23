@@ -7,6 +7,7 @@ from collections import deque
 
 from .constants import *
 from .helper import get_default_empty_object, get_default_empty_name, get_noise, remap
+from .geometry import compare_faces
 
 class WFC3DConstraints:
     def __init__(self):
@@ -18,12 +19,14 @@ class WFC3DConstraints:
         self.symtransform = []
         self.symflip = []
         self.grid = None
+        self.cache_geometry_compare = {}
+        self.collection = None
     
     def initialize_constraints(self, grid, collection, objects):
         """Loads constraints from custom properties"""
         self.objects = objects
         default_obj = get_default_empty_object(collection)
-
+        self.collection = collection
         self.grid = grid
         self.sympartner = np.empty(grid.grid_size, dtype=object)
         self.sympartner_obj = np.empty(grid.grid_size, dtype=object)
@@ -32,7 +35,7 @@ class WFC3DConstraints:
         for obj in objects:
             obj_name = obj.name
             self.constraints[obj_name] = {}
-            
+            self.cache_geometry_compare[obj_name] = {}
             if obj_name in bpy.data.collections:
                 obj = get_default_empty_object(bpy.data.collections[obj_name])
                 if obj is None: obj = bpy.data.collections[obj_name].objects[0]
@@ -547,6 +550,31 @@ class WFC3DConstraints:
             if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
 
+    def compare_geometry(self, current_obj, obj, direction):
+
+        if current_obj not in self.collection.objects or obj not in self.collection.objects: return True
+        if direction in self.cache_geometry_compare[current_obj] and obj in self.cache_geometry_compare[current_obj][direction]:
+            return self.cache_geometry_compare[current_obj][direction][obj]
+        if OPPOSITE_DIRECTIONS[direction] in self.cache_geometry_compare[obj] and current_obj in self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]]:
+            return self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]][current_obj]
+        result = True
+        cmpresult = compare_faces(self.collection.objects[current_obj], direction, self.collection.objects[obj], OPPOSITE_DIRECTIONS[direction], self.constraints[current_obj]["geo_tolerance"])
+
+        if self.constraints[current_obj]["geo_match_edges"]:
+            result = result and cmpresult["obj_a_edges_count"] == cmpresult["obj_b_edges_count"] and cmpresult["matching_edges_count"] == cmpresult["obj_a_edges_count"]
+        if self.constraints[current_obj]["geo_match_faces"]:
+            result = result and cmpresult["obj_a_faces_count"] == cmpresult["obj_b_faces_count"] and cmpresult["matching_faces_count"] == cmpresult["obj_a_faces_count"]
+
+        if not direction in self.cache_geometry_compare[current_obj]:
+            self.cache_geometry_compare[current_obj][direction] = { obj : result }
+        else:
+            self.cache_geometry_compare[current_obj][direction][obj] = result
+        if not OPPOSITE_DIRECTIONS[direction] in self.cache_geometry_compare[obj]:
+            self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]] = { current_obj : result }
+        else:
+            self.cache_geometry_compare[obj][OPPOSITE_DIRECTIONS[direction]][current_obj] = result
+        return result
+
     def propagate(self, grid, x, y, z):
         """Propagate constraints"""
 
@@ -584,6 +612,11 @@ class WFC3DConstraints:
                     new_options = [obj for obj in new_options if
                                    self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name] or
                                    self.constraints[obj][opp_prop_name] == ""]
+
+                # Filter disallowed geometry:
+                if self.constraints[current_obj]['geo_match_edges'] or self.constraints[current_obj]['geo_match_faces']:
+                    if direction in FACE_DIRECTIONS and self.constraints[current_obj][f"geo_{dirlower}"]:
+                        new_options = [ obj for obj in new_options if self.compare_geometry(current_obj, obj, direction)]
 
                 if len(new_options) >= len(neighbor_options): continue
                 grid.grid[nx, ny, nz] = new_options
@@ -643,3 +676,5 @@ class WFC3DConstraints:
         self.sympartner = None
         self.symflip = None
         self.symtransform = None
+        self.cache_geometry_compare = None
+        self.collection = None

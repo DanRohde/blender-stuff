@@ -123,7 +123,7 @@ def get_normalized_elements(obj, face):
     edges, faces = get_elements_on_side(obj, face)
     return normalize_geometry(obj, face, edges, faces)
 
-def compare_sides(obj_a, face_a, obj_b, face_b, tolerance=1e-6):
+def compare_faces(obj_a, face_a, obj_b, face_b, tolerance=1e-6):
     norm_edges_a, norm_faces_a = get_normalized_elements(obj_a, face_a)
     norm_edges_b, norm_faces_b = get_normalized_elements(obj_b, face_b)
 

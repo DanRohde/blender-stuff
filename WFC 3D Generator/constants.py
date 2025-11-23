@@ -91,7 +91,7 @@ PROP_DEFAULTS = {
     # geo constraints:
     'geo_left': False, 'geo_right': False, 'geo_bottom': False, 'geo_top': False, 'geo_front': False, 'geo_back': False,
     'geo_match_edges': False, 'geo_match_faces': False,
-    'geo_tolerance' : 0,
+    'geo_tolerance' : 0.001,
     # region probability constraints:
     'regprob_name' : '', 'regprob_min' : (-1,-1,-1), 'regprob_max' : (-1,-1,-1), 'regprob_weight' : 1, 'regprob_probability' : 1,
 }
