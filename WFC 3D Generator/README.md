@@ -227,6 +227,5 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * wfc_noise_transf_scale: float value 0..inf
 
 ## Upcoming Features
-* viewport constraint visualizer
-* geometry constraints: matching edges/faces
-* maybe various grid shapes: cubic, spherical, and cylindrical
+* 3D Viewport constraint visualizer
+* ??? I need feedback ???
