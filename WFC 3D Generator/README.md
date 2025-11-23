@@ -228,4 +228,5 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
 
 ## Upcoming Features
 * 3D Viewport constraint visualizer
-* ??? I need feedback ???
+* some tutorials and documentation
+* ??? I need feedback. ???
