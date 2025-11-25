@@ -72,6 +72,9 @@ def get_constraints(props):
 def get_selected_items(obj_list):
     return [item.obj.name for item in obj_list if item.obj is not None and item.selected]
 
+def count_selected_items(obj_list):
+    return len([item for item in obj_list if item.selected])
+
 def update_constraints(props, constraints):
     items = []
     if props.edit_type == 'objects':
@@ -247,7 +250,15 @@ def update_edit_form(_self, _context):
             while f"wfc_{lc[l][0]}_{idx}" in obj:
                 item = li.add()
                 for c in lc[l]:
-                    setattr(item, c, obj[f"wfc_{c}_{idx}"])
+                    try:
+                        if c in ENUM_CONSTRAINTS:
+                            setattr(item, c, ENUM_CONSTRAINTS[c][obj[f"wfc_{c}_{idx}"]])
+                        else:
+                            setattr(item, c, obj[f"wfc_{c}_{idx}"])
+                    except TypeError as e:
+                        v = obj[f"wfc_{c}_{idx}"]
+                        print(f"set of constraint {c} failed for item {item}: {v}: {e}" )
+                        pass
                 idx += 1
     props.auto_save = auto_save
 

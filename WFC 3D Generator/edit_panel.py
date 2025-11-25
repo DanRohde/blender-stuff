@@ -1,5 +1,5 @@
 import bpy
-from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name
+from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name, count_selected_items
 from .properties import get_known_conn_names
 from .constants import *
 
@@ -46,6 +46,7 @@ class WFC3D_UL_RegProbList(bpy.types.UIList):
         nr = col.row()
         nr.prop(item, "regprob_probability")
         nr.prop(item, "regprob_weight")
+
 class WFC3D_UL_DistanceList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
@@ -62,7 +63,6 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
             col.row().prop(item, "distance_position")
         else:
             col.row().prop(item, "distance_subcollection")
-
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
@@ -420,9 +420,13 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             col = row.column()
             col.template_list("WFC3D_UL_RegFreqList","", props, "regfreq_input_list", props, "regfreq_input_list_idx")
-            col = row.column()
+            col = row.column().box()
             col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-            col.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+            c = col.column()
+            c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+            c.separator()
+            c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
+            c.enabled = count_selected_items(props.regfreq_input_list) > 0
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "noise":
             box = box.box()
@@ -464,9 +468,13 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             col = row.column()
             col.template_list("WFC3D_UL_RegProbList", "", props, "regprob_input_list", props, "regprob_input_list_idx")
-            col = row.column()
+            col = row.column().box()
             col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-            col.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+            c = col.column()
+            c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+            c.separator()
+            c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
+            c.enabled = count_selected_items(props.regprob_input_list) > 0
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "distance":
             box = box.box()
@@ -476,9 +484,14 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             col = row.column()
             col.template_list("WFC3D_UL_DistanceList", "", props, "distance_input_list", props, "distance_input_list_idx")
-            col = row.column()
+            col = row.column().box()
             col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-            col.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+            c = col.column()
+            c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+            c.separator()
+            c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
+            c.enabled = count_selected_items(props.distance_input_list) > 0
+
             if not props.auto_save: box.operator("object.wfc_update_constraints")
 
     def _draw_labels(self, layout, labels):

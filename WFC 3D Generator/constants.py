@@ -158,6 +158,7 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'distance_object' : 'distance_input_list',
                      'distance_subcollection' : 'distance_input_list',
                    }
+ENUM_CONSTRAINTS = { 'distance_from' : [ 'object', 'position', 'sub-collection']}
 
 NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_scale',
                       'noise_transf_basis', 'noise_transf_scale',
@@ -167,7 +168,7 @@ GEOMETRY_CONSTRAINTS = [ 'geo_top', 'geo_bottom', 'geo_left', 'geo_right', 'geo_
 
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS
                    + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS
-                   + NOISE_CONSTRAINTS + GEOMETRY_CONSTRAINTS + REGPROB_CONSTRAINTS )
+                   + NOISE_CONSTRAINTS + GEOMETRY_CONSTRAINTS + REGPROB_CONSTRAINTS + DISTANCE_CONSTRAINTS)
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
 

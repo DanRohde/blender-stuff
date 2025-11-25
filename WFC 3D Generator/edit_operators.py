@@ -352,8 +352,25 @@ class WFC3D_OT_GenericAddListItem(bpy.types.Operator):
                 item = lst.add()
             setattr(item, c, PROP_DEFAULTS[c])
         return {'FINISHED'}
+class WFC3D_OT_GenericDuplicateListItems(bpy.types.Operator):
+    """Add new constraint item to list"""
+    bl_idname = "object.wfc_generic_duplicate_selected_items"
+    bl_label = "Duplicate selected rules"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        constraints = get_constraints(props)
+        lst = getattr(props, LIST_CONSTRAINTS[constraints[0]])
+        item = None
+        sel_items = [ item for item in lst if item.selected]
+        for si in sel_items:
+            item = lst.add()
+            for c in constraints:
+                setattr(item, c, getattr(si,c))
+        return {'FINISHED'}
 
 operators = [
+    WFC3D_OT_GenericDuplicateListItems,
     WFC3D_OT_GenericAddListItem,
     WFC3D_OT_GenericRemoveListItems,
     WFC3D_OT_InfoToggle,
