@@ -65,6 +65,8 @@ def get_constraints(props):
         constraints = GEOMETRY_CONSTRAINTS
     elif props.edit_constraints == 'regprob':
         constraints = REGPROB_CONSTRAINTS
+    elif props.edit_constraints == 'distance':
+        constraints = DISTANCE_CONSTRAINTS
     return constraints
 
 def get_selected_items(obj_list):

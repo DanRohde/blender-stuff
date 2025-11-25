@@ -110,6 +110,17 @@ class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
     regprob_probability: bpy.props.FloatProperty(update=auto_save, name="Probability", description="Region probability", min=0, max=1)
     selected: bpy.props.BoolProperty(default=False)
 
+class WFC3DDistanceListItem(bpy.types.PropertyGroup):
+    distance: bpy.props.IntVectorProperty(name="Distance", description="Minimum cell distance", default=PROP_DEFAULTS['distance'], min=1, update=auto_save)
+    distance_from: bpy.props.EnumProperty(update=auto_save, name="From", description="Minimum distance from ...",
+                                          items=[('object', 'Object', 'Minimum distance from an object'),
+                                                 ('position', 'Position', 'Minimum distance from a grid position'),
+                                          ('sub-collection','Sub-Collection','Minimum distance from objects in a sub-collection.')])
+    distance_object: bpy.props.PointerProperty(type=bpy.types.Object, name="Object", description="Object from the source collection", update=auto_save)
+    distance_position: bpy.props.IntVectorProperty(name="Position", description="Grid position", update=auto_save, default=PROP_DEFAULTS['distance_position'], min=0)
+    distance_subcollection: bpy.props.PointerProperty(type=bpy.types.Collection, name="Sub-Collection", description="Sub-collection from the source collection", update=auto_save)
+    selected: bpy.props.BoolProperty(default=False)
+
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, max=100,)
@@ -148,6 +159,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ('dimensions', 'Dimensions Constraints', 'Dimensions constraints'),
                ('fixed_position', 'Fixed Position Constraints', 'Fixed position constraints'),
                ("grid","Grid Constraints","Grid constraints"),("region","Region Constraints","Region constraints"),
+               ('distance','Distance Constraints','Distance constraints'),
                ('frequency',"Frequency Constraints","Frequency constraints"), ('regfreq','Region Frequency Constraints','Region Frequency constraints'),
                ("symmetry","Symmetry Constraints","Symmetry constraints"),
                None,
@@ -286,6 +298,9 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     regprob_input_list: bpy.props.CollectionProperty(type=WFC3DRegionProbabilityListItem)
     regprob_input_list_idx: bpy.props.IntProperty()
 
+    distance_input_list: bpy.props.CollectionProperty(type=WFC3DDistanceListItem)
+    distance_input_list_idx: bpy.props.IntProperty()
+
     backup_import_overwrite: bpy.props.BoolProperty(name="Overwrite", description="Overwrite existing properties", default=True)
     backup_import_replace: bpy.props.BoolProperty(name="Replace", description="Replace existing properties", default=False)
 
@@ -341,4 +356,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

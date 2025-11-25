@@ -94,6 +94,8 @@ PROP_DEFAULTS = {
     'geo_tolerance' : 0.001,
     # region probability constraints:
     'regprob_name' : '', 'regprob_min' : (-1,-1,-1), 'regprob_max' : (-1,-1,-1), 'regprob_weight' : 1, 'regprob_probability' : 1,
+    # distance constraints:
+    'distance': (1,1,1), 'distance_from': 'object', 'distance_object': None, 'distance_position': (0,0,0), 'distance_subcollection': None,
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
@@ -138,6 +140,8 @@ REGFREQ_CONSTRAINTS = [ 'regfreq_name', 'regfreq_min', 'regfreq_max', 'regfreq_f
 
 REGPROB_CONSTRAINTS = [ 'regprob_name', 'regprob_min', 'regprob_max', 'regprob_weight', 'regprob_probability']
 
+DISTANCE_CONSTRAINTS = [ 'distance', 'distance_from', 'distance_position', 'distance_object', 'distance_subcollection']
+
 LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'regfreq_max' : 'regfreq_input_list',
                      'regfreq_freq' : 'regfreq_input_list',
@@ -148,6 +152,11 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'regprob_max' : 'regprob_input_list',
                      'regprob_weight' : 'regprob_input_list',
                      'regprob_probability' : 'regprob_input_list',
+                     'distance' : 'distance_input_list',
+                     'distance_from' : 'distance_input_list',
+                     'distance_position' : 'distance_input_list',
+                     'distance_object' : 'distance_input_list',
+                     'distance_subcollection' : 'distance_input_list',
                    }
 
 NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_scale',

@@ -161,6 +161,34 @@ def check_region_probability_constraints(obj):
         idx += 1
 
     return warn_count
+def check_distance_constraints(obj):
+    warn_count = 0
+    gs = bpy.context.scene.wfc_props.grid_size
+    sc = bpy.context.scene.wfc_props.collection_obj
+    idx = 0
+    while f'wfc_distance_{idx}' in obj:
+        x, y, z = obj[f"wfc_distance_{idx}"]
+        if x < 0 or x > gs[0] or y < 0 or y > gs[1] or z < 0 or z > gs[2]:
+            add_log_entry(1, f"Distance constraints of {obj.name}: Distance of entry {idx} is larger than the grid size.")
+            warn_count += 1
+        f = obj[f"wfc_distance_from_{idx}"]
+        if f == 0:
+            o = obj[f"wfc_distance_object_{idx}"]
+            if o is None or o.name not in sc.objects:
+                add_log_entry(1, f"Distance constraints of {obj.name}: Object {o.name if o is not None else o} of entry {idx} is not in the source collection.")
+                warn_count += 1
+        elif f == 1:
+            px, py, pz = obj[f"wfc_distance_position_{idx}"]
+            if not (0 <= px < gs[0] and 0 <= py < gs[1] and 0 <= pz < gs[2]):
+                add_log_entry(1, f"Distance constraints of {obj.name}: Position of entry {idx} is outside the grid boundaries.")
+                warn_count += 1
+        else:
+            o = obj[f"wfc_distance_subcollection_{idx}"]
+            if o is None or o.name not in sc.children:
+                add_log_entry(1, f"Distance constraints of {obj.name}: Sub-collection of entry {idx} is not in the source collection.")
+                warn_count += 1
+        idx += 1
+    return warn_count
 def check_noise_constraints(obj):
     warn_count = 0
     if "wfc_noise_prob_scale" in obj:
@@ -188,6 +216,7 @@ def check_collection(collection):
         warn_count += check_fixed_position_constraints(obj)
         warn_count += check_region_frequency_constraints(obj)
         warn_count += check_noise_constraints(obj)
+        warn_count += check_distance_constraints(obj)
     warn_count += check_connector_names(conn_names, conn_obj_names)
     return warn_count, error_count
 

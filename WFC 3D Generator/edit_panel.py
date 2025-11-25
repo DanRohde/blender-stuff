@@ -16,8 +16,10 @@ class WFC3D_UL_RegFreqList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
-        col.label(text=f"{index}.")
-        col.prop(item,"selected", text="")
+        r = col.row()
+        r.prop(item,"selected", text="")
+        r.label(text=f"{index}.")
+
         col = row.column(align=True)
         col.row().prop(item,"regfreq_name")
         col.row().prop(item,"regfreq_min")
@@ -34,8 +36,9 @@ class WFC3D_UL_RegProbList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
-        col.label(text=f"{index}.")
-        col.prop(item,"selected", text="")
+        r = col.row()
+        r.prop(item, "selected", text="")
+        r.label(text=f"{index}.")
         col = row.column(align=True)
         col.row().prop(item,"regprob_name")
         col.row().prop(item,"regprob_min")
@@ -43,6 +46,23 @@ class WFC3D_UL_RegProbList(bpy.types.UIList):
         nr = col.row()
         nr.prop(item, "regprob_probability")
         nr.prop(item, "regprob_weight")
+class WFC3D_UL_DistanceList(bpy.types.UIList):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
+        row = layout.row(align=True)
+        col = row.column(align=True)
+        r = col.row()
+        r.prop(item, "selected", text="")
+        r.label(text=f"{index}.")
+        col = row.column(align=True)
+        col.row().prop(item, "distance")
+        col.prop(item, "distance_from")
+        if item.distance_from == 'object':
+            col.prop(item, "distance_object")
+        elif item.distance_from == 'position':
+            col.row().prop(item, "distance_position")
+        else:
+            col.row().prop(item, "distance_subcollection")
+
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
@@ -448,6 +468,19 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
             col.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if props.edit_constraints == "distance":
+            box = box.box()
+            row = box.row()
+            row.label(text=obj_name)
+            row.operator("object.wfc_reset_constraints")
+            row = box.row()
+            col = row.column()
+            col.template_list("WFC3D_UL_DistanceList", "", props, "distance_input_list", props, "distance_input_list_idx")
+            col = row.column()
+            col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
+            col.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+            if not props.auto_save: box.operator("object.wfc_update_constraints")
+
     def _draw_labels(self, layout, labels):
         for label in labels:
             layout.label(text=label)
@@ -498,6 +531,8 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             sbox.label(text="Grid constraints")
             self._draw_labels(sbox.column_flow(columns=2, align=True), labels)
 
+        self._draw_list_properties(props, box, "Distance constraints", DISTANCE_CONSTRAINTS)
+
         if sum(props.region_min) > -3 or sum(props.region_max) > -3 or sum(props.region_quadrant) < 8:
             sbox = box.box()
             sbox.label(text="Region constraints")
@@ -547,6 +582,6 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.enabled = False
             row.prop(props, p)
 
-panels = [ WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
+panels = [ WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
         
