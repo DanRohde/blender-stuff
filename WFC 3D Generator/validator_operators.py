@@ -129,7 +129,7 @@ def check_region_frequency_constraints(obj):
     while f'wfc_regfreq_freq_{idx}' in obj:
         minx, miny, minz = obj[f"wfc_regfreq_min_{idx}"]
         maxx, maxy, maxz = obj[f"wfc_regfreq_max_{idx}"]
-        name = obj[f"wfc_regpfreq_name_{idx}"] if f"wfc_regfreq_name_{idx}" in obj else ""
+        name = obj[f"wfc_regfreq_name_{idx}"] if f"wfc_regfreq_name_{idx}" in obj else ""
         rsize = (maxx-minx+1) * (maxy-miny+1) * (maxz-minz+1)
         freq = obj[f"wfc_regfreq_freq_{idx}"]
         if freq < 0 or freq > rsize:
