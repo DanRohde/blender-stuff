@@ -68,15 +68,18 @@ def get_faces_on_side(obj, face, spacing):
     return get_elements_on_side(obj, obj.data.polygons, face, spacing)
 
 def get_rotation_matrix(face):
+    nd = math.pi / 2
     rotations = {
-        'FRONT': Matrix.Identity(3),
-        'BACK': Matrix.Rotation(math.pi, 3, 'X'),
-        'RIGHT': Matrix.Rotation(-math.pi/2, 3, 'Z'),
-        'LEFT': Matrix.Rotation(math.pi/2, 3, 'Z'),
-        'TOP': Matrix.Rotation(math.pi/2, 3, 'X'),
-        'BOTTOM': Matrix.Rotation(-math.pi/2, 3, 'X')
+        'BACK': { 'angle': math.pi, 'axis': 'X' },
+        'RIGHT': { 'angle': -nd, 'axis': 'Z' },
+        'LEFT': { 'angle' : nd, 'axis': 'Z' },
+        'TOP': { 'angle': nd, 'axis': 'X'},
+        'BOTTOM': { 'angle': -nd, 'axis': 'X'},
     }
-    return rotations.get(face, Matrix.Identity(3))
+    if face == 'FRONT':
+        return Matrix.Identity(3)
+    else:
+        return Matrix.Rotation(rotations[face]['angle'], 3, rotations[face]['axis'])
 
 def normalize_edge_geometry(obj, face, edges):
     rot_matrix = get_rotation_matrix(face)
