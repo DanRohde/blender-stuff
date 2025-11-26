@@ -130,23 +130,21 @@ def get_normalized_faces(obj, face, spacing):
     return normalize_face_geometry(obj, face, get_faces_on_side(obj, face, spacing))
 
 def compare_edges(obj_a, face_a, obj_b, face_b, tolerance, spacing):
-    norm_edges_a = get_normalized_edges(obj_a, face_a, spacing)
-    norm_edges_b = get_normalized_edges(obj_b, face_b, spacing)
-    unique_edges_a = remove_duplicate_edges(norm_edges_a)
-    unique_edges_b = remove_duplicate_edges(norm_edges_b)
-    matching_edges = []
+    unique_edges_a = remove_duplicate_edges(get_normalized_edges(obj_a, face_a, spacing))
+    unique_edges_b = remove_duplicate_edges(get_normalized_edges(obj_b, face_b, spacing))
+    matching_edge_count = 0
     for edge_a in unique_edges_a:
         for edge_b in unique_edges_b:
             if (vectors_equal(edge_a[0], edge_b[0], tolerance) and
                 vectors_equal(edge_a[1], edge_b[1], tolerance)) or \
                (vectors_equal(edge_a[0], edge_b[1], tolerance) and
                 vectors_equal(edge_a[1], edge_b[0], tolerance)):
-                matching_edges.append(edge_a)
+                matching_edge_count += 1
                 break
     return {
         'obj_a_edges_count': len(unique_edges_a),
         'obj_b_edges_count': len(unique_edges_b),
-        'matching_edges_count': len(matching_edges),
+        'matching_edges_count': matching_edge_count,
     }
 
 
@@ -154,7 +152,7 @@ def compare_faces(obj_a, face_a, obj_b, face_b, tolerance, spacing):
     norm_faces_a = get_normalized_faces(obj_a, face_a, spacing)
     norm_faces_b = get_normalized_faces(obj_b, face_b, spacing)
 
-    matching_faces = []
+    matching_face_count = 0
     for face_a in norm_faces_a:
         for face_b in norm_faces_b:
             if len(face_a) != len(face_b): continue
@@ -170,11 +168,11 @@ def compare_faces(obj_a, face_a, obj_b, face_b, tolerance, spacing):
                     break
                     
             if match:
-                matching_faces.append(face_a)
+                matching_face_count =+ 1
                 break
     
     return {
         'obj_a_faces_count': len(norm_faces_a),
         'obj_b_faces_count': len(norm_faces_b),
-        'matching_faces_count': len(matching_faces)
+        'matching_faces_count': matching_face_count
     }
