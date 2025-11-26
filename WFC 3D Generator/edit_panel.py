@@ -91,6 +91,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
 
         selected = []
         if props.edit_type == 'objects':
+            sel_count = count_selected_items(props.obj_list)
             newrow = box.row()
             nc=newrow.column().box()
             nc.operator("collection.wfc_get_selected_object", icon="SELECT_SET")
@@ -99,9 +100,13 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nc.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
             nc.enabled = not props.auto_active_object
             nc=newrow.column().box()
-            nc.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
+            c = nc.column()
+            c.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
+            c.enabled = sel_count > 0
             nc.operator("collection.wfc_collection_list_select_all", icon="CHECKBOX_HLT")
-            nc.operator("collection.wfc_collection_list_select_none", icon="CHECKBOX_DEHLT")
+            c = nc.column()
+            c.operator("collection.wfc_collection_list_select_none", icon="CHECKBOX_DEHLT")
+            c.enabled = sel_count > 0
             nc.operator("collection.wfc_update_collection_list",icon="FILE_REFRESH")
             nc.enabled = not props.auto_active_object
         
@@ -163,11 +168,14 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 newcol.enabled = not props.auto_neighbor_object
                 newcol = row.column().box()
                 newcol.enabled = not props.auto_neighbor_object
+                sel_count = count_selected_items(props.neighbor_list)
                 nr = newcol.row()
                 nr.operator("collection.wfc_select_neighbor_object", icon='RESTRICT_SELECT_OFF')
-                nr.enabled = not props.auto_active_object
+                nr.enabled = not props.auto_active_object and sel_count > 0
                 newcol.operator("collection.wfc_neighbor_list_select_all", icon="CHECKBOX_HLT")
-                newcol.operator("collection.wfc_neighbor_list_select_none", icon="CHECKBOX_DEHLT")
+                c = newcol.column()
+                c.operator("collection.wfc_neighbor_list_select_none", icon="CHECKBOX_DEHLT")
+                c.enabled = sel_count > 0
 
                 box.row().prop(props,"allow_neighbor_constraint_violations",icon="VIEW_UNLOCKED")
 
