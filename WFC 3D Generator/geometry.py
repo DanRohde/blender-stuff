@@ -1,16 +1,22 @@
 from mathutils import Matrix, Vector
 import math
 
-def get_elements_on_side(obj, face='FRONT', threshold=0.001, spacing = None):
-    world_bbox = [Vector(v) for v in obj.bound_box]
 
-    min_x = min(min(v.x for v in world_bbox), -spacing[0]/2)
-    max_x = max(max(v.x for v in world_bbox), spacing[0]/2)
-    min_y = min(min(v.y for v in world_bbox), -spacing[1]/2)
-    max_y = max(max(v.y for v in world_bbox), spacing[1]/2)
-    min_z = min(min(v.z for v in world_bbox), -spacing[2]/2)
-    max_z = max(max(v.z for v in world_bbox), spacing[2]/2)
+def get_bounding_box(obj, spacing):
+    local_bbox = [Vector(v) for v in obj.bound_box]
 
+    min_x = min(min(v.x for v in local_bbox), -spacing[0]/2)
+    max_x = max(max(v.x for v in local_bbox), spacing[0]/2)
+    min_y = min(min(v.y for v in local_bbox), -spacing[1]/2)
+    max_y = max(max(v.y for v in local_bbox), spacing[1]/2)
+    min_z = min(min(v.z for v in local_bbox), -spacing[2]/2)
+    max_z = max(max(v.z for v in local_bbox), spacing[2]/2)
+
+    return min_x, max_x, min_y, max_y, min_z, max_z
+
+def get_axis_direction(bbox, face):
+    min_x, max_x, min_y, max_y, min_z, max_z = bbox
+    threshold = 0.001
     if face == 'FRONT':
         threshold_value = min_y + threshold
         axis = 'y'
@@ -36,28 +42,30 @@ def get_elements_on_side(obj, face='FRONT', threshold=0.001, spacing = None):
         axis = 'z'
         direction = 'min'
     else:
-        return [], []
-    
-    relevant_edges = []
-    for edge in obj.data.edges:
-        vertices = [obj.data.vertices[i] for i in edge.vertices]
+        return None
+    return threshold_value, axis, direction
+
+def get_elements_on_side(obj, data, face, spacing):
+    threshold_value, axis, direction = get_axis_direction(get_bounding_box(obj, spacing), face)
+
+    relevant_elements = []
+    for element in data:
+        vertices = [obj.data.vertices[i] for i in element.vertices]
         if direction == 'max':
             if all(getattr(v.co, axis) >= threshold_value for v in vertices):
-                relevant_edges.append(edge)
+                relevant_elements.append(element)
         else:
             if all(getattr(v.co, axis) <= threshold_value for v in vertices):
-                relevant_edges.append(edge)
-    
-    relevant_faces = []
-    for poly in obj.data.polygons:
-        vertices = [obj.data.vertices[i] for i in poly.vertices]
-        if direction == 'max':
-            if all(getattr(v.co, axis) >= threshold_value for v in vertices):
-                relevant_faces.append(poly)
-        else:
-            if all(getattr(v.co, axis) <= threshold_value for v in vertices):
-                relevant_faces.append(poly)
-    return relevant_edges, relevant_faces
+                relevant_elements.append(element)
+
+    return relevant_elements
+
+
+def get_edges_on_side(obj, face, spacing):
+    return get_elements_on_side(obj, obj.data.edges, face, spacing)
+
+def get_faces_on_side(obj, face, spacing):
+    return get_elements_on_side(obj, obj.data.polygons, face, spacing)
 
 def get_rotation_matrix(face):
     rotations = {
@@ -70,7 +78,7 @@ def get_rotation_matrix(face):
     }
     return rotations.get(face, Matrix.Identity(3))
 
-def normalize_geometry(obj, face, edges, faces):
+def normalize_edge_geometry(obj, face, edges):
     rot_matrix = get_rotation_matrix(face)
 
     norm_edges = []
@@ -79,13 +87,18 @@ def normalize_geometry(obj, face, edges, faces):
         v2 = obj.data.vertices[edge.vertices[1]].co
         norm_edges.append((rot_matrix @ v1, rot_matrix @ v2))
     
+    return norm_edges
+
+def normalize_face_geometry(obj, face, faces):
+    rot_matrix = get_rotation_matrix(face)
+
     norm_faces = []
     for f in faces:
         vertices = [rot_matrix @ obj.data.vertices[i].co for i in f.vertices]
         vertices = normalize_face_orientation(vertices)
         norm_faces.append(vertices)
     
-    return norm_edges, norm_faces
+    return norm_faces
 
 def vectors_equal(v1, v2, tolerance=1e-6):
     return all(abs(a - b) < tolerance for a, b in zip(v1, v2))
@@ -107,27 +120,37 @@ def remove_duplicate_edges(edges):
             unique_edges.append(sorted_edge)
     return unique_edges
 
-def get_normalized_elements(obj, face, spacing):
-    edges, faces = get_elements_on_side(obj, face, spacing=spacing)
-    return normalize_geometry(obj, face, edges, faces)
+def get_normalized_edges(obj, face, spacing):
+    return normalize_edge_geometry(obj, face, get_edges_on_side(obj, face, spacing))
 
-def compare_faces(obj_a, face_a, obj_b, face_b, tolerance=1e-6, spacing = None):
-    norm_edges_a, norm_faces_a = get_normalized_elements(obj_a, face_a, spacing)
-    norm_edges_b, norm_faces_b = get_normalized_elements(obj_b, face_b, spacing)
+def get_normalized_faces(obj, face, spacing):
+    return normalize_face_geometry(obj, face, get_faces_on_side(obj, face, spacing))
 
+def compare_edges(obj_a, face_a, obj_b, face_b, tolerance, spacing):
+    norm_edges_a = get_normalized_edges(obj_a, face_a, spacing)
+    norm_edges_b = get_normalized_edges(obj_b, face_b, spacing)
     unique_edges_a = remove_duplicate_edges(norm_edges_a)
     unique_edges_b = remove_duplicate_edges(norm_edges_b)
-
     matching_edges = []
     for edge_a in unique_edges_a:
         for edge_b in unique_edges_b:
-            if (vectors_equal(edge_a[0], edge_b[0], tolerance) and 
+            if (vectors_equal(edge_a[0], edge_b[0], tolerance) and
                 vectors_equal(edge_a[1], edge_b[1], tolerance)) or \
-               (vectors_equal(edge_a[0], edge_b[1], tolerance) and 
+               (vectors_equal(edge_a[0], edge_b[1], tolerance) and
                 vectors_equal(edge_a[1], edge_b[0], tolerance)):
                 matching_edges.append(edge_a)
                 break
-    
+    return {
+        'obj_a_edges_count': len(unique_edges_a),
+        'obj_b_edges_count': len(unique_edges_b),
+        'matching_edges_count': len(matching_edges),
+    }
+
+
+def compare_faces(obj_a, face_a, obj_b, face_b, tolerance, spacing):
+    norm_faces_a = get_normalized_faces(obj_a, face_a, spacing)
+    norm_faces_b = get_normalized_faces(obj_b, face_b, spacing)
+
     matching_faces = []
     for face_a in norm_faces_a:
         for face_b in norm_faces_b:
@@ -148,9 +171,6 @@ def compare_faces(obj_a, face_a, obj_b, face_b, tolerance=1e-6, spacing = None):
                 break
     
     return {
-        'obj_a_edges_count': len(unique_edges_a),
-        'obj_b_edges_count': len(unique_edges_b),
-        'matching_edges_count': len(matching_edges),
         'obj_a_faces_count': len(norm_faces_a),
         'obj_b_faces_count': len(norm_faces_b),
         'matching_faces_count': len(matching_faces)

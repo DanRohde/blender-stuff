@@ -7,7 +7,7 @@ from collections import deque
 
 from .constants import *
 from .helper import get_default_empty_object, get_default_empty_name, get_noise, remap
-from .geometry import compare_faces
+from .geometry import compare_edges, compare_faces
 
 class WFC3DConstraints:
     def __init__(self):
@@ -584,11 +584,16 @@ class WFC3DConstraints:
             return self.set_cache_geometry_compare(current_obj, obj, direction, True)
 
         result = True
-        cmpresult = compare_faces(self.collection.objects[current_obj], direction, self.collection.objects[obj], OPPOSITE_DIRECTIONS[direction], tolerance=self.constraints[current_obj]["geo_tolerance"], spacing=self.spacing)
-
         if self.constraints[current_obj]["geo_match_edges"]:
+            cmpresult = compare_edges(self.collection.objects[current_obj], direction, self.collection.objects[obj],
+                                      OPPOSITE_DIRECTIONS[direction],
+                                      self.constraints[current_obj]["geo_tolerance"], self.spacing)
             result = result and cmpresult["obj_a_edges_count"] == cmpresult["obj_b_edges_count"] and cmpresult["matching_edges_count"] == cmpresult["obj_a_edges_count"]
         if self.constraints[current_obj]["geo_match_faces"]:
+            cmpresult = compare_faces(self.collection.objects[current_obj], direction, self.collection.objects[obj],
+                                      OPPOSITE_DIRECTIONS[direction],
+                                      self.constraints[current_obj]["geo_tolerance"], self.spacing)
+
             result = result and cmpresult["obj_a_faces_count"] == cmpresult["obj_b_faces_count"] and cmpresult["matching_faces_count"] == cmpresult["obj_a_faces_count"]
 
         self.set_cache_geometry_compare(current_obj, obj, direction, result)
