@@ -89,11 +89,12 @@ class WFC3DConstraints:
                 if df not in [0,2]: continue
                 from_object = self.constraints[obj.name]['distance_object'][i] if df == 0 else self.constraints[obj.name]['distance_subcollection'][i]
                 if obj.name == from_object.name: continue
-                if from_object.name not in ddd: ddd[from_object.name] = { 'distance': [], 'distance_from': [] , 'distance_object': [], 'distance_subcollection': [] }
+                if from_object.name not in ddd: ddd[from_object.name] = { 'distance': [], 'distance_from': [] , 'distance_object': [], 'distance_subcollection': [], 'distance_type' : [] }
                 ddd[from_object.name]['distance'].append(distance)
                 ddd[from_object.name]['distance_from'].append(0 if obj.name in collection.objects else 2)
                 ddd[from_object.name]['distance_object'].append(obj if obj.name in collection.objects else None)
                 ddd[from_object.name]['distance_subcollection'].append(obj if obj.name in collection.children else None)
+                ddd[from_object.name]['distance_type'].append(self.constraints[obj.name]['distance_type'])
         ## initialize reversed distance constraints:
         for obj_name in ddd:
             for i, distance in enumerate(ddd[obj_name]['distance']):
@@ -101,6 +102,7 @@ class WFC3DConstraints:
                 self.constraints[obj_name]['distance_from'].append(ddd[obj_name]['distance_from'][i])
                 self.constraints[obj_name]['distance_object'].append(ddd[obj_name]['distance_object'][i])
                 self.constraints[obj_name]['distance_subcollection'].append(ddd[obj_name]['distance_subcollection'][i])
+                self.constraints[obj_name]['distance_type'].append(ddd[obj_name]['distance_type'][i])
 
     def get_adjacency_property_value(self, direction, prefix, obj, default_obj):
         cname = prefix + direction.lower()
@@ -583,7 +585,8 @@ class WFC3DConstraints:
                 self.grid.remove_max_region_neighbors(x,y,z,maxfreq,rmin,rmax)
 
     def propagate_distance_from_object_constraints(self, collapsed):
-        gs = self.grid.grid_size
+        mgx, mgy, mgz = self.grid.grid_size[0] - 1, self.grid.grid_size[1] - 1, self.grid.grid_size[2] - 1
+
         for position in collapsed:
             if len(self.grid.grid[position[0],position[1],position[2]]) == 0: continue
             obj_name = self.grid.grid[position[0],position[1],position[2]][0]
@@ -594,11 +597,21 @@ class WFC3DConstraints:
                 if df not in [0, 2]: continue
                 if df == 0 and constraints["distance_object"][i] is None: continue
                 if df == 2 and constraints["distance_subcollection"][i] is None: continue
-                minx, miny, minz = max(0, position[0] - distance[0]), max(0, position[1] - distance[1]), max(0, position[2] - distance[2])
-                maxx, maxy, maxz = (min(gs[0]-1, position[0] + distance[0] + dimensions[0] - 1 ), min(gs[1]-1, position[1] + distance[1] + dimensions[1] - 1),
-                                    min(gs[2]-1, position[2] + distance[2] + dimensions[2] - 1 ))
+                minx, miny, minz = min(mgx, max(0, position[0] - distance[0])), min(mgy, max(0, position[1] - distance[1])), min(mgz, max(0, position[2] - distance[2]))
+                maxx, maxy, maxz = (max(0, min(mgx, position[0] + distance[0] + dimensions[0] - 1 )), max(0, min(mgy, position[1] + distance[1] + dimensions[1] - 1)),
+                                    max(0, min(mgz, position[2] + distance[2] + dimensions[2] - 1 )))
                 fon = constraints["distance_object"][i].name if df == 0 else constraints["distance_subcollection"][i].name
-                self.grid.remove_obj_in_region(fon, (minx, miny, minz), (maxx, maxy, maxz), position)
+
+                if constraints["distance_type"][i] == 1:
+                    self.grid.remove_obj_outside_region(fon, (minx, miny, minz), (maxx, maxy, maxz))
+                elif constraints["distance_type"][i] == 2:
+                    self.grid.remove_obj_outside_region(fon, (minx, miny, minz), (maxx, maxy, maxz))
+                    minx, miny, minz = min(mgx, max(0, position[0] - distance[0] + 1)), min(mgy, max(0, position[1] - distance[1] + 1)), min(mgz, max(0, position[2] - distance[2] + 1))
+                    maxx, maxy, maxz = (max(0, min(mgx, position[0] + distance[0] + dimensions[0] - 2)), max(0, min(mgy, position[1] + distance[1] + dimensions[1] - 2)),
+                                        max(0, min(mgz, position[2] + distance[2] + dimensions[2] - 2)))
+                    self.grid.remove_obj_in_region(fon, (minx, miny, minz), (maxx, maxy, maxz), position)
+                else:
+                    self.grid.remove_obj_in_region(fon, (minx, miny, minz), (maxx, maxy, maxz), position)
 
     def set_cache_geometry_compare(self, current_obj, obj, direction, result):
         if not direction in self.cache_geometry_compare[current_obj]:
@@ -732,7 +745,6 @@ class WFC3DConstraints:
                     minx, miny ,minz = min(mgx, max(0, position[0] - distance[0] + 1)), min(mgy, max(0, position[1] - distance[1] + 1)), min(mgz, max(0, position[2] - distance[2] + 1))
                     maxx, maxy, maxz = max(0, min(mgx, position[0] + distance[0] - 1)), max(0, min(mgy, position[1] + distance[1] - 1)), max(0, min(mgz, position[2] + distance[2] - 1))
                     self.grid.remove_obj_in_region(obj.name, (minx, miny, minz), (maxx, maxy, maxz))
-                    print(f"remove in region for {obj.name}: {minx, miny, minz}, {maxx, maxy, maxz}")
 
         return collapsed
 
