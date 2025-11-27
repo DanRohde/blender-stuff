@@ -6,9 +6,8 @@ from bpy_extras.io_utils import ImportHelper, ExportHelper
 from .helper import get_default_empty_name, get_default_empty_object
 
 def remove_existing_constraints(obj):
-    for p in obj.keys():
-        if p.startswith("wfc_"):
-            del obj[p]
+    property_keys = [ k for k in obj.keys() if k.startswith("wfc_") ]
+    for k in property_keys: del obj[k]
 
 def put_data_into_object(data, p, obj):
     try:
@@ -25,14 +24,11 @@ def put_data_into_object(data, p, obj):
 
 def import_data(props, data):
     collection = props.collection_obj
-
-    if len(data["defaults"]) > 0:
-        default_obj = get_default_empty_object(collection, True)
-
-        #if props.backup_import_replace: remove_existing_constraints(default_obj)
-        for p in data["defaults"]:
-            if p in default_obj and not props.backup_import_overwrite: continue
-            put_data_into_object(data["defaults"][p], p, default_obj)
+    default_obj = get_default_empty_object(collection, True)
+    if props.backup_import_replace: remove_existing_constraints(default_obj)
+    for p in data["defaults"]:
+        if p in default_obj and not props.backup_import_overwrite: continue
+        put_data_into_object(data["defaults"][p], p, default_obj)
 
     for o in data["objects"]:
         if o in collection.objects:
@@ -41,7 +37,7 @@ def import_data(props, data):
             obj = get_default_empty_object(collection.children[o], True)
         else:
             continue
-        #if props.backup_import_replace: remove_existing_constraints(obj)
+        if props.backup_import_replace: remove_existing_constraints(obj)
         for p in data["objects"][o]:
             if p in obj and not props.backup_import_overwrite: continue
             put_data_into_object(data["objects"][o][p], p, obj)
