@@ -65,6 +65,7 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
             col.row().prop(item, "distance_position")
         else:
             col.row().prop(item, "distance_subcollection")
+        col.prop(item, "distance_type")
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""

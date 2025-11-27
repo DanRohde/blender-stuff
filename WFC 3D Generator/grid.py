@@ -247,6 +247,15 @@ class WFC3DGrid:
                     if self.within_boundaries(x, y, z) and (ignore_position is None or ignore_position[0]!=x or ignore_position[1]!=y or ignore_position[2]!=z):
                         new_options = [n for n in self.grid[x,y,z] if n != obj_name ]
                         self.grid[x,y,z] = new_options
+    def remove_obj_outside_region(self, obj_name, min_position, max_position):
+        min_x, min_y, min_z = min_position
+        max_x, max_y, max_z = max_position
+        for x in range(self.grid_size[0]):
+            for y in range(self.grid_size[1]):
+                for z in range(self.grid_size[2]):
+                    if min_x <= x <= max_x and min_y <= y <= max_y and min_z <= z <= max_z: continue
+                    new_options = [n for n in self.grid[x, y, z] if n != obj_name]
+                    self.grid[x, y, z] = new_options
 
     def remove_obj(self, obj_name, pos, d = None):
         gx, gy, gz = self.grid_size

@@ -6,17 +6,17 @@
 * Probability constraints: 3
 * Region probability constraints: 5
 * Transformations: 12
-* Frequency constraints: 11
-* Region frequency constraints: 4
+* Frequency constraints: 12
+* Region frequency constraints: 5
 * Symmetry constraints: 19
 * Connector constraints: 30
 * Fixed position constraints: 1
 * Dimensions constraints: 1
 * Geometry constraints: 9
 * Noise constraints: 4
-* Distance constraints: 5
+* Distance constraints: 6
 
-* **Sum: 142**
+* **Sum: 145**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -70,13 +70,14 @@
     * "-" - forbids to stay inside
 
 ## Distance Constraints
-* Used custom properties: `wfc_distance[_from|_object|_position|_subcollection]`
+* Used custom properties: `wfc_distance[_from|_object|_position|_subcollection|_type]`
 * Allowed property values:
   * wfc_distance: integer vector
   * wfc_distance_from: integer: 0: object,  1: position, 2: sub-collection
   * wfc_distance_object: a pointer to an object
   * wfc_distance_position: integer vector
   * wfc_distance_subcollection: a pointer to a collection
+  * wfc_distance_type: integer: 0: minimum distance, 1: maximum distance, 2: equal
 
 ## Region Constraints
 * Used custom properties: `wfc_region_min,wfc_region_max,wfc_region_quadrant`
@@ -111,17 +112,19 @@
     
    
 ## Frequency Constraints
-* Used custom properties: `wfc_freq_[any_]neighbor[_face|_edge|_corner],wfc_freq_grid,wfc_freq_[any_]axes`
+* Used custom properties: `wfc_freq_[any_]neighbor[_face|_edge|_corner],wfc_freq_grid[_pct],wfc_freq_[any_]axes`
 * Allowed property values:
    * wfc_grid, wfc_freq_[any_]neighbor[_face|_edge|_corner]: an integer
    * wfc_[_any]_axes: an integer vector
+   * wfc_grid_pct: float (-1..100)
 
 ## Region Frequency Constraints:
-* Used custom properties: `wfc_regfreq_name_[0..n],wfc_regfreq_min_[0..n],wfc_regfreq_max_[0..n],wfc_regfreq_freq_[0..n]`
+* Used custom properties: `wfc_regfreq_name_[0..n],wfc_regfreq_min_[0..n],wfc_regfreq_max_[0..n],wfc_regfreq_freq_[pct_][0..n]`
 * Allowed property values:
   * `wfc_regfreq_name_[0..n]`: a string with a region name 
   * `wfc_regfreq_min_[0..n], wfc_regfreq_max_[0..n]`: an integer vector (x,y,z)
   * `wfc_regfreq_freq`: an integer
+  * `wfc_reqgreq_freq_pct`: a float (-1..100)
 
 ## Symmetry Constraints
 * Used custom properties: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n,wfc_sym_mirror_axes_[x|y|z|xy|xz|yz|xyz],wfc_sym_mirror_flip_[x|y|z|xy|xz|yz|xyz],wfc_sym_mirror_flip_transl, wfc_sym_mirror_trans`

@@ -720,9 +720,20 @@ class WFC3DConstraints:
             if self.constraints[obj.name]["distance_from"][i] == 1:
                 position = self.constraints[obj.name]["distance_position"][i]
                 gs = self.grid.grid_size
-                minx, miny, minz = max(0, position[0] - distance[0]), max(0, position[1] - distance[1]), max(0, position[2] - distance[2])
-                maxx, maxy, maxz = min(gs[0]-1, position[0] + distance[0]), min(gs[1]-1, position[1] + distance[1]), min(gs[2]-1, position[2] + distance[2])
-                self.grid.remove_obj_in_region(obj.name, (minx, miny, minz), (maxx, maxy, maxz))
+                mgx, mgy, mgz = gs[0] - 1, gs[1] - 1, gs[2] - 1
+                minx, miny, minz = min(mgx, max(0, position[0] - distance[0])), min(mgy, max(0, position[1] - distance[1])), min(mgz, max(0, position[2] - distance[2]))
+                maxx, maxy, maxz = max(0, min(mgx, position[0] + distance[0])), max(0, min(mgy, position[1] + distance[1])), max(0, min(mgz, position[2] + distance[2]))
+                if self.constraints[obj.name]["distance_type"][i] == 0:
+                    self.grid.remove_obj_in_region(obj.name, (minx, miny, minz), (maxx, maxy, maxz))
+                elif self.constraints[obj.name]["distance_type"][i] == 1:
+                    self.grid.remove_obj_outside_region(obj.name, (minx, miny, minz), (maxx, maxy, maxz))
+                else:
+                    self.grid.remove_obj_outside_region(obj.name, (minx, miny, minz), (maxx, maxy, maxz))
+                    minx, miny ,minz = min(mgx, max(0, position[0] - distance[0] + 1)), min(mgy, max(0, position[1] - distance[1] + 1)), min(mgz, max(0, position[2] - distance[2] + 1))
+                    maxx, maxy, maxz = max(0, min(mgx, position[0] + distance[0] - 1)), max(0, min(mgy, position[1] + distance[1] - 1)), max(0, min(mgz, position[2] + distance[2] - 1))
+                    self.grid.remove_obj_in_region(obj.name, (minx, miny, minz), (maxx, maxy, maxz))
+                    print(f"remove in region for {obj.name}: {minx, miny, minz}, {maxx, maxy, maxz}")
+
         return collapsed
 
     def apply_pre_constraints(self):
