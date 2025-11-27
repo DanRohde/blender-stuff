@@ -581,6 +581,7 @@ class WFC3DConstraints:
         for position in collapsed:
             if len(self.grid.grid[position[0],position[1],position[2]]) == 0: continue
             obj_name = self.grid.grid[position[0],position[1],position[2]][0]
+            dimensions = self.constraints[obj_name]["dim_xyz"]
             constraints = self.constraints[obj_name]
             for i, distance in enumerate(constraints["distance"]):
                 df = constraints["distance_from"][i]
@@ -588,7 +589,8 @@ class WFC3DConstraints:
                 if df == 0 and constraints["distance_object"][i] is None: continue
                 if df == 2 and constraints["distance_subcollection"][i] is None: continue
                 minx, miny, minz = max(0, position[0] - distance[0]), max(0, position[1] - distance[1]), max(0, position[2] - distance[2])
-                maxx, maxy, maxz = min(gs[0]-1, position[0] + distance[0]), min(gs[1]-1, position[1] + distance[1]), min(gs[2]-1, position[2] + distance[2])
+                maxx, maxy, maxz = (min(gs[0]-1, position[0] + distance[0] + dimensions[0] - 1 ), min(gs[1]-1, position[1] + distance[1] + dimensions[1] - 1),
+                                    min(gs[2]-1, position[2] + distance[2] + dimensions[2] - 1 ))
                 fon = constraints["distance_object"][i].name if df == 0 else constraints["distance_subcollection"][i].name
                 self.grid.remove_obj_in_region(fon, (minx, miny, minz), (maxx, maxy, maxz), position)
 
