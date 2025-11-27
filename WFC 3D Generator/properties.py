@@ -111,7 +111,7 @@ class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
     selected: bpy.props.BoolProperty(default=False)
 
 class WFC3DDistanceListItem(bpy.types.PropertyGroup):
-    distance: bpy.props.IntVectorProperty(name="Distance", description="Minimum cell distance", default=PROP_DEFAULTS['distance'], min=1, update=auto_save)
+    distance: bpy.props.IntVectorProperty(name="Distance", description="Minimum cell distance", default=PROP_DEFAULTS['distance'], min=0, update=auto_save)
     distance_from: bpy.props.EnumProperty(update=auto_save, name="From", description="Minimum distance from ...",
                                           items=[('object', 'Object', 'Minimum distance from an object'),
                                                  ('position', 'Position', 'Minimum distance from a grid position'),
