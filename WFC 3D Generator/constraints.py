@@ -569,7 +569,8 @@ class WFC3DConstraints:
                 if df == 2 and constraints["distance_subcollection"][i] is None: continue
                 minx, miny, minz = max(0, position[0] - distance[0]), max(0, position[1] - distance[1]), max(0, position[2] - distance[2])
                 maxx, maxy, maxz = min(gs[0]-1, position[0] + distance[0]), min(gs[1]-1, position[1] + distance[1]), min(gs[2]-1, position[2] + distance[2])
-                self.grid.remove_obj_in_region(constraints["distance_object"][i].name if df == 0 else constraints["distance_subcollection"][i].name, (minx, miny, minz), (maxx, maxy, maxz), position)
+                fon = constraints["distance_object"][i].name if df == 0 else constraints["distance_subcollection"][i].name
+                self.grid.remove_obj_in_region(fon, (minx, miny, minz), (maxx, maxy, maxz), position)
 
             for x in range(gs[0]):
                 for y in range(gs[1]):
@@ -580,12 +581,10 @@ class WFC3DConstraints:
                             for i, distance in enumerate(self.constraints[o]["distance"]):
                                 df = self.constraints[o]["distance_from"][i]
                                 if df not in [0, 2]: continue
-                                if df == 0 and self.constraints[o]["distance_object"][i] is None: continue
-                                if df == 2 and self.constraints[o]["distance_subcollection"][i] is None: continue
-                                if abs(position[0]-x) > distance[0] and abs(position[1]-y) > distance[1] and abs(position[2]-z) > distance[2]: continue
-                                if df == 0 and self.constraints[o]["distance_object"][i].name != obj_name: continue
-                                if df == 2 and self.constraints[o]["distance_subcollection"][i].name != obj_name: continue
-                                self.grid.remove_obj(o, (x,y,z))
+                                fo = self.constraints[o]["distance_object"][i] if df == 0 else self.constraints[o]["distance_subcollection"][i]
+                                if fo is None or fo.name != obj_name: continue
+                                if  0 <= abs(position[0]-x) < distance[0] and 0 <= abs(position[1]-y) < distance[1] and  0 <= abs(position[2]-z) < distance[2]:
+                                    self.grid.remove_obj(o, (x,y,z))
 
     def set_cache_geometry_compare(self, current_obj, obj, direction, result):
         if not direction in self.cache_geometry_compare[current_obj]:
