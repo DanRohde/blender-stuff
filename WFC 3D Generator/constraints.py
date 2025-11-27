@@ -605,7 +605,6 @@ class WFC3DConstraints:
                 if constraints["distance_type"][i] == 1:
                     self.grid.remove_obj_outside_region(fon, (minx, miny, minz), (maxx, maxy, maxz))
                 elif constraints["distance_type"][i] == 2:
-                    self.grid.remove_obj_outside_region(fon, (minx, miny, minz), (maxx, maxy, maxz))
                     minx, miny, minz = min(mgx, max(0, position[0] - distance[0] + 1)), min(mgy, max(0, position[1] - distance[1] + 1)), min(mgz, max(0, position[2] - distance[2] + 1))
                     maxx, maxy, maxz = (max(0, min(mgx, position[0] + distance[0] + dimensions[0] - 2)), max(0, min(mgy, position[1] + distance[1] + dimensions[1] - 2)),
                                         max(0, min(mgz, position[2] + distance[2] + dimensions[2] - 2)))
