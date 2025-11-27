@@ -583,6 +583,7 @@ class WFC3DConstraints:
                                 if df == 0 and self.constraints[o]["distance_object"][i] is None: continue
                                 if df == 2 and self.constraints[o]["distance_subcollection"][i] is None: continue
                                 if abs(position[0]-x) > distance[0] and abs(position[1]-y) > distance[1] and abs(position[2]-z) > distance[2]: continue
+                                if ( df == 0 and self.constraints[o]["distance_object"][i] != obj_name) or (df == 2 and self.constraints[o]["distance_subcollection"][i] != obj_name): continue
                                 self.grid.remove_obj(o, (x,y,z))
 
     def set_cache_geometry_compare(self, current_obj, obj, direction, result):
