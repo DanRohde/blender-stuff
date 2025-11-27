@@ -566,10 +566,7 @@ class WFC3DConstraints:
                 if df == 2 and constraints["distance_subcollection"][i] is None: continue
                 minx, miny, minz = max(0, position[0] - distance[0]), max(0, position[1] - distance[1]), max(0, position[2] - distance[2])
                 maxx, maxy, maxz = min(gs[0]-1, position[0] + distance[0]), min(gs[1]-1, position[1] + distance[1]), min(gs[2]-1, position[2] + distance[2])
-                if df == 0:
-                    self.grid.remove_obj_in_region(constraints["distance_object"][i].name, (minx, miny, minz), (maxx, maxy, maxz), position)
-                else:
-                    self.grid.remove_obj_in_region(constraints["distance_subcollection"][i].name, (minx, miny, minz), (maxx, maxy, maxz), position)
+                self.grid.remove_obj_in_region(constraints["distance_object"][i].name if df == 0 else constraints["distance_subcollection"][i].name, (minx, miny, minz), (maxx, maxy, maxz), position)
 
     def set_cache_geometry_compare(self, current_obj, obj, direction, result):
         if not direction in self.cache_geometry_compare[current_obj]:

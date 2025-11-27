@@ -51,6 +51,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * This enables building blocks that are larger than a cell.
 * Grid and Region Constraints:
   * Allows you to specify where an object may be located within the grid.
+* Distance Constraints:
+  * Rules that restrict the placement of building blocks based on their distance from a specific point or another building block.
 * Probability Constraints:
   * These constraints increase or decrease the probability of an object being selected at random.
 * Region Probability Constraints:
@@ -87,7 +89,6 @@ An overview of all custom properties can be found on [GitHub](https://github.com
 
 
 ## Upcoming Features
-* Distance constraints: Rules that restrict the placement of building blocks based on their distance from a specific point or another building block
 * Improved (region) frequency constraints: Frequency in percent instead of a specific number
 * 3D Viewport constraint visualizer
 * some tutorials and documentation (thx, David-rD, for your feedback)
