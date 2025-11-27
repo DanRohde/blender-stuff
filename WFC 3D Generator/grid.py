@@ -248,12 +248,12 @@ class WFC3DGrid:
                         new_options = [n for n in self.grid[x,y,z] if n!=obj_name ]
                         self.grid[x,y,z] = new_options
 
-    def remove_obj(self, obj_name, pos, d):
+    def remove_obj(self, obj_name, pos, d = None):
         gx, gy, gz = self.grid_size
         reduced_cells = []
-        if pos and dir:
+        if pos:
             x, y, z = pos
-            dx, dy, dz = d
+            dx, dy, dz = d if d is not None else [0, 0, 0]
             if self.within_boundaries(x + dx, y + dy, z + dz):
                 obj_list = self.grid[x + dx, y + dy, z + dz]
                 if obj_name in obj_list and not self.collapsed[x, y, z]:
