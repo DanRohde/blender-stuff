@@ -370,6 +370,7 @@ class WFC3DConstraints:
         collapsed.extend(self.apply_symmetry_constraints(x, y, z))
         self.propagate_region_frequency_constraints(x, y, z)
         self.propagate_frequency_constraints(grid, x, y, z)
+        self.propagate_distance_from_object_constraints(collapsed)
 
         collapsedadd = []
         for c in collapsed:
@@ -552,6 +553,24 @@ class WFC3DConstraints:
             if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
 
+    def propagate_distance_from_object_constraints(self, collapsed):
+        gs = self.grid.grid_size
+        for position in collapsed:
+            if len(self.grid.grid[position[0],position[1],position[2]]) == 0: continue
+            obj_name = self.grid.grid[position[0],position[1],position[2]][0]
+            constraints = self.constraints[obj_name]
+            for i, distance in enumerate(constraints["distance"]):
+                df = constraints["distance_from"][i]
+                if df not in [0, 2]: continue
+                if df == 0 and constraints["distance_object"][i] is None: continue
+                if df == 2 and constraints["distance_subcollection"][i] is None: continue
+                minx, miny, minz = max(0, position[0] - distance[0]), max(0, position[1] - distance[1]), max(0, position[2] - distance[2])
+                maxx, maxy, maxz = min(gs[0]-1, position[0] + distance[0]), min(gs[1]-1, position[1] + distance[1]), min(gs[2]-1, position[2] + distance[2])
+                if df == 0:
+                    self.grid.remove_obj_in_region(constraints["distance_object"][i].name, (minx, miny, minz), (maxx, maxy, maxz), position)
+                else:
+                    self.grid.remove_obj_in_region(constraints["distance_subcollection"][i].name, (minx, miny, minz), (maxx, maxy, maxz), position)
+
     def set_cache_geometry_compare(self, current_obj, obj, direction, result):
         if not direction in self.cache_geometry_compare[current_obj]:
             self.cache_geometry_compare[current_obj][direction] = { obj : result }
@@ -674,7 +693,7 @@ class WFC3DConstraints:
                 gs = self.grid.grid_size
                 minx, miny, minz = max(0, position[0] - distance[0]), max(0, position[1] - distance[1]), max(0, position[2] - distance[2])
                 maxx, maxy, maxz = min(gs[0]-1, position[0] + distance[0]), min(gs[1]-1, position[1] + distance[1]), min(gs[2]-1, position[2] + distance[2])
-                self.grid.remove_obj_in_region(obj.name, (minx, miny, minz),(maxx, maxy, maxz))
+                self.grid.remove_obj_in_region(obj.name, (minx, miny, minz), (maxx, maxy, maxz))
         return collapsed
 
     def apply_pre_constraints(self):
