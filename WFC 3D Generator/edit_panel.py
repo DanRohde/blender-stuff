@@ -24,7 +24,9 @@ class WFC3D_UL_RegFreqList(bpy.types.UIList):
         col.row().prop(item,"regfreq_name")
         col.row().prop(item,"regfreq_min")
         col.row().prop(item,"regfreq_max")
-        col.row().prop(item,"regfreq_freq")
+        r = col.row()
+        r.prop(item,"regfreq_freq")
+        r.prop(item,"regfreq_freq_pct")
 
 class WFC3D_UL_FixedPositionList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
@@ -306,7 +308,9 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             
             newbox = box.box()
             newbox.label(text="Same Object")
-            newbox.prop(props,"freq_grid")
+            row = newbox.row()
+            row.prop(props,"freq_grid")
+            row.prop(props,"freq_grid_pct")
             newbox.prop(props,"freq_neighbor")
             newbox.prop(props,"freq_neighbor_face")
             newbox.prop(props,"freq_neighbor_corner")

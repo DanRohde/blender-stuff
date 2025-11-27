@@ -519,19 +519,21 @@ class WFC3DConstraints:
             for p in self.sympartner[x, y, z]: self.symtransform[p[0], p[1], p[2]] = symtransmat
 
     def propagate_frequency_constraints(self, grid, x, y, z):
-        if len(grid.grid[x,y,z])==0:
-            return []
+        if len(grid.grid[x,y,z])==0: return []
         reduced_cells = []
         current_obj = grid.grid[x,y,z][0]
         # grid frequency
         if self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
-            count = 0
-            if current_obj and self.constraints[current_obj]["freq_grid"] is not None and self.constraints[current_obj]["freq_grid"]>-1:
-                count = grid.count_obj(current_obj)
+            count = grid.count_obj(current_obj)
             if self.constraints[current_obj]["freq_grid"] == 0: grid.grid[x,y,z] = []
-           
             if count >= self.constraints[current_obj]["freq_grid"]: reduced_cells.extend(grid.remove_obj(current_obj, None, None))
-        
+
+        if self.constraints[current_obj]["freq_grid_pct"] is not None and self.constraints[current_obj]["freq_grid_pct"] > -1:
+            count = grid.count_obj(current_obj)
+            if self.constraints[current_obj]["freq_grid_pct"] == 0: grid.grid[x, y, z] = []
+            max_count = self.constraints[current_obj]["freq_grid_pct"]/100 * grid.grid_size[0] * grid.grid_size[1] * grid.grid_size[2]
+            if count >= max_count: reduced_cells.extend(grid.remove_obj(current_obj, None, None))
+
         # neighbor frequency
         nf = [ { "freq_neighbor_face" : FACE_DIRECTIONS}, {"freq_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_neighbor" : DIRECTIONS}]
         for a in nf:
@@ -573,8 +575,12 @@ class WFC3DConstraints:
             rmin = self.constraints[obj_name]["regfreq_min"][i]
             rmax = self.constraints[obj_name]["regfreq_max"][i]
             freq = self.constraints[obj_name]["regfreq_freq"][i]
+            freqpct = self.constraints[obj_name]["regfreq_freq_pct"][i]
+            maxfreq = int(freqpct / 100 * abs(rmax[0]-rmin[0]+1) * abs(rmax[1]-rmin[1]+1) * abs(rmax[2]-rmin[2]+1))
             if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
+            if freqpct >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
+                self.grid.remove_max_region_neighbors(x,y,z,maxfreq,rmin,rmax)
 
     def propagate_distance_from_object_constraints(self, collapsed):
         gs = self.grid.grid_size

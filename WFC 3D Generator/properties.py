@@ -94,6 +94,7 @@ class WFC3DRegionFrequencyListItem(bpy.types.PropertyGroup):
     regfreq_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", min=-1)
     regfreq_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", min=-1)
     regfreq_freq: bpy.props.IntProperty(update=auto_save, name="Frequency", description="Region frequency", min=-1)
+    regfreq_freq_pct: bpy.props.FloatProperty(update=auto_save, name="Frequency %", description="Region frequency in %", min=-1, max=100, subtype="PERCENTAGE")
     selected: bpy.props.BoolProperty(default=False)
 
 class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
@@ -224,6 +225,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     translation_steps : bpy.props.FloatVectorProperty(name="Steps", description="Translation steps", default=PROP_DEFAULTS["translation_steps"], subtype="TRANSLATION", update=auto_save, precision=3)
     flipping: bpy.props.FloatVectorProperty(name="Flipping", description="Flipping probability on given axes", default=PROP_DEFAULTS["flipping"], update=auto_save, min=0, max=1)
     freq_grid: bpy.props.IntProperty(name="Grid",description="Grid frequency max", default=PROP_DEFAULTS["freq_grid"], min=-1, update=auto_save)
+    freq_grid_pct: bpy.props.FloatProperty(name="Grid %",description="Grid frequency max. %", default=PROP_DEFAULTS["freq_grid_pct"], min=-1, max=100, subtype="PERCENTAGE", update=auto_save)
     freq_neighbor: bpy.props.IntProperty(name="Neighbor",description="Neighbor frequency max", default=PROP_DEFAULTS["freq_neighbor"], min=-1,max=26, update=auto_save)
     freq_axes: bpy.props.IntVectorProperty(name="Axes",description="Axes frequency max", default=PROP_DEFAULTS["freq_axes"], size=3, min=-1, update=auto_save)
     freq_any_neighbor: bpy.props.IntProperty(name="Any Neighbor",description="Any Neighbor frequency max", default=PROP_DEFAULTS["freq_any_neighbor"], min=-1,max=26, update=auto_save)

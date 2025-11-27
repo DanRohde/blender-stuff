@@ -89,7 +89,6 @@ An overview of all custom properties can be found on [GitHub](https://github.com
 
 
 ## Upcoming Features
-* Improved (region) frequency constraints: Frequency in percent instead of a specific number
 * 3D Viewport constraint visualizer
 * some tutorials and documentation (thx, David-rD, for your feedback)
 * ??? I need more feedback with ideas. ???

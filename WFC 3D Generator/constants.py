@@ -59,7 +59,7 @@ PROP_DEFAULTS = {
     'scale_min' : (1,1,1), 'scale_max' : (1,1,1), 'scale_steps' : (0,0,0), 
     'scale_type' : 0, 'scale_uni': (1,1,0), 'flipping' : (0, 0, 0),
     # frequency constraints:
-    'freq_grid' : -1, 'freq_neighbor' : -1, 'freq_axes' : (-1,-1,-1), 'freq_any_neighbor' : -1, 'freq_any_axes' : (-1,-1,-1),
+    'freq_grid' : -1, 'freq_grid_pct': -1, 'freq_neighbor' : -1, 'freq_axes' : (-1,-1,-1), 'freq_any_neighbor' : -1, 'freq_any_axes' : (-1,-1,-1),
     'freq_neighbor_face': -1, 'freq_neighbor_edge' : -1, 'freq_neighbor_corner' : -1,
     'freq_any_neighbor_face': -1, 'freq_any_neighbor_edge' : -1, 'freq_any_neighbor_corner' : -1,
     # symmetry constraints:
@@ -84,7 +84,7 @@ PROP_DEFAULTS = {
     # fixed position constraints:
     'fixed_position_xyz' : (-1,-1,-1),
     # region frequency constraints:
-    'regfreq_name' : '', 'regfreq_min' : (-1,-1,-1), 'regfreq_max' : (-1,-1,-1), 'regfreq_freq' : -1,
+    'regfreq_name' : '', 'regfreq_min' : (-1,-1,-1), 'regfreq_max' : (-1,-1,-1), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : .1,
     'noise_transf_basis' : 0, 'noise_transf_scale' : .1,
@@ -112,7 +112,7 @@ TRANSFORMATION_CONSTRAINTS = [ 'translation_min', 'translation_max', 'translatio
                                'scale_type', 'scale_min', 'scale_max', 'scale_steps', 'scale_uni',
                                'flipping']
 
-FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_neighbor', 'freq_neighbor_face', 'freq_neighbor_edge',
+FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_grid_pct', 'freq_neighbor', 'freq_neighbor_face', 'freq_neighbor_edge',
                           'freq_neighbor_corner', 'freq_axes', 'freq_any_neighbor',
                           'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner', 'freq_any_axes',
 ]
@@ -136,15 +136,16 @@ DIMENSIONS_CONSTRAINTS = [ 'dim_xyz' ]
 
 FIXED_POSITION_CONSTRAINTS = [ 'fixed_position_xyz' ]
 
-REGFREQ_CONSTRAINTS = [ 'regfreq_name', 'regfreq_min', 'regfreq_max', 'regfreq_freq',]
+REGFREQ_CONSTRAINTS = [ 'regfreq_name', 'regfreq_min', 'regfreq_max', 'regfreq_freq', 'regfreq_freq_pct',]
 
-REGPROB_CONSTRAINTS = [ 'regprob_name', 'regprob_min', 'regprob_max', 'regprob_weight', 'regprob_probability']
+REGPROB_CONSTRAINTS = [ 'regprob_name', 'regprob_min', 'regprob_max', 'regprob_weight', 'regprob_probability',]
 
-DISTANCE_CONSTRAINTS = [ 'distance', 'distance_from', 'distance_position', 'distance_object', 'distance_subcollection']
+DISTANCE_CONSTRAINTS = [ 'distance', 'distance_from', 'distance_position', 'distance_object', 'distance_subcollection',]
 
 LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'regfreq_max' : 'regfreq_input_list',
                      'regfreq_freq' : 'regfreq_input_list',
+                     'regfreq_freq_pct' : 'regfreq_input_list',
                      'regfreq_name' : 'regfreq_input_list',
                      'fixed_position_xyz' : 'fixed_position_input_list',
                      'regprob_name' : 'regprob_input_list',
