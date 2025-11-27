@@ -81,6 +81,26 @@ class WFC3DConstraints:
                 # load neighbor constraints:
                 val  = self.get_adjacency_property_value(direction,'', obj, default_obj)
                 self.constraints[obj_name][dirlower] = None if val == '' else val.split(',')
+        ## collect distance from object constraints:
+        ddd = { }
+        for obj in objects:
+            for i, distance in enumerate(self.constraints[obj.name]['distance']):
+                df = self.constraints[obj.name]['distance_from'][i]
+                if df not in [0,2]: continue
+                from_object = self.constraints[obj.name]['distance_object'][i] if df == 0 else self.constraints[obj.name]['distance_subcollection'][i]
+                if obj.name == from_object.name: continue
+                if from_object.name not in ddd: ddd[from_object.name] = { 'distance': [], 'distance_from': [] , 'distance_object': [], 'distance_subcollection': [] }
+                ddd[from_object.name]['distance'].append(distance)
+                ddd[from_object.name]['distance_from'].append(0 if obj.name in collection.objects else 2)
+                ddd[from_object.name]['distance_object'].append(obj if obj.name in collection.objects else None)
+                ddd[from_object.name]['distance_subcollection'].append(obj if obj.name in collection.children else None)
+        ## initialize reversed distance constraints:
+        for obj_name in ddd:
+            for i, distance in enumerate(ddd[obj_name]['distance']):
+                self.constraints[obj_name]['distance'].append(distance)
+                self.constraints[obj_name]['distance_from'].append(ddd[obj_name]['distance_from'][i])
+                self.constraints[obj_name]['distance_object'].append(ddd[obj_name]['distance_object'][i])
+                self.constraints[obj_name]['distance_subcollection'].append(ddd[obj_name]['distance_subcollection'][i])
 
     def get_adjacency_property_value(self, direction, prefix, obj, default_obj):
         cname = prefix + direction.lower()
@@ -571,20 +591,6 @@ class WFC3DConstraints:
                 maxx, maxy, maxz = min(gs[0]-1, position[0] + distance[0]), min(gs[1]-1, position[1] + distance[1]), min(gs[2]-1, position[2] + distance[2])
                 fon = constraints["distance_object"][i].name if df == 0 else constraints["distance_subcollection"][i].name
                 self.grid.remove_obj_in_region(fon, (minx, miny, minz), (maxx, maxy, maxz), position)
-
-            for x in range(gs[0]):
-                for y in range(gs[1]):
-                    for z in range(gs[2]):
-                        if self.grid.collapsed[x,y,z]: continue
-                        if x == position[0] and y == position[1] and z == position[2]: continue
-                        for o in self.grid.grid[x,y,z]:
-                            for i, distance in enumerate(self.constraints[o]["distance"]):
-                                df = self.constraints[o]["distance_from"][i]
-                                if df not in [0, 2]: continue
-                                fo = self.constraints[o]["distance_object"][i] if df == 0 else self.constraints[o]["distance_subcollection"][i]
-                                if fo is None or fo.name != obj_name: continue
-                                if  0 <= abs(position[0]-x) < distance[0] and 0 <= abs(position[1]-y) < distance[1] and  0 <= abs(position[2]-z) < distance[2]:
-                                    self.grid.remove_obj(o, (x,y,z))
 
     def set_cache_geometry_compare(self, current_obj, obj, direction, result):
         if not direction in self.cache_geometry_compare[current_obj]:
