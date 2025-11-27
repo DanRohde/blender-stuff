@@ -180,8 +180,11 @@ class WFC3DConstraints:
         for c in REGION_CONSTRAINTS:
             if c not in self.constraints[name] or self.constraints[name][c] == "":
                 weight += len(self.objects)
+
+        weight += len(self.constraints[name][DISTANCE_CONSTRAINTS[0]]) * len(DISTANCE_CONSTRAINTS)
+
         if sum(self.constraints[name]['dim_xyz'])==3: weight += 1
-        maxlen = (len(CONNECTOR_CONSTRAINTS+GRID_CONSTRAINTS+REGION_CONSTRAINTS)+len(DIRECTIONS)+1)*len(self.objects)
+        maxlen = (len(CONNECTOR_CONSTRAINTS+GRID_CONSTRAINTS+REGION_CONSTRAINTS+DISTANCE_CONSTRAINTS)+len(DIRECTIONS)+1)*len(self.objects)
         weight = int(round(len(self.objects) * weight/ maxlen))
 
         self.auto_weights[name] = weight
