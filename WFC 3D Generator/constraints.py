@@ -657,18 +657,31 @@ class WFC3DConstraints:
             return self.sympartner_obj[x, y, z]
         return random.choice([o for o in collection.objects if not o.name.startswith(get_default_empty_name())])
 
-    def apply_fixed_position_constraints(self):
+    def apply_fixed_position_constraints(self, obj):
         collapsed = []
-        for obj in self.objects:
-            if self.constraints[obj.name]["fixed_position_xyz"] is not None:
-                for p in self.constraints[obj.name]["fixed_position_xyz"]:
-                    if not self.grid.within_boundaries(p[0], p[1], p[2]): continue
-                    self.grid.grid[p[0], p[1], p[2]] = [ obj.name ]
-                    collapsed.extend(self.collapse(self.grid, p[0], p[1], p[2]))
+        if self.constraints[obj.name]["fixed_position_xyz"] is not None:
+            for p in self.constraints[obj.name]["fixed_position_xyz"]:
+                if not self.grid.within_boundaries(p[0], p[1], p[2]): continue
+                self.grid.grid[p[0], p[1], p[2]] = [ obj.name ]
+                collapsed.extend(self.collapse(self.grid, p[0], p[1], p[2]))
         return collapsed
+
+    def apply_distance_from_position_constraints(self, obj):
+        collapsed = []
+        for i, distance in enumerate(self.constraints[obj.name]["distance"]):
+            if self.constraints[obj.name]["distance_from"][i] == 1:
+                position = self.constraints[obj.name]["distance_position"][i]
+                gs = self.grid.grid_size
+                minx, miny, minz = max(0, position[0] - distance[0]), max(0, position[1] - distance[1]), max(0, position[2] - distance[2])
+                maxx, maxy, maxz = min(gs[0]-1, position[0] + distance[0]), min(gs[1]-1, position[1] + distance[1]), min(gs[2]-1, position[2] + distance[2])
+                self.grid.remove_obj_in_region(obj.name, (minx, miny, minz),(maxx, maxy, maxz))
+        return collapsed
+
     def apply_pre_constraints(self):
         collapsed = []
-        collapsed.extend(self.apply_fixed_position_constraints())
+        for obj in self.objects:
+            collapsed.extend(self.apply_fixed_position_constraints(obj))
+            collapsed.extend(self.apply_distance_from_position_constraints(obj))
         return collapsed
 
     def apply_dimensions_draw_constraints(self, position, spacing, obj_name, new_obj):

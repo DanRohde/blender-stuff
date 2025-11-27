@@ -1,7 +1,7 @@
 import bpy
 
 from .constants import *
-from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection, get_noise_basis
+from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection, get_noise_basis, is_sub_element
 from .gen_operators import  handle_seed_change
 
 
@@ -116,9 +116,9 @@ class WFC3DDistanceListItem(bpy.types.PropertyGroup):
                                           items=[('object', 'Object', 'Minimum distance from an object'),
                                                  ('position', 'Position', 'Minimum distance from a grid position'),
                                           ('sub-collection','Sub-Collection','Minimum distance from objects in a sub-collection.')])
-    distance_object: bpy.props.PointerProperty(type=bpy.types.Object, name="Object", description="Object from the source collection", update=auto_save)
+    distance_object: bpy.props.PointerProperty(type=bpy.types.Object, name="Object", description="Object from the source collection", update=auto_save, poll=is_sub_element)
     distance_position: bpy.props.IntVectorProperty(name="Position", description="Grid position", update=auto_save, default=PROP_DEFAULTS['distance_position'], min=0)
-    distance_subcollection: bpy.props.PointerProperty(type=bpy.types.Collection, name="Sub-Collection", description="Sub-collection from the source collection", update=auto_save)
+    distance_subcollection: bpy.props.PointerProperty(type=bpy.types.Collection, name="Sub-Collection", description="Sub-collection from the source collection", poll=is_sub_element, update=auto_save)
     selected: bpy.props.BoolProperty(default=False)
 
 class WFC3DProperties(bpy.types.PropertyGroup):

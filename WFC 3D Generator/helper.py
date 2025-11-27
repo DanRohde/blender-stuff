@@ -374,3 +374,7 @@ def get_noise(pos, basis, scale, minv = None, maxv = None):
 def set_select_all_list_items(itemlist, selected):
     for item in itemlist:
         item.selected = selected
+
+def is_sub_element(self, obj):
+    props = bpy.context.scene.wfc_props
+    return not obj.name.startswith(get_default_empty_name()) and (obj.name in props.collection_obj.children or obj.name in props.collection_obj.objects)
