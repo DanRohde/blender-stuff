@@ -423,7 +423,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             col.template_list("WFC3D_UL_FixedPositionList", "", props, "fixed_position_input_list", props, "fixed_position_input_list_idx")
             col = row.column()
             col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-            col.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+            c = col.column()
+            c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+            c.separator()
+            c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
+            c.enabled = count_selected_items(props.fixed_position_input_list) > 0
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "regfreq":
             box = box.box()
