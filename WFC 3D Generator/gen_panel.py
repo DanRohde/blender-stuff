@@ -11,7 +11,9 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         layout = self.layout
         props = context.scene.wfc_props
         prefs = bpy.context.preferences.addons[__package__].preferences
-        
+
+        render_allowed = props.collection_obj is not None and len(props.obj_list) != 0 and props.collection_obj.name != props.target_collection
+
         layout.label(text="Source Collection")
         
         layout.prop(props, "collection_obj")
@@ -56,7 +58,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row = box.row()
         row.prop(props, "search_iterations",text="Iterations")
         row.operator("object.wfc_3d_search",text="Search Seed")
-        row.enabled = props.collection_obj is not None and not props.cherry_picking_running
+        row.enabled = render_allowed and not props.cherry_picking_running
         if props.search_result[0] > -1:
             row = box.row()
             row.label(text=f"Seed {props.search_result[0]} found in {props.search_result[1]} steps with {props.search_result[2]} empty cell(s).")
@@ -66,10 +68,10 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         if prefs.cherry_picking_delay > 0:
             col = row.column()
             col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
-            col.enabled = props.collection_obj is not None
+            col.enabled = render_allowed
         col = row.column()
         col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
-        col.enabled = not props.cherry_picking_running and props.collection_obj is not None
+        col.enabled = render_allowed and not props.cherry_picking_running
 
         layout.separator(type="LINE", factor=0.2)
 
@@ -78,7 +80,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             
 
         row = layout.row()
-        row.enabled = props.collection_obj is not None and ( (len(props.collection_obj.objects)>0)or(len(props.collection_obj.children)>0) ) and props.collection_obj.name != props.target_collection and not props.running_delayed_renderer
+        row.enabled = render_allowed and not props.running_delayed_renderer
         row.operator("object.wfc_3d_generate")
         if props.render_delay > 0:
             row = layout.row()
