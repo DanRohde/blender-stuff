@@ -251,6 +251,7 @@ class WFC3DGrid:
         for x in range(min_position[0], max_position[0]+1):
             for y in range(min_position[1], max_position[1]+1):
                 for z in range(min_position[2], max_position[2]+1):
+                    if self.collapsed[x, y, z]: continue
                     if self.within_boundaries(x, y, z) and (ignore_position is None or ignore_position[0]!=x or ignore_position[1]!=y or ignore_position[2]!=z):
                         new_options = [n for n in self.grid[x,y,z] if n != obj_name ]
                         self.grid[x,y,z] = new_options
@@ -260,6 +261,7 @@ class WFC3DGrid:
         for x in range(self.grid_size[0]):
             for y in range(self.grid_size[1]):
                 for z in range(self.grid_size[2]):
+                    if self.collapsed[x, y, z]: continue
                     if min_x <= x <= max_x and min_y <= y <= max_y and min_z <= z <= max_z: continue
                     new_options = [n for n in self.grid[x, y, z] if n != obj_name]
                     self.grid[x, y, z] = new_options
