@@ -272,16 +272,15 @@ class WFC3DGrid:
             dx, dy, dz = d if d is not None else [0, 0, 0]
             if self.within_boundaries(x + dx, y + dy, z + dz):
                 obj_list = self.grid[x + dx, y + dy, z + dz]
-                if obj_name in obj_list and not self.collapsed[x, y, z]:
+                if not self.collapsed[x, y, z] and obj_name in obj_list:
                     self.grid[x + dx, y + dy, z + dz] = [n for n in obj_list if n != obj_name]
                     reduced_cells.append((x + dx, y + dy, z + dz))
         else:
             for x in range(gx):
                 for y in range(gy):
                     for z in range(gz):
-                        obj_list = self.grid[x, y, z]
-                        if obj_name in obj_list and not self.collapsed[x, y, z]:
-                            self.grid[x, y, z] = [n for n in obj_list if n != obj_name]
+                        if not self.collapsed[x, y, z] and obj_name in self.grid[x, y, z]:
+                            self.grid[x, y, z] = [n for n in self.grid[x, y, z] if n != obj_name]
                             reduced_cells.append((x, y, z))
         return reduced_cells
 

@@ -94,8 +94,9 @@ class WFC3DGenerator:
 
         if render: self.init_target_collection()
 
-        collapsed = self.constraints.apply_post_init_constraints() if self.use_constraints else []
+        if self.use_constraints: self.collapsed_cells.extend(self.constraints.propagate(self.constraints.apply_post_init_constraints()))
 
+        collapsed = []
         while True:
             cell = self.get_lowest_entropy_cell()
             if cell is None: break
