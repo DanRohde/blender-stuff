@@ -179,6 +179,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 c = newcol.column()
                 c.operator("collection.wfc_neighbor_list_select_none", icon="CHECKBOX_DEHLT")
                 c.enabled = sel_count > 0
+                newcol.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
 
                 box.row().prop(props,"allow_neighbor_constraint_violations",icon="VIEW_UNLOCKED")
 
