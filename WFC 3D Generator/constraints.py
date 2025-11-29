@@ -22,6 +22,7 @@ class WFC3DConstraints:
         self.cache_geometry_compare = {}
         self.collection = None
         self.spacing = None
+        self.noise_pos = None
     
     def initialize_constraints(self, grid, collection, objects, spacing):
         """Loads constraints from custom properties"""
@@ -106,6 +107,9 @@ class WFC3DConstraints:
                 self.constraints[obj_name]['distance_subcollection'].append(ddd[obj_name]['distance_subcollection'][i])
                 self.constraints[obj_name]['distance_type'].append(ddd[obj_name]['distance_type'][i])
 
+
+
+
     def get_adjacency_property_value(self, direction, prefix, obj, default_obj):
         cname = prefix + direction.lower()
         prop_name = f"wfc_{cname}"
@@ -137,6 +141,12 @@ class WFC3DConstraints:
             elif any_prop_name in default_obj and default_obj[any_prop_name] != "":
                 val = default_obj[any_prop_name]
         return val
+
+    def apply_noise_randomize_position_constraint(self, obj_name, pos):
+        if not self.constraints[obj_name]['noise_randomize_position']: return pos
+        if self.noise_pos is None: self.noise_pos = np.random.rand(1,3)
+        return [a*b for a, b in zip(self.noise_pos[0], pos)]
+
     def are_grid_constraints_satisfied(self, name, pos):
         if self.constraints[name]['freq_grid'] == 0: return False
         if self.constraints[name]['freq_grid_pct'] == 0: return False
@@ -144,7 +154,7 @@ class WFC3DConstraints:
         if not self.grid.is_inside_region(pos, self.constraints[name].get('region_min', None), self.constraints[name].get('region_max', None)): return False
         if not self.grid.is_inside_region_quadrant(pos, self.constraints[name]['region_quadrant']): return False
         if self.constraints[name]['noise_prob_basis'] > 1:
-            n = get_noise(pos, self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
+            n = get_noise(self.apply_noise_randomize_position_constraint(name, pos), self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
             return n >= self.constraints[name]['noise_prob_threshold']
         if self.grid.is_corner(pos) and len(self.constraints[name]['corners']) > 0:
             ret = False
@@ -423,7 +433,7 @@ class WFC3DConstraints:
             target_obj.scale.z *= fmat[2]
             return
         symtransmat = []
-        noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_noise(position, constraints["noise_transf_basis"], constraints["noise_transf_scale"])
+        noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_noise(self.apply_noise_randomize_position_constraint(obj_name, position), constraints["noise_transf_basis"], constraints["noise_transf_scale"])
 
         if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
             tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
@@ -802,3 +812,4 @@ class WFC3DConstraints:
         self.cache_geometry_compare = None
         self.collection = None
         self.spacing = None
+        self.noise_pos = None

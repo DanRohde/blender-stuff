@@ -90,8 +90,6 @@ class WFC3DGenerator:
 
         self.grid.initialize_grid(self.objects, self.constraints)
 
-        print(self.grid.grid)
-
         if render: self.init_target_collection()
 
         if self.use_constraints: self.collapsed_cells.extend(self.constraints.propagate(self.constraints.apply_post_init_constraints()))

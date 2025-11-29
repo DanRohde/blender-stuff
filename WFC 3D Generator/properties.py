@@ -287,6 +287,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
     noise_transf_basis: bpy.props.EnumProperty(name="Noise Basis", description="Select a noise basis", items=get_noise_basis, update=auto_save, )
     noise_transf_scale: bpy.props.FloatProperty(name="Scale", description="Scale", min=0, default=PROP_DEFAULTS['noise_transf_scale'], update=auto_save)
+    noise_randomize_position: bpy.props.BoolProperty(name="Randomize the starting position", description="Randomize the starting position", default=PROP_DEFAULTS['noise_randomize_position'], update=auto_save)
 
     geo_front: bpy.props.BoolProperty(name="front", description="Front face", default=PROP_DEFAULTS["geo_front"], update=auto_save)
     geo_back: bpy.props.BoolProperty(name="back", description="Back face", default=PROP_DEFAULTS["geo_back"], update=auto_save)

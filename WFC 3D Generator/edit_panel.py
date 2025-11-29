@@ -459,6 +459,8 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.row().prop(props, "noise_transf_basis")
             if props.noise_transf_basis != "_NONE_":
                 box.row().prop(props, "noise_transf_scale")
+
+            box.row().prop(props, "noise_randomize_position")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "geometry":
             box = box.box()

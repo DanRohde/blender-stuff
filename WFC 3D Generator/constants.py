@@ -87,7 +87,7 @@ PROP_DEFAULTS = {
     'regfreq_name' : '', 'regfreq_min' : (-1,-1,-1), 'regfreq_max' : (-1,-1,-1), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : .1,
-    'noise_transf_basis' : 0, 'noise_transf_scale' : .1,
+    'noise_transf_basis' : 0, 'noise_transf_scale' : .1, 'noise_randomize_position' : False,
     # geo constraints:
     'geo_left': False, 'geo_right': False, 'geo_bottom': False, 'geo_top': False, 'geo_front': False, 'geo_back': False,
     'geo_match_edges': False, 'geo_match_faces': False,
@@ -164,7 +164,7 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
 ENUM_CONSTRAINTS = { 'distance_from' : [ 'object', 'position', 'sub-collection'], 'distance_type' : [ 'minimum', 'maximum' ,'equal']}
 
 NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_scale',
-                      'noise_transf_basis', 'noise_transf_scale',
+                      'noise_transf_basis', 'noise_transf_scale', 'noise_randomize_position',
                     ]
 
 GEOMETRY_CONSTRAINTS = [ 'geo_top', 'geo_bottom', 'geo_left', 'geo_right', 'geo_front', 'geo_back', 'geo_match_edges', 'geo_match_faces', 'geo_tolerance',]

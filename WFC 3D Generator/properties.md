@@ -13,10 +13,10 @@
 * Fixed position constraints: 1
 * Dimensions constraints: 1
 * Geometry constraints: 9
-* Noise constraints: 4
+* Noise constraints: 5
 * Distance constraints: 6
 
-* **Sum: 145**
+* **Sum: 146**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -149,8 +149,9 @@
 * wfc_geo_tolerance: a float value
 
 ## Noise Constraints
-* Used custom properties: `wfc_noise_[prob|transf]_basis, wfc_noise_prob_threshold, wfc_noise_transf_scale`
+* Used custom properties: `wfc_noise_[prob|transf]_basis, wfc_noise_prob_threshold, wfc_noise_transf_scale, wfc_noise_randomize_position`
 * Allowed property values:
   * wfc_noise_[prob|transf]_basis: integer value between 2 - 11
   * wfc_noise_prob_threshold: float value between 0 and 1
   * wfc_noise_transf_scale: float value 0..inf
+  * wfc_noise_randomize_position: boolean
