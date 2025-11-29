@@ -11,6 +11,9 @@ def remove_existing_constraints(obj):
 
 def put_data_into_object(data, p, obj):
     try:
+        if isinstance(data, str):
+            obj[p] = data
+            return
         iter(data)
         if '_object_link_' in data:
             obj[p] = bpy.data.objects[data["_object_link_"]]
@@ -67,6 +70,9 @@ def get_property_data(obj):
     for p in obj.keys():
         if p.startswith("wfc_"):
             try:
+                if isinstance(obj[p], str):
+                    prop_data[p] = obj[p]
+                    continue
                 iter(obj[p])
                 if len(obj[p]) == 1:
                     prop_data[p] = obj[p][0]
