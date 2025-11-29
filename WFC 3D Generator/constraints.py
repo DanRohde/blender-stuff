@@ -352,9 +352,9 @@ class WFC3DConstraints:
         self.sympartner[x,y,z] = collapsed
         return collapsed
 
-    def _check_dimensions(self, position, dimensions, flipping):
+    def _check_dimensions(self, cell, dimensions, flipping):
         if sum(dimensions) == 3: return True
-        x, y, z = position
+        x, y, z = cell
         for nx in range(dimensions[0]):
             for ny in range(dimensions[1]):
                 for nz in range(dimensions[2]):
@@ -362,11 +362,11 @@ class WFC3DConstraints:
                     if not self.grid.within_boundaries(gx, gy, gz) or self.grid.collapsed[gx, gy, gz]: return False
         return True
 
-    def check_space(self, elements, position):
-        x, y, z = position
+    def check_space(self, cell):
+        x, y, z = cell
         options = []
-        for element in elements:
-            if self._check_dimensions(position, self.constraints[element]["dim_xyz"], (1,1,1) if not self.symflip[x,y,z] else self.symflip[x,y,z]): options.append(element)
+        for element in self.grid.grid[x, y, z]:
+            if self._check_dimensions(cell, self.constraints[element]["dim_xyz"], (1,1,1) if not self.symflip[x,y,z] else self.symflip[x,y,z]): options.append(element)
         return options
 
     def apply_dimensions_constraints(self, cell):
@@ -763,15 +763,10 @@ class WFC3DConstraints:
 
     def collapse(self, cell):
         """Collapse a grid cell with constraints"""
-        collapsed = []
         x, y, z = cell
-        options = self.apply_probability_constraints(cell, self.check_space(self.grid.grid[x, y, z], cell))
-        if len(options) > 0:
-            self.grid.grid[x, y, z] = [random.choice(options)]
-        else:
-            self.grid.grid[x, y, z] = []
-        collapsed.append(self.grid.mark_collapsed(x, y, z))
-        return collapsed
+        options = self.apply_probability_constraints(cell, self.check_space(cell))
+        self.grid.grid[x, y, z] = [random.choice(options)] if len(options) > 0 else []
+        return [ self.grid.mark_collapsed(x, y, z) ]
 
     def propagate(self, collapsed):
         """Propagate constraints"""
