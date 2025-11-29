@@ -80,7 +80,7 @@ An overview of all custom properties can be found on [GitHub](https://github.com
 5. **Repeat** steps 2-4 until all cells are collapsed.
 6. **Render** the grid in the order in which cells are collapsed. Transformations are applied.
 
-More information about the constraints can be found on [GitHub](https://github.com/DanRohde/blender-stuff/blob/main/WFC%203D%20Generator/properties.md)
+More information about the constraints can be found on [GitHub](https://github.com/DanRohde/blender-stuff/blob/main/WFC%203D%20Generator/constraints.md)
 
 ## Limitations and Known Issues
 * For neighbor restrictions to take effect, there must be more than one object in the source collection.
