@@ -656,11 +656,10 @@ class WFC3DConstraints:
 
     def apply_fixed_position_constraints(self, obj):
         collapsed = []
-        if self.constraints[obj.name]["fixed_position_xyz"] is not None:
-            for p in self.constraints[obj.name]["fixed_position_xyz"]:
-                if not self.grid.within_boundaries(p[0], p[1], p[2]): continue
-                self.grid.grid[p[0], p[1], p[2]] = [ obj.name ]
-                ## collapsed.extend(self.collapse(self.grid, p[0], p[1], p[2])) ### !!!!
+        for p in self.constraints[obj.name]["fixed_position_xyz"]:
+            if not self.grid.within_boundaries(p[0], p[1], p[2]): continue
+            self.grid.grid[p[0], p[1], p[2]] = [ obj.name ]
+            collapsed.append(self.grid.mark_collapsed(p[0], p[1], p[2]))
         return collapsed
 
     def apply_distance_from_position_constraints(self, obj):
