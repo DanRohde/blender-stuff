@@ -340,11 +340,11 @@ class WFC3DConstraints:
         collapsed = []
 
         if mirror_axes or rotate_axis:
-            points = self.mirror_and_rotate_3d((x,y,z), self.grid.grid_size, mirror_axes, rotate_axis, rotate_n)
+            points = self.mirror_and_rotate_3d(cell, self.grid.grid_size, mirror_axes, rotate_axis, rotate_n)
             for point in points:
                 nx, ny, nz = point
                 if x==nx and y==ny and z==nz: continue
-                mp, flipping = self.get_mirror_partner_and_flipping(self.grid.grid[x,y,z][0], (x,y,z), point)
+                mp, flipping = self.get_mirror_partner_and_flipping(self.grid.grid[x,y,z][0], cell, point)
                 self.grid.grid[nx, ny, nz] = [ mp ]
                 collapsed.append(self.grid.mark_collapsed(nx,ny,nz))
                 self.sympartner[nx, ny, nz] = [[x,y,z]]
@@ -394,7 +394,7 @@ class WFC3DConstraints:
             print(f"Ooops, cell {x},{y},{z} did not collapse as expected. {obj_name} does not fit.")
         return collapsed
 
-    def apply_transformation_constraints(self, position, obj_name, target_obj):
+    def apply_transformation_constraints(self, cell, obj_name, target_obj):
         def _get_mapped_random_values(vmin, vmax, steps):
             if steps < 0 and vmin > vmax:
                 steps =- steps
@@ -411,7 +411,7 @@ class WFC3DConstraints:
                 return v[random.randrange(0,len(v))]
             else:
                 return vmin + (vmax - vmin) * random.random()
-        x,y,z = position
+        x,y,z = cell
         if obj_name not in self.constraints: return
         constraints = self.constraints[obj_name]
 
@@ -433,7 +433,7 @@ class WFC3DConstraints:
             target_obj.scale.z *= fmat[2]
             return
         symtransmat = []
-        noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_noise(self.apply_noise_randomize_position_constraint(obj_name, position), constraints["noise_transf_basis"], constraints["noise_transf_scale"])
+        noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_noise(self.apply_noise_randomize_position_constraint(obj_name, cell), constraints["noise_transf_basis"], constraints["noise_transf_scale"])
 
         if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
             tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
@@ -568,11 +568,11 @@ class WFC3DConstraints:
             rmin = self.constraints[obj_name]["regfreq_min"][i]
             rmax = self.constraints[obj_name]["regfreq_max"][i]
             freq = self.constraints[obj_name]["regfreq_freq"][i]
-            freqpct = self.constraints[obj_name]["regfreq_freq_pct"][i] if "regfreq_freq_pct" in self.constraints[obj_name] and len(self.constraints[obj_name]["regfreq_freq_pct"])>i else -1
-            maxfreq = int(freqpct / 100 * abs(rmax[0]-rmin[0]+1) * abs(rmax[1]-rmin[1]+1) * abs(rmax[2]-rmin[2]+1))
-            if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
+            freqpct = self.constraints[obj_name]["regfreq_freq_pct"][i] if "regfreq_freq_pct" in self.constraints[obj_name] and i < len(self.constraints[obj_name]["regfreq_freq_pct"]) else -1
+            if freq >=0 and self.grid.is_inside_region(cell, rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
-            if freqpct >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
+            if freqpct >=0 and self.grid.is_inside_region(cell, rmin, rmax):
+                maxfreq = int(freqpct / 100 * abs(rmax[0] - rmin[0] + 1) * abs(rmax[1] - rmin[1] + 1) * abs(rmax[2] - rmin[2] + 1))
                 self.grid.remove_max_region_neighbors(x,y,z,maxfreq,rmin,rmax)
 
     def propagate_distance_from_object_constraints(self, cell):
@@ -765,7 +765,7 @@ class WFC3DConstraints:
         """Collapse a grid cell with constraints"""
         collapsed = []
         x, y, z = cell
-        options = self.apply_probability_constraints((x, y, z), self.check_space(self.grid.grid[x, y, z], (x, y, z)))
+        options = self.apply_probability_constraints(cell, self.check_space(self.grid.grid[x, y, z], cell))
         if len(options) > 0:
             self.grid.grid[x, y, z] = [random.choice(options)]
         else:

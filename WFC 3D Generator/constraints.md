@@ -16,21 +16,19 @@ All these constraints reduce entropy in grid cells or collapse cells:
 
 
 ### Collapse Phase
-* Probability constraints: influence collapse with weight and probability
-* Region probability constraints: influence collapse with weight and probability
+1. (Region) Probability constraints: influence collapse with weight and probability
 
 ### Propagate Phase
-* Symmetry constraints (collapse cells)
-* Dimension constraints (collapse cells): are influenced by symmetry (flipping)
-* Grid constraints
-* Frequency constraints
-* Region frequency constraints
-* Distance constraints
-* Neighbor constraints
-* Connector constraints
-* Geometry constraints
+1. Symmetry constraints (collapse cells)
+2. Frequency constraints
+3. Region frequency constraints
+4. Distance constraints
+5. Dimension constraints (collapse cells): are influenced by symmetry (flipping)
+6. Neighbor constraints
+7. Connector constraints
+8. Geometry constraints
 
 ### Render Phase
-* Noise constraints: replace randomness for transformations (scale, rotation, ...)
-* Transformation constraints
-* Symmetry constraints: influences transformations: flipping of 
+1. Noise constraints: replace randomness for transformations (scale, rotation, ...)
+2. Transformation constraints
+3. Symmetry constraints  
