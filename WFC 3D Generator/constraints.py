@@ -72,6 +72,8 @@ class WFC3DConstraints:
                     self.constraints[obj_name][c] = obj[cp].split(",")
                 elif default_obj and cp in default_obj and default_obj[cp] != "":
                     self.constraints[obj_name][c] = default_obj[cp].split(",")
+                else:
+                    self.constraints[obj_name][c] = PROP_DEFAULTS[c].split(",")
 
             for direction in DIRECTIONS:
                 if direction.startswith("ANY"): continue
@@ -136,48 +138,39 @@ class WFC3DConstraints:
                 val = default_obj[any_prop_name]
         return val
     def are_grid_constraints_satisfied(self, name, pos):
-        if 'noise_prob_basis' in self.constraints[name] and self.constraints[name]['noise_prob_basis'] > 1:
-                n = get_noise(pos, self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
-                return n >= self.constraints[name]['noise_prob_threshold']
-        if 'corners' in self.constraints[name] and self.grid.is_corner(pos):
+        if self.constraints[name]['freq_grid'] == 0: return False
+        if self.constraints[name]['freq_grid_pct'] == 0: return False
+        if self.constraints[name]['probability'] == 0 or self.constraints[name]['weight'] == 0: return False
+        if not self.grid.is_inside_region(pos, self.constraints[name].get('region_min', None), self.constraints[name].get('region_max', None)): return False
+        if not self.grid.is_inside_region_quadrant(pos, self.constraints[name]['region_quadrant']): return False
+        if self.constraints[name]['noise_prob_basis'] > 1:
+            n = get_noise(pos, self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
+            return n >= self.constraints[name]['noise_prob_threshold']
+        if self.grid.is_corner(pos):
             for c in self.constraints[name]['corners']:
-                if c == '' and len(self.constraints[name]['corners']) == 1: return True
+                if c == '' and len(self.constraints[name]['corners']) == 1: continue
                 if c == '-' or c == 'None' or c == 'False': return False
-                if c in self.grid.corners and pos == self.grid.corners[c]: return True
-            return False
-        if 'edges' in self.constraints[name] and self.grid.is_edge(pos):
+                if c in self.grid.corners and pos != self.grid.corners[c]: return False
+        if self.grid.is_edge(pos):
             for c in self.constraints[name]['edges']:
-                if c == '' and len(self.constraints[name]['edges']) == 1: return True
+                if c == '' and len(self.constraints[name]['edges']) == 1: continue
                 if c == '-' or c == 'None': return False
-                if c in self.grid.edges and self.grid.is_on_given_edge(pos, self.grid.edges[c]): return True
-            return False
-        if 'inside' in self.constraints[name] and self.grid.is_inside(pos):
-            inside = self.constraints[name]['inside']
-            if inside == '' or inside == 'True': return True
-            if inside == '-' or inside == 'None' or inside == 'False': return False
-            return False
-        if 'faces' in self.constraints[name] and self.grid.is_face(pos):
+                if c in self.grid.edges and not self.grid.is_on_given_edge(pos, self.grid.edges[c]): return False
+        if self.grid.is_inside(pos):
+            for inside in self.constraints[name]['inside']:
+                if inside == '-' or inside == 'None' or inside == 'False': return False
+        if self.grid.is_face(pos):
             for f in self.constraints[name]['faces']:
-                if f == '' and len(self.constraints[name]['faces']) == 1: return True
+                if f == '' and len(self.constraints[name]['faces']) == 1: continue
                 if f == '-' or f == 'None' or f == 'False': return False
-                if self.grid.is_on_specific_face(pos, f): return True
-            return False
-        if 'regprob_probability' in self.constraints[name]:
-            for i in range(len(self.constraints[name]['regprob_probability'])):
-                if self.constraints[name]['regprob_probability'][i] != 0 and self.constraints[name]['regprob_weight'][i] != 0: continue
-                if self.grid.is_inside_region(pos, self.constraints[name]['regprob_min'][i], self.constraints[name]['regprob_max'][i]): return False
-        if 'regfreq_freq' in self.constraints[name]:
-            for i in range(len(self.constraints[name]['regfreq_freq'])):
-                if self.constraints[name]['regfreq_freq'][i] != 0: continue
-                if self.grid.is_inside_region(pos, self.constraints[name]['regfreq_min'][i], self.constraints[name]['regfreq_max'][i]): return False
-        ret = True
-        if 'region_min' in self.constraints[name] or 'region_max' in self.constraints[name]:
-            ret = ret and self.grid.is_inside_region(pos, self.constraints[name].get('region_min', None),
-                                                self.constraints[name].get('region_max', None))
-        if 'region_quadrant' in self.constraints[name]:
-            ret = ret and self.grid.is_inside_region_quadrant(pos, self.constraints[name]['region_quadrant'])
-
-        return ret
+                if not self.grid.is_on_specific_face(pos, f): return False
+        for i in range(len(self.constraints[name]['regprob_probability'])):
+            if self.constraints[name]['regprob_probability'][i] != 0 and self.constraints[name]['regprob_weight'][i] != 0: continue
+            if self.grid.is_inside_region(pos, self.constraints[name]['regprob_min'][i], self.constraints[name]['regprob_max'][i]): return False
+        for i in range(len(self.constraints[name]['regfreq_freq'])):
+            if self.constraints[name]['regfreq_freq'][i] != 0: continue
+            if self.grid.is_inside_region(pos, self.constraints[name]['regfreq_min'][i], self.constraints[name]['regfreq_max'][i]): return False
+        return True
 
     def get_auto_weight(self, name):
         if not self.constraints[name].get('auto_weight', False): return 0
