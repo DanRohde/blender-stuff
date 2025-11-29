@@ -146,29 +146,36 @@ class WFC3DConstraints:
         if self.constraints[name]['noise_prob_basis'] > 1:
             n = get_noise(pos, self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
             return n >= self.constraints[name]['noise_prob_threshold']
-        if self.grid.is_corner(pos):
+        if self.grid.is_corner(pos) and len(self.constraints[name]['corners']) > 0:
+            ret = False
             for c in self.constraints[name]['corners']:
-                if c == '' and len(self.constraints[name]['corners']) == 1: continue
-                if c == '-' or c == 'None' or c == 'False': return False
-                if c in self.grid.corners and pos != self.grid.corners[c]: return False
-        if self.grid.is_edge(pos):
-            for c in self.constraints[name]['edges']:
-                if c == '' and len(self.constraints[name]['edges']) == 1: continue
-                if c == '-' or c == 'None': return False
-                if c in self.grid.edges and not self.grid.is_on_given_edge(pos, self.grid.edges[c]): return False
+                if c == '' and len(self.constraints[name]['corners']) == 1: ret = True
+                if c != '-' and self.grid.is_on_given_corner(pos, c): ret = True
+            if not ret: return ret
+        if self.grid.is_edge(pos) and len(self.constraints[name]['edges']) > 0:
+            ret = False
+            for e in self.constraints[name]['edges']:
+                if e == '' and len(self.constraints[name]['edges']) == 1: ret = True
+                if e != '-' and self.grid.is_on_given_edge(pos, e): ret = True
+            if not ret: return ret
         if self.grid.is_inside(pos):
             for inside in self.constraints[name]['inside']:
                 if inside == '-' or inside == 'None' or inside == 'False': return False
         if self.grid.is_face(pos):
+            ret = False
             for f in self.constraints[name]['faces']:
-                if f == '' and len(self.constraints[name]['faces']) == 1: continue
-                if f == '-' or f == 'None' or f == 'False': return False
-                if not self.grid.is_on_specific_face(pos, f): return False
+                if f == '' and len(self.constraints[name]['faces']) == 1: ret = True
+                if f != '-' and self.grid.is_on_specific_face(pos, f): ret = True
+            if not ret: return ret
+
         for i in range(len(self.constraints[name]['regprob_probability'])):
             if self.constraints[name]['regprob_probability'][i] != 0 and self.constraints[name]['regprob_weight'][i] != 0: continue
             if self.grid.is_inside_region(pos, self.constraints[name]['regprob_min'][i], self.constraints[name]['regprob_max'][i]): return False
         for i in range(len(self.constraints[name]['regfreq_freq'])):
             if self.constraints[name]['regfreq_freq'][i] != 0: continue
+            if self.grid.is_inside_region(pos, self.constraints[name]['regfreq_min'][i], self.constraints[name]['regfreq_max'][i]): return False
+        for i in range(len(self.constraints[name]['regfreq_freq_pct'])):
+            if self.constraints[name]['regfreq_freq_pct'][i] != 0: continue
             if self.grid.is_inside_region(pos, self.constraints[name]['regfreq_min'][i], self.constraints[name]['regfreq_max'][i]): return False
         return True
 
@@ -312,11 +319,12 @@ class WFC3DConstraints:
             if self.constraints[element]["sym_mirror_axes_xyz"] is not None: mp = self.constraints[element]["sym_mirror_axes_xyz"].name
             if self.constraints[element]["sym_mirror_flip_xyz"]: flipping = (-1, -1, -1)
         return mp, flipping
-    def apply_symmetry_constraints(self, x, y, z):
+    def apply_symmetry_constraints(self, cell):
         """Apply symmetry to collapsed cells"""
         grid = self.grid
-        if len(grid.grid[x,y,z])==0: 
-            return []
+        x, y, z = cell
+        if len(grid.grid[x,y,z])==0: return []
+
         mirror_axes = self.constraints[grid.grid[x,y,z][0]]["sym_mirror_axes"]
         rotate_n = self.constraints[grid.grid[x,y,z][0]]["sym_rotate_n"]
         rotate_axis = self.constraints[grid.grid[x, y, z][0]]["sym_rotate_axis"] if rotate_n and rotate_n > 0 else None
@@ -352,8 +360,9 @@ class WFC3DConstraints:
             if self._check_dimensions(position, self.constraints[element]["dim_xyz"], (1,1,1) if not self.symflip[x,y,z] else self.symflip[x,y,z]): options.append(element)
         return options
 
-    def apply_dimensions_constraints(self, x, y, z):
+    def apply_dimensions_constraints(self, cell):
         collapsed = []
+        x, y, z = cell
         if not self.grid.within_boundaries(x,y,z): return collapsed
         if len(self.grid.grid[x,y,z]) == 0: return collapsed
         obj_name = self.grid.grid[x,y,z][0]
@@ -374,26 +383,6 @@ class WFC3DConstraints:
         else:
             self.grid.grid[x, y, z] = []
             print(f"Ooops, cell {x},{y},{z} did not collapse as expected. {obj_name} does not fit.")
-        return collapsed
-
-    def collapse(self, grid, x, y, z):
-        """Collapse a grid cell with constraints"""
-        collapsed = []
-        options = self.apply_probability_constraints((x,y,z), self.check_space(grid.grid[x,y,z], (x,y,z)))
-        if len(options)>0:
-            grid.grid[x, y, z] = [ random.choice(options) ]
-        else:
-            grid.grid[x, y, z] = []
-        collapsed.append(grid.mark_collapsed(x, y, z))
-        collapsed.extend(self.apply_symmetry_constraints(x, y, z))
-        self.propagate_region_frequency_constraints(x, y, z)
-        self.propagate_frequency_constraints(grid, x, y, z)
-        self.propagate_distance_from_object_constraints(collapsed)
-
-        collapsedadd = []
-        for c in collapsed:
-            collapsedadd.extend(self.apply_dimensions_constraints(c[0], c[1], c[2]))
-        collapsed.extend(collapsedadd)
         return collapsed
 
     def apply_transformation_constraints(self, position, obj_name, target_obj):
@@ -513,7 +502,9 @@ class WFC3DConstraints:
         if self.constraints[obj_name]['sym_mirror_trans'] and self.sympartner[x, y, z] is not None:
             for p in self.sympartner[x, y, z]: self.symtransform[p[0], p[1], p[2]] = symtransmat
 
-    def propagate_frequency_constraints(self, grid, x, y, z):
+    def propagate_frequency_constraints(self, cell):
+        x, y, z = cell
+        grid = self.grid
         if len(grid.grid[x,y,z])==0: return []
         reduced_cells = []
         current_obj = grid.grid[x,y,z][0]
@@ -562,7 +553,8 @@ class WFC3DConstraints:
                 diff = max_count[i] - grid.count_axis_neighbors(x, y, z, None, axis[i])[i]
                 if diff < 0: grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i])
         return reduced_cells
-    def propagate_region_frequency_constraints(self, x, y, z):
+    def propagate_region_frequency_constraints(self, cell):
+        x, y, z = cell
         if len(self.grid.grid[x,y,z])==0: return
         obj_name = self.grid.grid[x,y,z][0]
 
@@ -570,40 +562,39 @@ class WFC3DConstraints:
             rmin = self.constraints[obj_name]["regfreq_min"][i]
             rmax = self.constraints[obj_name]["regfreq_max"][i]
             freq = self.constraints[obj_name]["regfreq_freq"][i]
-            freqpct = self.constraints[obj_name]["regfreq_freq_pct"][i]
+            freqpct = self.constraints[obj_name]["regfreq_freq_pct"][i] if "regfreq_freq_pct" in self.constraints[obj_name] and len(self.constraints[obj_name]["regfreq_freq_pct"])>i else -1
             maxfreq = int(freqpct / 100 * abs(rmax[0]-rmin[0]+1) * abs(rmax[1]-rmin[1]+1) * abs(rmax[2]-rmin[2]+1))
             if freq >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
             if freqpct >=0 and self.grid.is_inside_region((x,y,z), rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,maxfreq,rmin,rmax)
 
-    def propagate_distance_from_object_constraints(self, collapsed):
+    def propagate_distance_from_object_constraints(self, cell):
         mgx, mgy, mgz = self.grid.grid_size[0] - 1, self.grid.grid_size[1] - 1, self.grid.grid_size[2] - 1
+        x, y, z = cell
+        if len(self.grid.grid[x, y, z]) == 0: return
+        obj_name = self.grid.grid[x, y, z][0]
+        dimensions = self.constraints[obj_name]["dim_xyz"]
+        constraints = self.constraints[obj_name]
+        for i, distance in enumerate(constraints["distance"]):
+            df = constraints["distance_from"][i]
+            if df not in [0, 2]: return
+            if df == 0 and constraints["distance_object"][i] is None: return
+            if df == 2 and constraints["distance_subcollection"][i] is None: return
+            minx, miny, minz = min(mgx, max(0, x - distance[0])), min(mgy, max(0, y - distance[1])), min(mgz, max(0, z - distance[2]))
+            maxx, maxy, maxz = (max(0, min(mgx, x + distance[0] + dimensions[0] - 1 )), max(0, min(mgy, y + distance[1] + dimensions[1] - 1)),
+                                max(0, min(mgz, z + distance[2] + dimensions[2] - 1 )))
+            fon = constraints["distance_object"][i].name if df == 0 else constraints["distance_subcollection"][i].name
 
-        for position in collapsed:
-            if len(self.grid.grid[position[0],position[1],position[2]]) == 0: continue
-            obj_name = self.grid.grid[position[0],position[1],position[2]][0]
-            dimensions = self.constraints[obj_name]["dim_xyz"]
-            constraints = self.constraints[obj_name]
-            for i, distance in enumerate(constraints["distance"]):
-                df = constraints["distance_from"][i]
-                if df not in [0, 2]: continue
-                if df == 0 and constraints["distance_object"][i] is None: continue
-                if df == 2 and constraints["distance_subcollection"][i] is None: continue
-                minx, miny, minz = min(mgx, max(0, position[0] - distance[0])), min(mgy, max(0, position[1] - distance[1])), min(mgz, max(0, position[2] - distance[2]))
-                maxx, maxy, maxz = (max(0, min(mgx, position[0] + distance[0] + dimensions[0] - 1 )), max(0, min(mgy, position[1] + distance[1] + dimensions[1] - 1)),
-                                    max(0, min(mgz, position[2] + distance[2] + dimensions[2] - 1 )))
-                fon = constraints["distance_object"][i].name if df == 0 else constraints["distance_subcollection"][i].name
-
-                if constraints["distance_type"][i] == 1:
-                    self.grid.remove_obj_outside_region(fon, (minx, miny, minz), (maxx, maxy, maxz))
-                elif constraints["distance_type"][i] == 2:
-                    minx, miny, minz = min(mgx, max(0, position[0] - distance[0] + 1)), min(mgy, max(0, position[1] - distance[1] + 1)), min(mgz, max(0, position[2] - distance[2] + 1))
-                    maxx, maxy, maxz = (max(0, min(mgx, position[0] + distance[0] + dimensions[0] - 2)), max(0, min(mgy, position[1] + distance[1] + dimensions[1] - 2)),
-                                        max(0, min(mgz, position[2] + distance[2] + dimensions[2] - 2)))
-                    self.grid.remove_obj_in_region(fon, (minx, miny, minz), (maxx, maxy, maxz), position)
-                else:
-                    self.grid.remove_obj_in_region(fon, (minx, miny, minz), (maxx, maxy, maxz), position)
+            if constraints["distance_type"][i] == 1:
+                self.grid.remove_obj_outside_region(fon, (minx, miny, minz), (maxx, maxy, maxz))
+            elif constraints["distance_type"][i] == 2:
+                minx, miny, minz = min(mgx, max(0, x - distance[0] + 1)), min(mgy, max(0, y - distance[1] + 1)), min(mgz, max(0, z - distance[2] + 1))
+                maxx, maxy, maxz = (max(0, min(mgx, x + distance[0] + dimensions[0] - 2)), max(0, min(mgy, y + distance[1] + dimensions[1] - 2)),
+                                    max(0, min(mgz, z + distance[2] + dimensions[2] - 2)))
+                self.grid.remove_obj_in_region(fon, (minx, miny, minz), (maxx, maxy, maxz), cell)
+            else:
+                self.grid.remove_obj_in_region(fon, (minx, miny, minz), (maxx, maxy, maxz), cell)
 
     def set_cache_geometry_compare(self, current_obj, obj, direction, result):
         if not direction in self.cache_geometry_compare[current_obj]:
@@ -652,53 +643,6 @@ class WFC3DConstraints:
         self.set_cache_geometry_compare(current_obj, obj, direction, result)
         return result
 
-    def propagate(self, grid, x, y, z):
-        """Propagate constraints"""
-
-        # propagate neighbor constraints:
-        queue = deque([(x, y, z)])
-
-        while queue:
-            cx, cy, cz = queue.popleft()
-            if len(grid.grid[cx,cy,cz])>0:
-                current_obj =  grid.grid[cx, cy, cz][0]
-            else:
-                continue
-
-            for direction, (dx, dy, dz) in DIRECTIONS.items():
-                nx, ny, nz = cx + dx, cy + dy, cz + dz             
-                if not grid.within_boundaries(nx, ny, nz) or grid.collapsed[nx,ny,nz] or direction.startswith('ANY'): continue
-                neighbor_options = grid.grid[nx, ny, nz]
-
-                dirlower = direction.lower()
-                oppdirlower = OPPOSITE_DIRECTIONS[direction].lower()
-
-                # Filter disallowed neighbor options
-                new_options = [obj
-                               for obj in neighbor_options
-                                if (self.constraints[current_obj][dirlower] is None or obj in self.constraints[current_obj][dirlower])
-                                    and (self.constraints[obj][oppdirlower] is None or current_obj in self.constraints[obj][oppdirlower])
-                               ]
-                if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
-                    new_options= [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
-
-                # Filter disallowed connector options:
-                if self.constraints[current_obj].get('conn_'+dirlower,"") != "":
-                    prop_name = 'conn_' + dirlower
-                    opp_prop_name = 'conn_' + oppdirlower
-                    new_options = [obj for obj in new_options if
-                                   self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name] or
-                                   self.constraints[obj][opp_prop_name] == ""]
-
-                # Filter disallowed geometry:
-                if self.constraints[current_obj]['geo_match_edges'] or self.constraints[current_obj]['geo_match_faces']:
-                    if direction in FACE_DIRECTIONS and self.constraints[current_obj][f"geo_{dirlower}"]:
-                        new_options = [ obj for obj in new_options if self.compare_geometry(current_obj, obj, direction)]
-
-                if len(new_options) >= len(neighbor_options): continue
-                grid.grid[nx, ny, nz] = new_options
-                if len(new_options) == 1: queue.append((nx, ny, nz))
-
     def get_random_object_from_collection(self, pos, collection):
         x, y, z = pos
         if self.sympartner[x, y, z] is not None:
@@ -716,7 +660,7 @@ class WFC3DConstraints:
             for p in self.constraints[obj.name]["fixed_position_xyz"]:
                 if not self.grid.within_boundaries(p[0], p[1], p[2]): continue
                 self.grid.grid[p[0], p[1], p[2]] = [ obj.name ]
-                collapsed.extend(self.collapse(self.grid, p[0], p[1], p[2]))
+                ## collapsed.extend(self.collapse(self.grid, p[0], p[1], p[2])) ### !!!!
         return collapsed
 
     def apply_distance_from_position_constraints(self, obj):
@@ -740,13 +684,6 @@ class WFC3DConstraints:
 
         return collapsed
 
-    def apply_pre_constraints(self):
-        collapsed = []
-        for obj in self.objects:
-            collapsed.extend(self.apply_fixed_position_constraints(obj))
-            collapsed.extend(self.apply_distance_from_position_constraints(obj))
-        return collapsed
-
     def apply_dimensions_draw_constraints(self, position, spacing, obj_name, new_obj):
         x, y, z = position
         if sum(self.constraints[obj_name]["dim_xyz"])==3: return
@@ -766,6 +703,86 @@ class WFC3DConstraints:
     def apply_draw_constraints(self, position, spacing, obj_name, target_obj):
         self.apply_transformation_constraints(position, obj_name, target_obj)
         self.apply_dimensions_draw_constraints(position, spacing, obj_name, target_obj)
+
+    def propagate_adjacency_constraints(self, cell):
+        # propagate neighbor constraints:
+        queue = deque([ cell ] )
+        grid = self.grid
+        while queue:
+            cx, cy, cz = queue.popleft()
+            if len(grid.grid[cx, cy, cz]) > 0:
+                current_obj = grid.grid[cx, cy, cz][0]
+            else:
+                continue
+
+            for direction, (dx, dy, dz) in DIRECTIONS.items():
+                nx, ny, nz = cx + dx, cy + dy, cz + dz
+                if not grid.within_boundaries(nx, ny, nz) or grid.collapsed[nx, ny, nz] or direction.startswith('ANY'): continue
+                neighbor_options = grid.grid[nx, ny, nz]
+
+                dirlower = direction.lower()
+                oppdirlower = OPPOSITE_DIRECTIONS[direction].lower()
+
+                # Filter disallowed neighbor options
+                new_options = [obj
+                               for obj in neighbor_options
+                               if (self.constraints[current_obj][dirlower] is None or obj in self.constraints[current_obj][dirlower])
+                               and (self.constraints[obj][oppdirlower] is None or current_obj in self.constraints[obj][oppdirlower])
+                               ]
+                if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
+                    new_options = [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
+
+                # Filter disallowed connector options:
+                if self.constraints[current_obj].get('conn_' + dirlower, "") != "":
+                    prop_name = 'conn_' + dirlower
+                    opp_prop_name = 'conn_' + oppdirlower
+                    new_options = [obj for obj in new_options if
+                                   self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name] or
+                                   self.constraints[obj][opp_prop_name] == ""]
+
+                # Filter disallowed geometry:
+                if self.constraints[current_obj]['geo_match_edges'] or self.constraints[current_obj]['geo_match_faces']:
+                    if direction in FACE_DIRECTIONS and self.constraints[current_obj][f"geo_{dirlower}"]:
+                        new_options = [obj for obj in new_options if self.compare_geometry(current_obj, obj, direction)]
+
+                if len(new_options) >= len(neighbor_options): continue
+                grid.grid[nx, ny, nz] = new_options
+                if len(new_options) == 1: queue.append((nx, ny, nz))
+
+
+    def apply_post_init_constraints(self):
+        collapsed = []
+        for obj in self.objects:
+            collapsed.extend(self.apply_fixed_position_constraints(obj))
+            collapsed.extend(self.apply_distance_from_position_constraints(obj))
+        return collapsed
+
+    def collapse(self, cell):
+        """Collapse a grid cell with constraints"""
+        collapsed = []
+        x, y, z = cell
+        grid = self.grid
+        options = self.apply_probability_constraints((x, y, z), self.check_space(grid.grid[x, y, z], (x, y, z)))
+        if len(options) > 0:
+            grid.grid[x, y, z] = [random.choice(options)]
+        else:
+            grid.grid[x, y, z] = []
+        collapsed.append(grid.mark_collapsed(x, y, z))
+        return collapsed
+
+    def propagate(self, collapsed):
+        """Propagate constraints"""
+        queue = deque(collapsed)
+        while queue:
+            cell = queue.popleft()
+            collapsed.extend(self.apply_symmetry_constraints(cell)) ## symmetry breaks adjacency
+            self.propagate_region_frequency_constraints(cell)
+            self.propagate_frequency_constraints(cell)
+            self.propagate_distance_from_object_constraints(cell)
+            collapsed.extend(self.apply_dimensions_constraints(cell))
+            self.propagate_adjacency_constraints(cell)
+
+        return collapsed
 
     def clean(self):
         self.grid = None

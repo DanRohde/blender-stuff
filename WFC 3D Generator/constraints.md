@@ -1,0 +1,36 @@
+# Constraints
+## Phases
+### Grid Initialization Phase
+All these constraints reduce entropy in grid cells or collapse cells:
+1. Frequency constraints: frequency == 0 or percentage == 0
+2. Probability constraints: weight == 0 or probability == 0
+3. Region constraints
+4. Noise constraints
+5. Grid constraints
+6. Region probability constraints: weight == 0 or probability == 0
+7. Region frequency constraints: frequency == 0 or percentage == 0
+
+### Post Initialization Phase
+1. Fixed position constraints (collapse cells)
+2. Distance from position constraints
+
+
+### Collapse Phase
+* Probability constraints: influence collapse with weight and probability
+* Region probability constraints: influence collapse with weight and probability
+
+### Propagate Phase
+* Symmetry constraints (collapse cells)
+* Dimension constraints (collapse cells): are influenced by symmetry (flipping)
+* Grid constraints
+* Frequency constraints
+* Region frequency constraints
+* Distance constraints
+* Neighbor constraints
+* Connector constraints
+* Geometry constraints
+
+### Render Phase
+* Noise constraints: replace randomness for transformations (scale, rotation, ...)
+* Transformation constraints
+* Symmetry constraints: influences transformations: flipping of 

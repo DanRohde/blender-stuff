@@ -75,33 +75,37 @@ class WFC3DGenerator:
         else:
             return min_cells[min_entropy][0]
         
-    def collapse(self, x, y, z):
+    def collapse(self, cell):
         """Collapses a cell into a single state"""
         if self.use_constraints:
-            collapsed = self.constraints.collapse(self.grid, x, y, z)
+            collapsed = self.constraints.collapse(cell)
         else:
+            x, y, z = cell
             self.grid.grid[x, y, z] = [random.choice(self.grid.grid[x,y,z])]
             collapsed = [ self.grid.mark_collapsed(x, y, z) ]
         return collapsed
 
     def generate_model(self, render=True):
         """Execute WFC algorithm and generate the model"""
+
         self.grid.initialize_grid(self.objects, self.constraints)
+
+        print(self.grid.grid)
+
         if render: self.init_target_collection()
-        collapsed = []
-        if self.use_constraints: collapsed = self.constraints.apply_pre_constraints()
+
+        collapsed = self.constraints.apply_post_init_constraints() if self.use_constraints else []
+
         while True:
             cell = self.get_lowest_entropy_cell()
-            if cell is None:
-                break    
-            x, y, z = cell
-            collapsed.extend(self.collapse(x, y, z))
+            if cell is None: break
 
-            self.collapsed_cells.extend(collapsed)
-            if self.use_constraints:
-                for c in collapsed:
-                    self.constraints.propagate(self.grid, c[0], c[1], c[2])
+            collapsed.extend(self.collapse(cell))
+
+            self.collapsed_cells.extend(self.constraints.propagate(collapsed) if self.use_constraints else collapsed)
+
             collapsed = []
+
         if not render: return
         if self.render_delay > 0:
             bpy.context.scene.wfc_props.running_delayed_renderer = True

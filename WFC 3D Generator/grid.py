@@ -7,6 +7,8 @@ class WFC3DGrid:
         self.grid_size = grid_size
         self.grid = None
         self.collapsed = np.empty(self.grid_size)
+        self.corners = None
+        self.edges = None
         self._init_corners()
         self._init_edges()
 
@@ -44,7 +46,8 @@ class WFC3DGrid:
         return 0 < x < l - 1 and 0 < y < w - 1 and 0 < z < h - 1
 
     def is_on_given_edge(self, p, edge):
-        a, b = edge
+        if edge not in self.edges: return True
+        a, b = self.edges[edge]
         dx, dy, dz = b[0] - a[0], b[1] - a[1], b[2] - a[2]
         px, py, pz = p[0] - a[0], p[1] - a[1], p[2] - a[2]
         t_values = []
@@ -60,6 +63,10 @@ class WFC3DGrid:
             return False
         t = t_values[0]
         return 0 <= t <= 1
+
+    def is_on_given_corner(self, p, corner):
+        if corner not in self.corners: return True
+        return p == self.corners[corner]
 
     def is_face(self, pos):
         return not self.is_corner(pos) and not self.is_edge(pos) and not self.is_inside(pos)
@@ -319,3 +326,5 @@ class WFC3DGrid:
         self.grid = None
         self.collapsed = None
         self.grid_size = None
+        self.edges = None
+        self.corners = None
