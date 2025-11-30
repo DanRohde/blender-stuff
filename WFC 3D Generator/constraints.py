@@ -182,11 +182,8 @@ class WFC3DConstraints:
             if self.constraints[name]['regprob_probability'][i] != 0 and self.constraints[name]['regprob_weight'][i] != 0: continue
             if self.grid.is_inside_region(pos, self.constraints[name]['regprob_min'][i], self.constraints[name]['regprob_max'][i]): return False
         for i in range(len(self.constraints[name]['regfreq_freq'])):
-            if self.constraints[name]['regfreq_freq'][i] != 0: continue
-            if self.grid.is_inside_region(pos, self.constraints[name]['regfreq_min'][i], self.constraints[name]['regfreq_max'][i]): return False
-        for i in range(len(self.constraints[name]['regfreq_freq_pct'])):
-            if self.constraints[name]['regfreq_freq_pct'][i] != 0: continue
-            if self.grid.is_inside_region(pos, self.constraints[name]['regfreq_min'][i], self.constraints[name]['regfreq_max'][i]): return False
+            if ((self.constraints[name]['regfreq_freq'][i] == 0 or (i < len(self.constraints[name]['regfreq_freq_pct']) and self.constraints[name]['regfreq_freq_pct'][i] == 0))
+                    and  self.grid.is_inside_region(pos, self.constraints[name]['regfreq_min'][i], self.constraints[name]['regfreq_max'][i])): return False
         return True
 
     def get_auto_weight(self, name):
