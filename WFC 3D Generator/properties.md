@@ -77,7 +77,7 @@
   * wfc_distance_object: a pointer to an object
   * wfc_distance_position: integer vector
   * wfc_distance_subcollection: a pointer to a collection
-  * wfc_distance_type: integer: 0: minimum distance, 1: maximum distance, 2: equal
+  * wfc_distance_type: integer: 0: minimum distance, 1: maximum distance, 2: equal distance
 
 ## Region Constraints
 * Used custom properties: `wfc_region_min,wfc_region_max,wfc_region_quadrant`
