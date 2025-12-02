@@ -186,10 +186,10 @@ class WFC3DConstraints:
 
         for i in range(len(self.constraints[name]['regprob_probability'])):
             if self.constraints[name]['regprob_probability'][i] != 0 and self.constraints[name]['regprob_weight'][i] != 0: continue
-            if self.grid.is_inside_region(pos, self.constraints[name]['regprob_min'][i], self.constraints[name]['regprob_max'][i]): return False
+            if self.grid.is_inside_region(pos, self.grid.fix_position(self.constraints[name]['regprob_min'][i], False), self.grid.fix_position(self.constraints[name]['regprob_max'][i], True)): return False
         for i in range(len(self.constraints[name]['regfreq_freq'])):
             if ((self.constraints[name]['regfreq_freq'][i] == 0 or (i < len(self.constraints[name]['regfreq_freq_pct']) and self.constraints[name]['regfreq_freq_pct'][i] == 0))
-                    and  self.grid.is_inside_region(pos, self.constraints[name]['regfreq_min'][i], self.constraints[name]['regfreq_max'][i])): return False
+                    and  self.grid.is_inside_region(pos, self.grid.fix_position(self.constraints[name]['regfreq_min'][i], False), self.grid.fix_position(self.constraints[name]['regfreq_max'][i], True))): return False
         return True
 
     def get_auto_weight(self, name):
@@ -228,7 +228,7 @@ class WFC3DConstraints:
     def get_region_weight(self, position, element):
         if 'regprob_weight' not in self.constraints[element]: return -1
         for r in range(len(self.constraints[element]['regprob_weight'])):
-            if self.grid.is_inside_region(position, self.constraints[element]['regprob_min'][r], self.constraints[element]['regprob_max'][r]): return self.constraints[element]['regprob_weight'][r]
+            if self.grid.is_inside_region(position, self.grid.fix_position(self.constraints[element]['regprob_min'][r], False), self.grid.fix_position(self.constraints[element]['regprob_max'][r], True)): return self.constraints[element]['regprob_weight'][r]
         return -1
 
     def get_weighted_options(self, position, elements):
@@ -248,7 +248,7 @@ class WFC3DConstraints:
     def get_region_probability(self, position, element):
         if 'regprob_probability' not in self.constraints[element]: return -1
         for r in range(len(self.constraints[element]['regprob_probability'])):
-            if self.grid.is_inside_region(position, self.constraints[element]['regprob_min'][r], self.constraints[element]['regprob_max'][r]): return self.constraints[element]['regprob_probability'][r]
+            if self.grid.is_inside_region(position, self.grid.fix_position(self.constraints[element]['regprob_min'][r], False), self.grid.fix_position(self.constraints[element]['regprob_max'][r],True)): return self.constraints[element]['regprob_probability'][r]
         return -1
 
     def apply_probability_constraints(self, position, elements):
@@ -567,8 +567,8 @@ class WFC3DConstraints:
         obj_name = self.grid.grid[x,y,z][0]
 
         for i in range(len(self.constraints[obj_name]["regfreq_freq"])):
-            rmin = self.constraints[obj_name]["regfreq_min"][i]
-            rmax = self.constraints[obj_name]["regfreq_max"][i]
+            rmin = self.grid.fix_position(self.constraints[obj_name]["regfreq_min"][i], False)
+            rmax = self.grid.fix_position(self.constraints[obj_name]["regfreq_max"][i], True)
             freq = self.constraints[obj_name]["regfreq_freq"][i]
             freqpct = self.constraints[obj_name]["regfreq_freq_pct"][i] if "regfreq_freq_pct" in self.constraints[obj_name] and i < len(self.constraints[obj_name]["regfreq_freq_pct"]) else -1
             if freq >=0 and self.grid.is_inside_region(cell, rmin, rmax):
@@ -665,16 +665,16 @@ class WFC3DConstraints:
     def apply_fixed_position_constraints(self, obj):
         collapsed = []
         for p in self.constraints[obj.name]["fixed_position_xyz"]:
-            if not self.grid.within_boundaries(p[0], p[1], p[2]): continue
-            self.grid.grid[p[0], p[1], p[2]] = [ obj.name ]
-            collapsed.append(self.grid.mark_collapsed(p[0], p[1], p[2]))
+            fp = self.grid.fix_position(p, maximum=True)
+            self.grid.grid[fp[0], fp[1], fp[2]] = [ obj.name ]
+            collapsed.append(self.grid.mark_collapsed(fp[0], fp[1], fp[2]))
         return collapsed
 
     def apply_distance_from_position_constraints(self, obj):
         collapsed = []
         for i, distance in enumerate(self.constraints[obj.name]["distance"]):
             if self.constraints[obj.name]["distance_from"][i] == 1:
-                position = self.constraints[obj.name]["distance_position"][i]
+                position = self.grid.fix_position(self.constraints[obj.name]["distance_position"][i], True)
                 gs = self.grid.grid_size
                 mgx, mgy, mgz = gs[0] - 1, gs[1] - 1, gs[2] - 1
                 minx, miny, minz = min(mgx, max(0, position[0] - distance[0])), min(mgy, max(0, position[1] - distance[1])), min(mgz, max(0, position[2] - distance[2]))

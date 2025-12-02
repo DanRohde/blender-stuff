@@ -83,9 +83,9 @@ PROP_DEFAULTS = {
     # dimensions constraints:
     'dim_xyz' : (1,1,1),
     # fixed position constraints:
-    'fixed_position_xyz' : (-1,-1,-1),
+    'fixed_position_xyz' : (0,0,0),
     # region frequency constraints:
-    'regfreq_name' : '', 'regfreq_min' : (-1,-1,-1), 'regfreq_max' : (-1,-1,-1), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
+    'regfreq_name' : '', 'regfreq_min' : (0,0,0), 'regfreq_max' : (0,0,0), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : .1,
     'noise_transf_basis' : 0, 'noise_transf_scale' : .1, 'noise_randomize_position' : False,
@@ -94,7 +94,7 @@ PROP_DEFAULTS = {
     'geo_match_edges': False, 'geo_match_faces': False,
     'geo_tolerance' : 0.001, 'geo_threshold' : 0.001,
     # region probability constraints:
-    'regprob_name' : '', 'regprob_min' : (-1,-1,-1), 'regprob_max' : (-1,-1,-1), 'regprob_weight' : 1, 'regprob_probability' : 1,
+    'regprob_name' : '', 'regprob_min' : (0,0,0), 'regprob_max' : (0,0,0), 'regprob_weight' : 1, 'regprob_probability' : 1,
     # distance constraints:
     'distance': (1,1,1), 'distance_from': 'object', 'distance_object': None, 'distance_position': (0,0,0),
     'distance_subcollection': None, 'distance_type' : 'minimum',

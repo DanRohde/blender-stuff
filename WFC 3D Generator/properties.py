@@ -91,24 +91,24 @@ class WFC3DValidatorOutputItem(bpy.types.PropertyGroup):
 
 class WFC3DRegionFrequencyListItem(bpy.types.PropertyGroup):
     regfreq_name: bpy.props.StringProperty(name='Name', description="Optional name of the region", default=PROP_DEFAULTS["regfreq_name"], update=auto_save)
-    regfreq_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", min=-1)
-    regfreq_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", min=-1)
+    regfreq_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", min=0, default=PROP_DEFAULTS["regfreq_min"])
+    regfreq_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", default=PROP_DEFAULTS["regfreq_max"])
     regfreq_freq: bpy.props.IntProperty(update=auto_save, name="Frequency", description="Region frequency", min=-1)
     regfreq_freq_pct: bpy.props.FloatProperty(update=auto_save, name="Frequency %", description="Region frequency in %", min=-1, max=100, subtype="PERCENTAGE")
     selected: bpy.props.BoolProperty(default=False)
 
 class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
     fixed_position_xyz: bpy.props.IntVectorProperty(name="",
-                                                    description="Fixed Position for a building block", min=-1,
+                                                    description="Fixed Position for a building block",
                                                     default=PROP_DEFAULTS['fixed_position_xyz'], update=auto_save)
     selected: bpy.props.BoolProperty(default=False)
 
 class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
     regprob_name: bpy.props.StringProperty(name='Name', description='Optional name of the region', default=PROP_DEFAULTS['regprob_name'], update=auto_save)
-    regprob_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", min=-1)
-    regprob_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", min=-1)
-    regprob_weight: bpy.props.IntProperty(update=auto_save, name="Weight", description="Region weight", min=0)
-    regprob_probability: bpy.props.FloatProperty(update=auto_save, name="Probability", description="Region probability", min=0, max=1)
+    regprob_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", min=0, default=PROP_DEFAULTS['regprob_min'])
+    regprob_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", default=PROP_DEFAULTS['regprob_max'])
+    regprob_weight: bpy.props.IntProperty(update=auto_save, name="Weight", description="Region weight", min=0, default=PROP_DEFAULTS['regprob_weight'])
+    regprob_probability: bpy.props.FloatProperty(update=auto_save, name="Probability", description="Region probability", min=0, max=1, default=PROP_DEFAULTS['regprob_probability'])
     selected: bpy.props.BoolProperty(default=False)
 
 class WFC3DDistanceListItem(bpy.types.PropertyGroup):
@@ -118,7 +118,7 @@ class WFC3DDistanceListItem(bpy.types.PropertyGroup):
                                                  ('position', 'Position', 'Minimum distance from a grid position'),
                                           ('sub-collection','Sub-Collection','Minimum distance from objects in a sub-collection.')])
     distance_object: bpy.props.PointerProperty(type=bpy.types.Object, name="Object", description="Object from the source collection", update=auto_save, poll=is_sub_element)
-    distance_position: bpy.props.IntVectorProperty(name="Position", description="Grid position", update=auto_save, default=PROP_DEFAULTS['distance_position'], min=0)
+    distance_position: bpy.props.IntVectorProperty(name="Position", description="Grid position", update=auto_save, default=PROP_DEFAULTS['distance_position'])
     distance_subcollection: bpy.props.PointerProperty(type=bpy.types.Collection, name="Sub-Collection", description="Sub-collection from the source collection", poll=is_sub_element, update=auto_save)
     distance_type: bpy.props.EnumProperty(update=auto_save, name="Type", description="Distancy type", items=[('minimum', 'Minimum distance', 'Minimum distance'),('maximum', 'Maximum distance', 'Maximum distance'),('equal', 'Equal distance', 'Equal distance')])
     selected: bpy.props.BoolProperty(default=False)
