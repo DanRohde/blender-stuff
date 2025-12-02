@@ -38,12 +38,32 @@ This enables building blocks that are larger than a cell.
 |---------------|----------------------------------------------------------------------------|
 | Dimensions | Extension of the building block across multiple cells. |
 
-## Fixed Position Constraints
+### Fixed Position Constraints
 This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
 
 | **Parameter** | **Description**                                                            |
 |---------------|----------------------------------------------------------------------------|
 | Fixed Position | A fixed position within the grid allows for more predictable results.  |
+
+### Grid Constraints
+Allows you to specify where an object may be located within the grid.
+
+| **Parameter** | **Description**                                                                                                           |
+|---------------|---------------------------------------------------------------------------------------------------------------------------|
+| Corners       | Only selected grid corners may be occupied by the building block. If nothing is selected, all grid corners are permitted. |
+| Edges         | Only selected grid edges may be occupied by the building block. If nothing is selected, all grid edges are permitted.     |
+| Faces         | Only selected grid faces may be occupied by the building block. If nothing is selected, all grid faces are permitted.     |
+| Inside | The inner area of the grid can be prohibited for the building block.                                                      |
+
+### Region Constraints
+Allows you to specify where an object may be located within the grid.
+
+| **Parameter** | **Description**                                                                  |
+|---------------|----------------------------------------------------------------------------------|
+| min | Smallest position in the grid for the permitted region.                          |
+| max | Largest position in the grids for the permitted region.                          |
+| Quadrant | The grid is divided into eight quadrants: fbl, fbr, ftl, ftr, bbl, bbr, btl, btr |
+| Level | Only selected levels (floors) can be occupied by the building block.             |
 
 ## Algorithm Phases
 ### Grid Initialization Phase
