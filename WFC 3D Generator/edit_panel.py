@@ -259,6 +259,17 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.prop(props, "region_quadrant",text="")
             ql = ", ".join([l for q,l in zip(props.region_quadrant,['fbl','fbr','ftl','ftr','bbl','bbr','btl','btr']) if q ])
             box.row().label(text=f"Selected quadrant: {ql}")
+
+            row = box.row()
+            row.label(text="Level:")
+            row= row.column_flow(columns=3,align=True)
+            row.prop(props, "region_level_ground")
+            row.prop(props, "region_level_first")
+            row.prop(props, "region_level_second")
+            row.prop(props, "region_level_mid")
+            row.prop(props, "region_level_penultimate")
+            row.prop(props, "region_level_top")
+
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "probability":
             box = box.box()

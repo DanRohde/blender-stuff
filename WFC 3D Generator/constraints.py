@@ -153,6 +153,12 @@ class WFC3DConstraints:
         if self.constraints[name]['probability'] == 0 or self.constraints[name]['weight'] == 0: return False
         if not self.grid.is_inside_region(pos, self.constraints[name].get('region_min', None), self.constraints[name].get('region_max', None)): return False
         if not self.grid.is_inside_region_quadrant(pos, self.constraints[name]['region_quadrant']): return False
+        if not self.constraints[name]['region_level_ground'] and pos[2] == 0: return False
+        if not self.constraints[name]['region_level_first'] and pos[2] == 1: return False
+        if not self.constraints[name]['region_level_second'] and pos[2] == 2: return False
+        if not self.constraints[name]['region_level_mid'] and 0  < pos[2] < self.grid.grid_size[2]-1: return False
+        if not self.constraints[name]['region_level_penultimate'] and pos[2] == self.grid.grid_size[2]-2: return False
+        if not self.constraints[name]['region_level_top'] and pos[2] == self.grid.grid_size[2]-1: return False
         if self.constraints[name]['noise_prob_basis'] > 1:
             n = get_noise(self.apply_noise_randomize_position_constraint(name, pos), self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
             return n >= self.constraints[name]['noise_prob_threshold']

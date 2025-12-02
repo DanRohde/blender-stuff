@@ -2,7 +2,7 @@
 ## Statistics: Constraint Properties per Object
 * Neighbor constraints: 31
 * Grid constraints: 4
-* Region constraints: 3
+* Region constraints: 9
 * Probability constraints: 3
 * Region probability constraints: 5
 * Transformations: 12
@@ -16,7 +16,7 @@
 * Noise constraints: 5
 * Distance constraints: 6
 
-* **Sum: 146**
+* **Sum: 155**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -80,10 +80,11 @@
   * wfc_distance_type: integer: 0: minimum distance, 1: maximum distance, 2: equal distance
 
 ## Region Constraints
-* Used custom properties: `wfc_region_min,wfc_region_max,wfc_region_quadrant`
+* Used custom properties: `wfc_region_min,wfc_region_max,wfc_region_quadrant,wfc_region_level_[ground|first|second|mid|penultimate|top]`
 * Allowed property values:
     * wfc_region_[min|max]: integer vector 
     * wfc_region_quadrant: boolean vector of size 8 (fbl,fbr,ftl,ftr,bbl,bbr,btl,btr)
+    * wfc_region_level_[ground|first|second|mid|penultimate|top]: boolean
 	
 ## Probability Constraints
 * Used custom properties: `wfc_weight,wfc_probability,wfc_auto_weight`
@@ -96,9 +97,9 @@
 * Used custom properties: `wfc_regprob_[name|min|max|weight|probability]_[0..n]`
 * Allowed property values:
   * wfc_regprob_name_[0..n]: a string with a region name
-  * wfc_regprob_[min|max]: a float vector
-  * wfc_regprob_weight: an integer
-  * wfc_regprob_probability: a float value between 0 and 1
+  * wfc_regprob_[min|max]_[0..n]: a float vector
+  * wfc_regprob_weight_[0..n]: an integer
+  * wfc_regprob_probability_[0..n]: a float value between 0 and 1
 
 ## Transformations
 * Used custom properties: `wfc_translation_min,wfc_translation_max,wfc_translation_steps,wfc_rotation_min,wfc_rotation_max,wfc_rotation_steps,wfc_scale_min,wfc_scale_max,wfc_scale_steps,wfc_scale_uni,wfc_scale_type,wfc_flipping`

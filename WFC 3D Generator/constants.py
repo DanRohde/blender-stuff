@@ -71,6 +71,7 @@ PROP_DEFAULTS = {
     'sym_mirror_trans': False, 'sym_mirror_flip_transl':False,
     # region constraints:
     'region_min':(-1,-1,-1), 'region_max':(-1,-1,-1), 'region_quadrant': (True,)*8,
+    'region_level_ground': True, 'region_level_first': True, 'region_level_second': True, 'region_level_mid': True, 'region_level_penultimate': True, 'region_level_top': True,
     # connector constraints:
     'conn_left':'','conn_right':'','conn_top':'','conn_bottom':'','conn_back':'','conn_front':'',
     'conn_en_fl':'','conn_en_fr':'','conn_en_ft':'','conn_en_fb':'',
@@ -122,7 +123,7 @@ PROBABILITY_CONSTRAINTS = [ 'probability', 'weight', 'auto_weight']
 
 GRID_CONSTRAINTS = [ 'faces', 'corners', 'edges', 'inside']
 
-REGION_CONSTRAINTS = [ 'region_min', 'region_max', 'region_quadrant']
+REGION_CONSTRAINTS = [ 'region_min', 'region_max', 'region_quadrant', 'region_level_ground', 'region_level_first', 'region_level_second', 'region_level_mid', 'region_level_penultimate', 'region_level_top']
 
 CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn_top','conn_bottom',
                         'conn_en_fl','conn_en_fr','conn_en_ft','conn_en_fb',
