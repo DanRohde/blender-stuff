@@ -81,6 +81,21 @@ Define how often the same object or any other object may occur in the immediate 
 
 | **Parameter** | **Description**                                                                                                                                    |
 |---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| *Same Object* ||
+| Grid          || 
+| Grid %        ||
+| Neighbor      ||
+| Face          ||          
+| Grid          ||          
+| Edge          ||
+| Axes          ||
+| Any Object    ||
+| Any Neighbor  ||
+| Any Face      ||
+| Any Corner    ||
+| Any Edge      ||
+| Any Axes      ||
+
 
 
 ## Region Frequency Constraints
@@ -88,36 +103,75 @@ Define how often the same object may occur in a specific region.
 
 | **Parameter** | **Description**                                                                                                                                    |
 |---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name          ||
+| min           ||
+| max           ||
+| Frequency     ||
+| Frequency %   ||
+
+
 
 ## Symmetry Constraints
 These constraints allow mirror-symmetric and/or rotation-symmetric objects to be generated.
 
-| **Parameter** | **Description**                                                                                                                                    |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Parameter**                  | **Description**                                                                                                                                    |
+|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| *Mirror Symmetry*              |
+| Axes                           ||
+| Partner                        ||
+| Flip Mirror Partner            ||
+| Transfer Random Transformation ||
+| *Rotational Symmetry*          ||
+| Axis                           ||
+| Number                         ||
 
 ## Probability Constraints
 These constraints increase or decrease the probability of an object being selected at random.
 
-| **Parameter** | **Description**                                                                                                                                    |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Parameter**                  | **Description**                                                                                                                                    |
+|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Probability                    ||
+| Weight                         ||
+| Automatic weight determination ||
 
 ## Region Probability Constraints
 These constraints increase or decrease the probability of an object being selected at random in a specific region.
 
 | **Parameter** | **Description**                                                                                                                                    |
 |---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name ||
+| min ||
+| max ||
+| Probability ||
+| Weight ||
+
 
 ## Transformations
 These are not really restrictions. This allows you to randomize the position, size, rotation, and flipping of building blocks.
 
-| **Parameter** | **Description**                                                                                                                                    |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Parameter**      | **Description**                                                                                                                                    |
+|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Translation Offset ||
+| *Rotation*         ||
+| *Scale*            ||
+| *Flipping*         ||
+
 
 ## Noise Constraints
 Noise constraints either influence the probability of an object occurring or replace random values in transformations with noise values.
 
-| **Parameter** | **Description**                                                                                                                                    |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Parameter**                       | **Description**                                                                                                                                    |
+|-------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| *Noise on probability of occurance* ||
+| Noise Basis                         ||
+| Threshold                           ||
+| Scale                               ||
+| Noise on transformations            ||
+| Noise Basis                         ||
+| Scale                               ||
+| Randomize the starting position     ||
+
+
 
 ## Algorithm Phases
 ### Grid Initialization Phase
