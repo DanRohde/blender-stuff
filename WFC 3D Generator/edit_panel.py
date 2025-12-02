@@ -527,7 +527,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
 
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         row = layout.row()
-        anchormap = { 'transformations' : 'transformations', 'neighbor' : 'neighbor-constraints', 'connector' : 'connector-constraints', 'geometry': 'geometry-constraints',
+        anchormap = { '_none_': 'constraints', 'transformations' : 'transformations', 'neighbor' : 'neighbor-constraints', 'connector' : 'connector-constraints', 'geometry': 'geometry-constraints',
                       'regfreq' : 'region-frequency-constraints', 'noise' : 'noise-constraints', 'regprob' : 'region-probability-constraints', 'grid': 'grid-constraints',
                       'dimensions' : 'dimensions-constraints', 'fixed_position' : 'fixed-position-constraints', 'region' : 'region-constraints', 'distance' : 'distance-constraints',
                       'frequency' : 'frequency-constraints', 'symmetry' : 'symmetry-constraints', 'probability' : 'probability-constraints',
