@@ -1,4 +1,6 @@
 # Constraints
+[[_TOC_]]
+
 ## Description
 
 ### Neighbor Constraints
@@ -22,13 +24,13 @@ You can define a connector name for any direction that match with the connector 
 ### Geometry Constraints
 Edges or faces are used to determine whether two objects can be placed next to each other.
 
-| **Parameter** | **Description**                                                    |
-|---------------|--------------------------------------------------------------------|
-| Faces         | Only edges or faces of selected faces will be compared.            |
-| Match Edges   | Use edges for comparison.                                          |
-| Match Face    | Use faces for comparison.                                          |
-| Tolerance     | Maximum distance between vertices during vector comparison.        |
-| Threshold     | Maximum distance between grid face and building block face or edge. |
+| **Parameter** | **Description**                                                            |
+|---------------|----------------------------------------------------------------------------|
+| Faces         | Only edges or faces of selected faces will be compared.                    |
+| Match Edges   | Use edges for comparison.                                                  |
+| Match Faces   | Use faces for comparison.                                                  |
+| Tolerance     | Maximum distance between vertices during vector comparison.                |
+| Threshold     | Maximum distance between grid cell face and building block faces or edges. |
 
 
 
