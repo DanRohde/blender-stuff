@@ -91,7 +91,7 @@ class WFC3DValidatorOutputItem(bpy.types.PropertyGroup):
 
 class WFC3DRegionFrequencyListItem(bpy.types.PropertyGroup):
     regfreq_name: bpy.props.StringProperty(name='Name', description="Optional name of the region", default=PROP_DEFAULTS["regfreq_name"], update=auto_save)
-    regfreq_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", min=0, default=PROP_DEFAULTS["regfreq_min"])
+    regfreq_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", default=PROP_DEFAULTS["regfreq_min"])
     regfreq_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", default=PROP_DEFAULTS["regfreq_max"])
     regfreq_freq: bpy.props.IntProperty(update=auto_save, name="Frequency", description="Region frequency", min=-1)
     regfreq_freq_pct: bpy.props.FloatProperty(update=auto_save, name="Frequency %", description="Region frequency in %", min=-1, max=100, subtype="PERCENTAGE")
@@ -105,7 +105,7 @@ class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
 
 class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
     regprob_name: bpy.props.StringProperty(name='Name', description='Optional name of the region', default=PROP_DEFAULTS['regprob_name'], update=auto_save)
-    regprob_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", min=0, default=PROP_DEFAULTS['regprob_min'])
+    regprob_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", default=PROP_DEFAULTS['regprob_min'])
     regprob_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", default=PROP_DEFAULTS['regprob_max'])
     regprob_weight: bpy.props.IntProperty(update=auto_save, name="Weight", description="Region weight", min=0, default=PROP_DEFAULTS['regprob_weight'])
     regprob_probability: bpy.props.FloatProperty(update=auto_save, name="Probability", description="Region probability", min=0, max=1, default=PROP_DEFAULTS['regprob_probability'])
@@ -125,7 +125,7 @@ class WFC3DDistanceListItem(bpy.types.PropertyGroup):
 
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
-    grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, max=100,)
+    grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1,)
     spacing: bpy.props.FloatVectorProperty(name="", description="Size of a Grid Cell", subtype="TRANSLATION", default=(2.0,2.0,2.0), min=0.1, precision=3)
     odd_offset: bpy.props.FloatVectorProperty(name="", description="Odd Offset", subtype="TRANSLATION", default=(0.0,0.0,0.0), precision=3)
     use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)

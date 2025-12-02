@@ -290,13 +290,13 @@ class WFC3DGrid:
         self.collapsed[x, y, z] = True
         return x, y, z
 
-    def fix_position(self, position, maximum):
+    def fix_position(self, position):
         if position is None: return 0, 0, 0
         x, y, z = position
         mx, my, mz = self.grid_size[0]-1, self.grid_size[1]-1, self.grid_size[2]-1
-        if x < 0: x = mx + x if maximum else 0
-        if y < 0: y = my + y if maximum else 0
-        if z < 0: z = mz + z if maximum else 0
+        if x < 0: x = mx + x
+        if y < 0: y = my + y
+        if z < 0: z = mz + z
         return max(min(x, mx), 0), max(min(y, my), 0), max(min(z, mz), 0)
 
     @staticmethod
