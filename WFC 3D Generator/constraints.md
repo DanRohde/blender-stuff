@@ -58,12 +58,12 @@ Allows you to specify where an object may be located within the grid.
 ### Region Constraints
 Allows you to specify where an object may be located within the grid.
 
-| **Parameter** | **Description**                                                                  |
-|---------------|----------------------------------------------------------------------------------|
-| min | Smallest position in the grid for the permitted region.                          |
-| max | Largest position in the grids for the permitted region.                          |
-| Quadrant | The grid is divided into eight quadrants: fbl, fbr, ftl, ftr, bbl, bbr, btl, btr |
-| Level | Only selected levels (floors) can be occupied by the building block.             |
+| **Parameter** | **Description**                                                                                                                                    |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| min | Smallest position in the grid for the permitted region.                                                                                            |
+| max | Largest position in the grids for the permitted region.                                                                                            |
+| Quadrant | The grid is divided into eight quadrants and only selected quadrants can be occupied by the building block: fbl, fbr, ftl, ftr, bbl, bbr, btl, btr |
+| Level | Only selected levels (floors) can be occupied by the building block.                                                                               |
 
 ## Algorithm Phases
 ### Grid Initialization Phase
