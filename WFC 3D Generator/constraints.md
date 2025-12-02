@@ -1,5 +1,39 @@
 # Constraints
-## Phases
+## Description
+
+### Neighbor Constraints
+Allows you to define a list of allowed neighbors for all possible directions (at once).
+
+| **Parameter**                        | **Description**                                                                                                                 |
+|--------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| Direction                            | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected                                      |
+| Neighbor | Neigbors restrict neighbors to a given list of building blocks. If no neighbor is selected, all are permitted.                  |
+| No Neighbor allowed                  | prohibits all neighbors                                                                                                         |
+| Allow neighbor constraint violations | If no suitable neighbors can be found, all building blocks that also have this paremeter set can be used as possible neighbors. |
+
+### Connector Constraints
+You can define a connector name for any direction that match with the connector name of possible neighbors with the same connector name in the opposite direction.
+
+| **Parameter**                  | **Description**                                                                                                                  |
+|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| Direction | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected                                       |
+| Name | The connector name to restrict the possible neighbors. Only neighbors with the same name in the opposite direction can be used. Empty names or unspecified directions allow any neighbor. |
+
+### Geometry Constraints
+Edges or faces are used to determine whether two objects can be placed next to each other.
+
+| **Parameter** | **Description**                                                    |
+|---------------|--------------------------------------------------------------------|
+| Faces         | Only edges or faces of selected faces will be compared.            |
+| Match Edges   | Use edges for comparison.                                          |
+| Match Face    | Use faces for comparison.                                          |
+| Tolerance     | Maximum distance between vertices during vector comparison.        |
+| Threshold     | Maximum distance between grid face and building block face or edge. |
+
+
+
+
+## Algorithm Phases
 ### Grid Initialization Phase
 All these constraints reduce entropy in grid cells:
 1. Frequency constraints: frequency == 0 or percentage == 0

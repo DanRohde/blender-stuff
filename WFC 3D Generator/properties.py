@@ -29,7 +29,7 @@ def get_direction_list(items, prefix):
     return items
 
 def get_neighbor_constraint_items(_self, _context):
-    items = [("_NONE_","Select a Neighbor Constraint","Please select a neighbor constraint"),None]
+    items = [("_NONE_","Select a Direction ","Please select a direction"),None]
     return get_direction_list(items, "wfc_")
 
 def get_conn_directions(_self, _context):
