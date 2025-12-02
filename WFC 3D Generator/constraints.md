@@ -141,7 +141,7 @@ These constraints increase or decrease the probability of an object being select
 | Weight ||
 
 
-## Transformation Constraints
+## Transformations
 These are not really restrictions. This allows you to randomize the position, size, rotation, and flipping of building blocks.
 
 | **Parameter**      | **Description**                                                                                                                                    |
