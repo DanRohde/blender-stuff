@@ -68,9 +68,13 @@ Allows you to specify where an object may be located within the grid.
 ## Distance Constraints
 Rules that restrict the placement of building blocks based on their distance from a specific point or another building block.
 
-| **Parameter** | **Description**                                                                                                                                    |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-
+| **Parameter** | **Description**                                                                                                                                                                                       |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Distance | The distance to a position or object in the grid.                                                                                                                                                     |
+| From | Defines whether the distance from a position or from a specific building block must be maintained.                                                                                                    |
+| Object | A link to the building block                                                                                                                                                                          |
+| Position | This defines the position within the grid. Negative values are added to the maximum grid size values. Values greater than the corresponding grid size values are set to the maximum permitted values. |
+| Type | This sets the distance type. |                                                                                                                                                                         |
 
 ## Frequency Constraints
 Define how often the same object or any other object may occur in the immediate vicinity or on one of the 3 axes XYZ.
