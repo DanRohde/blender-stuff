@@ -1,5 +1,4 @@
 # Constraints
-<a id="neighbor"></a>
 ## Neighbor Constraints
 Allows you to define a list of allowed neighbors for all possible directions (at once).
 
@@ -10,7 +9,6 @@ Allows you to define a list of allowed neighbors for all possible directions (at
 | No Neighbor allowed                  | prohibits all neighbors                                                                                                         |
 | Allow neighbor constraint violations | If no suitable neighbors can be found, all building blocks that also have this paremeter set can be used as possible neighbors. |
 
-<a id="connector"></a>
 ## Connector Constraints
 You can define a connector name for any direction that match with the connector name of possible neighbors with the same connector name in the opposite direction.
 
@@ -19,7 +17,6 @@ You can define a connector name for any direction that match with the connector 
 | Direction | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected                                       |
 | Name | The connector name to restrict the possible neighbors. Only neighbors with the same name in the opposite direction can be used. Empty names or unspecified directions allow any neighbor. |
 
-<a id="geometry"></a>
 ## Geometry Constraints
 Edges or faces are used to determine whether two objects can be placed next to each other.
 
@@ -31,7 +28,6 @@ Edges or faces are used to determine whether two objects can be placed next to e
 | Tolerance     | Maximum distance between vertices during edge/face vector comparison.      |
 | Threshold     | Maximum distance between grid cell face and building block faces or edges. |
 
-<a id="dimensions"></a>
 ## Dimensions Constraints
 This enables building blocks that are larger than a cell.
 
@@ -39,7 +35,6 @@ This enables building blocks that are larger than a cell.
 |---------------|----------------------------------------------------------------------------|
 | Dimensions | Extension of the building block across multiple cells. |
 
-<a id="fixed_position">
 ## Fixed Position Constraints
 This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
 
@@ -47,7 +42,6 @@ This allows you to set a fixed starting position within the grid in order to ach
 |---------------|----------------------------------------------------------------------------|
 | Fixed Position | A fixed position within the grid allows for more predictable results.  |
 
-<a id="grid"></a>
 ## Grid Constraints
 Allows you to specify where an object may be located within the grid.
 
@@ -58,7 +52,6 @@ Allows you to specify where an object may be located within the grid.
 | Faces         | Only selected grid faces may be occupied by the building block. If nothing is selected, all grid faces are permitted.     |
 | Inside | The inner area of the grid can be prohibited for the building block.                                                      |
 
-<a id="region"></a>
 ## Region Constraints
 Allows you to specify where an object may be located within the grid.
 
@@ -69,7 +62,6 @@ Allows you to specify where an object may be located within the grid.
 | Quadrant | The grid is divided into eight quadrants and only selected quadrants can be occupied by the building block: fbl, fbr, ftl, ftr, bbl, bbr, btl, btr |
 | Level | Only selected levels (floors) can be occupied by the building block.                                                                              |
 
-<a id="distance"></a>
 ## Distance Constraints
 Rules that restrict the placement of building blocks based on their distance from a specific point or another building block.
 
@@ -81,7 +73,6 @@ Rules that restrict the placement of building blocks based on their distance fro
 | Position | This defines the position within the grid. Negative values are added to the maximum grid size values. Values greater than the corresponding grid size values are set to the maximum permitted values. |
 | Type | This sets the distance type. |                                                                                                                                                                         |
 
-<a id="frequency"></a>
 ## Frequency Constraints
 Define how often the same object or any other object may occur in the immediate vicinity or on one of the 3 axes XYZ.
 
@@ -103,7 +94,6 @@ Define how often the same object or any other object may occur in the immediate 
 | Any Axes      ||
 
 
-<a id="regfreq"></a>
 ## Region Frequency Constraints
 Define how often the same object may occur in a specific region.
 
@@ -116,7 +106,6 @@ Define how often the same object may occur in a specific region.
 | Frequency %   ||
 
 
-<a id="symmetry"></a>
 ## Symmetry Constraints
 These constraints allow mirror-symmetric and/or rotation-symmetric objects to be generated.
 
@@ -131,7 +120,6 @@ These constraints allow mirror-symmetric and/or rotation-symmetric objects to be
 | Axis                           ||
 | Number                         ||
 
-<a id="probability"></a>
 ## Probability Constraints
 These constraints increase or decrease the probability of an object being selected at random.
 
@@ -141,7 +129,6 @@ These constraints increase or decrease the probability of an object being select
 | Weight                         ||
 | Automatic weight determination ||
 
-<a id="regprob"></a>
 ## Region Probability Constraints 
 These constraints increase or decrease the probability of an object being selected at random in a specific region.
 
@@ -154,8 +141,7 @@ These constraints increase or decrease the probability of an object being select
 | Weight ||
 
 
-<a id="transformation"></a>
-## Transformations 
+## Transformation Constraints
 These are not really restrictions. This allows you to randomize the position, size, rotation, and flipping of building blocks.
 
 | **Parameter**      | **Description**                                                                                                                                    |
@@ -166,7 +152,6 @@ These are not really restrictions. This allows you to randomize the position, si
 | *Flipping*         ||
 
 
-<a id="noise"></a>
 ## Noise Constraints 
 Noise constraints either influence the probability of an object occurring or replace random values in transformations with noise values.
 
