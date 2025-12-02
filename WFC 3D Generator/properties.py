@@ -168,7 +168,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ("probability", "Probability Constraints", "Probability constraints"),
                ("regprob", "Region Probability Constraints", "Region Probability constraints"),
                None,
-               ("transformation", "Transformations", "Transformations"),
+               ("transformations", "Transformations", "Transformations"),
                ("noise","Noise Constraints","Noise constraints"),
                ],
         update = update_edit_form

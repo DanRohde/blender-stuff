@@ -41,7 +41,7 @@ def get_constraints(props):
         constraints = SYMMETRY_CONSTRAINTS
     elif props.edit_constraints == 'frequency':
         constraints = FREQUENCY_CONSTRAINTS
-    elif props.edit_constraints == 'transformation':
+    elif props.edit_constraints == 'transformations':
         constraints = TRANSFORMATION_CONSTRAINTS
     elif props.edit_constraints == 'probability':
         constraints = PROBABILITY_CONSTRAINTS

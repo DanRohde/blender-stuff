@@ -281,7 +281,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.prop(props, "auto_weight", icon="MOD_VERTEX_WEIGHT")
             
             if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "transformation":
+        if props.edit_constraints == "transformations":
             box = box.box()
             row = box.row()
             row.label(text=obj_name)
@@ -527,7 +527,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
 
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         row = layout.row()
-        row.operator("object.wfc_open_web_link", text="Visit GitHub to get help").url = "https://github.com/DanRohde/blender-stuff/blob/main/WFC%203D%20Generator/constraints.md"
+        row.operator("object.wfc_open_web_link", text="Visit GitHub to get help").url = "https://github.com/DanRohde/blender-stuff/blob/main/WFC%203D%20Generator/constraints.md#"+props.edit_constraints
 
     def _draw_labels(self, layout, labels):
         for label in labels:

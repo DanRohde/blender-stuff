@@ -1,6 +1,6 @@
 # Constraints
 
-## Neighbor Constraints
+## Neighbor Constraints <a id="neighbor"></a>
 Allows you to define a list of allowed neighbors for all possible directions (at once).
 
 | **Parameter**                        | **Description**                                                                                                                 |
@@ -10,7 +10,7 @@ Allows you to define a list of allowed neighbors for all possible directions (at
 | No Neighbor allowed                  | prohibits all neighbors                                                                                                         |
 | Allow neighbor constraint violations | If no suitable neighbors can be found, all building blocks that also have this paremeter set can be used as possible neighbors. |
 
-## Connector Constraints
+## Connector Constraints <a id="connector"></a>
 You can define a connector name for any direction that match with the connector name of possible neighbors with the same connector name in the opposite direction.
 
 | **Parameter**                  | **Description**                                                                                                                  |
@@ -18,7 +18,7 @@ You can define a connector name for any direction that match with the connector 
 | Direction | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected                                       |
 | Name | The connector name to restrict the possible neighbors. Only neighbors with the same name in the opposite direction can be used. Empty names or unspecified directions allow any neighbor. |
 
-## Geometry Constraints
+## Geometry Constraints <a id="geometry"></a>
 Edges or faces are used to determine whether two objects can be placed next to each other.
 
 | **Parameter** | **Description**                                                            |
@@ -30,21 +30,21 @@ Edges or faces are used to determine whether two objects can be placed next to e
 | Threshold     | Maximum distance between grid cell face and building block faces or edges. |
 
 
-## Dimensions Constraints
+## Dimensions Constraints <a id="dimensions"></a>
 This enables building blocks that are larger than a cell.
 
 | **Parameter** | **Description**                                                            |
 |---------------|----------------------------------------------------------------------------|
 | Dimensions | Extension of the building block across multiple cells. |
 
-## Fixed Position Constraints
+## Fixed Position Constraints <a id="fixed_position">
 This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
 
 | **Parameter** | **Description**                                                            |
 |---------------|----------------------------------------------------------------------------|
 | Fixed Position | A fixed position within the grid allows for more predictable results.  |
 
-## Grid Constraints
+## Grid Constraints <a id="grid"></a>
 Allows you to specify where an object may be located within the grid.
 
 | **Parameter** | **Description**                                                                                                           |
@@ -54,7 +54,7 @@ Allows you to specify where an object may be located within the grid.
 | Faces         | Only selected grid faces may be occupied by the building block. If nothing is selected, all grid faces are permitted.     |
 | Inside | The inner area of the grid can be prohibited for the building block.                                                      |
 
-## Region Constraints
+## Region Constraints <a id="region"></a>
 Allows you to specify where an object may be located within the grid.
 
 | **Parameter** | **Description**                                                                                                                                   |
@@ -65,7 +65,7 @@ Allows you to specify where an object may be located within the grid.
 | Level | Only selected levels (floors) can be occupied by the building block.                                                                              |
 
 
-## Distance Constraints
+## Distance Constraints <a id="distance"></a>
 Rules that restrict the placement of building blocks based on their distance from a specific point or another building block.
 
 | **Parameter** | **Description**                                                                                                                                                                                       |
@@ -76,7 +76,7 @@ Rules that restrict the placement of building blocks based on their distance fro
 | Position | This defines the position within the grid. Negative values are added to the maximum grid size values. Values greater than the corresponding grid size values are set to the maximum permitted values. |
 | Type | This sets the distance type. |                                                                                                                                                                         |
 
-## Frequency Constraints
+## Frequency Constraints <a id="frequency"></a>
 Define how often the same object or any other object may occur in the immediate vicinity or on one of the 3 axes XYZ.
 
 | **Parameter** | **Description**                                                                                                                                    |
@@ -98,7 +98,7 @@ Define how often the same object or any other object may occur in the immediate 
 
 
 
-## Region Frequency Constraints
+## Region Frequency Constraints <a id="regfreq"></a>
 Define how often the same object may occur in a specific region.
 
 | **Parameter** | **Description**                                                                                                                                    |
@@ -111,7 +111,7 @@ Define how often the same object may occur in a specific region.
 
 
 
-## Symmetry Constraints
+## Symmetry Constraints <a id="symmetry"></a>
 These constraints allow mirror-symmetric and/or rotation-symmetric objects to be generated.
 
 | **Parameter**                  | **Description**                                                                                                                                    |
@@ -125,7 +125,7 @@ These constraints allow mirror-symmetric and/or rotation-symmetric objects to be
 | Axis                           ||
 | Number                         ||
 
-## Probability Constraints
+## Probability Constraints <a id="probability"></a>
 These constraints increase or decrease the probability of an object being selected at random.
 
 | **Parameter**                  | **Description**                                                                                                                                    |
@@ -134,7 +134,7 @@ These constraints increase or decrease the probability of an object being select
 | Weight                         ||
 | Automatic weight determination ||
 
-## Region Probability Constraints
+## Region Probability Constraints <a id="regprob"></a>
 These constraints increase or decrease the probability of an object being selected at random in a specific region.
 
 | **Parameter** | **Description**                                                                                                                                    |
@@ -146,7 +146,7 @@ These constraints increase or decrease the probability of an object being select
 | Weight ||
 
 
-## Transformations
+## Transformations <a id="transformation"></a>
 These are not really restrictions. This allows you to randomize the position, size, rotation, and flipping of building blocks.
 
 | **Parameter**      | **Description**                                                                                                                                    |
@@ -157,7 +157,7 @@ These are not really restrictions. This allows you to randomize the position, si
 | *Flipping*         ||
 
 
-## Noise Constraints
+## Noise Constraints <a id="noise"></a>
 Noise constraints either influence the probability of an object occurring or replace random values in transformations with noise values.
 
 | **Parameter**                       | **Description**                                                                                                                                    |
