@@ -368,8 +368,20 @@ class WFC3D_OT_GenericDuplicateListItems(bpy.types.Operator):
             for c in constraints:
                 setattr(item, c, getattr(si,c))
         return {'FINISHED'}
+class WFC3D_OT_OpenWebLink(bpy.types.Operator):
+    """Open Web Link"""
+    bl_idname = "object.wfc_open_web_link"
+    bl_label = "Open Web Link"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    url : bpy.props.StringProperty()
+    def execute(self, context):
+        import webbrowser
+        webbrowser.open(self.url)
+        return {'FINISHED'}
 
 operators = [
+    WFC3D_OT_OpenWebLink,
     WFC3D_OT_GenericDuplicateListItems,
     WFC3D_OT_GenericAddListItem,
     WFC3D_OT_GenericRemoveListItems,

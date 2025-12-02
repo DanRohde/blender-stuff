@@ -526,6 +526,8 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             c.enabled = count_selected_items(props.distance_input_list) > 0
 
             if not props.auto_save: box.operator("object.wfc_update_constraints")
+        row = layout.row()
+        row.operator("object.wfc_open_web_link", text="Visit GitHub to get help").url = "https://github.com/DanRohde/blender-stuff/blob/main/WFC%203D%20Generator/constraints.md"
 
     def _draw_labels(self, layout, labels):
         for label in labels:
