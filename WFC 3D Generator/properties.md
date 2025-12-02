@@ -12,11 +12,11 @@
 * Connector constraints: 30
 * Fixed position constraints: 1
 * Dimensions constraints: 1
-* Geometry constraints: 9
+* Geometry constraints: 10
 * Noise constraints: 5
 * Distance constraints: 6
 
-* **Sum: 155**
+* **Sum: 156**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -143,11 +143,11 @@
 * Allowed property value: string with a connector name
 
 ## Geometry Constraints
-* Used custom properties: `wfc_geo_[top|bottom|left|right|front|back],wfc_geo_match_[edges|faces], wfc_geo_tolerance`
+* Used custom properties: `wfc_geo_[top|bottom|left|right|front|back],wfc_geo_match_[edges|faces], wfc_geo_[tolerance|threshold]`
 * Allowed property values:
 * wfc_geo_[top|bottom|left|right|front|back]: a boolean
 * wfc_geo_match_[edges|faces]: a boolean
-* wfc_geo_tolerance: a float value
+* wfc_geo_[tolerance|threshold]: a float value
 
 ## Noise Constraints
 * Used custom properties: `wfc_noise_[prob|transf]_basis, wfc_noise_prob_threshold, wfc_noise_transf_scale, wfc_noise_randomize_position`

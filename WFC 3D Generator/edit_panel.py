@@ -486,9 +486,12 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             for i,d in enumerate(FACE_DIRECTIONS):
                 if i % 2 == 0: col = row.column()
                 col.prop(props, f"geo_{d.lower()}")
-            box.row().prop(props, "geo_match_edges")
-            box.row().prop(props, "geo_match_faces")
-            box.row().prop(props, "geo_tolerance")
+            row = box.row()
+            row.prop(props, "geo_match_edges")
+            row.prop(props, "geo_match_faces")
+            row = box.row()
+            row.prop(props, "geo_tolerance")
+            row.prop(props, "geo_threshold")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "regprob":
             box = box.box()

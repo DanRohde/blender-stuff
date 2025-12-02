@@ -92,7 +92,7 @@ PROP_DEFAULTS = {
     # geo constraints:
     'geo_left': False, 'geo_right': False, 'geo_bottom': False, 'geo_top': False, 'geo_front': False, 'geo_back': False,
     'geo_match_edges': False, 'geo_match_faces': False,
-    'geo_tolerance' : 0.001,
+    'geo_tolerance' : 0.001, 'geo_threshold' : 0.001,
     # region probability constraints:
     'regprob_name' : '', 'regprob_min' : (-1,-1,-1), 'regprob_max' : (-1,-1,-1), 'regprob_weight' : 1, 'regprob_probability' : 1,
     # distance constraints:
@@ -168,7 +168,7 @@ NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_s
                       'noise_transf_basis', 'noise_transf_scale', 'noise_randomize_position',
                     ]
 
-GEOMETRY_CONSTRAINTS = [ 'geo_top', 'geo_bottom', 'geo_left', 'geo_right', 'geo_front', 'geo_back', 'geo_match_edges', 'geo_match_faces', 'geo_tolerance',]
+GEOMETRY_CONSTRAINTS = [ 'geo_top', 'geo_bottom', 'geo_left', 'geo_right', 'geo_front', 'geo_back', 'geo_match_edges', 'geo_match_faces', 'geo_tolerance', 'geo_threshold']
 
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS
                    + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS

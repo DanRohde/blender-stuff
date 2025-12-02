@@ -301,9 +301,10 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     geo_right: bpy.props.BoolProperty(name="right", description="Right face", default=PROP_DEFAULTS["geo_right"], update=auto_save)
     geo_top: bpy.props.BoolProperty(name="top", description="Top face", default=PROP_DEFAULTS["geo_top"], update=auto_save)
     geo_bottom: bpy.props.BoolProperty(name="bottom", description="Bottom face", default=PROP_DEFAULTS["geo_bottom"], update=auto_save)
-    geo_match_edges: bpy.props.BoolProperty(name="Match Edges", description="Match edges", default=PROP_DEFAULTS["geo_match_edges"], update=auto_save)
-    geo_match_faces: bpy.props.BoolProperty(name="Match Faces", description="Match faces", default=PROP_DEFAULTS["geo_match_faces"], update=auto_save)
-    geo_tolerance: bpy.props.FloatProperty(name="Tolerance", description="Tolerance", precision=4, default=PROP_DEFAULTS["geo_tolerance"], update=auto_save)
+    geo_match_edges: bpy.props.BoolProperty(name="Match Edges", description="Match edges (fast)", default=PROP_DEFAULTS["geo_match_edges"], update=auto_save)
+    geo_match_faces: bpy.props.BoolProperty(name="Match Faces", description="Match faces (slow)", default=PROP_DEFAULTS["geo_match_faces"], update=auto_save)
+    geo_tolerance: bpy.props.FloatProperty(name="Tolerance", description="Tolerance", precision=4, default=PROP_DEFAULTS["geo_tolerance"], update=auto_save, subtype="DISTANCE")
+    geo_threshold: bpy.props.FloatProperty(name="Threshold", description="Threshold", precision=4, default=PROP_DEFAULTS["geo_tolerance"], update=auto_save, subtype="DISTANCE")
 
     regprob_input_list: bpy.props.CollectionProperty(type=WFC3DRegionProbabilityListItem)
     regprob_input_list_idx: bpy.props.IntProperty()

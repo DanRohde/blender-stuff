@@ -639,12 +639,12 @@ class WFC3DConstraints:
         if self.constraints[current_obj]["geo_match_edges"]:
             cmpresult = compare_edges(self.collection.objects[current_obj], direction, self.collection.objects[obj],
                                       OPPOSITE_DIRECTIONS[direction],
-                                      self.constraints[current_obj]["geo_tolerance"], self.spacing)
+                                      self.constraints[current_obj]["geo_tolerance"], self.constraints[current_obj]["geo_threshold"], self.spacing)
             result = result and cmpresult["obj_a_edges_count"] == cmpresult["obj_b_edges_count"] and cmpresult["matching_edges_count"] == cmpresult["obj_a_edges_count"]
         if self.constraints[current_obj]["geo_match_faces"]:
             cmpresult = compare_faces(self.collection.objects[current_obj], direction, self.collection.objects[obj],
                                       OPPOSITE_DIRECTIONS[direction],
-                                      self.constraints[current_obj]["geo_tolerance"], self.spacing)
+                                      self.constraints[current_obj]["geo_tolerance"], self.constraints[current_obj]["geo_threshold"], self.spacing)
 
             result = result and cmpresult["obj_a_faces_count"] == cmpresult["obj_b_faces_count"] and cmpresult["matching_faces_count"] == cmpresult["obj_a_faces_count"]
 

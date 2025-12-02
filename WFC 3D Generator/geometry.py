@@ -14,9 +14,8 @@ def get_bounding_box(obj, spacing):
 
     return min_x, max_x, min_y, max_y, min_z, max_z
 
-def get_axis_direction(bbox, face):
+def get_axis_direction(bbox, face, threshold):
     min_x, max_x, min_y, max_y, min_z, max_z = bbox
-    threshold = 0.001
     if face == 'FRONT':
         threshold_value = min_y + threshold
         axis = 'y'
@@ -45,8 +44,8 @@ def get_axis_direction(bbox, face):
         return None
     return threshold_value, axis, direction
 
-def get_elements_on_side(obj, data, face, spacing):
-    threshold_value, axis, direction = get_axis_direction(get_bounding_box(obj, spacing), face)
+def get_elements_on_side(obj, data, face, spacing, threshold):
+    threshold_value, axis, direction = get_axis_direction(get_bounding_box(obj, spacing), face, threshold)
 
     relevant_elements = []
     for element in data:
@@ -61,11 +60,11 @@ def get_elements_on_side(obj, data, face, spacing):
     return relevant_elements
 
 
-def get_edges_on_side(obj, face, spacing):
-    return get_elements_on_side(obj, obj.data.edges, face, spacing)
+def get_edges_on_side(obj, face, spacing, threshold):
+    return get_elements_on_side(obj, obj.data.edges, face, spacing, threshold)
 
-def get_faces_on_side(obj, face, spacing):
-    return get_elements_on_side(obj, obj.data.polygons, face, spacing)
+def get_faces_on_side(obj, face, spacing, threshold):
+    return get_elements_on_side(obj, obj.data.polygons, face, spacing, threshold)
 
 def get_rotation_matrix(face):
     nd = math.pi / 2
@@ -123,15 +122,15 @@ def remove_duplicate_edges(edges):
             unique_edges.append(sorted_edge)
     return unique_edges
 
-def get_normalized_edges(obj, face, spacing):
-    return normalize_edge_geometry(obj, face, get_edges_on_side(obj, face, spacing))
+def get_normalized_edges(obj, face, spacing, threshold):
+    return normalize_edge_geometry(obj, face, get_edges_on_side(obj, face, spacing, threshold))
 
-def get_normalized_faces(obj, face, spacing):
-    return normalize_face_geometry(obj, face, get_faces_on_side(obj, face, spacing))
+def get_normalized_faces(obj, face, spacing, threshold):
+    return normalize_face_geometry(obj, face, get_faces_on_side(obj, face, spacing, threshold))
 
-def compare_edges(obj_a, face_a, obj_b, face_b, tolerance, spacing):
-    unique_edges_a = remove_duplicate_edges(get_normalized_edges(obj_a, face_a, spacing))
-    unique_edges_b = remove_duplicate_edges(get_normalized_edges(obj_b, face_b, spacing))
+def compare_edges(obj_a, face_a, obj_b, face_b, tolerance, threshold, spacing):
+    unique_edges_a = remove_duplicate_edges(get_normalized_edges(obj_a, face_a, spacing, threshold))
+    unique_edges_b = remove_duplicate_edges(get_normalized_edges(obj_b, face_b, spacing, threshold))
     matching_edge_count = 0
     for edge_a in unique_edges_a:
         for edge_b in unique_edges_b:
@@ -148,9 +147,9 @@ def compare_edges(obj_a, face_a, obj_b, face_b, tolerance, spacing):
     }
 
 
-def compare_faces(obj_a, face_a, obj_b, face_b, tolerance, spacing):
-    norm_faces_a = get_normalized_faces(obj_a, face_a, spacing)
-    norm_faces_b = get_normalized_faces(obj_b, face_b, spacing)
+def compare_faces(obj_a, face_a, obj_b, face_b, tolerance, threshold, spacing):
+    norm_faces_a = get_normalized_faces(obj_a, face_a, spacing, threshold)
+    norm_faces_b = get_normalized_faces(obj_b, face_b, spacing, threshold)
 
     matching_face_count = 0
     for face_a in norm_faces_a:
