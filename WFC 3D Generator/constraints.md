@@ -1,6 +1,4 @@
 # Constraints
-[[_TOC_]]
-
 ## Description
 
 ### Neighbor Constraints
@@ -29,11 +27,23 @@ Edges or faces are used to determine whether two objects can be placed next to e
 | Faces         | Only edges or faces of selected faces will be compared.                    |
 | Match Edges   | Use edges for comparison.                                                  |
 | Match Faces   | Use faces for comparison.                                                  |
-| Tolerance     | Maximum distance between vertices during vector comparison.                |
+| Tolerance     | Maximum distance between vertices during edge/face vector comparison.      |
 | Threshold     | Maximum distance between grid cell face and building block faces or edges. |
 
 
+### Dimensions Constraints
+This enables building blocks that are larger than a cell.
 
+| **Parameter** | **Description**                                                            |
+|---------------|----------------------------------------------------------------------------|
+| Dimensions | Extension of the building block across multiple cells. |
+
+## Fixed Position Constraints
+This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
+
+| **Parameter** | **Description**                                                            |
+|---------------|----------------------------------------------------------------------------|
+| Fixed Position | A fixed position within the grid allows for more predictable results.  |
 
 ## Algorithm Phases
 ### Grid Initialization Phase

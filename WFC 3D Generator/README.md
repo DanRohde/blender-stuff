@@ -44,11 +44,10 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * Connector Constraints: define a connector name for any direction that match with the connector name of possible neighbors with the same connector name in the opposite direction;
     Advantage: building blocks are easily expandable, Disadvantage: not always easy to define
   * Geometry Constraints: Edges or faces are used to determine whether two objects can be placed next to each other.
-
-* Fixed Position Constraints:
-  * This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
 * Dimensions Constraints:
   * This enables building blocks that are larger than a cell.
+* Fixed Position Constraints:
+  * This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
 * Grid and Region Constraints:
   * Allows you to specify where an object may be located within the grid.
 * Distance Constraints:
