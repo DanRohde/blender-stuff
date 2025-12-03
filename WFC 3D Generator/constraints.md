@@ -78,20 +78,20 @@ Define how often the same object or any other object may occur in the immediate 
 
 | **Parameter** | **Description**                                                                                                     |
 |---------------|---------------------------------------------------------------------------------------------------------------------|
-| *Same Object* | In these constraints, settings for the frequency of a Building Block itself can be configured.                      |
-| Grid          | Frequency of the Building Block itself within the Grid.                                                             |
-| Grid %        | Frequency as a percentage of the Building Block itself within the Grid.                                            |
-| Neighbor      | Frequency in the direct neighborhood (26 directions) of the Building Block itself.                                 |
-| Face          | Frequency in all six face directions of the Building Block itself.                                                 |
-| Corner        | Frequency at all eight corners of the Building Block itself.                                                       |
-| Edge          | Frequency at all twelve edges of the Building Block itself.                                                         |
-| Axes          | Frequency along the three axes (XYZ) of the Building Block itself.                                                 |
-| *Any Object*  | In these constraints, the frequency of all Building Blocks from the Source Collection can be set.                   |
-| Any Neighbor  | Frequency of Building Blocks in the direct neighborhood (26 directions).                                           |
-| Any Face      | Frequency of Building Blocks in the six face directions.                                                           |
-| Any Corner    | Frequency of Building Blocks at the eight corners.                                                                |
-| Any Edge      | Frequency of Building Blocks at the twelve edges.                                                                  |
-| Any Axes      | Frequency of Building Blocks along the three axes (XYZ).                                                           |
+| *Same Object* | In these constraints, settings for the frequency of a building block itself can be configured.                      |
+| Grid          | Frequency of the building block itself within the Grid.                                                             |
+| Grid %        | Frequency as a percentage of the building block itself within the Grid.                                            |
+| Neighbor      | Frequency in the direct neighborhood (26 directions) of the building block itself.                                 |
+| Face          | Frequency in all six face directions of the building block itself.                                                 |
+| Corner        | Frequency at all eight corners of the building block itself.                                                       |
+| Edge          | Frequency at all twelve edges of the building block itself.                                                         |
+| Axes          | Frequency along the three axes (XYZ) of the building block itself.                                                 |
+| *Any Object*  | In these constraints, the frequency of all building blocks from the Source Collection can be set.                   |
+| Any Neighbor  | Frequency of building blocks in the direct neighborhood (26 directions).                                           |
+| Any Face      | Frequency of building blocks in the six face directions.                                                           |
+| Any Corner    | Frequency of building blocks at the eight corners.                                                                |
+| Any Edge      | Frequency of building blocks at the twelve edges.                                                                  |
+| Any Axes      | Frequency of building blocks along the three axes (XYZ).                                                           |
 
 ## Region Frequency Constraints
 Define how often the same object may occur in a specific region.
@@ -101,23 +101,23 @@ Define how often the same object may occur in a specific region.
 | Name          | Optional name of the region for easier identification of the region.           |
 | min           | Lower point of the region as a vector.                                         |
 | max           | Upper point of the region as a vector.                                         |
-| Frequency     | Frequency of the Building Block itself within the region (min-max).             |
-| Frequency %   | Frequency as a percentage of the Building Block itself within the region (min-max). |
+| Frequency     | Frequency of the building block itself within the region (min-max).             |
+| Frequency %   | Frequency as a percentage of the building block itself within the region (min-max). |
 
 
 ## Symmetry Constraints
 These constraints allow mirror-symmetric and/or rotation-symmetric objects to be generated.
 
-| **Parameter**                  | **Description**                                                                                                                                    |
-|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| *Mirror Symmetry*              |
-| Axes                           ||
-| Partner                        ||
-| Flip Mirror Partner            ||
-| Transfer Random Transformation ||
-| *Rotational Symmetry*          ||
-| Axis                           ||
-| Number                         ||
+| **Parameter**                  | **Description**                                                                                                                                                                                                 |
+|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| *Mirror Symmetry*              | Settings for mirror symmetry can be configured here.                                                                                                                                                           |
+| Axes                           | The selected axes determine the mirroring behavior. If multiple axes are selected, all possible mirror combinations (up to 8) are automatically generated.                                                              |
+| Partner                        | Depending on the selected axis, optional building blocks can be specified to serve as mirror-symmetric counterparts instead of the building block itself.                                                               |
+| Flip Mirror Partner            | Instead of a mirror partner, the object itself can be mirrored (flipped).                                                                                                                                      |
+| Transfer Random Transformation | If random transformations are defined, the same transformations can be transferred to the mirror partners.                                                                                                      |
+| *Rotational Symmetry*          | Settings for rotational symmetry can be configured here.                                                                                                                                                       |
+| Axis                           | A vector is defined here to specify the rotation point.                                                                                                                                                         |
+| Number                         | This number serves as a divisor for the 360° rotation. For example, a value of 4 generates 4 rotations of 90 degrees each.                                                                                     |
 
 ## Probability Constraints
 These constraints increase or decrease the probability of an object being selected at random.
