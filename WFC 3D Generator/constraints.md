@@ -5,7 +5,7 @@ Allows you to define a list of allowed neighbors for all possible directions (at
 | **Parameter**                        | **Description**                                                                                                                 |
 |--------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
 | Direction                            | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected                                      |
-| Neighbor | Neigbors restrict neighbors to a given list of building blocks. If no neighbor is selected, all are permitted.                  |
+| Neighbors | Neighbors restrict neighbors to a given list of building blocks. If no neighbor is selected, all are permitted.                  |
 | No Neighbor allowed                  | prohibits all neighbors                                                                                                         |
 | Allow neighbor constraint violations | If no suitable neighbors can be found, all building blocks that also have this paremeter set can be used as possible neighbors. |
 
@@ -76,34 +76,33 @@ Rules that restrict the placement of building blocks based on their distance fro
 ## Frequency Constraints
 Define how often the same object or any other object may occur in the immediate vicinity or on one of the 3 axes XYZ.
 
-| **Parameter** | **Description**                                                                                                                                    |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| *Same Object* ||
-| Grid          || 
-| Grid %        ||
-| Neighbor      ||
-| Face          ||          
-| Grid          ||          
-| Edge          ||
-| Axes          ||
-| *Any Object*  ||
-| Any Neighbor  ||
-| Any Face      ||
-| Any Corner    ||
-| Any Edge      ||
-| Any Axes      ||
-
+| **Parameter** | **Description**                                                                                                     |
+|---------------|---------------------------------------------------------------------------------------------------------------------|
+| *Same Object* | In these constraints, settings for the frequency of a Building Block itself can be configured.                      |
+| Grid          | Frequency of the Building Block itself within the Grid.                                                             |
+| Grid %        | Frequency as a percentage of the Building Block itself within the Grid.                                            |
+| Neighbor      | Frequency in the direct neighborhood (26 directions) of the Building Block itself.                                 |
+| Face          | Frequency in all six face directions of the Building Block itself.                                                 |
+| Corner        | Frequency at all eight corners of the Building Block itself.                                                       |
+| Edge          | Frequency at all twelve edges of the Building Block itself.                                                         |
+| Axes          | Frequency along the three axes (XYZ) of the Building Block itself.                                                 |
+| *Any Object*  | In these constraints, the frequency of all Building Blocks from the Source Collection can be set.                   |
+| Any Neighbor  | Frequency of Building Blocks in the direct neighborhood (26 directions).                                           |
+| Any Face      | Frequency of Building Blocks in the six face directions.                                                           |
+| Any Corner    | Frequency of Building Blocks at the eight corners.                                                                |
+| Any Edge      | Frequency of Building Blocks at the twelve edges.                                                                  |
+| Any Axes      | Frequency of Building Blocks along the three axes (XYZ).                                                           |
 
 ## Region Frequency Constraints
 Define how often the same object may occur in a specific region.
 
-| **Parameter** | **Description**                                                                                                                                    |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| Name          ||
-| min           ||
-| max           ||
-| Frequency     ||
-| Frequency %   ||
+| **Parameter** | **Description**                                                                |
+|---------------|--------------------------------------------------------------------------------|
+| Name          | Optional name of the region for easier identification of the region.           |
+| min           | Lower point of the region as a vector.                                         |
+| max           | Upper point of the region as a vector.                                         |
+| Frequency     | Frequency of the Building Block itself within the region (min-max).             |
+| Frequency %   | Frequency as a percentage of the Building Block itself within the region (min-max). |
 
 
 ## Symmetry Constraints
