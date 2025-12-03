@@ -122,33 +122,32 @@ These constraints allow mirror-symmetric and/or rotation-symmetric objects to be
 ## Probability Constraints
 These constraints increase or decrease the probability of an object being selected at random.
 
-| **Parameter**                  | **Description**                                                                                                                                    |
-|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| Probability                    ||
-| Weight                         ||
-| Automatic weight determination ||
+| **Parameter**                  | **Description**                                                                                                                                                                                                 |
+|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Probability                    | The probability with which a building block should be selected from all possible building block options.                                                                                                       |
+| Weight                         | A weight greater than 1 increases the probability of being selected for a cell, depending on the available options.                                                                                           |
+| Automatic weight determination | The weight is automatically determined based on the number of constraints: The more constraints a building block has, the lower its weight.                                                                    |
 
 ## Region Probability Constraints 
 These constraints increase or decrease the probability of an object being selected at random in a specific region.
 
-| **Parameter** | **Description**                                                                                                                                    |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| Name ||
-| min ||
-| max ||
-| Probability ||
-| Weight ||
-
+| **Parameter** | **Description**                                                                                                                                                 |
+|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name | Optional name for easier identification of the region.                                                                                                  |
+| min | Lowest point of the region as a vector.                                                                                                                        |
+| max | Highest point of the region as a vector.                                                                                                                           |
+| Probability | Probability with which a building block is chosen from the possible options in this region.                                                        |
+| Weight | A weight greater than 1 increases the probability of a building block being chosen for a cell in the region depending on possible options. |
 
 ## Transformations
 These are not really restrictions. This allows you to randomize the position, size, rotation, and flipping of building blocks.
 
-| **Parameter**      | **Description**                                                                                                                                    |
-|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| Translation Offset ||
-| *Rotation*         ||
-| *Scale*            ||
-| *Flipping*         ||
+| **Parameter**      | **Description**                                                                                                                      |
+|--------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| Translation Offset | This allows a building block to be randomly shifted in its position depending on its position in the grid.                           |
+| *Rotation*         | With these parameters, a building block can be randomly rotated as desired.                                                          |
+| *Scale*            | TThese parameters allow random scaling of building blocks.                                                                       |
+| *Flipping*         | Here, for each axis, the probability can be set with which a building block is randomly mirrored (flipped).                          |
 
 
 ## Noise Constraints 
