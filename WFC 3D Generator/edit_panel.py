@@ -527,12 +527,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
 
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         row = layout.row()
-        anchormap = { '_none_': 'constraints', 'transformations' : 'transformations', 'neighbor' : 'neighbor-constraints', 'connector' : 'connector-constraints', 'geometry': 'geometry-constraints',
-                      'regfreq' : 'region-frequency-constraints', 'noise' : 'noise-constraints', 'regprob' : 'region-probability-constraints', 'grid': 'grid-constraints',
-                      'dimensions' : 'dimensions-constraints', 'fixed_position' : 'fixed-position-constraints', 'region' : 'region-constraints', 'distance' : 'distance-constraints',
-                      'frequency' : 'frequency-constraints', 'symmetry' : 'symmetry-constraints', 'probability' : 'probability-constraints',
-                      }
-        row.operator("object.wfc_open_web_link", text="Visit GitHub to get help").url = "https://github.com/DanRohde/blender-stuff/blob/main/WFC%203D%20Generator/constraints.md#"+anchormap[props.edit_constraints]
+        row.operator("object.wfc_open_web_link", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
 
     def _draw_labels(self, layout, labels):
         for label in labels:

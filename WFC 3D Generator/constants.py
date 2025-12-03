@@ -211,3 +211,14 @@ NODEGROUP_NAMES = {
     'directions' : 'WFC 3D Directions',
 }
 CHERRY_PICKING_DELAY = 3
+
+HELP = {
+    'constraints' : {
+        'url' : 'https://github.com/DanRohde/blender-stuff/blob/main/WFC%203D%20Generator/constraints.md',
+        'anchormap' : { '_none_': 'constraints', 'transformations' : 'transformations', 'neighbor' : 'neighbor-constraints', 'connector' : 'connector-constraints', 'geometry': 'geometry-constraints',
+                      'regfreq' : 'region-frequency-constraints', 'noise' : 'noise-constraints', 'regprob' : 'region-probability-constraints', 'grid': 'grid-constraints',
+                      'dimensions' : 'dimensions-constraints', 'fixed_position' : 'fixed-position-constraints', 'region' : 'region-constraints', 'distance' : 'distance-constraints',
+                      'frequency' : 'frequency-constraints', 'symmetry' : 'symmetry-constraints', 'probability' : 'probability-constraints',
+                      }
+    }
+}
