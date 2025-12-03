@@ -153,18 +153,16 @@ These are not really restrictions. This allows you to randomize the position, si
 ## Noise Constraints 
 Noise constraints either influence the probability of an object occurring or replace random values in transformations with noise values.
 
-| **Parameter**                       | **Description**                                                                                                                                    |
-|-------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| *Noise on probability of occurance* ||
-| Noise Basis                         ||
-| Threshold                           ||
-| Scale                               ||
-| Noise on transformations            ||
-| Noise Basis                         ||
-| Scale                               ||
-| Randomize the starting position     ||
-
-
+| **Parameter**                       | **Description**                                                                                                                                                                          |
+|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| *Noise on probability of occurance* | Instead of randomly selecting an object, the selection of objects can be influenced by a selectable noise function.                                                                       |
+| Noise Basis                         | Noise function to influence the appearance of a building block.                                                                                                                         |
+| Threshold                           | Threshold that must be exceeded by the noise function for an object to be allowed to appear in a specific cell of the grid.                                                               |
+| Scale                               | Scaling factor for the position to calculate the noise function value.                                                                                                                  |
+| Noise on transformations            | This allows replacing the random value function for a transformation with a noise function.                                                                                              |
+| Noise Basis                         | Noise function to influence transformations of a building block.                                                                                                                        |
+| Scale                               | Scaling factor for the position to calculate the noise function value.                                                                                                                  |
+| Randomize the starting position     | When enabled, a random value is multiplied with the position of the building block in the grid. This allows generating different results when changing the random seed.               |
 
 ## Algorithm Phases
 ### Grid Initialization Phase
