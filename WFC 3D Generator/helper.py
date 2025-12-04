@@ -99,9 +99,9 @@ def update_constraints(props, constraints):
                 for idx, li in enumerate(props.get(lc, [])):
                     obj[f"{prop_name}_{idx}"] = li.get(c, PROP_DEFAULTS[c])
             elif c in SELECTION_CONSTRAINTS:
-                item_list = ",".join([ item.direction for item in getattr(props, SELECTION_CONSTRAINTS[c]) if item.selected ])
+                item_list = [ item.direction for item in getattr(props, SELECTION_CONSTRAINTS[c]) if item.selected ]
                 if item_list != PROP_DEFAULTS[c]:
-                    obj[prop_name] = item_list
+                    obj[prop_name] = ",".join(item_list)
                 elif prop_name in obj:
                     del obj[prop_name]
             elif c in props:
@@ -237,7 +237,7 @@ def update_edit_form(_self, _context):
                 else:
                     lc[LIST_CONSTRAINTS[c]] = [ c ]
             elif c in SELECTION_CONSTRAINTS:
-                items = obj[cp].split(",") if cp in obj else PROP_DEFAULTS[c].split(",")
+                items = obj[cp].split(",") if cp in obj else PROP_DEFAULTS[c]
                 for i in getattr(props, SELECTION_CONSTRAINTS[c]):
                     i.selected = i.direction in items
 
