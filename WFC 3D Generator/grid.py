@@ -169,6 +169,13 @@ class WFC3DGrid:
                 for z in range(self.grid_size[2]):
                     if len(self.grid[x,y,z]) == 0: count+=1
         return count
+    def count_empty_cells_in_direction(self, x, y, z, direction):
+        count = 0
+        xa, ya, za = x + direction[0], y + direction[1], z + direction[2]
+        while self.within_boundaries(xa, ya, za):
+            if len(self.grid[xa, ya, za]) == 0: count+=1
+            xa, ya, za = xa + direction[0], ya + direction[1], za + direction[2]
+        return count
 
     def remove_neighbors(self, x, y, z, neighbor, d):
         """Remove neighbors"""

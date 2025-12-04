@@ -99,7 +99,7 @@ PROP_DEFAULTS = {
     'distance': (1,1,1), 'distance_from': 'object', 'distance_object': None, 'distance_position': (0,0,0),
     'distance_subcollection': None, 'distance_type' : 'minimum',
     # empty neighbor constraints:
-    'empty_neighbor':'', 'empty_any_neighbor':'',
+    'empty_neighbor':   [], 'empty_any_neighbor': [],
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]

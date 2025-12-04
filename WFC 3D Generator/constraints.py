@@ -61,11 +61,11 @@ class WFC3DConstraints:
                     if cp in obj and len(self.constraints[obj_name][p])==0: self.constraints[obj_name][p].append(obj[cp]) # backward compatibility
                 elif p in SELECTION_CONSTRAINTS:
                     if cp in obj:
-                        self.constraints[obj_name][p] = obj.split(",")
+                        self.constraints[obj_name][p] = obj[cp].split(",")
                     elif default_obj is not None and cp in default_obj:
-                        self.constraints[obj_name][p] = default_obj.split(",")
+                        self.constraints[obj_name][p] = default_obj[cp].split(",")
                     else:
-                        self.constraints[obj_name][p] = PROP_DEFAULTS[p].split(",")
+                        self.constraints[obj_name][p] = PROP_DEFAULTS[p]
                 elif cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
                 elif default_obj and cp in default_obj and default_obj[cp] != "":
@@ -381,8 +381,24 @@ class WFC3DConstraints:
 
     def check_empty_neighbors(self, cell, options):
         x, y, z = cell
+        new_options = []
+        for option in options:
+            check_directions = True
+            for direction in self.constraints[option]["empty_neighbor"]:
+                if direction not in DIRECTIONS: continue
+                d = DIRECTIONS[direction]
+                if len(self.grid.grid[x+d[0],y+d[1],z+d[2]]) == 0:
+                    check_directions = False
+                    break
+            if not check_directions: continue
+            for direction in self.constraints[option]["empty_any_neighbor"]:
+                if direction not in DIRECTIONS: continue
+                if self.grid.count_empty_cells_in_direction(x, y, z, DIRECTIONS[direction]) > 0:
+                    check_directions = False
+                    break
+            if check_directions: new_options.append(option)
+        return new_options
 
-        return options
     def apply_dimensions_constraints(self, cell):
         collapsed = []
         x, y, z = cell
