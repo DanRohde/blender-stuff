@@ -174,7 +174,7 @@ class WFC3D_OT_UpdateCollectionList(bpy.types.Operator):
 
 
 class WFC3D_OT_GenericListSelectAll(bpy.types.Operator):
-    """Select all in the list"""
+    """Select all entries in the list"""
     bl_idname = "object.wfc_list_select_all"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
@@ -184,7 +184,7 @@ class WFC3D_OT_GenericListSelectAll(bpy.types.Operator):
         return {'FINISHED'}
 
 class WFC3D_OT_GenericListSelectNone(bpy.types.Operator):
-    """Deselect all in the list"""
+    """Deselect all entries in the list"""
     bl_idname = "object.wfc_list_select_none"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
@@ -237,7 +237,8 @@ class WFC3DVisDirections(bpy.types.Operator):
 class WFC3D_OT_GenericRemoveListItems(bpy.types.Operator):
     """Remove selected constraint items from list"""
     bl_idname = "object.wfc_generic_remove_list_items"
-    bl_label = "Remove selected constraints"
+    bl_label = ""
+    bl_description = "Remove selected constraint items from list"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
@@ -252,7 +253,8 @@ class WFC3D_OT_GenericRemoveListItems(bpy.types.Operator):
 class WFC3D_OT_GenericAddListItem(bpy.types.Operator):
     """Add new constraint item to list"""
     bl_idname = "object.wfc_generic_add_list_item"
-    bl_label = "Add Constraint"
+    bl_label = ""
+    bl_description = "Add new constraint item to list"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
@@ -266,9 +268,9 @@ class WFC3D_OT_GenericAddListItem(bpy.types.Operator):
             setattr(item, c, PROP_DEFAULTS[c])
         return {'FINISHED'}
 class WFC3D_OT_GenericDuplicateListItems(bpy.types.Operator):
-    """Add new constraint item to list"""
     bl_idname = "object.wfc_generic_duplicate_selected_items"
-    bl_label = "Duplicate selected rules"
+    bl_label = ""
+    bl_description = "Duplicate selected constraints"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
@@ -284,7 +286,8 @@ class WFC3D_OT_GenericDuplicateListItems(bpy.types.Operator):
 class WFC3D_OT_OpenWebLink(bpy.types.Operator):
     """Open Web Link"""
     bl_idname = "object.wfc_open_web_link"
-    bl_label = "Open Web Link"
+    bl_label = ""
+    bl_description = "Open Online Help on GitHub"
     bl_options = {'REGISTER', 'UNDO'}
 
     url : bpy.props.StringProperty()
