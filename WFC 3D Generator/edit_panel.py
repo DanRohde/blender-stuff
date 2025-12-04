@@ -118,10 +118,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             c = nc.column()
             c.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name="obj_list"
             c.enabled = sel_count > 0
-            nc.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT").list_name = "obj_list"
-            c = nc.column()
-            c.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT").list_name = "obj_list"
-            c.enabled = sel_count > 0
+            self._draw_list_actions(props, nc, "obj_list")
             nc.operator("collection.wfc_update_collection_list",icon="FILE_REFRESH")
             nc.enabled = not props.auto_active_object
         
@@ -187,10 +184,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 nr = newcol.row()
                 nr.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name = "neighbor_list"
                 nr.enabled = not props.auto_active_object and sel_count > 0
-                newcol.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT").list_name="neighbor_list"
-                c = newcol.column()
-                c.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT").list_name="neighbor_list"
-                c.enabled = sel_count > 0
+                self._draw_list_actions(props, newcol, "neighbor_list")
                 newcol.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
 
                 box.row().prop(props,"allow_neighbor_constraint_violations",icon="VIEW_UNLOCKED")
@@ -452,6 +446,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             c.separator()
             c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
             c.enabled = count_selected_items(props.fixed_position_input_list) > 0
+            self._draw_list_actions(props, col, "fixed_position_input_list")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "regfreq":
             box = box.box()
@@ -468,6 +463,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             c.separator()
             c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
             c.enabled = count_selected_items(props.regfreq_input_list) > 0
+            self._draw_list_actions(props, col, "regfreq_input_list")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "noise":
             box = box.box()
@@ -520,6 +516,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             c.separator()
             c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
             c.enabled = count_selected_items(props.regprob_input_list) > 0
+            self._draw_list_actions(props, col, "regprob_input_list")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "distance":
             box = box.box()
@@ -536,7 +533,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             c.separator()
             c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
             c.enabled = count_selected_items(props.distance_input_list) > 0
-
+            self._draw_list_actions(props, col, "distance_input_list")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "empty":
             box = box.box()
@@ -553,10 +550,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nc = col.column()
             nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
             nc.enabled = props.edit_type == 'objects'
-            col.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT", text="").list_name="empty_neighbor_list"
-            nc = col.column()
-            nc.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT", text="").list_name="empty_neighbor_list"
-            nc.enabled = count_selected_items(props.empty_neighbor_list) > 0
+            self._draw_list_actions(props, col, "empty_neighbor_list")
 
             sl = [item.direction.lower() for item in props.empty_neighbor_list if item.selected]
             if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
@@ -570,10 +564,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nc = col.column()
             nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
             nc.enabled = props.edit_type == 'objects'
-            col.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT", text="").list_name = "empty_any_neighbor_list"
-            nc = col.column()
-            nc.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT", text="").list_name = "empty_any_neighbor_list"
-            nc.enabled = count_selected_items(props.empty_any_neighbor_list) > 0
+            self._draw_list_actions(props, col, "empty_any_neighbor_list")
             sl = [item.direction.lower() for item in props.empty_any_neighbor_list if item.selected]
             if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
 
@@ -581,6 +572,15 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
 
         row = layout.row()
         row.operator("object.wfc_open_web_link", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
+
+    def _draw_list_actions(self, props, column, list_name):
+        lst = getattr(props, list_name)
+        nc = column.column()
+        nc.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT", text="").list_name = list_name
+        nc.enabled = len(lst) > 0
+        nc = column.column()
+        nc.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT", text="").list_name = list_name
+        nc.enabled = count_selected_items(lst) > 0
 
     def _draw_labels(self, layout, labels):
         for label in labels:
