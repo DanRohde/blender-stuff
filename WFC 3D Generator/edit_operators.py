@@ -292,8 +292,7 @@ class WFC3D_OT_ResetAllConstraints(bpy.types.Operator):
     bl_idname = "object.wfc_reset_all_constraints"
     bl_label = "Reset All"
     bl_description = "Reset all constraints"
-    bl_options = {'REGISTER', 'UNDO'}
-    sure : bpy.props.BoolProperty(name="I'm sure!", default=False)
+    sure : bpy.props.BoolProperty()
     def execute(self, context):
         props = context.scene.wfc_props
         if not self.sure: return {'CANCELLED'}
