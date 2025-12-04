@@ -156,7 +156,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     obj_list: bpy.props.CollectionProperty(type=WFC3DEditPanelMultiSelItem)
     obj_list_idx: bpy.props.IntProperty()
     edit_type: bpy.props.EnumProperty(name="", description="Select constraints type",
-        items=[('objects','Object Constraints','Object constraints'),('defaults','Collection Defaults','Collection defaults')],
+        items=[('objects','Object Constraints','Object constraints'),('defaults','Collection Defaults','Collection defaults'),('reset','Reset Constraints','Reset constraints')],
         update=update_edit_form,
     )
     edit_constraints: bpy.props.EnumProperty(
@@ -341,6 +341,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     empty_neighbor_list_idx: bpy.props.IntProperty()
     empty_any_neighbor_list: bpy.props.CollectionProperty(type=WFC3DEmptyAnyNeighborListItem)
     empty_any_neighbor_list_idx: bpy.props.IntProperty()
+
+    reset_all_confirmation: bpy.props.BoolProperty(name="I'm sure!", default=False)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props

@@ -197,7 +197,8 @@ def update_edit_form(_self, _context):
         default_obj = get_default_empty_object(props.collection_obj)
         if obj is None: obj = default_obj
         if obj is None: return
-
+    else:
+        return
     if props.edit_constraints == '_none_': return
 
     auto_save = props.auto_save

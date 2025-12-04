@@ -95,6 +95,7 @@ class WFC3D_OT_ResetConstraints(bpy.types.Operator):
     """Reset constraints"""
     bl_idname = "object.wfc_reset_constraints"
     bl_label = "Reset"
+    bl_description = "Reset constraints"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -296,7 +297,36 @@ class WFC3D_OT_OpenWebLink(bpy.types.Operator):
         webbrowser.open(self.url)
         return {'FINISHED'}
 
+class WFC3D_OT_ResetAllConstraints(bpy.types.Operator):
+    """Reset all constraints"""
+    bl_idname = "object.wfc_reset_all_constraints"
+    bl_label = "Reset All"
+    bl_description = "Reset all constraints"
+    bl_options = {'REGISTER', 'UNDO'}
+    sure : bpy.props.BoolProperty()
+    def execute(self, context):
+        props = context.scene.wfc_props
+        if not self.sure: return {'CANCELLED'}
+        # remove default objects and  wfc_-Properties
+        for obj in props.collection_obj.objects:
+            if obj.name.startswith(get_default_empty_name()):
+                bpy.data.objects.remove(obj, do_unlink=True)
+                continue
+            for p in obj.keys():
+                if not p.startswith("wfc_"): continue
+                del obj[p]
+        for child in props.collection_obj.children:
+            for obj in child.objects:
+                if obj.name.startswith(get_default_empty_name()):
+                    bpy.data.objects.remove(obj, do_unlink=True)
+                    break
+        self.report({'INFO'}, "All WFC3D Generator constraints have been reset.")
+        return {'FINISHED'}
+
+
+
 operators = [
+    WFC3D_OT_ResetAllConstraints,
     WFC3D_OT_GenericListSelectAll,
     WFC3D_OT_GenericListSelectNone,
     WFC3D_OT_OpenWebLink,

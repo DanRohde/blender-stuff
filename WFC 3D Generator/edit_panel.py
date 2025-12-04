@@ -80,7 +80,7 @@ class WFC3D_UL_EmptyAnyNeighborList(bpy.types.UIList):
         row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
-    """User interface for WFC 3D Add-On"""
+    """User interface for WFC 3D Edit"""
     bl_label = "WFC 3D Constraint Editor"
     bl_idname = "VIEW3D_PT_wfc_3d_edit"
     bl_space_type = 'VIEW_3D'
@@ -103,6 +103,15 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             
         box = col.box()
         box.prop(props,"edit_type", icon="OBJECT_DATA")
+
+        if props.edit_type == 'reset':
+            box = layout.box()
+
+            box.prop(props, "reset_all_confirmation")
+            row = box.row()
+            row.operator("object.wfc_reset_all_constraints").sure = props.reset_all_confirmation
+            row.enabled = props.reset_all_confirmation
+            return
 
         selected = []
         if props.edit_type == 'objects':
