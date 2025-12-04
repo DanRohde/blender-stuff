@@ -70,16 +70,14 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
 class WFC3D_UL_EmptyNeighborList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
-        row.prop(item, "selected", text="", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
         direction = item.direction.split('_')
-        row.label(text=f" {DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}")
+        row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
 
 class WFC3D_UL_EmptyAnyNeighborList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
-        row.prop(item, "selected", text="", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
         direction = item.direction.split('_')
-        row.label(text=f" {DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}")
+        row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
@@ -547,23 +545,25 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.operator("object.wfc_reset_constraints")
             row = box.row()
             col = row.column()
-            col.label(text="Prohibit ...")
+            col.label(text="Prohibit Empty ...")
             col = row.column()
-            col.label(text="Direction")
-            row = box.box().row()
+            col.label(text="in these Directions:")
+            nbox = box.box()
+            row = nbox.row()
             col = row.column()
-            col.label(text="Empty Neighbors:")
+            col.label(text="Neighbors:")
             col = row.column()
             col.template_list("WFC3D_UL_EmptyNeighborList", "", props, "empty_neighbor_list", props, "empty_neighbor_list_idx")
             sl = [item.direction.lower() for item in props.empty_neighbor_list if item.selected]
-            if len(sl) > 0: box.row().label(text=f"Selected direction(s): " + ", ".join(sl))
-            row = box.box().row()
+            if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
+            nbox = box.box()
+            row = nbox.row()
             col = row.column()
-            col.label(text="Any Empty Neighbors:")
+            col.label(text="Any Neighbors:")
             col = row.column()
             col.template_list("WFC3D_UL_EmptyAnyNeighborList", "", props, "empty_any_neighbor_list", props, "empty_any_neighbor_list_idx")
             sl = [item.direction.lower() for item in props.empty_any_neighbor_list if item.selected]
-            if len(sl) > 0: box.row().label(text=f"Selected direction(s): " + ", ".join(sl))
+            if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
 
             if not props.auto_save: box.operator("object.wfc_update_constraints")
 
