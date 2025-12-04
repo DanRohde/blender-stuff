@@ -67,6 +67,20 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
             col.row().prop(item, "distance_subcollection")
         col.prop(item, "distance_type")
 
+class WFC3D_UL_EmptyNeighborList(bpy.types.UIList):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
+        row = layout.row(align=True)
+        row.prop(item, "selected", text="", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
+        direction = item.direction.split('_')
+        row.label(text=f" {DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}")
+
+class WFC3D_UL_EmptyAnyNeighborList(bpy.types.UIList):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
+        row = layout.row(align=True)
+        row.prop(item, "selected", text="", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
+        direction = item.direction.split('_')
+        row.label(text=f" {DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}")
+
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Constraint Editor"
@@ -526,6 +540,30 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             c.enabled = count_selected_items(props.distance_input_list) > 0
 
             if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if props.edit_constraints == "empty":
+            box = box.box()
+            row = box.row()
+            row.label(text=obj_name)
+            row.operator("object.wfc_reset_constraints")
+            row = box.row()
+            col = row.column()
+            col.label(text="Prohibit ...")
+            col = row.column()
+            col.label(text="Direction")
+            row = box.box().row()
+            col = row.column()
+            col.label(text="Empty Neighbors:")
+            col = row.column()
+            col.template_list("WFC3D_UL_EmptyNeighborList", "", props, "empty_neighbor_list", props, "empty_neighbor_list_idx")
+
+            row = box.box().row()
+            col = row.column()
+            col.label(text="Any Empty Neighbors:")
+            col = row.column()
+            col.template_list("WFC3D_UL_EmptyAnyNeighborList", "", props, "empty_any_neighbor_list", props, "empty_any_neighbor_list_idx")
+
+            if not props.auto_save: box.operator("object.wfc_update_constraints")
+
         row = layout.row()
         row.operator("object.wfc_open_web_link", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
 
@@ -630,6 +668,6 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.enabled = False
             row.prop(props, p)
 
-panels = [ WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
+panels = [ WFC3D_UL_EmptyNeighborList, WFC3D_UL_EmptyAnyNeighborList, WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
         

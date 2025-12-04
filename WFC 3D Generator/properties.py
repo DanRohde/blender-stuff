@@ -1,7 +1,8 @@
 import bpy
 
 from .constants import *
-from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection, get_noise_basis, is_sub_element
+from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection, get_noise_basis, is_sub_element, init_empty_neighbor_lists
+
 from .gen_operators import  handle_seed_change
 
 
@@ -103,6 +104,14 @@ class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
                                                     default=PROP_DEFAULTS['fixed_position_xyz'], update=auto_save)
     selected: bpy.props.BoolProperty(default=False)
 
+class WFC3DEmptyNeighborListItem(bpy.types.PropertyGroup):
+    direction: bpy.props.StringProperty(name="Direction")
+    selected: bpy.props.BoolProperty(default=False, update=auto_save)
+
+class WFC3DEmptyAnyNeighborListItem(bpy.types.PropertyGroup):
+    direction: bpy.props.StringProperty(name="Direction")
+    selected: bpy.props.BoolProperty(default=False, update=auto_save)
+
 class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
     regprob_name: bpy.props.StringProperty(name='Name', description='Optional name of the region', default=PROP_DEFAULTS['regprob_name'], update=auto_save)
     regprob_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", default=PROP_DEFAULTS['regprob_min'])
@@ -157,6 +166,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ("neighbor","Neighbor Constraints","Neighbor constraints"),
                ('connector', 'Connector Constraints', 'Connector constraints'),
                ('geometry', 'Geometry Constraints', 'Geometry constraints'),
+               ('empty', 'Empty Neighbor Constraints', 'Empty Neighbor constraints'),
                None,
                ('dimensions', 'Dimensions Constraints', 'Dimensions constraints'),
                ('fixed_position', 'Fixed Position Constraints', 'Fixed position constraints'),
@@ -326,6 +336,12 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     rt_connector: bpy.props.BoolProperty(name="Connector", description="Rotate connector constraints", default=True)
     rt_geometry: bpy.props.BoolProperty(name="Geometry", description="Rotate geometry constraints", default=True)
 
+
+    empty_neighbor_list: bpy.props.CollectionProperty(type=WFC3DEmptyNeighborListItem)
+    empty_neighbor_list_idx: bpy.props.IntProperty()
+    empty_any_neighbor_list: bpy.props.CollectionProperty(type=WFC3DEmptyAnyNeighborListItem)
+    empty_any_neighbor_list_idx: bpy.props.IntProperty()
+
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
 
@@ -342,6 +358,8 @@ def handle_blend_load(fn):
     if fn== "" or not props.prefs_migrated:
         handle_update_pref(bpy.context.preferences.addons[__package__].preferences)
         props.prefs_migrated = True
+    init_empty_neighbor_lists(props)
+
 
 class WFC3DAddonPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
@@ -367,4 +385,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

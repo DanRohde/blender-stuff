@@ -98,6 +98,8 @@ PROP_DEFAULTS = {
     # distance constraints:
     'distance': (1,1,1), 'distance_from': 'object', 'distance_object': None, 'distance_position': (0,0,0),
     'distance_subcollection': None, 'distance_type' : 'minimum',
+    # empty neighbor constraints:
+    'empty_neighbor':'', 'empty_any_neighbor':'',
 }
 
 ADD_NEIGHBOR_CONSTRAINTS = ['allow_neighbor_constraint_violations' ]
@@ -164,6 +166,12 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                    }
 ENUM_CONSTRAINTS = { 'distance_from' : [ 'object', 'position', 'sub-collection'], 'distance_type' : [ 'minimum', 'maximum' ,'equal']}
 
+EMPTY_NEIGHBOR_CONSTRAINTS = [ 'empty_neighbor', 'empty_any_neighbor' ]
+SELECTION_CONSTRAINTS = {
+    'empty_neighbor' : 'empty_neighbor_list',
+    'empty_any_neighbor' : 'empty_any_neighbor_list',
+}
+
 NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_scale',
                       'noise_transf_basis', 'noise_transf_scale', 'noise_randomize_position',
                     ]
@@ -172,7 +180,7 @@ GEOMETRY_CONSTRAINTS = [ 'geo_top', 'geo_bottom', 'geo_left', 'geo_right', 'geo_
 
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS
                    + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS
-                   + NOISE_CONSTRAINTS + GEOMETRY_CONSTRAINTS + REGPROB_CONSTRAINTS + DISTANCE_CONSTRAINTS)
+                   + NOISE_CONSTRAINTS + GEOMETRY_CONSTRAINTS + REGPROB_CONSTRAINTS + DISTANCE_CONSTRAINTS + EMPTY_NEIGHBOR_CONSTRAINTS)
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
 
@@ -218,7 +226,7 @@ HELP = {
         'anchormap' : { '_none_': 'constraints', 'transformations' : 'transformations', 'neighbor' : 'neighbor-constraints', 'connector' : 'connector-constraints', 'geometry': 'geometry-constraints',
                       'regfreq' : 'region-frequency-constraints', 'noise' : 'noise-constraints', 'regprob' : 'region-probability-constraints', 'grid': 'grid-constraints',
                       'dimensions' : 'dimensions-constraints', 'fixed_position' : 'fixed-position-constraints', 'region' : 'region-constraints', 'distance' : 'distance-constraints',
-                      'frequency' : 'frequency-constraints', 'symmetry' : 'symmetry-constraints', 'probability' : 'probability-constraints',
+                      'frequency' : 'frequency-constraints', 'symmetry' : 'symmetry-constraints', 'probability' : 'probability-constraints', 'empty':'empty-neighbor-constraints',
                       }
     }
 }

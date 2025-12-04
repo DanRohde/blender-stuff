@@ -67,6 +67,8 @@ def get_constraints(props):
         constraints = REGPROB_CONSTRAINTS
     elif props.edit_constraints == 'distance':
         constraints = DISTANCE_CONSTRAINTS
+    elif props.edit_constraints == 'empty':
+        constraints = EMPTY_NEIGHBOR_CONSTRAINTS
     return constraints
 
 def get_selected_items(obj_list):
@@ -96,6 +98,12 @@ def update_constraints(props, constraints):
                     idx+=1
                 for idx, li in enumerate(props.get(lc, [])):
                     obj[f"{prop_name}_{idx}"] = li.get(c, PROP_DEFAULTS[c])
+            elif c in SELECTION_CONSTRAINTS:
+                item_list = ",".join([ item.direction for item in getattr(props, SELECTION_CONSTRAINTS[c]) if item.selected ])
+                if item_list != PROP_DEFAULTS[c]:
+                    obj[prop_name] = item_list
+                else:
+                    del obj[prop_name]
             elif c in props:
                 if not cmpall(props[c], PROP_DEFAULTS[c]) or (default_object and default_object != obj and prop_name in default_object and default_object[prop_name] != props[c]):
                     obj[prop_name] = props[c]
@@ -228,6 +236,11 @@ def update_edit_form(_self, _context):
                     lc[LIST_CONSTRAINTS[c]].append(c)
                 else:
                     lc[LIST_CONSTRAINTS[c]] = [ c ]
+            elif c in SELECTION_CONSTRAINTS:
+                items = obj[cp].split(",") if cp in obj else PROP_DEFAULTS[c].split(",")
+                for i in getattr(props, SELECTION_CONSTRAINTS[c]):
+                    i.selected = i.direction in items
+
             elif cp in obj:
                 try:
                     props[c] = obj[cp]
@@ -378,3 +391,13 @@ def set_select_all_list_items(itemlist, selected):
 def is_sub_element(self, obj):
     props = bpy.context.scene.wfc_props
     return not obj.name.startswith(get_default_empty_name()) and (obj.name in props.collection_obj.children or obj.name in props.collection_obj.objects)
+
+def init_empty_neighbor_lists(props):
+    if len(props.empty_neighbor_list) == 0:
+        for d in { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS }:
+            item = props.empty_neighbor_list.add()
+            item.direction = d
+    if len(props.empty_any_neighbor_list) == 0:
+        for d in { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS }:
+            item = props.empty_any_neighbor_list.add()
+            item.direction = d
