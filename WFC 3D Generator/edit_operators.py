@@ -110,7 +110,6 @@ class WFC3D_OT_SelectDropdownObject(bpy.types.Operator):
     """Select objects in 3D Viewport"""
     bl_idname = "object.wfc_select_dropdown_object"
     bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
     list_name : bpy.props.StringProperty()
     def execute(self, context):
         props = context.scene.wfc_props
@@ -142,7 +141,6 @@ class WFC3D_OT_GetSelectedObject(bpy.types.Operator):
     """Select objects selected in 3D Viewport"""
     bl_idname = "object.wfc_get_selected_object"
     bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
     list_name: bpy.props.StringProperty()
     def execute(self, context):
         props = context.scene.wfc_props
@@ -178,7 +176,6 @@ class WFC3D_OT_GenericListSelectAll(bpy.types.Operator):
     """Select all entries in the list"""
     bl_idname = "object.wfc_list_select_all"
     bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
     list_name: bpy.props.StringProperty()
     def execute(self, context):
         set_select_all_list_items(getattr(context.scene.wfc_props, self.list_name), True)
@@ -188,7 +185,6 @@ class WFC3D_OT_GenericListSelectNone(bpy.types.Operator):
     """Deselect all entries in the list"""
     bl_idname = "object.wfc_list_select_none"
     bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
     list_name : bpy.props.StringProperty()
     def execute(self, context):
         set_select_all_list_items(getattr(context.scene.wfc_props, self.list_name), False)
@@ -222,7 +218,6 @@ class WFC3DVisDirections(bpy.types.Operator):
     bl_idname = "object.wfc_vis_directions"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
-
     def execute(self, context):
         props = context.scene.wfc_props
         props.vis_directions = not props.vis_directions
@@ -240,7 +235,6 @@ class WFC3D_OT_GenericRemoveListItems(bpy.types.Operator):
     bl_idname = "object.wfc_generic_remove_list_items"
     bl_label = ""
     bl_description = "Remove selected constraint items from list"
-    bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
         constraints = get_constraints(props)
@@ -256,7 +250,6 @@ class WFC3D_OT_GenericAddListItem(bpy.types.Operator):
     bl_idname = "object.wfc_generic_add_list_item"
     bl_label = ""
     bl_description = "Add new constraint item to list"
-    bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
         constraints = get_constraints(props)
@@ -272,7 +265,6 @@ class WFC3D_OT_GenericDuplicateListItems(bpy.types.Operator):
     bl_idname = "object.wfc_generic_duplicate_selected_items"
     bl_label = ""
     bl_description = "Duplicate selected constraints"
-    bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
         constraints = get_constraints(props)
@@ -287,10 +279,8 @@ class WFC3D_OT_GenericDuplicateListItems(bpy.types.Operator):
 class WFC3D_OT_OpenWebLink(bpy.types.Operator):
     """Open Web Link"""
     bl_idname = "object.wfc_open_web_link"
-    bl_label = "Open Online Help on GitHub"
+    bl_label = ""
     bl_description = "Open Online Help on GitHub"
-    bl_options = {'REGISTER', 'UNDO'}
-
     url : bpy.props.StringProperty(name="URL")
     def execute(self, context):
         import webbrowser
