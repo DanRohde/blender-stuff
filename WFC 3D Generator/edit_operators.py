@@ -287,11 +287,11 @@ class WFC3D_OT_GenericDuplicateListItems(bpy.types.Operator):
 class WFC3D_OT_OpenWebLink(bpy.types.Operator):
     """Open Web Link"""
     bl_idname = "object.wfc_open_web_link"
-    bl_label = ""
+    bl_label = "Open Online Help on GitHub"
     bl_description = "Open Online Help on GitHub"
     bl_options = {'REGISTER', 'UNDO'}
 
-    url : bpy.props.StringProperty()
+    url : bpy.props.StringProperty(name="URL")
     def execute(self, context):
         import webbrowser
         webbrowser.open(self.url)
@@ -303,7 +303,7 @@ class WFC3D_OT_ResetAllConstraints(bpy.types.Operator):
     bl_label = "Reset All"
     bl_description = "Reset all constraints"
     bl_options = {'REGISTER', 'UNDO'}
-    sure : bpy.props.BoolProperty()
+    sure : bpy.props.BoolProperty(name="I'm sure!", default=False)
     def execute(self, context):
         props = context.scene.wfc_props
         if not self.sure: return {'CANCELLED'}
@@ -321,6 +321,7 @@ class WFC3D_OT_ResetAllConstraints(bpy.types.Operator):
                     bpy.data.objects.remove(obj, do_unlink=True)
                     break
         self.report({'INFO'}, "All WFC3D Generator constraints have been reset.")
+        props.reset_all_confirmation = False
         return {'FINISHED'}
 
 

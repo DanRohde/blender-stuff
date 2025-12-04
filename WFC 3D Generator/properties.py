@@ -342,7 +342,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     empty_any_neighbor_list: bpy.props.CollectionProperty(type=WFC3DEmptyAnyNeighborListItem)
     empty_any_neighbor_list_idx: bpy.props.IntProperty()
 
-    reset_all_confirmation: bpy.props.BoolProperty(name="I'm sure!", default=False)
+    reset_all_confirmation: bpy.props.BoolProperty(name="I'm sure!", default=False, options={'SKIP_SAVE','SKIP_PRESET'})
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
