@@ -35,7 +35,7 @@ These constraints prohibit empty neighbors.
 | **Parameter** | **Description**                                                    |
 |---------------|--------------------------------------------------------------------|
 | Empty Neighbor | Prohibits empty immediate neighbors in the selected directions. |
-| Empty Any Neighbor | Prohibits empty neighbors in general in the selected directions.    |
+| Empty Any Neighbor | Generally prohibits empty neighbors in the selected directions.    |
 
 ## Dimensions Constraints
 This enables building blocks that are larger than a cell.
@@ -151,12 +151,12 @@ These constraints increase or decrease the probability of an object being select
 ## Transformations
 These are not really restrictions. This allows you to randomize the position, size, rotation, and flipping of building blocks.
 
-| **Parameter**      | **Description**                                                                                                                      |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| Translation Offset | This allows a building block to be randomly shifted in its position depending on its position in the grid.                           |
-| *Rotation*         | With these parameters, a building block can be randomly rotated as desired.                                                          |
-| *Scale*            | TThese parameters allow random scaling of building blocks.                                                                       |
-| *Flipping*         | Here, for each axis, the probability can be set with which a building block is randomly mirrored (flipped).                          |
+| **Parameter**      | **Description**                                                                                                                     |
+|--------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| Translation Offset | This allows a building block to be randomly shifted in its position depending on its position in the grid.                          |
+| *Rotation*         | With these parameters, a building block can be randomly rotated as desired.                                                         |
+| *Scale*            | These parameters allow random scaling of building blocks.                                                                       |
+| *Flipping*         | Here, for each axis, the probability can be set with which a building block is randomly mirrored (flipped).                         |
 
 
 ## Noise Constraints 
