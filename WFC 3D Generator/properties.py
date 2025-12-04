@@ -1,7 +1,7 @@
 import bpy
 
 from .constants import *
-from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection, get_noise_basis, is_sub_element, init_empty_neighbor_lists
+from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection, get_noise_basis, is_sub_element
 
 from .gen_operators import  handle_seed_change
 
@@ -358,8 +358,6 @@ def handle_blend_load(fn):
     if fn== "" or not props.prefs_migrated:
         handle_update_pref(bpy.context.preferences.addons[__package__].preferences)
         props.prefs_migrated = True
-    init_empty_neighbor_lists(props)
-
 
 class WFC3DAddonPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__

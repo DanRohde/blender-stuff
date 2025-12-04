@@ -59,6 +59,13 @@ class WFC3DConstraints:
                         self.constraints[obj_name][p].append(obj[f"{cp}_{idx}"])
                         idx += 1
                     if cp in obj and len(self.constraints[obj_name][p])==0: self.constraints[obj_name][p].append(obj[cp]) # backward compatibility
+                elif p in SELECTION_CONSTRAINTS:
+                    if cp in obj:
+                        self.constraints[obj_name][p] = obj.split(",")
+                    elif default_obj is not None and cp in default_obj:
+                        self.constraints[obj_name][p] = default_obj.split(",")
+                    else:
+                        self.constraints[obj_name][p] = PROP_DEFAULTS[p].split(",")
                 elif cp in obj and obj[cp] != "":
                     self.constraints[obj_name][p] = obj[cp]
                 elif default_obj and cp in default_obj and default_obj[cp] != "":
@@ -372,6 +379,10 @@ class WFC3DConstraints:
             if self._check_dimensions(cell, self.constraints[element]["dim_xyz"], (1,1,1) if not self.symflip[x,y,z] else self.symflip[x,y,z]): options.append(element)
         return options
 
+    def check_empty_neighbors(self, cell, options):
+        x, y, z = cell
+
+        return options
     def apply_dimensions_constraints(self, cell):
         collapsed = []
         x, y, z = cell
@@ -765,7 +776,7 @@ class WFC3DConstraints:
     def collapse(self, cell):
         """Collapse a grid cell with constraints"""
         x, y, z = cell
-        options = self.apply_probability_constraints(cell, self.check_space(cell))
+        options = self.apply_probability_constraints(cell, self.check_empty_neighbors(cell, self.check_space(cell)))
         self.grid.grid[x, y, z] = [random.choice(options)] if len(options) > 0 else []
         return [ self.grid.mark_collapsed(x, y, z) ]
 

@@ -555,12 +555,15 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             col.label(text="Empty Neighbors:")
             col = row.column()
             col.template_list("WFC3D_UL_EmptyNeighborList", "", props, "empty_neighbor_list", props, "empty_neighbor_list_idx")
-
+            sl = [item.direction.lower() for item in props.empty_neighbor_list if item.selected]
+            if len(sl) > 0: box.row().label(text=f"Selected direction(s): " + ", ".join(sl))
             row = box.box().row()
             col = row.column()
             col.label(text="Any Empty Neighbors:")
             col = row.column()
             col.template_list("WFC3D_UL_EmptyAnyNeighborList", "", props, "empty_any_neighbor_list", props, "empty_any_neighbor_list_idx")
+            sl = [item.direction.lower() for item in props.empty_any_neighbor_list if item.selected]
+            if len(sl) > 0: box.row().label(text=f"Selected direction(s): " + ", ".join(sl))
 
             if not props.auto_save: box.operator("object.wfc_update_constraints")
 
