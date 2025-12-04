@@ -109,18 +109,18 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             sel_count = count_selected_items(props.obj_list)
             newrow = box.row()
             nc=newrow.column().box()
-            nc.operator("collection.wfc_get_selected_object", icon="SELECT_SET")
+            nc.operator("object.wfc_get_selected_object", icon="SELECT_SET").list_name="obj_list"
             nc.prop(props,"auto_active_object", icon="TRIA_RIGHT")
             nc=newrow.column()
             nc.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
             nc.enabled = not props.auto_active_object
             nc=newrow.column().box()
             c = nc.column()
-            c.operator("collection.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
+            c.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name="obj_list"
             c.enabled = sel_count > 0
-            nc.operator("collection.wfc_collection_list_select_all", icon="CHECKBOX_HLT")
+            nc.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT").list_name = "obj_list"
             c = nc.column()
-            c.operator("collection.wfc_collection_list_select_none", icon="CHECKBOX_DEHLT")
+            c.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT").list_name = "obj_list"
             c.enabled = sel_count > 0
             nc.operator("collection.wfc_update_collection_list",icon="FILE_REFRESH")
             nc.enabled = not props.auto_active_object
@@ -174,7 +174,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 row = box.row()
                 row.enabled = not props.no_neighbor_allowed 
                 newcol = row.column().box()
-                newcol.operator("collection.wfc_get_neighbor_selected_object", icon="SELECT_SET")
+                newcol.operator("object.wfc_get_selected_object", icon="SELECT_SET").list_name = "neighbor_list"
                 nc=newcol.column()
                 nc.prop(props,"auto_neighbor_object",icon="TRIA_RIGHT")
                 nc.enabled = not props.auto_active_object
@@ -185,11 +185,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 newcol.enabled = not props.auto_neighbor_object
                 sel_count = count_selected_items(props.neighbor_list)
                 nr = newcol.row()
-                nr.operator("collection.wfc_select_neighbor_object", icon='RESTRICT_SELECT_OFF')
+                nr.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name = "neighbor_list"
                 nr.enabled = not props.auto_active_object and sel_count > 0
-                newcol.operator("collection.wfc_neighbor_list_select_all", icon="CHECKBOX_HLT")
+                newcol.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT").list_name="neighbor_list"
                 c = newcol.column()
-                c.operator("collection.wfc_neighbor_list_select_none", icon="CHECKBOX_DEHLT")
+                c.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT").list_name="neighbor_list"
                 c.enabled = sel_count > 0
                 newcol.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
 
@@ -543,25 +543,37 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             row.label(text=obj_name)
             row.operator("object.wfc_reset_constraints")
-            row = box.row()
-            col = row.column()
-            col.label(text="Prohibit Empty ...")
-            col = row.column()
-            col.label(text="in these Directions:")
             nbox = box.box()
             row = nbox.row()
-            col = row.column()
-            col.label(text="Neighbors:")
+            row.label(text="Prohibit empty neighbors in selected directions:")
+            row = nbox.row()
             col = row.column()
             col.template_list("WFC3D_UL_EmptyNeighborList", "", props, "empty_neighbor_list", props, "empty_neighbor_list_idx")
+            col = row.column().box()
+            nc = col.column()
+            nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
+            nc.enabled = props.edit_type == 'objects'
+            col.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT", text="").list_name="empty_neighbor_list"
+            nc = col.column()
+            nc.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT", text="").list_name="empty_neighbor_list"
+            nc.enabled = count_selected_items(props.empty_neighbor_list) > 0
+
             sl = [item.direction.lower() for item in props.empty_neighbor_list if item.selected]
             if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
             nbox = box.box()
             row = nbox.row()
-            col = row.column()
-            col.label(text="Any Neighbors:")
+            row.label(text="Prohibit any neighbors in selected directions:")
+            row = nbox.row()
             col = row.column()
             col.template_list("WFC3D_UL_EmptyAnyNeighborList", "", props, "empty_any_neighbor_list", props, "empty_any_neighbor_list_idx")
+            col = row.column().box()
+            nc = col.column()
+            nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
+            nc.enabled = props.edit_type == 'objects'
+            col.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT", text="").list_name = "empty_any_neighbor_list"
+            nc = col.column()
+            nc.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT", text="").list_name = "empty_any_neighbor_list"
+            nc.enabled = count_selected_items(props.empty_any_neighbor_list) > 0
             sl = [item.direction.lower() for item in props.empty_any_neighbor_list if item.selected]
             if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
 
@@ -602,6 +614,10 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             self._draw_labels(sbox.column_flow(columns=3, align=True), labels)
 
         self._draw_properties(props, box, "Geometry constraints", GEOMETRY_CONSTRAINTS)
+
+        sbox = box.box()
+        for p in EMPTY_NEIGHBOR_CONSTRAINTS:
+            if f"wfc_{p}" in obj: sbox.row().label(text=f"{p}: {obj[f'wfc_{p}']}")
 
         if sum(props.dim_xyz) > 3:
             row = box.box().row()
