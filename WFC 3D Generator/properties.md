@@ -15,8 +15,8 @@
 * Geometry constraints: 10
 * Noise constraints: 5
 * Distance constraints: 6
-
-* **Sum: 156**
+* Empty Neighbor constraints: 2
+* **Sum: 158**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -26,6 +26,11 @@
     * empty string - allows all neighbors
     * comma separated list of object names - permitted neighbor(s)
     * "None" - disallows all neighbors
+
+## Empty Neighbor Constraints
+* These constraints prohibit empty neighbors.
+* Used custom properties: `wfc_empty_[any_]neighbor`
+* Allowed property values: a string: a comma separated direction list
 
 ## Fixed Position Constraints
 * This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.

@@ -28,6 +28,15 @@ Edges or faces are used to determine whether two objects can be placed next to e
 | Tolerance     | Maximum distance between vertices during edge/face vector comparison.      |
 | Threshold     | Maximum distance between grid cell face and building block faces or edges. |
 
+
+## Empty Neighbor Constraints
+These constraints prohibit empty neighbors.
+
+| **Parameter** | **Description**                                                    |
+|---------------|--------------------------------------------------------------------|
+| Empty Neighbor | Prohibits empty immediate neighbors in the selected directions. |
+| Empty Any Neighbor | Prohibits empty neighbors in general in the selected directions.    |
+
 ## Dimensions Constraints
 This enables building blocks that are larger than a cell.
 

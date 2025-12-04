@@ -102,7 +102,7 @@ def update_constraints(props, constraints):
                 item_list = ",".join([ item.direction for item in getattr(props, SELECTION_CONSTRAINTS[c]) if item.selected ])
                 if item_list != PROP_DEFAULTS[c]:
                     obj[prop_name] = item_list
-                else:
+                elif prop_name in obj:
                     del obj[prop_name]
             elif c in props:
                 if not cmpall(props[c], PROP_DEFAULTS[c]) or (default_object and default_object != obj and prop_name in default_object and default_object[prop_name] != props[c]):
