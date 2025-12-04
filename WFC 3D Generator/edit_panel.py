@@ -562,7 +562,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
             nbox = box.box()
             row = nbox.row()
-            row.label(text="Prohibit any neighbors in selected directions:")
+            row.label(text="Prohibit any empty neighbors in selected directions:")
             row = nbox.row()
             col = row.column()
             col.template_list("WFC3D_UL_EmptyAnyNeighborList", "", props, "empty_any_neighbor_list", props, "empty_any_neighbor_list_idx")
