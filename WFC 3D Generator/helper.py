@@ -100,7 +100,9 @@ def update_constraints(props, constraints):
                     obj[f"{prop_name}_{idx}"] = li.get(c, PROP_DEFAULTS[c])
             elif c in SELECTION_CONSTRAINTS:
                 item_list = [ item.direction for item in getattr(props, SELECTION_CONSTRAINTS[c]) if item.selected ]
-                if item_list != PROP_DEFAULTS[c]:
+                v = ",".join(item_list)
+                pv = ",".join(PROP_DEFAULTS[c])
+                if v != pv or (default_object is not None and default_object != obj and prop_name in default_object and default_object[prop_name]!=v):
                     obj[prop_name] = ",".join(item_list)
                 elif prop_name in obj:
                     del obj[prop_name]
@@ -395,11 +397,9 @@ def is_sub_element(self, obj):
     return not obj.name.startswith(get_default_empty_name()) and (obj.name in props.collection_obj.children or obj.name in props.collection_obj.objects)
 
 def init_empty_neighbor_lists(props):
-    if len(props.empty_neighbor_list) == 0:
-        for d in { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS }:
-            item = props.empty_neighbor_list.add()
-            item.direction = d
-    if len(props.empty_any_neighbor_list) == 0:
-        for d in { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS }:
-            item = props.empty_any_neighbor_list.add()
-            item.direction = d
+    if len(props.empty_neighbor_list) > 0: return
+    for d in { **FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS }:
+        item = props.empty_neighbor_list.add()
+        item.direction = d
+        item = props.empty_any_neighbor_list.add()
+        item.direction = d
