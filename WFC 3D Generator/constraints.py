@@ -385,9 +385,11 @@ class WFC3DConstraints:
         for option in options:
             check_directions = True
             for direction in self.constraints[option]["empty_neighbor"]:
-                if direction not in DIRECTIONS: continue
+                if direction not in DIRECTIONS or direction.startswith("ANY"): continue
                 d = DIRECTIONS[direction]
-                if len(self.grid.grid[x+d[0],y+d[1],z+d[2]]) == 0:
+                nx, ny, nz = x+d[0], y+d[1], z+d[2]
+                if not self.grid.within_boundaries(nx, ny, nz): continue
+                if len(self.grid.grid[nx, ny, nz]) == 0:
                     check_directions = False
                     break
             if not check_directions: continue
@@ -823,10 +825,14 @@ class WFC3DConstraints:
                 queue.extend(nc)
 
             self.propagate_adjacency_constraints(cell)
-            self.propagate_empty_neighbor_constraints(cell)
 
         return collapsed
-
+    def propagate_post_gen_constraints(self):
+        ## propagate empty neighbor constraints:
+        for x in range(self.grid.grid_size[0]):
+            for y in range(self.grid.grid_size[1]):
+                for z in range(self.grid.grid_size[2]):
+                    self.grid.grid[x,y,z] = self.check_empty_neighbors((x,y,z), self.grid.grid[x,y,z])
     def clean(self):
         self.grid = None
         self.constraints = None

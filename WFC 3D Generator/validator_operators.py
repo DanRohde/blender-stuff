@@ -47,7 +47,7 @@ def check_connector_names(conn_names, conn_obj_names):
     for d in conn_names:
         for cn in conn_names[d]:
             if OPPOSITE_DIRECTIONS[d] in conn_names and cn in conn_names[OPPOSITE_DIRECTIONS[d]]: continue
-            add_log_entry(1, f"Connector name {cn} found in {d.lower()} connector constraint of '{', '.join(conn_obj_names[d][cn])}' has no counterpart in the opposite direction {OPPOSITE_DIRECTIONS[d].lower()}!")
+            add_log_entry(1, f"Connector name '{cn}' found in {d.lower()} connector constraint of '{', '.join(conn_obj_names[d][cn])}' has no counterpart in the opposite direction {OPPOSITE_DIRECTIONS[d].lower()}!")
             warn_count += 1
     return warn_count
 

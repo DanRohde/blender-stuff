@@ -104,7 +104,7 @@ class WFC3DGenerator:
             self.collapsed_cells.extend(self.constraints.propagate(collapsed) if self.use_constraints else collapsed)
 
             collapsed = []
-
+        if self.use_constraints: self.constraints.propagate_post_gen_constraints()
         if not render: return
         if self.render_delay > 0:
             bpy.context.scene.wfc_props.running_delayed_renderer = True
@@ -117,7 +117,9 @@ class WFC3DGenerator:
         if not bpy.context.scene.wfc_props.running_delayed_renderer:
             return None
         if len(self.collapsed_cells) > 0 and not bpy.context.scene.wfc_props.paused_delayed_renderer:
-            self.place_object(self.collapsed_cells.pop(0))
+            pos = self.collapsed_cells.pop(0)
+            while len(self.collapsed_cells) > 0 and len(self.grid.grid[pos[0], pos[1], pos[2]])==0: pos = self.collapsed_cells.pop(0)
+            self.place_object(pos)
 
         if len(self.collapsed_cells) > 0:
             return self.render_delay/1000
