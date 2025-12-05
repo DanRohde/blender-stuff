@@ -163,7 +163,7 @@ class WFC3DConstraints:
         if not self.constraints[name]['region_level_ground'] and pos[2] == 0: return False
         if not self.constraints[name]['region_level_first'] and pos[2] == 1: return False
         if not self.constraints[name]['region_level_second'] and pos[2] == 2: return False
-        if not self.constraints[name]['region_level_mid'] and 0  < pos[2] < self.grid.grid_size[2]-1: return False
+        if not self.constraints[name]['region_level_mid'] and 2  < pos[2] < self.grid.grid_size[2]-2: return False
         if not self.constraints[name]['region_level_penultimate'] and pos[2] == self.grid.grid_size[2]-2: return False
         if not self.constraints[name]['region_level_top'] and pos[2] == self.grid.grid_size[2]-1: return False
         if self.constraints[name]['noise_prob_basis'] > 1:
@@ -781,6 +781,9 @@ class WFC3DConstraints:
                 self.grid.grid[nx, ny, nz] = new_options
                 if len(new_options) == 1: queue.append((nx, ny, nz))
 
+    def propagate_empty_neighbor_constraints(self, cell):
+        x, y, z = cell
+        self.grid.grid[x, y ,z] = self.check_empty_neighbors(cell, self.grid.grid[x, y, z])
 
     def apply_post_init_constraints(self):
         collapsed = []
@@ -820,6 +823,7 @@ class WFC3DConstraints:
                 queue.extend(nc)
 
             self.propagate_adjacency_constraints(cell)
+            self.propagate_empty_neighbor_constraints(cell)
 
         return collapsed
 

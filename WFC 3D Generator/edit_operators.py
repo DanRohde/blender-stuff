@@ -301,9 +301,8 @@ class WFC3D_OT_ResetAllConstraints(bpy.types.Operator):
             if obj.name.startswith(get_default_empty_name()):
                 bpy.data.objects.remove(obj, do_unlink=True)
                 continue
-            for p in obj.keys():
-                if not p.startswith("wfc_"): continue
-                del obj[p]
+            obj_keys = [ p for p in obj.keys() if p.startswith("wfc_")]
+            for p in obj_keys: del obj[p]
         for child in props.collection_obj.children:
             for obj in child.objects:
                 if obj.name.startswith(get_default_empty_name()):

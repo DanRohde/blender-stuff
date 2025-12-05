@@ -274,6 +274,7 @@ def update_edit_form(_self, _context):
                         print(f"set of constraint {c} failed for item {item}: {v}: {e}" )
                         pass
                 idx += 1
+    init_empty_neighbor_lists(props)
     props.auto_save = auto_save
 
 
@@ -367,7 +368,6 @@ def handle_update_collection(_self, context = None):
         item = props.rt_list.add()
         item.obj = obj
         item.selected = obj.name in sel_rt_items
-    init_empty_neighbor_lists(props)
 
 def get_noise_basis(_self, _context = None):
     ret = [('_NONE_','Please select a noise basis','Please select a noise basis'),None]
