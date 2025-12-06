@@ -112,15 +112,6 @@ def check_dimensions_constraints(obj):
     return warn_count
 def check_fixed_position_constraints(obj):
     warn_count = 0
-    props = bpy.context.scene.wfc_props
-    idx = 0
-    while f'wfc_fixed_position_xyz_{idx}' in obj:
-        pn  = f"wfc_fixed_position_xyz_{idx}"
-        x, y, z = obj[pn]
-        if not (0 <= x < props.grid_size[0] and 0 <= y < props.grid_size[1] and 0 <= z < props.grid_size[2]):
-            add_log_entry(1, f"The fixed position {idx} ({x},{y},{z}) of object {obj.name} is outside the grid.")
-            warn_count += 1
-        idx += 1
     return warn_count
 def check_region_frequency_constraints(obj):
     warn_count = 0
@@ -135,30 +126,11 @@ def check_region_frequency_constraints(obj):
         if freq < 0 or freq > rsize:
             add_log_entry(1,f"The frequency {freq} of the region frequency constraint {idx} (name: {name}) of object {obj.name} is out of range 0..{rsize}.")
             warn_count += 1
-        if not (0 <= minx < gs[0] and 0 <= miny < gs[1] and 0 <= minz < gs[2]):
-            add_log_entry(1, f"The min value of the region frequency constraint {idx} (name: {name})of object {obj.name} is outside the grid boundaries.")
-            warn_count += 1
-        if not (0 <= maxx < gs[0] and 0 <= maxy < gs[1] and 0 <= maxz < gs[2]):
-            add_log_entry(1, f"The max value of the region frequency constraint {idx} (name: {name}) of object {obj.name} is outside the grid boundaries.")
-            warn_count += 1
         idx += 1
 
     return warn_count
 def check_region_probability_constraints(obj):
     warn_count = 0
-    gs = bpy.context.scene.wfc_props.grid_size
-    idx = 0
-    while f'wfc_regprob_probability_{idx}' in obj:
-        minx, miny, minz = obj[f"wfc_regprob_min_{idx}"]
-        maxx, maxy, maxz = obj[f"wfc_regprob_max_{idx}"]
-        name = obj[f"wfc_regprob_name_{idx}"] if f"wfc_regprob_name_{idx}" in obj else ""
-        if not (0 <= minx < gs[0] and 0 <= miny < gs[1] and 0 <= minz < gs[2]):
-            add_log_entry(1, f"The min value of the region probability constraint {idx} (name: {name}) of object {obj.name} is outside the grid boundaries.")
-            warn_count += 1
-        if not (0 <= maxx < gs[0] and 0 <= maxy < gs[1] and 0 <= maxz < gs[2]):
-            add_log_entry(1, f"The max value of the region frequency constraint {idx} (name: {name}) of object {obj.name} is outside the grid boundaries.")
-            warn_count += 1
-        idx += 1
 
     return warn_count
 def check_distance_constraints(obj):
@@ -176,11 +148,6 @@ def check_distance_constraints(obj):
             o = obj[f"wfc_distance_object_{idx}"]
             if o is None or o.name not in sc.objects:
                 add_log_entry(1, f"Distance constraints of {obj.name}: Object {o.name if o is not None else o} of entry {idx} is not in the source collection.")
-                warn_count += 1
-        elif f == 1:
-            px, py, pz = obj[f"wfc_distance_position_{idx}"]
-            if not (0 <= px < gs[0] and 0 <= py < gs[1] and 0 <= pz < gs[2]):
-                add_log_entry(1, f"Distance constraints of {obj.name}: Position of entry {idx} is outside the grid boundaries.")
                 warn_count += 1
         else:
             o = obj[f"wfc_distance_subcollection_{idx}"]
