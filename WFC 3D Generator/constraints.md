@@ -180,12 +180,12 @@ Noise constraints either influence the probability of an object occurring or rep
 
 
 # Positions and Regions
-| **Vector Values (X,Y,Z)**         | **Used Vector Values (X,Y,Z)**                  | **Description**                                                        |
-|-----------------------------------|-------------------------------------------------|------------------------------------------------------------------------|
-| ```0 <= [X\|Y\|Z] < [grid size]``` | ```new [X\|Y\|Z] = old [X\|Y\|Z]```             | The vector values remain unchanged if they are within the grid.        |
-| ```[X\|Y\|Z] < 0```               | ```new [X\|Y\|Z] = [grid size]-1 + [X\|Y\|Z]``` | Negative vector values allow specifications relative to the grid size. |
-| ```[X\|Y\|Z] >= [grid size]```    | ```new [X\|Y\|Z] = [grid size]-1```             | Vector values that are too large are set to the grid size.             |
-| ```[X\|Y\|Z] < -[grid size]```    | ```new [X\|Y\|Z] = 0```                         | Negative vector values that are too small are set to 0.                |
+| **Vector Values (X,Y,Z)**         | **Used Vector Values (X,Y,Z)**                  | **Description**                                                          |
+|-----------------------------------|-------------------------------------------------|--------------------------------------------------------------------------|
+| ```0 <= [X\|Y\|Z] < [grid size]``` | ```new [X\|Y\|Z] = old [X\|Y\|Z]```             | The vector values remain unchanged if they are within the grid.          |
+| ```[X\|Y\|Z] < 0```               | ```new [X\|Y\|Z] = [grid size]-1 + [X\|Y\|Z]``` | Negative vector values allow specifications relative to the grid size.   |
+| ```[X\|Y\|Z] >= [grid size]```    | ```new [X\|Y\|Z] = [grid size]-1```             | Vector values that are too large are set to the maximum permitted value. |
+| ```[X\|Y\|Z] < -[grid size]```    | ```new [X\|Y\|Z] = 0```                         | Negative vector values that are too small are set to 0.                  |
 
 Challenge:
 - When changing the grid size, regions or positions may need to be corrected.
