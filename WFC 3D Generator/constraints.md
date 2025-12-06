@@ -49,7 +49,7 @@ This allows you to set a fixed starting position within the grid in order to ach
 
 | **Parameter** | **Description**                                                            |
 |---------------|----------------------------------------------------------------------------|
-| Fixed Position | A fixed position within the grid allows for more predictable results.  |
+| Fixed Position | A fixed position within the grid allows for more predictable results. ([more](#positions-and-regions)) |
 
 ## Grid Constraints
 Allows you to specify where an object may be located within the grid.
@@ -64,23 +64,23 @@ Allows you to specify where an object may be located within the grid.
 ## Region Constraints
 Allows you to specify where an object may be located within the grid.
 
-| **Parameter** | **Description**                                                                                                                                   |
-|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| min | Smallest position in the grid for the permitted region.                                                                                           |
-| max | Largest position in the grid for the permitted region.                                                                                            |
+| **Parameter** | **Description**                                                                                                                                    |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| min | Smallest position in the grid for the permitted region. ```(-1,-1,-1) => (0,0,0)```                                                                |
+| max | Largest position in the grid for the permitted region. ```(-1,-1,-1) => (max. X, max. Y, max. Z)```                                                   |
 | Quadrant | The grid is divided into eight quadrants and only selected quadrants can be occupied by the building block: fbl, fbr, ftl, ftr, bbl, bbr, btl, btr |
-| Level | Only selected levels (floors) can be occupied by the building block.                                                                              |
+| Level | Only selected levels (floors) can be occupied by the building block.                                                                               |
 
 ## Distance Constraints
 Rules that restrict the placement of building blocks based on their distance from a specific point or another building block.
 
-| **Parameter** | **Description**                                                                                                                                                                                       |
-|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Distance | The distance to a position or object in the grid.                                                                                                                                                     |
-| From | Defines whether the distance from a position or from a specific building block must be maintained.                                                                                                    |
-| Object | A link to the building block                                                                                                                                                                          |
-| Position | This defines the position within the grid. Negative values are added to the maximum grid size values. Values greater than the corresponding grid size values are set to the maximum permitted values. |
-| Type | This sets the distance type. |                                                                                                                                                                         |
+| **Parameter** | **Description**                                                             |
+|---------------|-----------------------------------------------------------------------------|
+| Distance | The distance to a position or object in the grid.                           |
+| From | Defines whether the distance from a position or from a specific building block must be maintained. |
+| Object | A link to the building block                                                |
+| Position | This defines the position within the grid. ([more](#positions-and-regions)) |
+| Type | This sets the distance type.                                                |                                                                                                                                                                         |
 
 ## Frequency Constraints
 Define how often the same object or any other object may occur in the immediate vicinity or on one of the 3 axes XYZ.
@@ -105,12 +105,12 @@ Define how often the same object or any other object may occur in the immediate 
 ## Region Frequency Constraints
 Define how often the same object may occur in a specific region.
 
-| **Parameter** | **Description**                                                                |
-|---------------|--------------------------------------------------------------------------------|
-| Name          | Optional name of the region for easier identification of the region.           |
-| min           | Lower point of the region as a vector.                                         |
-| max           | Upper point of the region as a vector.                                         |
-| Frequency     | Frequency of the building block itself within the region (min-max).             |
+| **Parameter** | **Description**                                                                     |
+|---------------|-------------------------------------------------------------------------------------|
+| Name          | Optional name of the region for easier identification of the region.                |
+| min           | Lower point of the region as a vector ([more](#positions-and-regions)).             |
+| max           | Upper point of the region as a vector ([more](#positions-and-regions)).                                             |
+| Frequency     | Frequency of the building block itself within the region (min-max).                 |
 | Frequency %   | Frequency as a percentage of the building block itself within the region (min-max). |
 
 
@@ -140,12 +140,12 @@ These constraints increase or decrease the probability of an object being select
 ## Region Probability Constraints 
 These constraints increase or decrease the probability of an object being selected at random in a specific region.
 
-| **Parameter** | **Description**                                                                                                                                                 |
-|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Name | Optional name for easier identification of the region.                                                                                                  |
-| min | Lowest point of the region as a vector.                                                                                                                        |
-| max | Highest point of the region as a vector.                                                                                                                           |
-| Probability | Probability with which a building block is chosen from the possible options in this region.                                                        |
+| **Parameter** | **Description**                                                                                                                            |
+|---------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| Name | Optional name for easier identification of the region.                                                                                     |
+| min | Lowest point of the region as a vector ([more](#positions-and-regions)).                                                                   |
+| max | Highest point of the region as a vector ([more](#positions-and-regions)).                                                                                                  |
+| Probability | Probability with which a building block is chosen from the possible options in this region.                                                |
 | Weight | A weight greater than 1 increases the probability of a building block being chosen for a cell in the region depending on possible options. |
 
 ## Transformations
@@ -172,6 +172,16 @@ Noise constraints either influence the probability of an object occurring or rep
 | Noise Basis                         | Noise function to influence transformations of a building block.                                                                                                                        |
 | Scale                               | Scaling factor for the position to calculate the noise function value.                                                                                                                  |
 | Randomize the starting position     | When enabled, a random value is multiplied with the position of the building block in the grid. This allows generating different results when changing the random seed.               |
+
+
+# Positions and Regions
+| **Vector Values (X,Y,Z)**               | **Used Vector Values (X,Y,Z)**                    |
+|-----------------------------------------|---------------------------------------------------|
+| ```0 <= [X\|Y\|Z] < [max. grid size]``` | ```new [X\|Y\|Z] = old [X\|Y\|Z]```               | 
+| ```[X\|Y\|Z] < 0```                     | ```new [X\|Y\|Z] = [max. grid size] + [X\|Y\|Z]``` |
+| ```[X\|Y\|Z] > [max. grid size]```      | ```new [X\|Y\|Z] = [max. grid size]```            |
+| ```[X\|Y\|Z] < -[max. grid size]```     | ```new [X\|Y\|Z] = 0```                           |
+
 
 ## Algorithm Phases
 ### Grid Initialization Phase
