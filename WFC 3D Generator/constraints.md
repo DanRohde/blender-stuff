@@ -196,6 +196,7 @@ Challenge:
 | Implementation                                   | easy  | concept required | very easy   |  
 | Adding, deleting, renaming building blocks       | time-consuming | no problem       | no problem  | 
 | Performance with large number of building blocks | fast | very fast        | (very) slow |
+
 Recommendation: use connector constraints
 
 ## Algorithm Phases
