@@ -175,12 +175,12 @@ Noise constraints either influence the probability of an object occurring or rep
 
 
 # Positions and Regions
-| **Vector Values (X,Y,Z)**               | **Used Vector Values (X,Y,Z)**                    |
-|-----------------------------------------|---------------------------------------------------|
-| ```0 <= [X\|Y\|Z] < [max. grid size]``` | ```new [X\|Y\|Z] = old [X\|Y\|Z]```               | 
-| ```[X\|Y\|Z] < 0```                     | ```new [X\|Y\|Z] = [max. grid size] + [X\|Y\|Z]``` |
-| ```[X\|Y\|Z] > [max. grid size]```      | ```new [X\|Y\|Z] = [max. grid size]```            |
-| ```[X\|Y\|Z] < -[max. grid size]```     | ```new [X\|Y\|Z] = 0```                           |
+| **Vector Values (X,Y,Z)**               | **Used Vector Values (X,Y,Z)**                    | ** Description ** |
+|-----------------------------------------|---------------------------------------------------|-------------------|
+| ```0 <= [X\|Y\|Z] < [max. grid size]``` | ```new [X\|Y\|Z] = old [X\|Y\|Z]```               | The vector values remain unchanged. |
+| ```[X\|Y\|Z] < 0```                     | ```new [X\|Y\|Z] = [max. grid size] + [X\|Y\|Z]``` | Negative vector values allow specifications relative to the maximum grid size.|
+| ```[X\|Y\|Z] > [max. grid size]```      | ```new [X\|Y\|Z] = [max. grid size]```            | Vector values that are too large are set to the maximum grid size. |
+| ```[X\|Y\|Z] < -[max. grid size]```     | ```new [X\|Y\|Z] = 0```                           | Negative vector values that are too large are set to 0. |
 
 
 ## Algorithm Phases
