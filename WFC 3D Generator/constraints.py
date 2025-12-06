@@ -733,7 +733,7 @@ class WFC3DConstraints:
         for nx in range(d[0]):
             for ny in range(d[1]):
                 for nz in range(d[2]):
-                    self.grid.grid[x+nx*fac[0], y+ny*fac[1], z+nz*fac[2]] = []
+                    if self.grid.within_boundaries(x+nx*fac[0], y+ny*fac[1], z+nz*fac[2]): self.grid.grid[x+nx*fac[0], y+ny*fac[1], z+nz*fac[2]] = []
 
     def apply_draw_constraints(self, position, spacing, obj_name, target_obj):
         self.apply_transformation_constraints(position, obj_name, target_obj)
@@ -804,13 +804,14 @@ class WFC3DConstraints:
     def propagate(self, collapsed):
         """Propagate constraints"""
         queue = deque(collapsed)
-        c = []
+        c1 = []
+        c2 = []
         while queue:
             cell = queue.popleft()
 
-            if cell not in c: ## prevent double application
+            if cell not in c1: ## prevent double application
                 nc = self.apply_symmetry_constraints(cell)
-                c.extend(nc)
+                c1.extend(nc)
                 collapsed.extend(nc)
                 queue.extend(nc)
 
@@ -818,9 +819,9 @@ class WFC3DConstraints:
             self.propagate_frequency_constraints(cell)
             self.propagate_distance_from_object_constraints(cell)
 
-            if cell not in c:  ## prevent double application
+            if cell not in c2:  ## prevent double application
                 nc = self.apply_dimensions_constraints(cell)
-                c.extend(nc)
+                c2.extend(nc)
                 collapsed.extend(nc)
                 queue.extend(nc)
 
