@@ -188,11 +188,11 @@ Noise constraints either influence the probability of an object occurring or rep
 | ```[X\|Y\|Z] < -[grid size]``` | ```new [X\|Y\|Z] = 0```                       | Negative vector values that are too small are set to 0.                |
 
 # Adjacency Constraints Comparison
-| *Tasks*                    | *Neighbor*     | *Connector* | *Geometry* |
-|----------------------------|----------------|-------------|------------|
-| Implementation             | easy  | concecpt required | very easy  |  
-| Renaming objects           | time-consuming | no problem | no problem |
-| Deleting or adding objects | time-consuming | no problem  | no problem | 
+| *Tasks*                                          | *Neighbor*     | *Connector* | *Geometry*  |
+|--------------------------------------------------|----------------|-------------|-------------|
+| Implementation                                   | easy  | concept required | very easy   |  
+| Adding, deleting, renaming objects               | time-consuming | no problem | no problem  | 
+| Performance with large number of building blocks | fast | fast | (very) slow |
 
 ## Algorithm Phases
 ### Grid Initialization Phase
