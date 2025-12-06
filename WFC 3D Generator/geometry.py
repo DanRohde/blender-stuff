@@ -1,6 +1,6 @@
 from mathutils import Matrix, Vector
 import math
-
+from .helper import get_default_empty_name
 
 def get_bounding_box(obj, spacing):
     local_bbox = [Vector(v) for v in obj.bound_box]
@@ -175,3 +175,25 @@ def compare_faces(obj_a, face_a, obj_b, face_b, tolerance, threshold, spacing):
         'obj_b_faces_count': len(norm_faces_b),
         'matching_faces_count': matching_face_count
     }
+def get_bb(obj):
+    local_bbox = [Vector(v) for v in obj.bound_box]
+
+    min_x = min(v.x for v in local_bbox)
+    max_x = max(v.x for v in local_bbox)
+    min_y = min(v.y for v in local_bbox)
+    max_y = max(v.y for v in local_bbox)
+    min_z = min(v.z for v in local_bbox)
+    max_z = max(v.z for v in local_bbox)
+
+    return [ min_x, max_x, min_y, max_y, min_z, max_z ]
+def auto_detect_spacing(props):
+    max_size = [ 0, 0, 0 ]
+    for obj in props.collection_obj.objects:
+        if obj.name.startswith(get_default_empty_name()) or not hasattr(obj, "bound_box"): continue
+        bb = get_bb(obj)
+        dimensions = obj["wfc_dim_xyz"] if "wfc_dim_xyz" in obj else (1, 1, 1)
+        obj_size = [ (bb[1]-bb[0])/dimensions[0], (bb[3]-bb[2])/dimensions[1], (bb[5]-bb[4])/dimensions[2] ]
+        if obj_size[0] > max_size[0]: max_size[0] = obj_size[0]
+        if obj_size[1] > max_size[1]: max_size[1] = obj_size[1]
+        if obj_size[2] > max_size[2]: max_size[2] = obj_size[2]
+    return max_size

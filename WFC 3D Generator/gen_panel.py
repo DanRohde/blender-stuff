@@ -22,8 +22,12 @@ class WFC3DGeneratePanel(bpy.types.Panel):
        
         box.label(text="Grid Size (width/depth/height)")
         box.row().prop(props, "grid_size")
-        box.label(text="Grid Cell Space")
-        box.row().prop(props, "spacing")
+        row = box.row()
+        row.label(text="Grid Cell Space")
+        row.prop(props, "auto_detect_spacing")
+        row = box.row()
+        row.prop(props, "spacing")
+        row.enabled = not props.auto_detect_spacing
         box.label(text="Odd Offset")
         box.row().prop(props, "odd_offset")
         

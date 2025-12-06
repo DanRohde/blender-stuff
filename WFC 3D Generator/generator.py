@@ -6,12 +6,13 @@ import gc
 from .constraints import WFC3DConstraints
 from .grid import WFC3DGrid
 from .helper import get_default_empty_name
+from .geometry import auto_detect_spacing
 
 class WFC3DGenerator:
     def __init__(self, collection, props):
         self.collection = collection
         self.grid_size = props.grid_size
-        self.spacing = props.spacing
+        self.spacing = self.get_spacing(props)
         self.use_constraints = props.use_constraints
         self.target_collection = props.target_collection
         self.target_collection_obj = None
@@ -34,7 +35,14 @@ class WFC3DGenerator:
         if self.use_constraints:
             self.constraints = WFC3DConstraints()
             self.constraints.initialize_constraints(self.grid, self.collection, self.objects, self.spacing)
-                    
+
+    def get_spacing(self, props):
+        if not props.auto_detect_spacing: return props.spacing
+
+        spacing = auto_detect_spacing(props)
+        props.spacing = spacing
+        return spacing
+
     def set_seed(self, seed):
         random.seed(seed)
         np.random.seed(np.abs(seed))
