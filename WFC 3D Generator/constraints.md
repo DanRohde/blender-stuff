@@ -1,6 +1,6 @@
 # Constraints
 ## Neighbor Constraints
-Allows you to define a list of allowed neighbors for all possible directions (at once).
+Allows you to define a list of allowed neighbors for all possible directions (at once). 
 
 | **Parameter**                        | **Description**                                                                                                                 |
 |--------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
@@ -9,6 +9,8 @@ Allows you to define a list of allowed neighbors for all possible directions (at
 | No Neighbor allowed                  | prohibits all neighbors                                                                                                         |
 | Allow neighbor constraint violations | If no suitable neighbors can be found, all building blocks that also have this paremeter set can be used as possible neighbors. |
 
+- More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
+
 ## Connector Constraints
 You can define a connector name for any direction that match with the connector name of possible neighbors with the same connector name in the opposite direction.
 
@@ -16,6 +18,8 @@ You can define a connector name for any direction that match with the connector 
 |--------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Direction | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected                                       |
 | Name | The connector name to restrict the possible neighbors. Only neighbors with the same name in the opposite direction can be used. Empty names or unspecified directions allow any neighbor. |
+
+- More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
 
 ## Geometry Constraints
 Edges or faces are used to determine whether two objects can be placed next to each other.
@@ -28,6 +32,7 @@ Edges or faces are used to determine whether two objects can be placed next to e
 | Tolerance     | Maximum distance between vertices during edge/face vector comparison.      |
 | Threshold     | Maximum distance between grid cell face and building block faces or edges. |
 
+- More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
 
 ## Empty Neighbor Constraints
 These constraints prohibit empty neighbors.
@@ -175,13 +180,19 @@ Noise constraints either influence the probability of an object occurring or rep
 
 
 # Positions and Regions
-| **Vector Values (X,Y,Z)**               | **Used Vector Values (X,Y,Z)**                    | **Description**                                                                  |
-|-----------------------------------------|---------------------------------------------------|----------------------------------------------------------------------------------|
-| ```0 <= [X\|Y\|Z] < [max. grid size]``` | ```new [X\|Y\|Z] = old [X\|Y\|Z]```               | The vector values remain unchanged if they are within the grid.                  |
-| ```[X\|Y\|Z] < 0```                     | ```new [X\|Y\|Z] = [max. grid size] + [X\|Y\|Z]``` | Negative vector values allow specifications relative to the maximum grid size.   |
-| ```[X\|Y\|Z] > [max. grid size]```      | ```new [X\|Y\|Z] = [max. grid size]```            | Vector values that are too large are set to the maximum grid size.               |
-| ```[X\|Y\|Z] < -[max. grid size]```     | ```new [X\|Y\|Z] = 0```                           | Negative vector values that are too large are set to 0.                          |
+| **Vector Values (X,Y,Z)**     | **Used Vector Values (X,Y,Z)**                | **Description**                                                        |
+|-------------------------------|-----------------------------------------------|------------------------------------------------------------------------|
+| ```0 <= [X\|Y\|Z] < [grid size]``` | ```new [X\|Y\|Z] = old [X\|Y\|Z]```           | The vector values remain unchanged if they are within the grid.        |
+| ```[X\|Y\|Z] < 0```           | ```new [X\|Y\|Z] = [grid size] + [X\|Y\|Z]``` | Negative vector values allow specifications relative to the grid size. |
+| ```[X\|Y\|Z] > [grid size]``` | ```new [X\|Y\|Z] = [grid size]```        | Vector values that are too large are set to the grid size.             |
+| ```[X\|Y\|Z] < -[grid size]``` | ```new [X\|Y\|Z] = 0```                       | Negative vector values that are too small are set to 0.                |
 
+# Adjacency Constraints Comparison
+| *Tasks*                    | *Neighbor*     | *Connector* | *Geometry* |
+|----------------------------|----------------|-------------|------------|
+| Implementation             | easy  | concecpt required | very easy  |  
+| Renaming objects           | time-consuming | no problem | no problem |
+| Deleting or adding objects | time-consuming | no problem  | no problem | 
 
 ## Algorithm Phases
 ### Grid Initialization Phase
