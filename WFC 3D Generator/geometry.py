@@ -1,6 +1,6 @@
 from mathutils import Matrix, Vector
 import math
-from .helper import get_default_empty_name
+from .helper import get_default_empty_name, get_default_empty_object
 
 def get_bounding_box(obj, spacing):
     local_bbox = [Vector(v) for v in obj.bound_box]
@@ -186,14 +186,25 @@ def get_bb(obj):
     max_z = max(v.z for v in local_bbox)
 
     return [ min_x, max_x, min_y, max_y, min_z, max_z ]
+
+def get_max_size(max_size, obj, default_obj, prop_obj):
+    bb = get_bb(obj)
+    dimensions = default_obj["wfc_dim_xyz"] if default_obj is not None and "wfc_dim_xyz" in default_obj else (1, 1, 1)
+    dimensions = prop_obj["wfc_dim_xyz"] if "wfc_dim_xyz" in prop_obj else dimensions
+    obj_size = [(bb[1] - bb[0]) / dimensions[0], (bb[3] - bb[2]) / dimensions[1], (bb[5] - bb[4]) / dimensions[2]]
+    if obj_size[0] > max_size[0]: max_size[0] = obj_size[0]
+    if obj_size[1] > max_size[1]: max_size[1] = obj_size[1]
+    if obj_size[2] > max_size[2]: max_size[2] = obj_size[2]
+    return max_size
 def auto_detect_spacing(props):
     max_size = [ 0, 0, 0 ]
+    default_obj = get_default_empty_object(props.collection_obj, False)
     for obj in props.collection_obj.objects:
         if obj.name.startswith(get_default_empty_name()) or not hasattr(obj, "bound_box"): continue
-        bb = get_bb(obj)
-        dimensions = obj["wfc_dim_xyz"] if "wfc_dim_xyz" in obj else (1, 1, 1)
-        obj_size = [ (bb[1]-bb[0])/dimensions[0], (bb[3]-bb[2])/dimensions[1], (bb[5]-bb[4])/dimensions[2] ]
-        if obj_size[0] > max_size[0]: max_size[0] = obj_size[0]
-        if obj_size[1] > max_size[1]: max_size[1] = obj_size[1]
-        if obj_size[2] > max_size[2]: max_size[2] = obj_size[2]
+        max_size = get_max_size(max_size, obj, default_obj, obj)
+    for child in props.collection_obj.children:
+        collection_default = get_default_empty_object(child, False)
+        for obj in child.objects:
+            if obj.name.startswith(get_default_empty_name()) or not hasattr(obj, "bound_box"): continue
+            max_size = get_max_size(max_size, obj, default_obj, collection_default)
     return max_size
