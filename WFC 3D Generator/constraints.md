@@ -191,11 +191,11 @@ Challenge:
 - When changing the grid size, regions or positions may need to be corrected.
 
 # Adjacency Constraints Comparison
-| *Tasks*                                          | *Neighbor*     | *Connector* | *Geometry*  |
-|--------------------------------------------------|----------------|-------------|-------------|
+| *Tasks*                                          | *Neighbor*     | *Connector*      | *Geometry*  |
+|--------------------------------------------------|----------------|------------------|-------------|
 | Implementation                                   | easy  | concept required | very easy   |  
-| Adding, deleting, renaming building blocks       | time-consuming | no problem | no problem  | 
-| Performance with large number of building blocks | fast | fast | (very) slow |
+| Adding, deleting, renaming building blocks       | time-consuming | no problem       | no problem  | 
+| Performance with large number of building blocks | fast | very fast        | (very) slow |
 
 ## Algorithm Phases
 ### Grid Initialization Phase
