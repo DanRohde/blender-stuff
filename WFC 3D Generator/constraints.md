@@ -214,7 +214,9 @@ All these constraints reduce entropy in grid cells:
 
 
 ### Collapse Phase
-1. (Region) Probability constraints: influence collapse with weight and probability
+1. Empty Neighbor Constraints
+2. Dimensions Constraints
+3. (Region) Probability constraints: influence collapse with weight and probability
 
 ### Propagate Phase
 1. Symmetry constraints (collapse cells)
@@ -225,6 +227,9 @@ All these constraints reduce entropy in grid cells:
 6. Neighbor constraints
 7. Connector constraints
 8. Geometry constraints
+
+### Post Generation Phase
+1. Empty Neighbor Constraints
 
 ### Render Phase
 1. Noise constraints: replace randomness for transformations (scale, rotation, ...)
