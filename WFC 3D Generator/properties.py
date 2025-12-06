@@ -274,7 +274,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     region_level_ground: bpy.props.BoolProperty(name="Ground", description="Ground level (z=0)", default=PROP_DEFAULTS["region_level_ground"], update=auto_save)
     region_level_first: bpy.props.BoolProperty(name="First", description="First level (z=1)", default=PROP_DEFAULTS["region_level_first"], update=auto_save)
     region_level_second: bpy.props.BoolProperty(name="Second", description="Second level (z=2)", default=PROP_DEFAULTS["region_level_second"], update=auto_save)
-    region_level_mid: bpy.props.BoolProperty(name="Mid", description="Mid level (0<z<max)", default=PROP_DEFAULTS["region_level_mid"], update=auto_save)
+    region_level_mid: bpy.props.BoolProperty(name="Mid", description="Mid level (2<z<max-2)", default=PROP_DEFAULTS["region_level_mid"], update=auto_save)
     region_level_penultimate: bpy.props.BoolProperty(name="Penultimate", description="Penultimate level (z=max-1)", default=PROP_DEFAULTS["region_level_penultimate"], update=auto_save)
     region_level_top: bpy.props.BoolProperty(name="Top", description="Top level (z=max)", default=PROP_DEFAULTS["region_level_top"], update=auto_save)
     conn_directions: bpy.props.EnumProperty(name="", description="Select a direction", items=get_conn_directions, update=handle_conn_directions_update)
