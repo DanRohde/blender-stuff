@@ -4,11 +4,11 @@ import random
 from .helper import get_default_empty_name
 
 class WFC3DRenderer:
-    def __init__(self, generator):
+    def __init__(self, generator, props):
         self.generator = generator
         self.grid = generator.grid
         self.constraints = generator.constraints
-        self.props = generator.props
+        self.props = props
         self.collapsed_cells = []
         self.target_collection_obj = None
         self.odd_offset = self.props.odd_offset

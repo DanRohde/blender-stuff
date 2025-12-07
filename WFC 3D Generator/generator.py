@@ -7,12 +7,11 @@ from .helper import get_default_empty_name
 from .geometry import auto_detect_spacing
 
 class WFC3DGenerator:
-    def __init__(self, collection, props):
+    def __init__(self, props):
         self.props = props
-        self.collection = collection
+        self.collection = props.collection_obj
         self.grid_size = props.grid_size
         self.use_constraints = props.use_constraints
-        self.copy_modifiers = props.copy_modifiers
         self.random_start_cell = props.random_start_cell
         self.collapsed_cells = []
         self.spacing = self.get_spacing(self.props)

@@ -7,10 +7,10 @@ def generate_model(props):
         vl = bpy.context.view_layer
         for c in vl.layer_collection.children:
             if c.name.startswith(props.target_collection): c.hide_viewport = True
-    generator = WFC3DGenerator(props.collection_obj, props)
+    generator = WFC3DGenerator(props)
     generator.generate_model()
     from .renderer import WFC3DRenderer
-    renderer = WFC3DRenderer(generator)
+    renderer = WFC3DRenderer(generator, props)
     renderer.render()
     if props.render_delay == 0:
         generator.clean()
@@ -45,7 +45,7 @@ class WFC3D_OT_Search(bpy.types.Operator):
         props = context.scene.wfc_props
         if props.search_iterations <= 0 or props.collection_obj is None: return {'FINISHED'}
         if len(props.collection_obj.objects) == 0 and len(props.collection_obj.children) == 0: return {'FINISHED'}
-        generator = WFC3DGenerator(props.collection_obj, props)
+        generator = WFC3DGenerator(props)
         props.search_result = (-1, -1, -1)
         a = props.auto_generate
         props.auto_generate = False
