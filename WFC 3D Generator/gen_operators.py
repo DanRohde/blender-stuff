@@ -13,7 +13,7 @@ def generate_model(props):
     renderer = WFC3DRenderer(generator, props)
     renderer.render()
     if props.render_delay == 0:
-        generator.clean()
+        renderer.clean()
         gc.collect()
     return generator
 
