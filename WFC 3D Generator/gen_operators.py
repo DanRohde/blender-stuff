@@ -8,7 +8,7 @@ def generate_model(props, context):
         for c in vl.layer_collection.children:
             if c.name.startswith(props.target_collection): c.hide_viewport = True
     gs = props.grid_size[0]*props.grid_size[1]*props.grid_size[2]
-    progress = WFC3DProgress(2 * gs if props.render_delay == 0 else gs , context)
+    progress = WFC3DProgress(2 * gs, context)
     progress.begin()
     generator = WFC3DGenerator(props)
     generator.generate_model(progress)
@@ -35,7 +35,6 @@ class WFC3D_OT_Generate(bpy.types.Operator):
     bl_idname = "object.wfc_3d_generate"
     bl_label = "Generate WFC 3D Model"
     bl_options = {'REGISTER', 'UNDO'}
-        
     def execute(self, context):
         props = context.scene.wfc_props
         generate_model(props, context)
@@ -49,10 +48,14 @@ class WFC3DProgress():
         self.offset = offset
     def begin(self):
         self.context.window_manager.progress_begin(0, 100)
+        self.context.scene.wfc_props.progress = 0
     def update(self, count):
-        self.context.window_manager.progress_update(100 * (self.offset+count) / self.max_count)
+        pct = (self.offset + count) / self.max_count
+        self.context.window_manager.progress_update(100 * pct)
+        self.context.scene.wfc_props.progress = pct
     def end(self):
         self.context.window_manager.progress_end()
+        self.context.scene.wfc_props.progress = 0
     def set_offset(self, offset):
         self.offset = offset
 
