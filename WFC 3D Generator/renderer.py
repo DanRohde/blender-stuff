@@ -31,15 +31,10 @@ class WFC3DRenderer:
                 progress.update(self.element_count - len(self.collapsed_cells))
 
     def place_delayed_objects(self):
-        def _cleanup(success=False):
+        def _cleanup():
             bpy.context.scene.wfc_props.running_delayed_renderer = False
             bpy.context.scene.wfc_props.paused_delayed_renderer = False
             self.progress.end()
-
-            def draw(self, _context):
-                self.layout.label(text="WFC 3D model successfully rendered!")
-
-            if success and not bpy.context.scene.wfc_props.cherry_picking_running: bpy.context.window_manager.popup_menu(draw, title="Info", icon='INFO')
             self.clean()
             gc.collect()
         if not bpy.context.scene.wfc_props.running_delayed_renderer:
@@ -54,7 +49,7 @@ class WFC3DRenderer:
         if len(self.collapsed_cells) > 0:
             return self.props.render_delay/1000
         else:
-            _cleanup(True)
+            _cleanup()
         return None
 
     def init_target_collection(self):
