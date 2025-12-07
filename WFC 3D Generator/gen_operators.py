@@ -9,6 +9,9 @@ def generate_model(props):
             if c.name.startswith(props.target_collection): c.hide_viewport = True
     generator = WFC3DGenerator(props.collection_obj, props)
     generator.generate_model()
+    from .renderer import WFC3DRenderer
+    renderer = WFC3DRenderer(generator)
+    renderer.render()
     if props.render_delay == 0:
         generator.clean()
         gc.collect()
@@ -52,7 +55,7 @@ class WFC3D_OT_Search(bpy.types.Operator):
         context.window_manager.progress_begin(0, 100)
         while i < props.search_iterations:
             generator.set_seed(props.seed)
-            generator.generate_model(False)
+            generator.generate_model()
             c = generator.grid.count_empty_cells()
             if c < mincount:
                 minseed = props.seed
