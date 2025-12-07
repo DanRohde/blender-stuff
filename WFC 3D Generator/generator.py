@@ -85,7 +85,7 @@ class WFC3DGenerator:
             collapsed = [ self.grid.mark_collapsed(x, y, z) ]
         return collapsed
 
-    def generate_model(self):
+    def generate_model(self, progress = None):
         """Execute WFC algorithm and generate the model"""
 
         self.grid.initialize_grid(self.objects, self.constraints)
@@ -102,7 +102,9 @@ class WFC3DGenerator:
             self.collapsed_cells.extend(self.constraints.propagate(collapsed) if self.use_constraints else collapsed)
 
             collapsed = []
+            if progress is not None: progress.update(len(self.collapsed_cells))
         if self.use_constraints: self.constraints.propagate_post_gen_constraints()
+        if progress is not None: progress.update(len(self.collapsed_cells))
 
     def clean(self):
         self.grid.clean()

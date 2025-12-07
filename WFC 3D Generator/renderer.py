@@ -15,7 +15,7 @@ class WFC3DRenderer:
         self.link_objects = self.props.link_objects
         self.spacing = self.generator.spacing
 
-    def render(self):
+    def render(self, progress=None):
         self.collapsed_cells = self.generator.collapsed_cells
         self.init_target_collection()
 
@@ -23,8 +23,10 @@ class WFC3DRenderer:
             bpy.context.scene.wfc_props.running_delayed_renderer = True
             bpy.app.timers.register(self.place_delayed_objects, first_interval=self.props.render_delay/1000)
         else:
+            max_cells = len(self.collapsed_cells)
             while len(self.collapsed_cells)>0:
                 self.place_object(self.collapsed_cells.pop(0))
+                progress.update(max_cells - len(self.collapsed_cells))
 
     def place_delayed_objects(self):
         if not bpy.context.scene.wfc_props.running_delayed_renderer:

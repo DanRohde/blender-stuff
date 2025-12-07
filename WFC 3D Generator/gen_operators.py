@@ -2,18 +2,25 @@ import bpy
 import gc
 from .generator import WFC3DGenerator
 
-def generate_model(props):
+def generate_model(props, context):
     if not props.remove_target_collection:
         vl = bpy.context.view_layer
         for c in vl.layer_collection.children:
             if c.name.startswith(props.target_collection): c.hide_viewport = True
+    gs = props.grid_size[0]*props.grid_size[1]*props.grid_size[2]
+    progress = WFC3DProgress(2 * gs if props.render_delay == 0 else gs , context)
+    progress.begin()
     generator = WFC3DGenerator(props)
-    generator.generate_model()
+    generator.generate_model(progress)
     from .renderer import WFC3DRenderer
     renderer = WFC3DRenderer(generator, props)
-    renderer.render()
+    progress.set_offset(gs)
+    renderer.render(progress)
+    progress.end()
+    progress = None
     if props.render_delay == 0:
         renderer.clean()
+        renderer = None
         gc.collect()
     return generator
 
@@ -21,7 +28,7 @@ def handle_seed_change(_self, context):
     props = context.scene.wfc_props
     if props.cherry_picking_running or not props.auto_generate or props.collection_obj is None: return
     if len(props.collection_obj.objects) == 0 and len(props.collection_obj.children) == 0: return
-    generate_model(props)
+    generate_model(props, context)
 
 class WFC3D_OT_Generate(bpy.types.Operator):
     """Generates a 3D model with Wave Function Collapse"""
@@ -31,9 +38,23 @@ class WFC3D_OT_Generate(bpy.types.Operator):
         
     def execute(self, context):
         props = context.scene.wfc_props
-        generate_model(props)
+        generate_model(props, context)
         self.report({'INFO'}, "WFC 3D model successfully generated!")
         return {'FINISHED'}
+
+class WFC3DProgress():
+    def __init__(self, max_count, context, offset = 0):
+        self.max_count = max_count
+        self.context = context
+        self.offset = offset
+    def begin(self):
+        self.context.window_manager.progress_begin(0, 100)
+    def update(self, count):
+        self.context.window_manager.progress_update(100 * (self.offset+count) / self.max_count)
+    def end(self):
+        self.context.window_manager.progress_end()
+    def set_offset(self, offset):
+        self.offset = offset
 
 class WFC3D_OT_Search(bpy.types.Operator):
     """Search for a random seed with maximum grid occupancy"""
@@ -52,7 +73,8 @@ class WFC3D_OT_Search(bpy.types.Operator):
         i=0
         mincount = 2**63 - 1
         minseed = props.seed
-        context.window_manager.progress_begin(0, 100)
+        progress = WFC3DProgress(props.search_iterations, context)
+        progress.begin()
         while i < props.search_iterations:
             generator.set_seed(props.seed)
             generator.generate_model()
@@ -63,16 +85,17 @@ class WFC3D_OT_Search(bpy.types.Operator):
             if mincount == 0: break
             props.seed += 1
             i += 1
-            context.window_manager.progress_update(100*i/props.search_iterations)
+            progress.update(i)
 
-        context.window_manager.progress_end()
+        progress.end()
+        progress = None
         generator.clean()
         gc.collect()
         props.auto_generate = a
         props.seed = minseed
         props.search_result = (minseed, i, mincount )
 
-        if not props.auto_generate: generate_model(props)
+        if not props.auto_generate: generate_model(props, context)
         if mincount == 0:
             self.report({'INFO'}, f"Found a result with full grid occupancy after {i} iteration(s)!")
         else:
@@ -131,7 +154,7 @@ class WFC3D_OT_CherryPicking(bpy.types.Operator):
         if not props.cherry_picking_running: return None
         if props.running_delayed_renderer: return prefs.cherry_picking_delay
         props.seed += 1
-        generate_model(props)
+        generate_model(props, bpy.context)
         return prefs.cherry_picking_delay
 
     def execute(self, context):
