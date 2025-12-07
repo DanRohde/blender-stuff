@@ -783,10 +783,6 @@ class WFC3DConstraints:
                 self.grid.grid[nx, ny, nz] = new_options
                 if len(new_options) == 1: queue.append((nx, ny, nz))
 
-    def propagate_empty_neighbor_constraints(self, cell):
-        x, y, z = cell
-        self.grid.grid[x, y ,z] = self.check_empty_neighbors(cell, self.grid.grid[x, y, z])
-
     def apply_post_init_constraints(self):
         collapsed = []
         for obj in self.objects:
