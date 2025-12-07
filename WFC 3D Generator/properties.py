@@ -345,6 +345,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
     reset_all_confirmation: bpy.props.BoolProperty(name="I'm sure!", default=False, options={'SKIP_SAVE','SKIP_PRESET'})
     progress: bpy.props.FloatProperty(default=0, min=0, max=1)
+    progress_elapsed_time: bpy.props.FloatProperty(default=0)
+    progress_eta: bpy.props.FloatProperty(default=0)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props

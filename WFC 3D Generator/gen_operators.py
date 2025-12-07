@@ -1,4 +1,6 @@
 import bpy
+import time
+import numpy as np
 import gc
 from .generator import WFC3DGenerator
 
@@ -46,18 +48,39 @@ class WFC3DProgress():
         self.max_count = max_count
         self.context = context
         self.offset = offset
+        self.start_time = 0
     def begin(self):
         self.context.window_manager.progress_begin(0, 100)
         self.context.scene.wfc_props.progress = 0
+        self.start_time = time.perf_counter()
+        self.progress_history = []
+        self.time_history = []
+        self.window_size = 10
     def update(self, count):
         pct = (self.offset + count) / self.max_count
+        props = self.context.scene.wfc_props
         self.context.window_manager.progress_update(100 * pct)
-        self.context.scene.wfc_props.progress = pct
+        props.progress = pct
+        props.progress_elapsed_time = time.perf_counter() - self.start_time
+        self.progress_history.append(pct)
+        self.time_history.append(props.progress_elapsed_time)
+        self.context.scene.wfc_props.progress_eta = self.get_eta()
     def end(self):
         self.context.window_manager.progress_end()
         self.context.scene.wfc_props.progress = 0
     def set_offset(self, offset):
         self.offset = offset
+    def get_eta(self):
+        if len(self.progress_history) < 2: return -1
+        deltas_progress = np.diff(self.progress_history)
+        deltas_time = np.diff(self.time_history)
+        speeds = deltas_progress / deltas_time
+        window = min(self.window_size, len(speeds))
+        smoothed_speed = np.convolve(speeds, np.ones(window) / window, mode='valid')[-1]
+        if smoothed_speed <= 0: return -1
+        remaining_progress = 1 - self.progress_history[-1]
+        eta = remaining_progress / smoothed_speed
+        return eta
 
 class WFC3D_OT_Search(bpy.types.Operator):
     """Search for a random seed with maximum grid occupancy"""
