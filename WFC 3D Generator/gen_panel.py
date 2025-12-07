@@ -86,7 +86,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row = layout.row()
         row.enabled = render_allowed and not props.running_delayed_renderer
         row.operator("object.wfc_3d_generate")
-        if props.progress > 0: layout.row().progress(factor=props.progress, text=f"{round(props.progress*100)}% (elapsed: {round(props.progress_elapsed_time,0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
+        if props.progress > 0: layout.row().progress(factor=props.progress, text=f"{round(props.progress*100)}% (et: {round(props.progress_elapsed_time,0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
         if props.render_delay > 0:
             row = layout.row()
             row.operator("object.wfc_3d_generate_stop_delayed_renderer", text="Stop Delayed Renderer",icon='EVENT_MEDIASTOP')
