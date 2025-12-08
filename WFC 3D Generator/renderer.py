@@ -40,9 +40,12 @@ class WFC3DRenderer:
             return None
         if len(self.collapsed_cells) > 0 and not bpy.context.scene.wfc_props.paused_delayed_renderer:
             pos = self.collapsed_cells.pop(0)
-            while len(self.collapsed_cells) > 0 and len(self.grid.grid[pos[0], pos[1], pos[2]])==0: pos = self.collapsed_cells.pop(0)
+            skipped = 1
+            while len(self.collapsed_cells) > 0 and len(self.grid.grid[pos[0], pos[1], pos[2]])==0:
+                pos = self.collapsed_cells.pop(0)
+                skipped += 1
             self.place_object(pos)
-            self.progress.update_inc()
+            self.progress.update_inc(skipped)
 
         if len(self.collapsed_cells) > 0:
             return self.props.render_delay/1000
