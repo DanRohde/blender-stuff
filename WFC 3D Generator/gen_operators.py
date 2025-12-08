@@ -97,10 +97,12 @@ class WFC3DBackgroundSearch():
         self.mincount = 2**63 - 1
         self.minseed = 0
         self.context = None
+        self.generator = None
         pass
     def _done(self, props):
         self.progress.end()
         self.progress = None
+        if self.generator is not None: self.generator.clean()
         props.search_result = (self.minseed, props.search_iterations - props.search_running_iterations, self.mincount)
         props.auto_generate = self.auto_generate
         props.seed = self.minseed
@@ -112,10 +114,10 @@ class WFC3DBackgroundSearch():
         if props.search_running_iterations == 0 or not props.search_running:
             self._done(props)
             return None
-        generator = WFC3DGenerator(props)
-        generator.set_seed(props.seed)
-        generator.generate_model(self.progress)
-        c = generator.grid.count_empty_cells()
+        if self.generator == None: self.generator = WFC3DGenerator(props)
+        self.generator.set_seed(props.seed)
+        self.generator.generate_model(self.progress)
+        c = self.generator.grid.count_empty_cells()
         if c < self.mincount:
             self.minseed = props.seed
             self.mincount = c
@@ -124,7 +126,6 @@ class WFC3DBackgroundSearch():
             return None
         props.seed += 1
         props.search_running_iterations -= 1
-        generator.clean()
         return 0.01
     def start_search(self, context):
         self.context = context
