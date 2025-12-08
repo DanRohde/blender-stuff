@@ -14,13 +14,11 @@ class WFC3DRenderer:
         self.odd_offset = self.props.odd_offset
         self.link_objects = self.props.link_objects
         self.spacing = self.generator.spacing
-        self.element_count = 0
         self.progress = None
 
     def render(self, progress=None):
         self.collapsed_cells = self.generator.collapsed_cells
-        self.init_target_collection()
-        self.element_count = len(self.collapsed_cells)
+        self.init_target_collection(progress)
         self.progress = progress
         if self.props.render_delay > 0:
             bpy.context.scene.wfc_props.running_delayed_renderer = True
@@ -28,7 +26,7 @@ class WFC3DRenderer:
         else:
             while len(self.collapsed_cells)>0:
                 self.place_object(self.collapsed_cells.pop(0))
-                progress.update(self.element_count - len(self.collapsed_cells))
+                progress.update_inc()
 
     def place_delayed_objects(self):
         def _cleanup():
@@ -44,7 +42,7 @@ class WFC3DRenderer:
             pos = self.collapsed_cells.pop(0)
             while len(self.collapsed_cells) > 0 and len(self.grid.grid[pos[0], pos[1], pos[2]])==0: pos = self.collapsed_cells.pop(0)
             self.place_object(pos)
-            self.progress.update(self.element_count - len(self.collapsed_cells))
+            self.progress.update_inc()
 
         if len(self.collapsed_cells) > 0:
             return self.props.render_delay/1000
@@ -52,11 +50,12 @@ class WFC3DRenderer:
             _cleanup()
         return None
 
-    def init_target_collection(self):
+    def init_target_collection(self, progress):
         collection_name = self.props.target_collection
         if self.props.remove_target_collection and collection_name in bpy.data.collections:
             for obj in bpy.data.collections[collection_name].objects:
                 bpy.data.objects.remove(obj,do_unlink=True)
+                if progress: progress.update_inc()
             bpy.data.collections.remove(bpy.data.collections[collection_name])
             bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
         self.target_collection_obj = bpy.data.collections.new(collection_name)

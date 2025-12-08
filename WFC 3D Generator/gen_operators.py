@@ -5,18 +5,20 @@ import gc
 from .generator import WFC3DGenerator
 
 def generate_model(props, context):
+    progress_offset = 0
     if not props.remove_target_collection:
         vl = bpy.context.view_layer
         for c in vl.layer_collection.children:
             if c.name.startswith(props.target_collection): c.hide_viewport = True
+    else:
+        if props.target_collection in bpy.data.collections: progress_offset += len(bpy.data.collections[props.target_collection].objects)
     gs = props.grid_size[0]*props.grid_size[1]*props.grid_size[2]
-    progress = WFC3DProgress(2 * gs, context)
+    progress = WFC3DProgress(progress_offset + 2*gs, context)
     progress.begin()
     generator = WFC3DGenerator(props)
     generator.generate_model(progress)
     from .renderer import WFC3DRenderer
     renderer = WFC3DRenderer(generator, props)
-    progress.set_offset(gs)
     renderer.render(progress)
     progress.end()
     progress = None
@@ -44,11 +46,11 @@ class WFC3D_OT_Generate(bpy.types.Operator):
         return {'FINISHED'}
 
 class WFC3DProgress():
-    def __init__(self, max_count, context, offset = 0):
+    def __init__(self, max_count, context, offset = 0,):
         self.max_count = max_count
         self.context = context
-        self.offset = offset
         self.start_time = 0
+        self.last_count = 0
     def begin(self):
         self.context.window_manager.progress_begin(0, 100)
         self.context.scene.wfc_props.progress = 0
@@ -57,7 +59,8 @@ class WFC3DProgress():
         self.time_history = []
         self.window_size = 10
     def update(self, count):
-        pct = (self.offset + count) / self.max_count
+        self.last_count = count
+        pct = count / self.max_count
         props = self.context.scene.wfc_props
         self.context.window_manager.progress_update(100 * pct)
         props.progress = pct
@@ -68,8 +71,9 @@ class WFC3DProgress():
     def end(self):
         self.context.window_manager.progress_end()
         self.context.scene.wfc_props.progress = 0
-    def set_offset(self, offset):
-        self.offset = offset
+    def update_inc(self, count = 1):
+        self.last_count += count
+        self.update(self.last_count)
     def get_eta(self):
         if len(self.progress_history) < 2: return -1
         deltas_progress = np.diff(self.progress_history)
