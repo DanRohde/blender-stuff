@@ -72,11 +72,13 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             row.label(text=f"Seed {props.search_result[0]} found in {props.search_result[1]} steps with {props.search_result[2]} empty cell(s).")
             row.operator("object.wfc_3d_reset_search_result",icon="PANEL_CLOSE")
         row = box.row()
-        row.prop(props, "seed")
+        col = row.column()
+        col.prop(props, "seed")
+        col.enabled = not props.search_running
         if prefs.cherry_picking_delay > 0:
             col = row.column()
             col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
-            col.enabled = render_allowed
+            col.enabled = render_allowed and not props.search_running
         col = row.column()
         col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
         col.enabled = render_allowed and not props.cherry_picking_running and not props.search_running
@@ -88,7 +90,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             
 
         row = layout.row()
-        row.enabled = render_allowed and not props.running_delayed_renderer
+        row.enabled = render_allowed and not props.running_delayed_renderer and not props.search_running
         row.operator("object.wfc_3d_generate")
         if props.progress > 0: layout.row().progress(factor=props.progress, text=f"{round(props.progress*100)}% (et: {round(props.progress_elapsed_time,0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
         if props.render_delay > 0:

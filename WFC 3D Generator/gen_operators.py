@@ -45,15 +45,16 @@ class WFC3D_OT_Generate(bpy.types.Operator):
         self.report({'INFO'}, "WFC 3D model successfully generated!")
         return {'FINISHED'}
 
-class WFC3DProgress():
-    def __init__(self, max_count, context, prop_prefix = ''):
+class WFC3DProgress:
+    def __init__(self, max_count, context, prop_prefix = '', cursor = True):
         self.max_count = max_count
         self.context = context
         self.start_time = 0
         self.last_count = 0
         self.prop_prefix = prop_prefix
+        self.cursor = cursor
     def begin(self):
-        self.context.window_manager.progress_begin(0, 100)
+        if self.cursor: self.context.window_manager.progress_begin(0, 100)
         setattr(self.context.scene.wfc_props, self.prop_prefix, 0)
         self.start_time = time.perf_counter()
         self.progress_history = []
@@ -63,14 +64,14 @@ class WFC3DProgress():
         self.last_count = count
         pct = count / self.max_count
         props = self.context.scene.wfc_props
-        self.context.window_manager.progress_update(100 * pct)
+        if self.cursor: self.context.window_manager.progress_update(100 * pct)
         setattr(props, self.prop_prefix+'progress',  pct)
         setattr(props, self.prop_prefix+'progress_elapsed_time', time.perf_counter() - self.start_time)
         self.progress_history.append(pct)
-        self.time_history.append(props.progress_elapsed_time)
+        self.time_history.append(getattr(props,self.prop_prefix+'progress_elapsed_time'))
         setattr(props, self.prop_prefix+'progress_eta', self.get_eta())
     def end(self):
-        self.context.window_manager.progress_end()
+        if self.cursor: self.context.window_manager.progress_end()
         setattr(self.context.scene.wfc_props, self.prop_prefix+'progress', 0)
     def update_inc(self, count = 1):
         self.last_count += count
@@ -89,7 +90,7 @@ class WFC3DProgress():
         except:
             return -1
         return eta
-class WFC3DBackgroundSearch():
+class WFC3DBackgroundSearch:
     def __init__(self):
         self.progress = None
         self.props = None
@@ -133,7 +134,7 @@ class WFC3DBackgroundSearch():
         props.search_running_iterations = props.search_iterations
         self.auto_generate = props.auto_generate
         props.auto_generate = False
-        self.progress = WFC3DProgress(props.search_iterations * props.grid_size[0] * props.grid_size[1] * props.grid_size[2], context, prop_prefix="search_")
+        self.progress = WFC3DProgress(props.search_iterations * props.grid_size[0] * props.grid_size[1] * props.grid_size[2], context, prop_prefix="search_", cursor=False)
         self.progress.begin()
         props.search_running = True
         bpy.app.timers.register(self._search, first_interval=0.01)
