@@ -100,11 +100,10 @@ class WFC3DGenerator:
             collapsed.extend(self.collapse(cell))
 
             self.collapsed_cells.extend(self.constraints.propagate(collapsed) if self.use_constraints else collapsed)
-
+            if progress is not None: progress.update_inc(len(collapsed))
             collapsed = []
-            if progress is not None: progress.update(len(self.collapsed_cells))
         if self.use_constraints: self.constraints.propagate_post_gen_constraints()
-        if progress is not None: progress.update(len(self.collapsed_cells))
+        if progress is not None: progress.update_inc(len(collapsed))
 
     def clean(self):
         self.grid.clean()

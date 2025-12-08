@@ -60,9 +60,13 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         box = layout.box()
         box.prop(props, "random_start_cell")
         row = box.row()
-        row.prop(props, "search_iterations",text="Iterations")
-        row.operator("object.wfc_3d_search",text="Search Seed")
-        row.enabled = render_allowed and not props.cherry_picking_running
+        if props.search_running:
+            row.progress(factor=props.search_progress,text=f"{round(props.search_progress*100)}% (et: {round(props.search_progress_elapsed_time,0):.0f}s/eta: {props.search_progress_eta:.0f}s)", type="BAR")
+            row.operator("object.wfc_3d_stop_search", icon="EVENT_MEDIASTOP")
+        else:
+            row.prop(props, "search_iterations",text="Iterations")
+            row.operator("object.wfc_3d_search",text="Search Seed")
+            row.enabled = render_allowed and not props.cherry_picking_running
         if props.search_result[0] > -1:
             row = box.row()
             row.label(text=f"Seed {props.search_result[0]} found in {props.search_result[1]} steps with {props.search_result[2]} empty cell(s).")
@@ -75,7 +79,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             col.enabled = render_allowed
         col = row.column()
         col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
-        col.enabled = render_allowed and not props.cherry_picking_running
+        col.enabled = render_allowed and not props.cherry_picking_running and not props.search_running
 
         layout.separator(type="LINE", factor=0.2)
 

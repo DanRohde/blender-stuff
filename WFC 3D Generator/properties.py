@@ -153,6 +153,11 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove existing target collection",)
     search_iterations: bpy.props.IntProperty(name="Search Iterations", description="Search iterations", min=1, default=100, max=1000)
     search_result: bpy.props.IntVectorProperty(name="Search Result", description="Search result", default=(-1,-1,-1), size=3)
+    search_progress: bpy.props.FloatProperty(default=0, min=0, max=1)
+    search_progress_elapsed_time: bpy.props.FloatProperty(default=0)
+    search_progress_eta: bpy.props.FloatProperty(default=0)
+    search_running: bpy.props.BoolProperty(default=False)
+    search_running_iterations: bpy.props.IntProperty(default=0)
 
     obj_list: bpy.props.CollectionProperty(type=WFC3DEditPanelMultiSelItem)
     obj_list_idx: bpy.props.IntProperty()
