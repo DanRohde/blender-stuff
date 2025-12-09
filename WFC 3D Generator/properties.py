@@ -124,10 +124,10 @@ class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
 
 class WFC3DDistanceListItem(bpy.types.PropertyGroup):
     distance: bpy.props.IntVectorProperty(name="Distance", description="Minimum cell distance", default=PROP_DEFAULTS['distance'], min=0, update=auto_save)
-    distance_from: bpy.props.EnumProperty(update=auto_save, name="From", description="Minimum distance from ...",
-                                          items=[('object', 'Object', 'Minimum distance from an object'),
-                                                 ('position', 'Position', 'Minimum distance from a grid position'),
-                                          ('sub-collection','Sub-Collection','Minimum distance from objects in a sub-collection.')])
+    distance_from: bpy.props.EnumProperty(update=auto_save, name="From", description="Distance from ",
+                                          items=[('object', 'Object', 'Distance from an object'),
+                                                 ('position', 'Position', 'Distance from a grid position'),
+                                          ('sub-collection','Sub-Collection','Distance from objects in a sub-collection.')])
     distance_object: bpy.props.PointerProperty(type=bpy.types.Object, name="Object", description="Object from the source collection", update=auto_save, poll=is_sub_element)
     distance_position: bpy.props.IntVectorProperty(name="Position", description="Grid position", update=auto_save, default=PROP_DEFAULTS['distance_position'])
     distance_position_pct: bpy.props.FloatVectorProperty(name="", description="Percentage-based relative grid position", min=0, max=100, precision=1, default=PROP_DEFAULTS['distance_position_pct'], update=auto_save)
