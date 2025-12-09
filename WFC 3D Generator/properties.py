@@ -131,7 +131,7 @@ class WFC3DDistanceListItem(bpy.types.PropertyGroup):
     distance_object: bpy.props.PointerProperty(type=bpy.types.Object, name="Object", description="Object from the source collection", update=auto_save, poll=is_sub_element)
     distance_position: bpy.props.IntVectorProperty(name="Position", description="Grid position", update=auto_save, default=PROP_DEFAULTS['distance_position'])
     distance_position_pct: bpy.props.FloatVectorProperty(name="", description="Percentage-based relative grid position", min=0, max=100, precision=1, default=PROP_DEFAULTS['distance_position_pct'], update=auto_save)
-    distance_position_type: bpy.props.EnumProperty(name="", description="Fixed position type", items=[('absolute', 'Absolute:', 'Absolute position'), ('pct', 'Pct:', 'Percentage-based relative position within the grid'), ], update=auto_save)
+    distance_position_type: bpy.props.EnumProperty(name="", description="Fixed position type", items=[('absolute', 'Abs:', 'Absolute position'), ('pct', 'Pct:', 'Percentage-based relative position within the grid'), ], update=auto_save)
     distance_subcollection: bpy.props.PointerProperty(type=bpy.types.Collection, name="Sub-Collection", description="Sub-collection from the source collection", poll=is_sub_element, update=auto_save)
     distance_type: bpy.props.EnumProperty(update=auto_save, name="Type", description="Distancy type", items=[('minimum', 'Minimum distance', 'Minimum distance'),('maximum', 'Maximum distance', 'Maximum distance'),('equal', 'Equal distance', 'Equal distance')])
     selected: bpy.props.BoolProperty(default=False)
