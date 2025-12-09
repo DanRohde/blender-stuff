@@ -122,6 +122,7 @@ class WFC3DBackgroundSearch:
         if c < self.mincount:
             self.minseed = props.seed
             self.mincount = c
+            props.search_result = (self.minseed, props.search_iterations - props.search_running_iterations, self.mincount)
         if c == 0:
             self._done(props)
             return None
