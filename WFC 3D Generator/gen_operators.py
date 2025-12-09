@@ -134,6 +134,7 @@ class WFC3DBackgroundSearch:
         props.search_running_iterations = props.search_iterations
         self.auto_generate = props.auto_generate
         props.auto_generate = False
+        props.search_result = (-1, -1, -1)
         self.progress = WFC3DProgress(props.search_iterations * props.grid_size[0] * props.grid_size[1] * props.grid_size[2], context, prop_prefix="search_", cursor=False)
         self.progress.begin()
         props.search_running = True
@@ -156,45 +157,7 @@ class WFC3D_OT_Search(bpy.types.Operator):
         search = WFC3DBackgroundSearch()
         search.start_search(context)
         return {'FINISHED'}
-    def _execute(self, context):
-        props = context.scene.wfc_props
-        if props.search_iterations <= 0 or props.collection_obj is None: return {'FINISHED'}
-        if len(props.collection_obj.objects) == 0 and len(props.collection_obj.children) == 0: return {'FINISHED'}
-        generator = WFC3DGenerator(props)
-        props.search_result = (-1, -1, -1)
-        a = props.auto_generate
-        props.auto_generate = False
-        i=0
-        mincount = 2**63 - 1
-        minseed = props.seed
-        progress = WFC3DProgress(props.search_iterations, context)
-        progress.begin()
-        while i < props.search_iterations:
-            generator.set_seed(props.seed)
-            generator.generate_model()
-            c = generator.grid.count_empty_cells()
-            if c < mincount:
-                minseed = props.seed
-                mincount = c
-            if mincount == 0: break
-            props.seed += 1
-            i += 1
-            progress.update(i)
 
-        progress.end()
-        progress = None
-        generator.clean()
-        gc.collect()
-        props.auto_generate = a
-        props.seed = minseed
-        props.search_result = (minseed, i, mincount )
-
-        if not props.auto_generate: generate_model(props, context)
-        if mincount == 0:
-            self.report({'INFO'}, f"Found a result with full grid occupancy after {i} iteration(s)!")
-        else:
-            self.report({'INFO'}, f"Found a result with maximum grid occupancy after {i} iteration(s)!")
-        return {'FINISHED'}
 class WFC3D_OT_ResetSearchResult(bpy.types.Operator):
     """Reset search result"""
     bl_idname = "object.wfc_3d_reset_search_result"
