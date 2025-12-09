@@ -10,13 +10,13 @@
 * Region frequency constraints: 5
 * Symmetry constraints: 19
 * Connector constraints: 30
-* Fixed position constraints: 1
+* Fixed position constraints: 3
 * Dimensions constraints: 1
 * Geometry constraints: 10
 * Noise constraints: 5
 * Distance constraints: 6
 * Empty Neighbor constraints: 2
-* **Sum: 158**
+* **Sum: 160**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -34,8 +34,11 @@
 
 ## Fixed Position Constraints
 * This allows you to set a fixed starting position within the grid in order to achieve a more predictable result.
-* Used custom property: `wfc_fixed_position_[0..n]`
-* Allowed property value: an integer vector
+* Used custom property: `wfc_fixed_position_[xyz|pct|type]_[0..n]`
+* Allowed property values: 
+  * wfc_fixed_position_xyz: an integer vector
+  * wfc_fixed_position_pct: a float vector [0..100]
+  * wfc_fixed_position_type: an integer (0: absolute, 1: percentage-based position)
 
 ## Dimensions Constraints
 * This enables building blocks that are larger than a cell.

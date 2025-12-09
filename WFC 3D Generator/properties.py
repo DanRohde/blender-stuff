@@ -102,6 +102,8 @@ class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
     fixed_position_xyz: bpy.props.IntVectorProperty(name="",
                                                     description="Fixed Position for a building block",
                                                     default=PROP_DEFAULTS['fixed_position_xyz'], update=auto_save)
+    fixed_position_pct: bpy.props.FloatVectorProperty(name="", description="Fixed Position for a building block", min=0, max=100, precision=1, default=PROP_DEFAULTS['fixed_position_pct'], update=auto_save)
+    fixed_position_type: bpy.props.EnumProperty(name="", description="Fixed position type", items=[('absolute','A','Absolute position'),('pct','%','Percentage-based relative position within the grid'),], update=auto_save)
     selected: bpy.props.BoolProperty(default=False)
 
 class WFC3DEmptyNeighborListItem(bpy.types.PropertyGroup):

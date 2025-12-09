@@ -83,7 +83,7 @@ PROP_DEFAULTS = {
     # dimensions constraints:
     'dim_xyz' : (1,1,1),
     # fixed position constraints:
-    'fixed_position_xyz' : (0,0,0),
+    'fixed_position_xyz' : (0,0,0), 'fixed_position_pct' : (0,0,0), 'fixed_position_type' : 'absolute',
     # region frequency constraints:
     'regfreq_name' : '', 'regfreq_min' : (0,0,0), 'regfreq_max' : (0,0,0), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
     # noise constraints:
@@ -138,7 +138,7 @@ CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn
 
 DIMENSIONS_CONSTRAINTS = [ 'dim_xyz' ]
 
-FIXED_POSITION_CONSTRAINTS = [ 'fixed_position_xyz' ]
+FIXED_POSITION_CONSTRAINTS = [ 'fixed_position_xyz', 'fixed_position_pct', 'fixed_position_type' ]
 
 REGFREQ_CONSTRAINTS = [ 'regfreq_name', 'regfreq_min', 'regfreq_max', 'regfreq_freq', 'regfreq_freq_pct',]
 
@@ -152,6 +152,8 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'regfreq_freq_pct' : 'regfreq_input_list',
                      'regfreq_name' : 'regfreq_input_list',
                      'fixed_position_xyz' : 'fixed_position_input_list',
+                     'fixed_position_pct' : 'fixed_position_input_list',
+                     'fixed_position_type' : 'fixed_position_input_list',
                      'regprob_name' : 'regprob_input_list',
                      'regprob_min' : 'regprob_input_list',
                      'regprob_max' : 'regprob_input_list',
@@ -164,7 +166,9 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'distance_subcollection' : 'distance_input_list',
                      'distance_type' : 'distance_input_list',
                    }
-ENUM_CONSTRAINTS = { 'distance_from' : [ 'object', 'position', 'sub-collection'], 'distance_type' : [ 'minimum', 'maximum' ,'equal']}
+ENUM_CONSTRAINTS = { 'distance_from' : [ 'object', 'position', 'sub-collection'], 'distance_type' : [ 'minimum', 'maximum' ,'equal'],
+                     'fixed_position_type' : [ 'absolute', 'pct']
+                     }
 
 EMPTY_NEIGHBOR_CONSTRAINTS = [ 'empty_neighbor', 'empty_any_neighbor' ]
 SELECTION_CONSTRAINTS = {

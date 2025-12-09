@@ -32,7 +32,11 @@ class WFC3D_UL_FixedPositionList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item,"selected", text="")
-        row.prop(item,"fixed_position_xyz")
+        row.prop(item,"fixed_position_type")
+        if item.fixed_position_type == 'absolute':
+            row.prop(item,"fixed_position_xyz")
+        else:
+            row.prop(item,"fixed_position_pct")
 
 class WFC3D_UL_RegProbList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):

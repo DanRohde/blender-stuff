@@ -692,8 +692,13 @@ class WFC3DConstraints:
 
     def apply_fixed_position_constraints(self, obj):
         collapsed = []
-        for p in self.constraints[obj.name]["fixed_position_xyz"]:
-            fp = self.grid.fix_position(p)
+        for idx,p in enumerate(self.constraints[obj.name]["fixed_position_xyz"]):
+            if self.constraints[obj.name]["fixed_position_type"][idx] == 0:
+                fp = self.grid.fix_position(p)
+            else:
+                mx, my, mz = self.grid.grid_size[0]-1, self.grid.grid_size[1]-1, self.grid.grid_size[2]-1
+                xpct, ypct, zpct = self.constraints[obj.name]["fixed_position_pct"][idx]
+                fp = self.grid.fix_position((int(mx*xpct/100), int(my*ypct/100), int(mz*zpct/100)))
             self.grid.grid[fp[0], fp[1], fp[2]] = [ obj.name ]
             collapsed.append(self.grid.mark_collapsed(fp[0], fp[1], fp[2]))
         return collapsed
