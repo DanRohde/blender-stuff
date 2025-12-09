@@ -103,7 +103,7 @@ class WFC3DBackgroundSearch:
     def _done(self, props):
         self.progress.end()
         self.progress = None
-        if self.generator is not None: self.generator.clean()
+        self.generator.clean()
         props.search_result = (self.minseed, props.search_iterations - props.search_running_iterations, self.mincount)
         props.auto_generate = self.auto_generate
         props.seed = self.minseed
@@ -127,7 +127,7 @@ class WFC3DBackgroundSearch:
             return None
         props.seed += 1
         props.search_running_iterations -= 1
-        return 0.01
+        return 0
     def start_search(self, context):
         self.context = context
         props = bpy.context.scene.wfc_props
@@ -139,7 +139,7 @@ class WFC3DBackgroundSearch:
         self.progress.begin()
         props.search_running = True
         self.generator = WFC3DGenerator(props)
-        bpy.app.timers.register(self._search, first_interval=0.01)
+        bpy.app.timers.register(self._search, first_interval=0)
 
 class WFC3D_OT_StopBackgroundSearch(bpy.types.Operator):
     bl_idname = "object.wfc_3d_stop_search"

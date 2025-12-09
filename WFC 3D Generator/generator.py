@@ -87,7 +87,7 @@ class WFC3DGenerator:
 
     def generate_model(self, progress = None):
         """Execute WFC algorithm and generate the model"""
-
+        self.collapsed_cells = []
         self.grid.initialize_grid(self.objects, self.constraints)
         if self.use_constraints: self.collapsed_cells.extend(self.constraints.propagate(self.constraints.apply_post_init_constraints()))
         while True:
@@ -109,6 +109,7 @@ class WFC3DGenerator:
         return True
 
     def init_generate_model_in_background(self):
+        self.collapsed_cells = []
         self.grid.initialize_grid(self.objects, self.constraints)
         if self.use_constraints: self.collapsed_cells.extend(self.constraints.propagate(self.constraints.apply_post_init_constraints()))
 
