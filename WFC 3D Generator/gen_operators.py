@@ -115,7 +115,6 @@ class WFC3DBackgroundSearch:
         if props.search_running_iterations == 0 or not props.search_running:
             self._done(props)
             return None
-        if self.generator == None: self.generator = WFC3DGenerator(props)
         self.generator.set_seed(props.seed)
         self.generator.generate_model(self.progress)
         c = self.generator.grid.count_empty_cells()
@@ -139,6 +138,7 @@ class WFC3DBackgroundSearch:
         self.progress = WFC3DProgress(props.search_iterations * props.grid_size[0] * props.grid_size[1] * props.grid_size[2], context, prop_prefix="search_", cursor=False)
         self.progress.begin()
         props.search_running = True
+        self.generator = WFC3DGenerator(props)
         bpy.app.timers.register(self._search, first_interval=0.01)
 
 class WFC3D_OT_StopBackgroundSearch(bpy.types.Operator):

@@ -89,21 +89,28 @@ class WFC3DGenerator:
         """Execute WFC algorithm and generate the model"""
 
         self.grid.initialize_grid(self.objects, self.constraints)
-
         if self.use_constraints: self.collapsed_cells.extend(self.constraints.propagate(self.constraints.apply_post_init_constraints()))
-
-        collapsed = []
         while True:
             cell = self.get_lowest_entropy_cell()
             if cell is None: break
-
-            collapsed.extend(self.collapse(cell))
-
+            collapsed = self.collapse(cell)
             self.collapsed_cells.extend(self.constraints.propagate(collapsed) if self.use_constraints else collapsed)
             if progress is not None: progress.update_inc(len(collapsed))
-            collapsed = []
         if self.use_constraints: self.constraints.propagate_post_gen_constraints()
+
+    def generate_model_in_background_task(self, progress = None):
+        cell = self.get_lowest_entropy_cell()
+        if cell is None:
+            if self.use_constraints: self.constraints.propagate_post_gen_constraints()
+            return False
+        collapsed = self.collapse(cell)
+        self.collapsed_cells.extend(self.constraints.propagate(collapsed) if self.use_constraints else collapsed)
         if progress is not None: progress.update_inc(len(collapsed))
+        return True
+
+    def init_generate_model_in_background(self):
+        self.grid.initialize_grid(self.objects, self.constraints)
+        if self.use_constraints: self.collapsed_cells.extend(self.constraints.propagate(self.constraints.apply_post_init_constraints()))
 
     def clean(self):
         self.grid.clean()
