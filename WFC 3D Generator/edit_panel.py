@@ -66,7 +66,12 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
         if item.distance_from == 'object':
             col.prop(item, "distance_object")
         elif item.distance_from == 'position':
-            col.row().prop(item, "distance_position")
+            row = col.row(align=True)
+            row.prop(item, "distance_position_type")
+            if item.distance_position_type == 'absolute':
+                row.prop(item, "distance_position",text="")
+            else:
+                row.prop(item, "distance_position_pct")
         else:
             col.row().prop(item, "distance_subcollection")
         col.prop(item, "distance_type")

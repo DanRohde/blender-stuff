@@ -14,9 +14,9 @@
 * Dimensions constraints: 1
 * Geometry constraints: 10
 * Noise constraints: 5
-* Distance constraints: 6
+* Distance constraints: 8
 * Empty Neighbor constraints: 2
-* **Sum: 160**
+* **Sum: 162**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -78,12 +78,14 @@
     * "-" - forbids to stay inside
 
 ## Distance Constraints
-* Used custom properties: `wfc_distance[_from|_object|_position|_subcollection|_type]`
+* Used custom properties: `wfc_distance[_from|_object|_position[_type|_pct]|_subcollection|_type]`
 * Allowed property values:
   * wfc_distance: integer vector
   * wfc_distance_from: integer: 0: object,  1: position, 2: sub-collection
   * wfc_distance_object: a pointer to an object
   * wfc_distance_position: integer vector
+  * wfc_distance_position_type: an integer: 0 - absolute, 1 - percentage-based
+  * wfc_distance_position_pct: a float vector [0..100]
   * wfc_distance_subcollection: a pointer to a collection
   * wfc_distance_type: integer: 0: minimum distance, 1: maximum distance, 2: equal distance
 

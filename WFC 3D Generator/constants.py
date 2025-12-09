@@ -96,7 +96,7 @@ PROP_DEFAULTS = {
     # region probability constraints:
     'regprob_name' : '', 'regprob_min' : (0,0,0), 'regprob_max' : (0,0,0), 'regprob_weight' : 1, 'regprob_probability' : 1,
     # distance constraints:
-    'distance': (1,1,1), 'distance_from': 'object', 'distance_object': None, 'distance_position': (0,0,0),
+    'distance': (1,1,1), 'distance_from': 'object', 'distance_object': None, 'distance_position': (0,0,0), 'distance_position_type' : 'absolute', 'distance_position_pct' : (0,0,0),
     'distance_subcollection': None, 'distance_type' : 'minimum',
     # empty neighbor constraints:
     'empty_neighbor':   [], 'empty_any_neighbor': [],
@@ -144,7 +144,7 @@ REGFREQ_CONSTRAINTS = [ 'regfreq_name', 'regfreq_min', 'regfreq_max', 'regfreq_f
 
 REGPROB_CONSTRAINTS = [ 'regprob_name', 'regprob_min', 'regprob_max', 'regprob_weight', 'regprob_probability',]
 
-DISTANCE_CONSTRAINTS = [ 'distance', 'distance_from', 'distance_position', 'distance_object', 'distance_subcollection', 'distance_type']
+DISTANCE_CONSTRAINTS = [ 'distance', 'distance_from', 'distance_position', 'distance_position_type', 'distance_position_pct', 'distance_object', 'distance_subcollection', 'distance_type']
 
 LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'regfreq_max' : 'regfreq_input_list',
@@ -162,12 +162,15 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'distance' : 'distance_input_list',
                      'distance_from' : 'distance_input_list',
                      'distance_position' : 'distance_input_list',
+                     'distance_position_pct' : 'distance_input_list',
+                     'distance_position_type' : 'distance_input_list',
                      'distance_object' : 'distance_input_list',
                      'distance_subcollection' : 'distance_input_list',
                      'distance_type' : 'distance_input_list',
                    }
 ENUM_CONSTRAINTS = { 'distance_from' : [ 'object', 'position', 'sub-collection'], 'distance_type' : [ 'minimum', 'maximum' ,'equal'],
-                     'fixed_position_type' : [ 'absolute', 'pct']
+                     'fixed_position_type' : [ 'absolute', 'pct'],
+                     'distance_position_type' : [ 'absolute', 'pct'],
                      }
 
 EMPTY_NEIGHBOR_CONSTRAINTS = [ 'empty_neighbor', 'empty_any_neighbor' ]

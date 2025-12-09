@@ -707,9 +707,13 @@ class WFC3DConstraints:
         collapsed = []
         for i, distance in enumerate(self.constraints[obj.name]["distance"]):
             if self.constraints[obj.name]["distance_from"][i] == 1:
-                position = self.grid.fix_position(self.constraints[obj.name]["distance_position"][i])
                 gs = self.grid.grid_size
                 mgx, mgy, mgz = gs[0] - 1, gs[1] - 1, gs[2] - 1
+                if self.constraints[obj.name]["distance_position_type"][i] == 0:
+                    position = self.grid.fix_position(self.constraints[obj.name]["distance_position"][i])
+                else:
+                    xpct, ypct, zpct = self.constraints[obj.name]["distance_position_pct"][i]
+                    position = self.grid.fix_position((int(xpct*mgx/100),int(ypct*mgy/100),int(zpct*mgz/100)))
                 minx, miny, minz = min(mgx, max(0, position[0] - distance[0])), min(mgy, max(0, position[1] - distance[1])), min(mgz, max(0, position[2] - distance[2]))
                 maxx, maxy, maxz = max(0, min(mgx, position[0] + distance[0])), max(0, min(mgy, position[1] + distance[1])), max(0, min(mgz, position[2] + distance[2]))
                 if self.constraints[obj.name]["distance_type"][i] == 0:
