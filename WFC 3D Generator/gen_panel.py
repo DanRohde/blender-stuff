@@ -22,6 +22,10 @@ class WFC3DGeneratePanel(bpy.types.Panel):
        
         box.label(text="Grid Size (width/depth/height)")
         box.row().prop(props, "grid_size")
+        if props.grid_size[0] * props.grid_size[1] * props.grid_size[2] > 200:
+            row = box.row()
+            row.prop(props, "background_generation")
+            row.prop(props, "background_iterations")
         row = box.row()
         row.label(text="Grid Cell Space")
         row.prop(props, "auto_detect_spacing")
