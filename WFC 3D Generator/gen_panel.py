@@ -91,12 +91,15 @@ class WFC3DGeneratePanel(bpy.types.Panel):
 
         row = layout.row()
         row.enabled = render_allowed and not props.running_delayed_renderer and not props.search_running
-        row.operator("object.wfc_3d_generate")
-        if props.progress > 0: layout.row().progress(factor=props.progress, text=f"{round(props.progress*100)}% (et: {round(props.progress_elapsed_time,0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
-        if props.render_delay > 0:
+        if props.progress == 0:
+            row.operator("object.wfc_3d_generate")
+        else:
             row = layout.row()
-            row.operator("object.wfc_3d_generate_stop_delayed_renderer", text="Stop Delayed Renderer",icon='EVENT_MEDIASTOP')
-            row.enabled = props.running_delayed_renderer
+            row.progress(factor=props.progress, text=f"{round(props.progress*100)}% (et: {round(props.progress_elapsed_time,0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
+            if props.render_delay > 0:
+                col = row.column()
+                col.operator("object.wfc_3d_generate_stop_delayed_renderer", text="",icon='EVENT_MEDIASTOP')
+                col.enabled = props.running_delayed_renderer
 
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon="INFO_LARGE")
