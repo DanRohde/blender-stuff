@@ -9,7 +9,7 @@ class WFC3DRenderer:
         self.grid = generator.grid
         self.constraints = generator.constraints
         self.props = props
-        self.collapsed_cells = []
+        self.collapsed_cells = self.generator.collapsed_cells
         self.target_collection_obj = None
         self.odd_offset = self.props.odd_offset
         self.link_objects = self.props.link_objects
@@ -17,7 +17,6 @@ class WFC3DRenderer:
         self.progress = None
 
     def render(self, progress=None):
-        self.collapsed_cells = self.generator.collapsed_cells
         self.init_target_collection(progress)
         self.progress = progress
         if self.props.render_delay > 0:
@@ -39,13 +38,7 @@ class WFC3DRenderer:
             _cleanup()
             return None
         if len(self.collapsed_cells) > 0 and not bpy.context.scene.wfc_props.paused_delayed_renderer:
-            pos = self.collapsed_cells.pop(0)
-            skipped = 1
-            while len(self.collapsed_cells) > 0 and len(self.grid.grid[pos[0], pos[1], pos[2]])==0:
-                pos = self.collapsed_cells.pop(0)
-                skipped += 1
-            self.place_object(pos)
-            self.progress.update_inc(skipped)
+            self.render_object(self.progress)
 
         if len(self.collapsed_cells) > 0:
             return self.props.render_delay/1000
@@ -63,6 +56,17 @@ class WFC3DRenderer:
             bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
         self.target_collection_obj = bpy.data.collections.new(collection_name)
         bpy.context.scene.collection.children.link(self.target_collection_obj)
+
+    def render_object(self, progress):
+        if len(self.collapsed_cells) == 0: return False
+        pos = self.collapsed_cells.pop(0)
+        skipped = 0
+        while len(self.collapsed_cells) > 0 and len(self.grid.grid[pos[0],pos[1],pos[2]]) == 0:
+            pos = self.collapsed_cells.pop(0)
+            skipped += 1
+        self.place_object(pos)
+        progress.update_inc(1+skipped)
+        return len(self.collapsed_cells) > 0
 
     def place_object(self, pos):
         x, y, z = pos

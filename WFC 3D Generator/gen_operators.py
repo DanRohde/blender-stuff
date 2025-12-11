@@ -2,31 +2,82 @@ import bpy
 import time
 import numpy as np
 import gc
+import functools
 from .generator import WFC3DGenerator
+from .renderer import WFC3DRenderer
 
-def generate_model(props, context):
-    progress_offset = 0
+
+def hide_old_target_collections(props):
     if not props.remove_target_collection:
         vl = bpy.context.view_layer
         for c in vl.layer_collection.children:
             if c.name.startswith(props.target_collection): c.hide_viewport = True
-    else:
-        if props.target_collection in bpy.data.collections: progress_offset += len(bpy.data.collections[props.target_collection].objects)
+        return True
+    return False
+def generate_model(props, context):
+    if props.background_generation:
+        generate_model_in_background(props, context)
+        return
+    progress_offset = 0
+    if not hide_old_target_collections(props) and props.target_collection in bpy.data.collections:
+        progress_offset += len(bpy.data.collections[props.target_collection].objects)
     gs = props.grid_size[0]*props.grid_size[1]*props.grid_size[2]
     progress = WFC3DProgress(progress_offset + 2*gs, context)
     progress.begin()
     generator = WFC3DGenerator(props)
     generator.generate_model(progress)
-    from .renderer import WFC3DRenderer
     renderer = WFC3DRenderer(generator, props)
     renderer.render(progress)
-    progress.end()
-    progress = None
     if props.render_delay == 0:
+        progress.end()
         renderer.clean()
-        renderer = None
         gc.collect()
-    return generator
+    else:
+        progress.set_cursor(False)
+    return
+
+def render_model_task(props, renderer, progress):
+    if props.progress_running:
+        if props.progress_paused: return 0.01
+        idx = 0
+        done = False
+        while idx < props.background_iterations:
+            idx += 1
+            if renderer.render_object(progress): continue
+            done = True
+            break
+        if not done: return 0
+    renderer.clean()
+    props.progress_running = False
+    props.progress_paused = False
+    progress.end()
+    return None
+
+def generate_model_task(props, generator, progress):
+    if not props.progress_running: return None
+    if props.progress_paused: return 0.01
+    idx = 0
+    while idx < props.background_iterations:
+        idx += 1
+        if generator.generate_task(progress): continue
+        renderer = WFC3DRenderer(generator, props)
+        renderer.init_target_collection(progress)
+        bpy.app.timers.register(functools.partial(render_model_task, props, renderer, progress))
+        return None
+    return 0
+
+def generate_model_in_background(props, context):
+    progress_offset = 0
+    if not hide_old_target_collections(props) and props.target_collection in bpy.data.collections:
+        progress_offset += len(bpy.data.collections[props.target_collection].objects)
+    gs = props.grid_size[0] * props.grid_size[1] * props.grid_size[2]
+    progress = WFC3DProgress(progress_offset + 2 * gs, context)
+    progress.begin()
+    generator = WFC3DGenerator(props)
+    generator.init_task()
+    props.progress_running = True
+    props.progress_paused = False
+    bpy.app.timers.register(functools.partial(generate_model_task, props, generator, progress), first_interval=0)
 
 def handle_seed_change(_self, context):
     props = context.scene.wfc_props
@@ -76,6 +127,9 @@ class WFC3DProgress:
     def update_inc(self, count = 1):
         self.last_count += count
         self.update(self.last_count)
+    def set_cursor(self, cursor):
+        if self.cursor and not cursor: self.context.window_manager.progress_end()
+        self.cursor = cursor
     def get_eta(self):
         if len(self.progress_history) < 2: return -1
         deltas_progress = np.diff(self.progress_history)
@@ -168,27 +222,23 @@ class WFC3D_OT_ResetSearchResult(bpy.types.Operator):
         props = context.scene.wfc_props
         props.search_result = (-1, -1, -1)
         return {'FINISHED'}
-class WFC3D_OT_GenerateStopDelayedRenderer(bpy.types.Operator):
+class WFC3D_OT_StopProgress(bpy.types.Operator):
     """Stops running delayed WFC 3D model renderer"""
-    bl_idname = "object.wfc_3d_generate_stop_delayed_renderer"
+    bl_idname = "object.wfc_3d_stop_progress"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
-
+    prop_name : bpy.props.StringProperty(default="")
     def execute(self, context):
-        props = context.scene.wfc_props
-        props.running_delayed_renderer = False
-        props.paused_delayed_renderer = False
+        setattr(context.scene.wfc_props, self.prop_name, False)
         return {'FINISHED'}
 
-class WFC3D_OT_GenerateTogglePauseDelayedRenderer(bpy.types.Operator):
+class WFC3D_OT_TogglePauseProgress(bpy.types.Operator):
     """Toggle pause for running delayed WFC 3D model renderer"""
-    bl_idname = "object.wfc_3d_generate_toggle_pause_delayed_renderer"
+    bl_idname = "object.wfc_3d_pause_toggle"
     bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
-
+    prop_name : bpy.props.StringProperty(default="")
     def execute(self, context):
-        props = context.scene.wfc_props
-        props.paused_delayed_renderer = not props.paused_delayed_renderer
+        setattr(context.scene.wfc_props, self.prop_name, not getattr(context.scene.wfc_props, self.prop_name))
         return {'FINISHED'}
 
 class WFC3D_OT_AutoGenerateToggle(bpy.types.Operator):
@@ -229,4 +279,4 @@ class WFC3D_OT_CherryPicking(bpy.types.Operator):
         return {'FINISHED'}
 
 
-operators = [ WFC3D_OT_StopBackgroundSearch, WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_CherryPicking, WFC3D_OT_GenerateTogglePauseDelayedRenderer, WFC3D_OT_GenerateStopDelayedRenderer, WFC3D_OT_Generate ]
+operators = [ WFC3D_OT_StopBackgroundSearch, WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_CherryPicking, WFC3D_OT_TogglePauseProgress, WFC3D_OT_StopProgress, WFC3D_OT_Generate ]

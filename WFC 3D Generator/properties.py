@@ -139,8 +139,8 @@ class WFC3DDistanceListItem(bpy.types.PropertyGroup):
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1,)
-    background_generation: bpy.props.BoolProperty(name="Generate in Background")
-    background_iterations: bpy.props.IntProperty(name="Grid Cells at once", default=100)
+    background_generation: bpy.props.BoolProperty(name="Generate in Background", default=False)
+    background_iterations: bpy.props.IntProperty(name="Grid Cells at once", min=1, default=100)
     spacing: bpy.props.FloatVectorProperty(name="", description="Size of a Grid Cell", subtype="TRANSLATION", default=(2.0,2.0,2.0), min=0.1, precision=3)
     auto_detect_spacing: bpy.props.BoolProperty(name="Auto-detect", description="Automatic spacing detection", default=False,)
     odd_offset: bpy.props.FloatVectorProperty(name="", description="Odd Offset", subtype="TRANSLATION", default=(0.0,0.0,0.0), precision=3)
@@ -358,6 +358,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     progress: bpy.props.FloatProperty(default=0, min=0, max=1)
     progress_elapsed_time: bpy.props.FloatProperty(default=0)
     progress_eta: bpy.props.FloatProperty(default=0)
+    progress_running: bpy.props.BoolProperty(default=False)
+    progress_paused: bpy.props.BoolProperty(default=False)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props

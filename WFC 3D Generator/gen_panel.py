@@ -22,7 +22,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
        
         box.label(text="Grid Size (width/depth/height)")
         box.row().prop(props, "grid_size")
-        if props.grid_size[0] * props.grid_size[1] * props.grid_size[2] > 200:
+        if props.grid_size[0] * props.grid_size[1] * props.grid_size[2] > 3000:
             row = box.row()
             row.prop(props, "background_generation")
             row.prop(props, "background_iterations")
@@ -51,10 +51,10 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row = box.row()
         row.prop(props, "render_delay")
         col = row.column()
-        col.operator("object.wfc_3d_generate_toggle_pause_delayed_renderer", icon='PAUSE', depress=props.paused_delayed_renderer)
+        col.operator("object.wfc_3d_pause_toggle", icon='PAUSE', depress=props.paused_delayed_renderer).prop_name = 'paused_delayed_renderer'
         col.enabled = props.running_delayed_renderer
         col = row.column()
-        col.operator("object.wfc_3d_generate_stop_delayed_renderer", icon='EVENT_MEDIASTOP')
+        col.operator("object.wfc_3d_stop_progress", icon='EVENT_MEDIASTOP').prop_name ="running_delayed_renderer"
         col.enabled = props.running_delayed_renderer
         if props.render_delay>0:
             row = box.row()
@@ -100,12 +100,12 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         else:
             row = layout.row()
             row.progress(factor=props.progress, text=f"{round(props.progress*100)}% (et: {round(props.progress_elapsed_time,0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
-            if props.render_delay > 0:
-                col = row.column()
-                row = col.row()
-                row.operator("object.wfc_3d_generate_toggle_pause_delayed_renderer", icon='PAUSE', depress=props.paused_delayed_renderer)
-                row.operator("object.wfc_3d_generate_stop_delayed_renderer", text="",icon='EVENT_MEDIASTOP')
-                col.enabled = props.running_delayed_renderer
+            if props.progress_running:
+                row.operator("object.wfc_3d_pause_toggle", icon='PAUSE', depress=props.progress_paused).prop_name = "progress_paused"
+                row.operator("object.wfc_3d_stop_progress", text="", icon='EVENT_MEDIASTOP').prop_name = "progress_running"
+            if props.running_delayed_renderer:
+                row.operator("object.wfc_3d_pause_toggle", icon='PAUSE', depress=props.paused_delayed_renderer).prop_name="paused_delayed_renderer"
+                row.operator("object.wfc_3d_stop_progress", text="",icon='EVENT_MEDIASTOP').prop_name="running_delayed_renderer"
 
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon="INFO_LARGE")
