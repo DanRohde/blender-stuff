@@ -1,6 +1,5 @@
 import bpy
 import time
-import numpy as np
 import gc
 import functools
 from .generator import WFC3DGenerator
@@ -100,9 +99,6 @@ class WFC3DProgress:
         if self.cursor: self.context.window_manager.progress_begin(0, 100)
         setattr(self.context.scene.wfc_props, self.prop_prefix+"progress", 0)
         self.start_time = time.perf_counter()
-        self.progress_history = []
-        self.time_history = []
-        self.window_size = 10
     def update(self, count):
         self.last_count = count
         pct = count / self.max_count
@@ -110,8 +106,6 @@ class WFC3DProgress:
         if self.cursor: self.context.window_manager.progress_update(100 * pct)
         setattr(props, self.prop_prefix+'progress',  pct)
         setattr(props, self.prop_prefix+'progress_elapsed_time', time.perf_counter() - self.start_time)
-        self.progress_history.append(pct)
-        self.time_history.append(getattr(props,self.prop_prefix+'progress_elapsed_time'))
         setattr(props, self.prop_prefix+'progress_eta', self.get_eta())
     def end(self):
         if self.cursor: self.context.window_manager.progress_end()
@@ -124,19 +118,9 @@ class WFC3DProgress:
         if cursor and not self.cursor: self.context.window_manager.progress_begin()
         self.cursor = cursor
     def get_eta(self):
-        if len(self.progress_history) < 2: return -1
-        deltas_progress = np.diff(self.progress_history)
-        deltas_time = np.diff(self.time_history)
-        try:
-            speeds = deltas_progress / deltas_time
-            window = min(self.window_size, len(speeds))
-            smoothed_speed = np.convolve(speeds, np.ones(window) / window, mode='valid')[-1]
-            if smoothed_speed <= 0: return -1
-            remaining_progress = 1 - self.progress_history[-1]
-            eta = remaining_progress / smoothed_speed
-        except:
-            return -1
-        return eta
+        if self.last_count <= 0: return 0
+        return (self.max_count - self.last_count) * ( time.perf_counter() - self.start_time ) /  self.last_count
+
 class WFC3DBackgroundSearch:
     def __init__(self):
         self.progress = None
@@ -186,6 +170,7 @@ class WFC3DBackgroundSearch:
         self.progress = WFC3DProgress(props.search_iterations * props.grid_size[0] * props.grid_size[1] * props.grid_size[2], context, prop_prefix="search_", cursor=False)
         self.progress.begin()
         props.search_running = True
+        props.search_paused = False
         self.generator = WFC3DGenerator(props)
         bpy.app.timers.register(self._search, first_interval=0)
 
