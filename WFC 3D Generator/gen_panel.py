@@ -51,10 +51,10 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row = box.row()
         row.prop(props, "render_delay")
         col = row.column()
-        col.operator("object.wfc_3d_pause_toggle", icon='PAUSE', depress=props.paused_delayed_renderer).prop_name = 'paused_delayed_renderer'
+        col.operator("object.wfc_3d_toggle_button", icon='PAUSE', depress=props.paused_delayed_renderer).prop_name = 'paused_delayed_renderer'
         col.enabled = props.running_delayed_renderer
         col = row.column()
-        col.operator("object.wfc_3d_stop_progress", icon='EVENT_MEDIASTOP').prop_name ="running_delayed_renderer"
+        col.operator("object.wfc_3d_stop_button", icon='EVENT_MEDIASTOP').prop_name ="running_delayed_renderer"
         col.enabled = props.running_delayed_renderer
         if props.render_delay>0:
             row = box.row()
@@ -66,7 +66,8 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row = box.row()
         if props.search_running:
             row.progress(factor=props.search_progress,text=f"{round(props.search_progress*100)}% (et: {round(props.search_progress_elapsed_time,0):.0f}s/eta: {props.search_progress_eta:.0f}s)", type="BAR")
-            row.operator("object.wfc_3d_stop_search", icon="EVENT_MEDIASTOP")
+            row.operator("object.wfc_3d_toggle_button", icon="PAUSE", depress=props.search_paused).prop_name = 'search_paused'
+            row.operator("object.wfc_3d_stop_button", icon="EVENT_MEDIASTOP").prop_name = 'search_running'
         else:
             row.prop(props, "search_iterations",text="Iterations")
             row.operator("object.wfc_3d_search",text="Search Seed")
@@ -84,7 +85,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
             col.enabled = render_allowed and not props.search_running
         col = row.column()
-        col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
+        col.operator("object.wfc_3d_toggle_button", icon='AUTO', depress = props.auto_generate).prop_name="auto_generate"
         col.enabled = render_allowed and not props.cherry_picking_running and not props.search_running
 
         layout.separator(type="LINE", factor=0.2)
@@ -101,11 +102,11 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             row = layout.row()
             row.progress(factor=props.progress, text=f"{round(props.progress*100)}% (et: {round(props.progress_elapsed_time,0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
             if props.progress_running:
-                row.operator("object.wfc_3d_pause_toggle", icon='PAUSE', depress=props.progress_paused).prop_name = "progress_paused"
-                row.operator("object.wfc_3d_stop_progress", text="", icon='EVENT_MEDIASTOP').prop_name = "progress_running"
+                row.operator("object.wfc_3d_toggle_button", icon='PAUSE', depress=props.progress_paused).prop_name = "progress_paused"
+                row.operator("object.wfc_3d_stop_button", text="", icon='EVENT_MEDIASTOP').prop_name = "progress_running"
             if props.running_delayed_renderer:
-                row.operator("object.wfc_3d_pause_toggle", icon='PAUSE', depress=props.paused_delayed_renderer).prop_name="paused_delayed_renderer"
-                row.operator("object.wfc_3d_stop_progress", text="",icon='EVENT_MEDIASTOP').prop_name="running_delayed_renderer"
+                row.operator("object.wfc_3d_toggle_button", icon='PAUSE', depress=props.paused_delayed_renderer).prop_name="paused_delayed_renderer"
+                row.operator("object.wfc_3d_stop_button", text="",icon='EVENT_MEDIASTOP').prop_name="running_delayed_renderer"
 
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon="INFO_LARGE")

@@ -163,6 +163,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     search_progress_elapsed_time: bpy.props.FloatProperty(default=0)
     search_progress_eta: bpy.props.FloatProperty(default=0)
     search_running: bpy.props.BoolProperty(default=False)
+    search_paused: bpy.props.BoolProperty(default=False)
     search_running_iterations: bpy.props.IntProperty(default=0)
 
     obj_list: bpy.props.CollectionProperty(type=WFC3DEditPanelMultiSelItem)

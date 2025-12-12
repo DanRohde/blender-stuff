@@ -14,10 +14,8 @@ def hide_old_target_collections(props):
             if c.name.startswith(props.target_collection): c.hide_viewport = True
         return True
     return False
+
 def generate_model(props, context):
-    if props.background_generation:
-        generate_model_in_background(props, context)
-        return
     progress_offset = 0
     if not hide_old_target_collections(props) and props.target_collection in bpy.data.collections:
         progress_offset += len(bpy.data.collections[props.target_collection].objects)
@@ -25,15 +23,21 @@ def generate_model(props, context):
     progress = WFC3DProgress(progress_offset + 2*gs, context)
     progress.begin()
     generator = WFC3DGenerator(props)
-    generator.generate_model(progress)
-    renderer = WFC3DRenderer(generator, props)
-    renderer.render(progress)
-    if props.render_delay == 0:
-        progress.end()
-        renderer.clean()
-        gc.collect()
+    if props.background_generation:
+        generator.init_task()
+        props.progress_running = True
+        props.progress_paused = False
+        bpy.app.timers.register(functools.partial(generate_model_task, props, generator, progress), first_interval=0)
     else:
-        progress.set_cursor(False)
+        generator.generate_model(progress)
+        renderer = WFC3DRenderer(generator, props)
+        renderer.render(progress)
+        if props.render_delay == 0:
+            progress.end()
+            renderer.clean()
+            gc.collect()
+        else:
+            progress.set_cursor(False)
     return
 
 def render_model_task(props, renderer, progress):
@@ -66,18 +70,6 @@ def generate_model_task(props, generator, progress):
         return None
     return 0
 
-def generate_model_in_background(props, context):
-    progress_offset = 0
-    if not hide_old_target_collections(props) and props.target_collection in bpy.data.collections:
-        progress_offset += len(bpy.data.collections[props.target_collection].objects)
-    gs = props.grid_size[0] * props.grid_size[1] * props.grid_size[2]
-    progress = WFC3DProgress(progress_offset + 2 * gs, context)
-    progress.begin()
-    generator = WFC3DGenerator(props)
-    generator.init_task()
-    props.progress_running = True
-    props.progress_paused = False
-    bpy.app.timers.register(functools.partial(generate_model_task, props, generator, progress), first_interval=0)
 
 def handle_seed_change(_self, context):
     props = context.scene.wfc_props
@@ -106,7 +98,7 @@ class WFC3DProgress:
         self.cursor = cursor
     def begin(self):
         if self.cursor: self.context.window_manager.progress_begin(0, 100)
-        setattr(self.context.scene.wfc_props, self.prop_prefix, 0)
+        setattr(self.context.scene.wfc_props, self.prop_prefix+"progress", 0)
         self.start_time = time.perf_counter()
         self.progress_history = []
         self.time_history = []
@@ -129,6 +121,7 @@ class WFC3DProgress:
         self.update(self.last_count)
     def set_cursor(self, cursor):
         if self.cursor and not cursor: self.context.window_manager.progress_end()
+        if cursor and not self.cursor: self.context.window_manager.progress_begin()
         self.cursor = cursor
     def get_eta(self):
         if len(self.progress_history) < 2: return -1
@@ -169,6 +162,7 @@ class WFC3DBackgroundSearch:
         if props.search_running_iterations == 0 or not props.search_running:
             self._done(props)
             return None
+        if props.search_paused: return 0.01
         self.generator.set_seed(props.seed)
         self.generator.generate_model(self.progress)
         c = self.generator.grid.count_empty_cells()
@@ -195,13 +189,6 @@ class WFC3DBackgroundSearch:
         self.generator = WFC3DGenerator(props)
         bpy.app.timers.register(self._search, first_interval=0)
 
-class WFC3D_OT_StopBackgroundSearch(bpy.types.Operator):
-    bl_idname = "object.wfc_3d_stop_search"
-    bl_label = ""
-    bl_description = "Stop Seed Search"
-    def execute(self, context):
-        context.scene.wfc_props.search_running = False
-        return {'FINISHED'}
 class WFC3D_OT_Search(bpy.types.Operator):
     """Search for a random seed with maximum grid occupancy"""
     bl_idname = "object.wfc_3d_search"
@@ -222,9 +209,9 @@ class WFC3D_OT_ResetSearchResult(bpy.types.Operator):
         props = context.scene.wfc_props
         props.search_result = (-1, -1, -1)
         return {'FINISHED'}
-class WFC3D_OT_StopProgress(bpy.types.Operator):
-    """Stops running delayed WFC 3D model renderer"""
-    bl_idname = "object.wfc_3d_stop_progress"
+
+class WFC3D_OT_StopButton(bpy.types.Operator):
+    bl_idname = "object.wfc_3d_stop_button"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
     prop_name : bpy.props.StringProperty(default="")
@@ -232,23 +219,12 @@ class WFC3D_OT_StopProgress(bpy.types.Operator):
         setattr(context.scene.wfc_props, self.prop_name, False)
         return {'FINISHED'}
 
-class WFC3D_OT_TogglePauseProgress(bpy.types.Operator):
-    """Toggle pause for running delayed WFC 3D model renderer"""
-    bl_idname = "object.wfc_3d_pause_toggle"
+class WFC3D_OT_ToggleButton(bpy.types.Operator):
+    bl_idname = "object.wfc_3d_toggle_button"
     bl_label = ""
     prop_name : bpy.props.StringProperty(default="")
     def execute(self, context):
         setattr(context.scene.wfc_props, self.prop_name, not getattr(context.scene.wfc_props, self.prop_name))
-        return {'FINISHED'}
-
-class WFC3D_OT_AutoGenerateToggle(bpy.types.Operator):
-    """Automatic Model Generation when Random Seed changes."""
-    bl_idname = "object.wfc_3d_auto_generate_toggle"
-    bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
-    def execute(self, context):
-        props = context.scene.wfc_props
-        props.auto_generate = not props.auto_generate
         return {'FINISHED'}
 
 class WFC3D_OT_CherryPicking(bpy.types.Operator):
@@ -279,4 +255,4 @@ class WFC3D_OT_CherryPicking(bpy.types.Operator):
         return {'FINISHED'}
 
 
-operators = [ WFC3D_OT_StopBackgroundSearch, WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_CherryPicking, WFC3D_OT_TogglePauseProgress, WFC3D_OT_StopProgress, WFC3D_OT_Generate ]
+operators = [ WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]
