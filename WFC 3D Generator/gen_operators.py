@@ -20,7 +20,7 @@ def generate_model(props, context):
     if not hide_old_target_collections(props) and props.target_collection in bpy.data.collections:
         progress_offset += len(bpy.data.collections[props.target_collection].objects)
     gs = props.grid_size[0]*props.grid_size[1]*props.grid_size[2]
-    progress = WFC3DProgress(progress_offset + 2*gs, context)
+    progress = WFC3DProgress(progress_offset + 2*gs, context, cursor = not props.background_generation)
     progress.begin()
     generator = WFC3DGenerator(props)
     if props.background_generation:
@@ -213,7 +213,7 @@ class WFC3D_OT_ResetSearchResult(bpy.types.Operator):
 class WFC3D_OT_StopButton(bpy.types.Operator):
     bl_idname = "object.wfc_3d_stop_button"
     bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_description = "Stop background process."
     prop_name : bpy.props.StringProperty(default="")
     def execute(self, context):
         setattr(context.scene.wfc_props, self.prop_name, False)
@@ -222,9 +222,18 @@ class WFC3D_OT_StopButton(bpy.types.Operator):
 class WFC3D_OT_ToggleButton(bpy.types.Operator):
     bl_idname = "object.wfc_3d_toggle_button"
     bl_label = ""
+    bl_description = "Pause Toggle"
     prop_name : bpy.props.StringProperty(default="")
     def execute(self, context):
         setattr(context.scene.wfc_props, self.prop_name, not getattr(context.scene.wfc_props, self.prop_name))
+        return {'FINISHED'}
+
+class WFC3D_OT_AutoGenerateToggle(bpy.types.Operator):
+    """Automatic Model Generation when Random Seed changes."""
+    bl_idname = "object.wfc_3d_auto_generate_toggle"
+    bl_label = ""
+    def execute(self, context):
+        context.scene.wfc_props.auto_generate = not context.scene.wfc_props.auto_generate
         return {'FINISHED'}
 
 class WFC3D_OT_CherryPicking(bpy.types.Operator):
@@ -255,4 +264,4 @@ class WFC3D_OT_CherryPicking(bpy.types.Operator):
         return {'FINISHED'}
 
 
-operators = [ WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]
+operators = [ WFC3D_OT_AutoGenerateToggle, WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]

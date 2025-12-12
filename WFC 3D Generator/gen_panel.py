@@ -22,7 +22,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
        
         box.label(text="Grid Size (width/depth/height)")
         box.row().prop(props, "grid_size")
-        if props.grid_size[0] * props.grid_size[1] * props.grid_size[2] > 3000:
+        if props.grid_size[0] * props.grid_size[1] * props.grid_size[2] > 3000 or props.background_generation:
             row = box.row()
             row.prop(props, "background_generation")
             row.prop(props, "background_iterations")
@@ -85,7 +85,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
             col.enabled = render_allowed and not props.search_running
         col = row.column()
-        col.operator("object.wfc_3d_toggle_button", icon='AUTO', depress = props.auto_generate).prop_name="auto_generate"
+        col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
         col.enabled = render_allowed and not props.cherry_picking_running and not props.search_running
 
         layout.separator(type="LINE", factor=0.2)
@@ -96,7 +96,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
 
         row = layout.row()
         row.enabled = render_allowed and not props.running_delayed_renderer and not props.search_running
-        if props.progress == 0:
+        if not props.progress_running and not props.running_delayed_renderer:
             row.operator("object.wfc_3d_generate")
         else:
             row = layout.row()
