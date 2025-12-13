@@ -6,7 +6,7 @@ from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint
 from .gen_operators import  handle_seed_change
 
 
-def get_direction_list(items, prefix):
+def get_direction_list(items, prefix, with_sep = True):
     ls = ""
     for d in DIRECTIONS:
         label = d.lower()
@@ -14,7 +14,7 @@ def get_direction_list(items, prefix):
             s, n = d.split("_", 1)
             if ls != s:
                 ls = s
-                items.append(None)
+                if with_sep: items.append(None)
             if n in DIR_TRANSLATION:
                 label = DIR_TRANSLATION[n]
             elif d in DIR_TRANSLATION:
@@ -22,7 +22,7 @@ def get_direction_list(items, prefix):
         else:
             if ls!= "":
                 ls = ""
-                items.append(None)
+                if with_sep: items.append(None)
             if d in DIR_TRANSLATION:
                 label = DIR_TRANSLATION[d]
 
@@ -36,6 +36,9 @@ def get_neighbor_constraint_items(_self, _context):
 def get_conn_directions(_self, _context):
     items = [("_NONE_","Select a Direction","Please select a direction"),None]
     return get_direction_list(items, 'wfc_conn_')
+
+def get_connector_exclusion_direction_list(_self, _context):
+    return get_direction_list([], 'wfc_conn_excl_', with_sep = False)
 
 def get_known_conn_names(_self, _context):
     props = bpy.context.scene.wfc_props
@@ -114,6 +117,11 @@ class WFC3DEmptyAnyNeighborListItem(bpy.types.PropertyGroup):
     direction: bpy.props.StringProperty(name="Direction")
     selected: bpy.props.BoolProperty(default=False, update=auto_save)
 
+class WFC3DConnectorExclusionListItem(bpy.types.PropertyGroup):
+    conn_excl_name: bpy.props.StringProperty(name="Name",description="Connector name to exclude", default=PROP_DEFAULTS["conn_excl_name"] ,update=auto_save)
+    conn_excl_direction: bpy.props.EnumProperty(name="",description="Direction",items=get_connector_exclusion_direction_list, default=PROP_DEFAULTS["conn_excl_direction"], update=auto_save)
+    selected: bpy.props.BoolProperty(default=False)
+
 class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
     regprob_name: bpy.props.StringProperty(name='Name', description='Optional name of the region', default=PROP_DEFAULTS['regprob_name'], update=auto_save)
     regprob_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", default=PROP_DEFAULTS['regprob_min'])
@@ -178,6 +186,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                None,
                ("neighbor","Neighbor Constraints","Neighbor constraints"),
                ('connector', 'Connector Constraints', 'Connector constraints'),
+               ('connector_exclusion', 'Connector Exclusion Constraints', 'Connector exclusion constraints'),
                ('geometry', 'Geometry Constraints', 'Geometry constraints'),
                ('empty', 'Empty Neighbor Constraints', 'Empty Neighbor constraints'),
                None,
@@ -291,7 +300,9 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     region_level_top: bpy.props.BoolProperty(name="Top", description="Top level (z=max)", default=PROP_DEFAULTS["region_level_top"], update=auto_save)
     conn_directions: bpy.props.EnumProperty(name="", description="Select a direction", items=get_conn_directions, update=handle_conn_directions_update)
     conn_name: bpy.props.StringProperty(name="Connector name",description="Connector name", default="", update=auto_save)
-    conn_known_names : bpy.props.EnumProperty(items=get_known_conn_names, name='Select to apply', update=take_known_conn_name)
+
+    conn_excl_input_list: bpy.props.CollectionProperty(type=WFC3DConnectorExclusionListItem)
+    conn_excl_input_list_idx: bpy.props.IntProperty()
 
     auto_save: bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties")
     info_toggle: bpy.props.BoolProperty(name="Info", description="Shows constraint properties")
@@ -403,4 +414,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

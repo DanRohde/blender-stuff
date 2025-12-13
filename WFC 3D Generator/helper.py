@@ -53,6 +53,8 @@ def get_constraints(props):
         constraints = [props.edit_neighbor_constraint] + ADD_NEIGHBOR_CONSTRAINTS
     elif props.edit_constraints == 'connector':
         constraints = CONNECTOR_CONSTRAINTS
+    elif props.edit_constraints == 'connector_exclusion':
+        constraints = CONNECTOR_EXCLUSION_CONSTRAINTS
     elif props.edit_constraints == 'dimensions':
         constraints = DIMENSIONS_CONSTRAINTS
     elif props.edit_constraints == 'fixed_position':
@@ -268,9 +270,12 @@ def update_edit_form(_self, _context):
                 for c in lc[l]:
                     try:
                         if c in ENUM_CONSTRAINTS:
-                            setattr(item, c, ENUM_CONSTRAINTS[c][obj.get(f"wfc_{c}_{idx}",0)])
+                            try:
+                                item[c] = { ENUM_CONSTRAINTS[c][obj[f"wfc_{c}_{idx}"]] }
+                            except TypeError:
+                                item[c] = obj[f"wfc_{c}_{idx}"]
                         else:
-                            setattr(item, c, obj.get(f"wfc_{c}_{idx}", PROP_DEFAULTS[c]))
+                            setattr(item, c, obj[f"wfc_{c}_{idx}"])
                     except TypeError as e:
                         v = obj[f"wfc_{c}_{idx}"]
                         print(f"set of constraint {c} failed for item {item}: {v}: {e}" )

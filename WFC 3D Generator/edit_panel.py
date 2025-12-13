@@ -12,6 +12,13 @@ class WFC3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
+class WFC3D_UL_ConnectorExclusionList(bpy.types.UIList):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+        row = layout.row()
+        row.prop(item, "selected", text="")
+        row.prop(item, "conn_excl_name")
+        row.prop(item, "conn_excl_direction")
+
 class WFC3D_UL_RegFreqList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
@@ -495,6 +502,9 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
     def draw_distance_panel(self, props, layout, obj, obj_name):
         self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_DistanceList","distance_input_list")
 
+    def draw_connector_exclusion_panel(self, props, layout, obj, obj_name):
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_ConnectorExclusionList","conn_excl_input_list")
+
     def draw_empty_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -667,6 +677,6 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row.enabled = False
             row.prop(props, p)
 
-panels = [ WFC3D_UL_EmptyNeighborList, WFC3D_UL_EmptyAnyNeighborList, WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
+panels = [ WFC3D_UL_ConnectorExclusionList, WFC3D_UL_EmptyNeighborList, WFC3D_UL_EmptyAnyNeighborList, WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
         

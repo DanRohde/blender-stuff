@@ -43,6 +43,7 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
     Advantage: easy to define, Disadvantage: difficult to expand
   * Connector Constraints: define a connector name for any direction that match with the connector name of possible neighbors with the same connector name in the opposite direction;
     Advantage: building blocks are easily expandable, Disadvantage: not always easy to define
+  * Connector Exclusion Constraints: define a list of connector names that are not allowed for a specific direction
   * Geometry Constraints: Edges or faces are used to determine whether two objects can be placed next to each other.
   * Empty Neighbor Constraints: These constraints prohibit empty neighbors.
 * Dimensions Constraints:

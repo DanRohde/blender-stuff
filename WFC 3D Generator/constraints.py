@@ -84,6 +84,10 @@ class WFC3DConstraints:
                     self.constraints[obj_name][c] = PROP_DEFAULTS[c].split(",")
 
             for direction in DIRECTIONS:
+                # init connector exclusion constraints:
+                if "conn_excl" not in self.constraints[obj_name]: self.constraints[obj_name]["conn_excl"] = {}
+                if direction not in self.constraints[obj_name]["conn_excl"]: self.constraints[obj_name]["conn_excl"][direction] = []
+
                 if direction.startswith("ANY"): continue
                 dirlower = direction.lower()
                 # load connector constraints:
@@ -91,6 +95,19 @@ class WFC3DConstraints:
                 # load neighbor constraints:
                 val  = self.get_adjacency_property_value(direction,'', obj, default_obj)
                 self.constraints[obj_name][dirlower] = None if val == '' else val.split(',')
+
+            # connector exclusion constraints:
+            idx = 0
+            while f"wfc_conn_excl_name_{idx}" in obj:
+                dirpropname = f"conn_excl_direction_{idx}"
+                name = obj[f"wfc_conn_excl_name_{idx}"]
+                idx+=1
+                dirpropidx = obj[f"wfc_{dirpropname}"]
+                enumvalues = ENUM_CONSTRAINTS['conn_excl_direction']
+                if name == "" or not (0 <= dirpropidx < len(enumvalues)): continue
+                dirpropvalue = enumvalues[dirpropidx]
+                self.constraints[obj_name]["conn_excl"][dirpropvalue].append(name)
+
         ## collect distance from object constraints:
         ddd = { }
         for obj in objects:
@@ -750,6 +767,22 @@ class WFC3DConstraints:
         self.apply_transformation_constraints(position, obj_name, target_obj)
         self.apply_dimensions_draw_constraints(position, spacing, obj_name, target_obj)
 
+    def check_connection_exclusion_constraints(self, current_obj, direction, obj, prop_name, opp_prop_name):
+        ret = True
+        if direction in FACE_DIRECTIONS:
+            ret = ret and self.constraints[obj][opp_prop_name] not in self.constraints[current_obj]["conn_excl"]["ANY_FACE"] \
+                and self.constraints[current_obj][prop_name] not in self.constraints[obj]["conn_excl"]["ANY_FACE"]
+        if direction in EDGE_DIRECTIONS:
+            ret = ret and self.constraints[obj][opp_prop_name] not in self.constraints[current_obj]["conn_excl"]["ANY_EDGE"] \
+                  and self.constraints[current_obj][prop_name] not in self.constraints[obj]["conn_excl"]["ANY_EDGE"]
+        if direction in CORNER_DIRECTIONS:
+            ret = ret and self.constraints[obj][opp_prop_name] not in self.constraints[current_obj]["conn_excl"]["ANY_CORNER"] \
+                  and self.constraints[current_obj][prop_name] not in self.constraints[obj]["conn_excl"]["ANY_CORNER"]
+        ret = ret and self.constraints[obj][opp_prop_name] not in self.constraints[current_obj]["conn_excl"]["ANY"] \
+              and self.constraints[current_obj][prop_name] not in self.constraints[obj]["conn_excl"]["ANY"]
+        ret = ret and self.constraints[obj][opp_prop_name] not in self.constraints[current_obj]["conn_excl"][direction] \
+            and self.constraints[current_obj][prop_name] not in self.constraints[obj]["conn_excl"][OPPOSITE_DIRECTIONS[direction]]
+        return ret
     def propagate_adjacency_constraints(self, cell):
         # propagate neighbor constraints:
         queue = deque([ cell ] )
@@ -778,12 +811,13 @@ class WFC3DConstraints:
                     new_options = [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
 
                 # Filter disallowed connector options:
-                if self.constraints[current_obj].get('conn_' + dirlower, "") != "":
-                    prop_name = 'conn_' + dirlower
-                    opp_prop_name = 'conn_' + oppdirlower
-                    new_options = [obj for obj in new_options if
-                                   self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name] or
-                                   self.constraints[obj][opp_prop_name] == ""]
+                prop_name = 'conn_' + dirlower
+                opp_prop_name = 'conn_' + oppdirlower
+                new_options = [obj for obj in new_options
+                               if
+                                (self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name] or self.constraints[obj][opp_prop_name] == "")
+                                and self.check_connection_exclusion_constraints(current_obj, direction, obj, prop_name, opp_prop_name)
+                               ]
 
                 # Filter disallowed geometry:
                 if self.constraints[current_obj]['geo_match_edges'] or self.constraints[current_obj]['geo_match_faces']:

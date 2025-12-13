@@ -21,6 +21,17 @@ You can define a connector name for any direction that match with the connector 
 
 - More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
 
+## Connector Exclusion Constraints
+You can define a list of prohibited connector names for a specific direction.
+
+| **Parameter**                  | **Description**                                                                                                                 |
+|--------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| Name | The connector name to restrict the possible neighbors. |
+| Direction | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected                                      |
+
+- More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
+
+
 ## Geometry Constraints
 Edges or faces are used to determine whether two objects can be placed next to each other.
 
