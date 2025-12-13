@@ -89,8 +89,8 @@ class WFC3D_UL_EmptyAnyNeighborList(bpy.types.UIList):
         row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
-    """User interface for WFC 3D Edit"""
-    bl_label = "WFC 3D Constraint Editor"
+    """User interface for WFC 3D Constraints Editor"""
+    bl_label = "WFC 3D Constraints Editor"
     bl_idname = "VIEW3D_PT_wfc_3d_edit"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -545,13 +545,13 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             col = row.column()
             col.template_list("WFC3D_UL_DistanceList", "", props, "distance_input_list", props, "distance_input_list_idx")
-            col = row.column().box()
+            col = row.box().column()
             col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
             c = col.column()
             c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-            c.separator()
             c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
             c.enabled = count_selected_items(props.distance_input_list) > 0
+            col.separator()
             self._draw_list_actions(props, col, "distance_input_list")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "empty":
