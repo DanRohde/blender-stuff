@@ -69,17 +69,18 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
             col.row().prop(item, "distance_subcollection")
         col.prop(item, "distance_type")
 
-class WFC3DObjectList(bpy.types.UIList):
+
+def draw_empty_neighbor_list_item(layout, item):
+    row = layout.row(align=True)
+    direction = item.direction.split('_')
+    row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
+
+class WFC3D_UL_EmptyNeighborList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
-        row = layout.row(align=True)
-        direction = item.direction.split('_')
-        row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
-class WFC3D_UL_EmptyNeighborList(WFC3DObjectList):
-    def __init__(self):
-        pass
-class WFC3D_UL_EmptyAnyNeighborList(WFC3DObjectList):
-    def __init__(self):
-        pass
+        draw_empty_neighbor_list_item(layout, item)
+class WFC3D_UL_EmptyAnyNeighborList(bpy.types.UIList):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
+        draw_empty_neighbor_list_item(layout, item)
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Constraints Editor"""
