@@ -16,10 +16,7 @@ class WFC3D_UL_RegFreqList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
-        r = col.row()
-        r.prop(item,"selected", text="")
-        r.label(text=f"{index}.")
-
+        col.row().prop(item,"selected", text=f"{index}.")
         col = row.column(align=True)
         col.row().prop(item,"regfreq_name")
         col.row().prop(item,"regfreq_min")
@@ -42,9 +39,7 @@ class WFC3D_UL_RegProbList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
-        r = col.row()
-        r.prop(item, "selected", text="")
-        r.label(text=f"{index}.")
+        col.row().prop(item, "selected", text=f"{index}.")
         col = row.column(align=True)
         col.row().prop(item,"regprob_name")
         col.row().prop(item,"regprob_min")
@@ -57,9 +52,7 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
-        r = col.row()
-        r.prop(item, "selected", text="")
-        r.label(text=f"{index}.")
+        col.row().prop(item, "selected", text=f"{index}.")
         col = row.column(align=True)
         col.row().prop(item, "distance")
         col.prop(item, "distance_from")
@@ -166,431 +159,427 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row.prop(props,"edit_constraints",icon="SETTINGS")
         row.operator('collection.wfc_auto_save_toggle',icon='IMPORT',depress = props.auto_save)
 
+        if hasattr(self, f"draw_{props.edit_constraints}_panel") and callable(getattr(self, f"draw_{props.edit_constraints}_panel")):
+            draw_method = getattr(self, f"draw_{props.edit_constraints}_panel")
+            draw_method(props, box, obj, obj_name)
+
         if props.info_toggle: self.draw_info_panel(layout, props, obj)
-        if props.edit_constraints == "neighbor":
-            box = box.box()
-            row = box.row()
-            row.prop(props,"edit_neighbor_constraint")
-            col = row.column()
-            col.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
-            col.enabled = props.edit_type == 'objects'
-
-            newrow = row.row()
-            newrow.operator("object.wfc_reset_constraints",text="",icon="PRESET")
-            newrow.enabled = props.edit_type == 'defaults' or (obj and props.edit_neighbor_constraint in obj)
-            
-            if props.edit_neighbor_constraint and props.edit_neighbor_constraint !="_NONE_":
-                if obj and props.edit_neighbor_constraint in obj:
-                    box.label(text="Neighbors: "+obj[props.edit_neighbor_constraint])
-                else:
-                    box.label(text="Neighbors:")
-                
-                box.prop(props,"no_neighbor_allowed",icon="VIEW_LOCKED")
-                row = box.row()
-                row.enabled = not props.no_neighbor_allowed 
-                newcol = row.column().box()
-                newcol.operator("object.wfc_get_selected_object", icon="SELECT_SET").list_name = "neighbor_list"
-                nc=newcol.column()
-                nc.prop(props,"auto_neighbor_object",icon="TRIA_RIGHT")
-                nc.enabled = not props.auto_active_object
-                newcol.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
-                newcol = row.column()
-                newcol.template_list("WFC3D_UL_EditPanelNeighborMultiSelList", "", props, "neighbor_list", props, "neighbor_list_idx")
-                newcol.enabled = not props.auto_neighbor_object
-                newcol = row.column().box()
-                newcol.enabled = not props.auto_neighbor_object
-                sel_count = count_selected_items(props.neighbor_list)
-                nr = newcol.row()
-                nr.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name = "neighbor_list"
-                nr.enabled = not props.auto_active_object and sel_count > 0
-                self._draw_list_actions(props, newcol, "neighbor_list")
-
-
-                box.row().prop(props,"allow_neighbor_constraint_violations",icon="VIEW_UNLOCKED")
-
-                if not props.auto_save: box.row().operator("object.wfc_update_neighbor_constraints")
-            if obj and not props.info_toggle:
-                newbox = box.box()
-                newbox.label(text=f"Defined neighbor constraints:")
-                c=0
-                for d in DIRECTIONS:
-                    if 'wfc_' + d.lower() not in obj: continue
-                    c+=1
-                    newbox.label(text=f"{DIR_TRANSLATION[d]}: {obj['wfc_' + d.lower()]}")
-                if c==0: newbox.label(text="nothing defined yet")
-        if props.edit_constraints == "grid":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            newbox = box.box()
-            newrow = newbox.row()
-            newrow.label(text="Corners")
-            newrow.prop(props, "corner_none")    
-            if not props.corner_none:
-                row = newbox.row()
-                for c in ['fbl','fbr','ftl','ftr']:
-                    row.prop(props,"corner_"+c)
-                    
-                row = newbox.row()
-                for c in ['bbl','bbr','btl','btr']:
-                    row.prop(props,"corner_"+c)
-            
-            newbox = box.box()
-            newrow = newbox.row()
-            newrow.label(text="Edges")
-            newrow.prop(props,"edge_none")
-            if not props.edge_none:
-                for p in ['f','b']:
-                    row = newbox.row()
-                    for c in ['b','l','t','r']:
-                        row.prop(props,"edge_"+p+c)
-                row = newbox.row()
-                for p in ['lb','lt','rb','rt']:
-                    row.prop(props,"edge_"+p)
-            
-            newbox = box.box()
-            newrow = newbox.row()
-            newrow.label(text="Faces")
-            newrow.prop(props, "face_none")
-            if not props.face_none:
-                row = newbox.row()
-                for f in ['front','left','top']:
-                    row.prop(props, "face_"+f)
-                row = newbox.row()
-                for f in ['back','right','bottom']:
-                    row.prop(props,"face_"+f)
-                
-            
-            newbox = box.box()
-            newrow = newbox.row()
-            newrow.label(text="Inside")
-            newrow.prop(props,"inside_none")
-            
-            
-            if not props.auto_save: box.operator("object.wfc_update_grid_constraints")
-        if props.edit_constraints == 'region':
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            row=box.row()
-            row.prop(props,"region_min")
-            row=box.row()
-            row.prop(props,"region_max")
-
-            row = box.row()
-            row.label(text="Quadrant:")
-            row.prop(props, "region_quadrant",text="")
-            ql = ", ".join([l for q,l in zip(props.region_quadrant,['fbl','fbr','ftl','ftr','bbl','bbr','btl','btr']) if q ])
-            box.row().label(text=f"Selected quadrant: {ql}")
-
-            row = box.row()
-            row.label(text="Level:")
-            row= row.column_flow(columns=3,align=True)
-            row.prop(props, "region_level_ground")
-            row.prop(props, "region_level_first")
-            row.prop(props, "region_level_second")
-            row.prop(props, "region_level_mid")
-            row.prop(props, "region_level_penultimate")
-            row.prop(props, "region_level_top")
-
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "probability":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            box.prop(props,"probability")
-            box.prop(props, "weight")
-            box.prop(props, "auto_weight", icon="MOD_VERTEX_WEIGHT")
-            
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "transformations":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            newbox = box.box()
-            newbox.label(text="Translation Offset")
-            newbox.row().prop(props,"translation_min")
-            newbox.row().prop(props,"translation_max")
-            newbox.row().prop(props,"translation_steps")
-
-            newbox = box.box()
-            newbox.label(text="Rotation")
-            newbox.row().prop(props,"rotation_min")
-            newbox.row().prop(props,"rotation_max")
-            newbox.row().prop(props,"rotation_steps")
-
-            newbox = box.box()
-            newrow = newbox.row()
-            newrow.label(text="Scale")
-            newrow.prop(props,"scale_type")
-            if props.scale_type == 'uniform':
-                newbox.prop(props,"scale_uni")
-            elif props.scale_type == 'non-uniform':
-                newbox.row().prop(props,"scale_min")
-                newbox.row().prop(props,"scale_max")
-                newbox.row().prop(props,"scale_steps")
-
-            newbox = box.box()
-            newrow = newbox.row()
-            newrow.prop(props,"flipping")
-            if not props.auto_save: box.operator('object.wfc_update_constraints')
-        if props.edit_constraints == "frequency":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            
-            newbox = box.box()
-            newbox.label(text="Same Object")
-            row = newbox.row()
-            row.prop(props,"freq_grid")
-            row.prop(props,"freq_grid_pct")
-            newbox.prop(props,"freq_neighbor")
-            newbox.prop(props,"freq_neighbor_face")
-            newbox.prop(props,"freq_neighbor_corner")
-            newbox.prop(props,"freq_neighbor_edge")
-            row = newbox.row()
-            row.prop(props,"freq_axes")
-            
-            newbox = box.box()
-            newbox.label(text="Any Object")
-            newbox.prop(props,"freq_any_neighbor")
-            newbox.prop(props,"freq_any_neighbor_face")
-            newbox.prop(props,"freq_any_neighbor_corner")
-            newbox.prop(props,"freq_any_neighbor_edge")
-            
-            row = newbox.row()
-            row.prop(props,"freq_any_axes")
-            
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-
-        if props.edit_constraints=="symmetry":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-
-            box.label(text="Mirror Symmetry")
-            newbox = box.box()
-            newbox.row().prop(props,"sym_mirror_axes")
-            if props.edit_type == 'objects':
-                if props.sym_mirror_axes[0]: newbox.prop(props,"sym_mirror_axes_x", text="X Partner")
-                if props.sym_mirror_axes[1]: newbox.prop(props,"sym_mirror_axes_y", text="Y Partner")
-                if props.sym_mirror_axes[2]: newbox.prop(props,"sym_mirror_axes_z", text="Z Partner")
-                if props.sym_mirror_axes[0] and props.sym_mirror_axes[1]: newbox.prop(props,"sym_mirror_axes_xy", text="XY Partner")
-                if props.sym_mirror_axes[0] and props.sym_mirror_axes[2]: newbox.prop(props,"sym_mirror_axes_xz", text="XZ Partner")
-                if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: newbox.prop(props,"sym_mirror_axes_yz", text="YZ Partner")
-                if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: newbox.prop(props,"sym_mirror_axes_xyz", text="XYZ Partner")
-
-            if sum(props['sym_mirror_axes']) > 0:
-                newbox.row().label(text="Flip Mirror Partner")
-                fmpbox = newbox.box()
-                row = fmpbox.column_flow(columns=4,align=True)
-                if props.sym_mirror_axes[0]: row.prop(props,"sym_mirror_flip_x")
-                if props.sym_mirror_axes[1]: row.prop(props,"sym_mirror_flip_y")
-                if props.sym_mirror_axes[2]: row.prop(props,"sym_mirror_flip_z")
-                if props.sym_mirror_axes[0] and props.sym_mirror_axes[1]: row.prop(props,"sym_mirror_flip_xy")
-                if props.sym_mirror_axes[0] and props.sym_mirror_axes[2]: row.prop(props,"sym_mirror_flip_xz")
-                if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: row.prop(props,"sym_mirror_flip_yz")
-                if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: row.prop(props,"sym_mirror_flip_xyz")
-
-                flip = sum([props['sym_mirror_flip_'+k] for k in ['x','y','z','xy','xz','yz','xyz']])
-                if flip > 0: fmpbox.row().prop(props,"sym_mirror_flip_transl")
-
-                newbox.row().prop(props,"sym_mirror_trans")
-
-            box.label(text="Rotational Symmetry")
-            newbox = box.box()
-            newbox.row().prop(props,"sym_rotate_axis")
-            newbox.prop(props,"sym_rotate_n")
-
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-
-            #box.label(text="Translational Symmetry")
-            #box.label(text="Point Reflection Symmetry")
-            #box.label(text="Glide Reflection Symmetry")
-        if props.edit_constraints=="connector":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            row = box.row()
-            row.prop(props, "conn_directions")
-            col = row.column()
-            col.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
-            col.enabled = props.edit_type == 'objects'
-            if props.conn_directions != '_NONE_':
-                row = box.row()
-                row.prop(props,"conn_name",text="Name")
-                if len(get_known_conn_names(None, None)) > 1:
-                    box.row().label(text="Known connector names:")
-                    box.row().prop(props,"conn_known_names",text="")
-                if not props.auto_save: box.row().operator("object.wfc_update_connector_constraints")
-
-            if obj and not props.info_toggle:
-                newbox = box.box()
-                newbox.label(text=f"Defined connector constraints:")
-                cf = newbox.column_flow(columns=2,align=True)
-                c=0
-                for d in DIRECTIONS:
-                    pn = 'wfc_conn_' + d.lower()
-                    if not pn in obj: continue
-                    cf.label(text=f"{d.lower()}: {obj[pn]}")
-                    c+=1
-                if c==0: newbox.label(text="nothing defined yet")
-        if props.edit_constraints == "dimensions":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            box.row().prop(props, "dim_xyz")
-            # if sum(props.dim_xyz)>3: box.row().prop(props, "dim_alignment")
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "fixed_position":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            row = box.row()
-            col = row.column()
-            col.template_list("WFC3D_UL_FixedPositionList", "", props, "fixed_position_input_list", props, "fixed_position_input_list_idx")
-            col = row.box().column()
-            col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-            c = col.column()
-            c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-            c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
-            c.enabled = count_selected_items(props.fixed_position_input_list) > 0
-            col.separator()
-            self._draw_list_actions(props, col, "fixed_position_input_list")
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "regfreq":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            row = box.row()
-            col = row.column()
-            col.template_list("WFC3D_UL_RegFreqList","", props, "regfreq_input_list", props, "regfreq_input_list_idx")
-            col = row.box().column()
-            col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-            c = col.column()
-            c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-            c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
-            c.enabled = count_selected_items(props.regfreq_input_list) > 0
-            col.separator()
-            self._draw_list_actions(props, col, "regfreq_input_list")
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "noise":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            box.row().label(text="Noise on probability of occurrence:")
-            box.row().prop(props, "noise_prob_basis")
-            if props.noise_prob_basis != "_NONE_":
-                box.row().prop(props, "noise_prob_threshold")
-                box.row().prop(props, "noise_prob_scale")
-            box.row().label(text="Noise on transformations:")
-            box.row().prop(props, "noise_transf_basis")
-            if props.noise_transf_basis != "_NONE_":
-                box.row().prop(props, "noise_transf_scale")
-
-            box.row().prop(props, "noise_randomize_position")
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "geometry":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-
-            box.row().label(text="Applies only to mesh objects.", icon="INFO_LARGE")
-            row = box.row()
-            row.column().label(text="Faces:")
-            for i,d in enumerate(FACE_DIRECTIONS):
-                if i % 2 == 0: col = row.column()
-                col.prop(props, f"geo_{d.lower()}")
-            row = box.row()
-            row.prop(props, "geo_match_edges")
-            row.prop(props, "geo_match_faces")
-            row = box.row()
-            row.prop(props, "geo_tolerance")
-            row.prop(props, "geo_threshold")
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "regprob":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            row = box.row()
-            col = row.column()
-            col.template_list("WFC3D_UL_RegProbList", "", props, "regprob_input_list", props, "regprob_input_list_idx")
-            col = row.box().column()
-            col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-            c = col.column()
-            c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-            c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
-            c.enabled = count_selected_items(props.regprob_input_list) > 0
-            col.separator()
-            self._draw_list_actions(props, col, "regprob_input_list")
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "distance":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            row = box.row()
-            col = row.column()
-            col.template_list("WFC3D_UL_DistanceList", "", props, "distance_input_list", props, "distance_input_list_idx")
-            col = row.box().column()
-            col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-            c = col.column()
-            c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-            c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
-            c.enabled = count_selected_items(props.distance_input_list) > 0
-            col.separator()
-            self._draw_list_actions(props, col, "distance_input_list")
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-        if props.edit_constraints == "empty":
-            box = box.box()
-            row = box.row()
-            row.label(text=obj_name)
-            row.operator("object.wfc_reset_constraints")
-            nbox = box.box()
-            row = nbox.row()
-            row.label(text="Prohibit empty neighbors in selected directions:")
-            row = nbox.row()
-            col = row.column()
-            col.template_list("WFC3D_UL_EmptyNeighborList", "", props, "empty_neighbor_list", props, "empty_neighbor_list_idx")
-            col = row.column().box()
-            nc = col.column()
-            nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
-            nc.enabled = props.edit_type == 'objects'
-            self._draw_list_actions(props, col, "empty_neighbor_list")
-
-            sl = [item.direction.lower() for item in props.empty_neighbor_list if item.selected]
-            if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
-            nbox = box.box()
-            row = nbox.row()
-            row.label(text="Prohibit any empty neighbors in selected directions:")
-            row = nbox.row()
-            col = row.column()
-            col.template_list("WFC3D_UL_EmptyAnyNeighborList", "", props, "empty_any_neighbor_list", props, "empty_any_neighbor_list_idx")
-            col = row.column().box()
-            nc = col.column()
-            nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
-            nc.enabled = props.edit_type == 'objects'
-            self._draw_list_actions(props, col, "empty_any_neighbor_list")
-            sl = [item.direction.lower() for item in props.empty_any_neighbor_list if item.selected]
-            if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
-
-            if not props.auto_save: box.operator("object.wfc_update_constraints")
-
         row = layout.row()
         row.operator("object.wfc_open_web_link", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
+    def draw_neighbor_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.prop(props, "edit_neighbor_constraint")
+        col = row.column()
+        col.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
+        col.enabled = props.edit_type == 'objects'
+
+        newrow = row.row()
+        newrow.operator("object.wfc_reset_constraints", text="", icon="PRESET")
+        newrow.enabled = props.edit_type == 'defaults' or (obj and props.edit_neighbor_constraint in obj)
+
+        if props.edit_neighbor_constraint and props.edit_neighbor_constraint != "_NONE_":
+            if obj and props.edit_neighbor_constraint in obj:
+                box.label(text="Neighbors: " + obj[props.edit_neighbor_constraint])
+            else:
+                box.label(text="Neighbors:")
+
+            box.prop(props, "no_neighbor_allowed", icon="VIEW_LOCKED")
+            row = box.row()
+            row.enabled = not props.no_neighbor_allowed
+            newcol = row.column().box()
+            newcol.operator("object.wfc_get_selected_object", icon="SELECT_SET").list_name = "neighbor_list"
+            nc = newcol.column()
+            nc.prop(props, "auto_neighbor_object", icon="TRIA_RIGHT")
+            nc.enabled = not props.auto_active_object
+            newcol.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
+            newcol = row.column()
+            newcol.template_list("WFC3D_UL_EditPanelNeighborMultiSelList", "", props, "neighbor_list", props, "neighbor_list_idx")
+            newcol.enabled = not props.auto_neighbor_object
+            newcol = row.column().box()
+            newcol.enabled = not props.auto_neighbor_object
+            sel_count = count_selected_items(props.neighbor_list)
+            nr = newcol.row()
+            nr.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name = "neighbor_list"
+            nr.enabled = not props.auto_active_object and sel_count > 0
+            self._draw_list_actions(props, newcol, "neighbor_list")
+
+            box.row().prop(props, "allow_neighbor_constraint_violations", icon="VIEW_UNLOCKED")
+
+            if not props.auto_save: box.row().operator("object.wfc_update_neighbor_constraints")
+        if obj and not props.info_toggle:
+            newbox = box.box()
+            newbox.label(text=f"Defined neighbor constraints:")
+            c = 0
+            for d in DIRECTIONS:
+                if 'wfc_' + d.lower() not in obj: continue
+                c += 1
+                newbox.label(text=f"{DIR_TRANSLATION[d]}: {obj['wfc_' + d.lower()]}")
+            if c == 0: newbox.label(text="nothing defined yet")
+    def draw_grid_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        newbox = box.box()
+        newrow = newbox.row()
+        newrow.label(text="Corners")
+        newrow.prop(props, "corner_none")
+        if not props.corner_none:
+            row = newbox.row()
+            for c in ['fbl', 'fbr', 'ftl', 'ftr']:
+                row.prop(props, "corner_" + c)
+
+            row = newbox.row()
+            for c in ['bbl', 'bbr', 'btl', 'btr']:
+                row.prop(props, "corner_" + c)
+
+        newbox = box.box()
+        newrow = newbox.row()
+        newrow.label(text="Edges")
+        newrow.prop(props, "edge_none")
+        if not props.edge_none:
+            for p in ['f', 'b']:
+                row = newbox.row()
+                for c in ['b', 'l', 't', 'r']:
+                    row.prop(props, "edge_" + p + c)
+            row = newbox.row()
+            for p in ['lb', 'lt', 'rb', 'rt']:
+                row.prop(props, "edge_" + p)
+
+        newbox = box.box()
+        newrow = newbox.row()
+        newrow.label(text="Faces")
+        newrow.prop(props, "face_none")
+        if not props.face_none:
+            row = newbox.row()
+            for f in ['front', 'left', 'top']:
+                row.prop(props, "face_" + f)
+            row = newbox.row()
+            for f in ['back', 'right', 'bottom']:
+                row.prop(props, "face_" + f)
+
+        newbox = box.box()
+        newrow = newbox.row()
+        newrow.label(text="Inside")
+        newrow.prop(props, "inside_none")
+
+        if not props.auto_save: box.operator("object.wfc_update_grid_constraints")
+    def draw_region_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        row = box.row()
+        row.prop(props, "region_min")
+        row = box.row()
+        row.prop(props, "region_max")
+
+        row = box.row()
+        row.label(text="Quadrant:")
+        row.prop(props, "region_quadrant", text="")
+        ql = ", ".join([l for q, l in zip(props.region_quadrant, ['fbl', 'fbr', 'ftl', 'ftr', 'bbl', 'bbr', 'btl', 'btr']) if q])
+        box.row().label(text=f"Selected quadrant: {ql}")
+
+        row = box.row()
+        row.label(text="Level:")
+        row = row.column_flow(columns=3, align=True)
+        row.prop(props, "region_level_ground")
+        row.prop(props, "region_level_first")
+        row.prop(props, "region_level_second")
+        row.prop(props, "region_level_mid")
+        row.prop(props, "region_level_penultimate")
+        row.prop(props, "region_level_top")
+
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+    def draw_probability_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        box.prop(props, "probability")
+        box.prop(props, "weight")
+        box.prop(props, "auto_weight", icon="MOD_VERTEX_WEIGHT")
+
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+    def draw_transformations_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        newbox = box.box()
+        newbox.label(text="Translation Offset")
+        newbox.row().prop(props, "translation_min")
+        newbox.row().prop(props, "translation_max")
+        newbox.row().prop(props, "translation_steps")
+
+        newbox = box.box()
+        newbox.label(text="Rotation")
+        newbox.row().prop(props, "rotation_min")
+        newbox.row().prop(props, "rotation_max")
+        newbox.row().prop(props, "rotation_steps")
+
+        newbox = box.box()
+        newrow = newbox.row()
+        newrow.label(text="Scale")
+        newrow.prop(props, "scale_type")
+        if props.scale_type == 'uniform':
+            newbox.prop(props, "scale_uni")
+        elif props.scale_type == 'non-uniform':
+            newbox.row().prop(props, "scale_min")
+            newbox.row().prop(props, "scale_max")
+            newbox.row().prop(props, "scale_steps")
+
+        newbox = box.box()
+        newrow = newbox.row()
+        newrow.prop(props, "flipping")
+        if not props.auto_save: box.operator('object.wfc_update_constraints')
+    def draw_frequency_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+
+        newbox = box.box()
+        newbox.label(text="Same Object")
+        row = newbox.row()
+        row.prop(props, "freq_grid")
+        row.prop(props, "freq_grid_pct")
+        newbox.prop(props, "freq_neighbor")
+        newbox.prop(props, "freq_neighbor_face")
+        newbox.prop(props, "freq_neighbor_corner")
+        newbox.prop(props, "freq_neighbor_edge")
+        row = newbox.row()
+        row.prop(props, "freq_axes")
+
+        newbox = box.box()
+        newbox.label(text="Any Object")
+        newbox.prop(props, "freq_any_neighbor")
+        newbox.prop(props, "freq_any_neighbor_face")
+        newbox.prop(props, "freq_any_neighbor_corner")
+        newbox.prop(props, "freq_any_neighbor_edge")
+
+        row = newbox.row()
+        row.prop(props, "freq_any_axes")
+
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+
+    def draw_symmetry_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+
+        box.label(text="Mirror Symmetry")
+        newbox = box.box()
+        newbox.row().prop(props, "sym_mirror_axes")
+        if props.edit_type == 'objects':
+            if props.sym_mirror_axes[0]: newbox.prop(props, "sym_mirror_axes_x", text="X Partner")
+            if props.sym_mirror_axes[1]: newbox.prop(props, "sym_mirror_axes_y", text="Y Partner")
+            if props.sym_mirror_axes[2]: newbox.prop(props, "sym_mirror_axes_z", text="Z Partner")
+            if props.sym_mirror_axes[0] and props.sym_mirror_axes[1]: newbox.prop(props, "sym_mirror_axes_xy", text="XY Partner")
+            if props.sym_mirror_axes[0] and props.sym_mirror_axes[2]: newbox.prop(props, "sym_mirror_axes_xz", text="XZ Partner")
+            if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: newbox.prop(props, "sym_mirror_axes_yz", text="YZ Partner")
+            if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: newbox.prop(props, "sym_mirror_axes_xyz", text="XYZ Partner")
+
+        if sum(props['sym_mirror_axes']) > 0:
+            newbox.row().label(text="Flip Mirror Partner")
+            fmpbox = newbox.box()
+            row = fmpbox.column_flow(columns=4, align=True)
+            if props.sym_mirror_axes[0]: row.prop(props, "sym_mirror_flip_x")
+            if props.sym_mirror_axes[1]: row.prop(props, "sym_mirror_flip_y")
+            if props.sym_mirror_axes[2]: row.prop(props, "sym_mirror_flip_z")
+            if props.sym_mirror_axes[0] and props.sym_mirror_axes[1]: row.prop(props, "sym_mirror_flip_xy")
+            if props.sym_mirror_axes[0] and props.sym_mirror_axes[2]: row.prop(props, "sym_mirror_flip_xz")
+            if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: row.prop(props, "sym_mirror_flip_yz")
+            if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: row.prop(props, "sym_mirror_flip_xyz")
+
+            flip = sum([props['sym_mirror_flip_' + k] for k in ['x', 'y', 'z', 'xy', 'xz', 'yz', 'xyz']])
+            if flip > 0: fmpbox.row().prop(props, "sym_mirror_flip_transl")
+
+            newbox.row().prop(props, "sym_mirror_trans")
+
+        box.label(text="Rotational Symmetry")
+        newbox = box.box()
+        newbox.row().prop(props, "sym_rotate_axis")
+        newbox.prop(props, "sym_rotate_n")
+
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+
+    def draw_connector_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        row = box.row()
+        row.prop(props, "conn_directions")
+        col = row.column()
+        col.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
+        col.enabled = props.edit_type == 'objects'
+        if props.conn_directions != '_NONE_':
+            row = box.row()
+            row.prop(props, "conn_name", text="Name")
+            if len(get_known_conn_names(None, None)) > 1:
+                box.row().label(text="Known connector names:")
+                box.row().prop(props, "conn_known_names", text="")
+            if not props.auto_save: box.row().operator("object.wfc_update_connector_constraints")
+
+        if obj and not props.info_toggle:
+            newbox = box.box()
+            newbox.label(text=f"Defined connector constraints:")
+            cf = newbox.column_flow(columns=2, align=True)
+            c = 0
+            for d in DIRECTIONS:
+                pn = 'wfc_conn_' + d.lower()
+                if not pn in obj: continue
+                cf.label(text=f"{d.lower()}: {obj[pn]}")
+                c += 1
+            if c == 0: newbox.label(text="nothing defined yet")
+    def draw_dimensions_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        box.row().prop(props, "dim_xyz")
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+    def draw_fixed_position_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        row = box.row()
+        col = row.column()
+        col.template_list("WFC3D_UL_FixedPositionList", "", props, "fixed_position_input_list", props, "fixed_position_input_list_idx")
+        col = row.box().column()
+        col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
+        c = col.column()
+        c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+        c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
+        c.enabled = count_selected_items(props.fixed_position_input_list) > 0
+        col.separator()
+        self._draw_list_actions(props, col, "fixed_position_input_list")
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+    def draw_regfreq_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        row = box.row()
+        col = row.column()
+        col.template_list("WFC3D_UL_RegFreqList", "", props, "regfreq_input_list", props, "regfreq_input_list_idx")
+        col = row.box().column()
+        col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
+        c = col.column()
+        c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+        c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
+        c.enabled = count_selected_items(props.regfreq_input_list) > 0
+        col.separator()
+        self._draw_list_actions(props, col, "regfreq_input_list")
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+    def draw_noise_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        box.row().label(text="Noise on probability of occurrence:")
+        box.row().prop(props, "noise_prob_basis")
+        if props.noise_prob_basis != "_NONE_":
+            box.row().prop(props, "noise_prob_threshold")
+            box.row().prop(props, "noise_prob_scale")
+        box.row().label(text="Noise on transformations:")
+        box.row().prop(props, "noise_transf_basis")
+        if props.noise_transf_basis != "_NONE_":
+            box.row().prop(props, "noise_transf_scale")
+
+        box.row().prop(props, "noise_randomize_position")
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+    def draw_geometry_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+
+        box.row().label(text="Applies only to mesh objects.", icon="INFO_LARGE")
+        row = box.row()
+        row.column().label(text="Faces:")
+        for i, d in enumerate(FACE_DIRECTIONS):
+            if i % 2 == 0: col = row.column()
+            col.prop(props, f"geo_{d.lower()}")
+        row = box.row()
+        row.prop(props, "geo_match_edges")
+        row.prop(props, "geo_match_faces")
+        row = box.row()
+        row.prop(props, "geo_tolerance")
+        row.prop(props, "geo_threshold")
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+    def draw_regprob_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        row = box.row()
+        col = row.column()
+        col.template_list("WFC3D_UL_RegProbList", "", props, "regprob_input_list", props, "regprob_input_list_idx")
+        col = row.box().column()
+        col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
+        c = col.column()
+        c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+        c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
+        c.enabled = count_selected_items(props.regprob_input_list) > 0
+        col.separator()
+        self._draw_list_actions(props, col, "regprob_input_list")
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+    def draw_distance_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        row = box.row()
+        col = row.column()
+        col.template_list("WFC3D_UL_DistanceList", "", props, "distance_input_list", props, "distance_input_list_idx")
+        col = row.box().column()
+        col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
+        c = col.column()
+        c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
+        c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
+        c.enabled = count_selected_items(props.distance_input_list) > 0
+        col.separator()
+        self._draw_list_actions(props, col, "distance_input_list")
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
+    def draw_empty_panel(self, props, layout, obj, obj_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        nbox = box.box()
+        row = nbox.row()
+        row.label(text="Prohibit empty neighbors in selected directions:")
+        row = nbox.row()
+        col = row.column()
+        col.template_list("WFC3D_UL_EmptyNeighborList", "", props, "empty_neighbor_list", props, "empty_neighbor_list_idx")
+        col = row.column().box()
+        nc = col.column()
+        nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
+        nc.enabled = props.edit_type == 'objects'
+        self._draw_list_actions(props, col, "empty_neighbor_list")
+
+        sl = [item.direction.lower() for item in props.empty_neighbor_list if item.selected]
+        if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
+        nbox = box.box()
+        row = nbox.row()
+        row.label(text="Prohibit any empty neighbors in selected directions:")
+        row = nbox.row()
+        col = row.column()
+        col.template_list("WFC3D_UL_EmptyAnyNeighborList", "", props, "empty_any_neighbor_list", props, "empty_any_neighbor_list_idx")
+        col = row.column().box()
+        nc = col.column()
+        nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
+        nc.enabled = props.edit_type == 'objects'
+        self._draw_list_actions(props, col, "empty_any_neighbor_list")
+        sl = [item.direction.lower() for item in props.empty_any_neighbor_list if item.selected]
+        if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
+
+        if not props.auto_save: box.operator("object.wfc_update_constraints")
 
     def _draw_list_actions(self, props, column, list_name):
         lst = getattr(props, list_name)

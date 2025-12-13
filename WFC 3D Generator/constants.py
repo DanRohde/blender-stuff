@@ -19,7 +19,7 @@ OPPOSITE_DIRECTIONS = { 'TOP':'BOTTOM', 'BOTTOM':'TOP', 'FRONT':'BACK', 'BACK':'
                        'CN_FTL':'CN_BBR', 'CN_BBR':'CN_FTL', 'CN_FTR':'CN_BBL', 'CN_BBL':'CN_FTR',
                        'EN_FL':'EN_BR', 'EN_BR':'EN_FL', 'EN_FR':'EN_BL', 'EN_BL':'EN_FR', 'EN_FT':'EN_BB','EN_BB':'EN_FT', 'EN_FB':'EN_BT','EN_BT':'EN_FB',
                        'EN_LT':'EN_RB', 'EN_RB':'EN_LT', 'EN_LB':'EN_RT', 'EN_RT':'EN_LB',
-                       'ANY':'ANY',
+                       'ANY':'ANY', 'ANY_FACE':'ANY_FACE', 'ANY_EDGE':'ANY_EDGE', 'ANY_CORNER':'ANY_CORNER',
 }
 ROTATE_DIRECTIONS = {
     'X' :  { 'TOP' : 'BACK', 'BOTTOM' :'FRONT', 'FRONT' : 'TOP', 'BACK': 'BOTTOM', 'LEFT' : 'LEFT', 'RIGHT' : 'RIGHT',
