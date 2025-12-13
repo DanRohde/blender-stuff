@@ -89,7 +89,7 @@ More information about the constraints can be found on [GitHub](https://github.c
 * For neighbor restrictions to take effect, there must be more than one object in the source collection.
 * Region constraints don't work with all symmetry constraint variants
 * Dimensions constraints can cause empty cells, especially in conjunction with symmetry constraints
-
+* Not all frequency constraints work with dimensions constraints.
 
 
 ## Upcoming Features
