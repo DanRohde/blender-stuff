@@ -94,8 +94,8 @@ class WFC3DRegionFrequencyListItem(bpy.types.PropertyGroup):
     regfreq_name: bpy.props.StringProperty(name='Name', description="Optional name of the region", default=PROP_DEFAULTS["regfreq_name"], update=auto_save)
     regfreq_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", default=PROP_DEFAULTS["regfreq_min"])
     regfreq_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", default=PROP_DEFAULTS["regfreq_max"])
-    regfreq_freq: bpy.props.IntProperty(update=auto_save, name="Frequency", description="Region frequency", min=-1)
-    regfreq_freq_pct: bpy.props.FloatProperty(update=auto_save, name="Frequency %", description="Region frequency in %", min=-1, max=100, subtype="PERCENTAGE")
+    regfreq_freq: bpy.props.IntProperty(update=auto_save, name="Frequency", description="Region frequency", min=-1, default=PROP_DEFAULTS["regfreq_freq"])
+    regfreq_freq_pct: bpy.props.FloatProperty(update=auto_save, name="Frequency %", description="Region frequency in %", min=-1, max=100, subtype="PERCENTAGE", default=PROP_DEFAULTS["regfreq_freq_pct"])
     selected: bpy.props.BoolProperty(default=False)
 
 class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):

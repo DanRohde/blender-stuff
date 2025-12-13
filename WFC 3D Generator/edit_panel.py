@@ -69,17 +69,17 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
             col.row().prop(item, "distance_subcollection")
         col.prop(item, "distance_type")
 
-class WFC3D_UL_EmptyNeighborList(bpy.types.UIList):
+class WFC3DObjectList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         direction = item.direction.split('_')
         row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
-
-class WFC3D_UL_EmptyAnyNeighborList(bpy.types.UIList):
-    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
-        row = layout.row(align=True)
-        direction = item.direction.split('_')
-        row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
+class WFC3D_UL_EmptyNeighborList(WFC3DObjectList):
+    def __init__(self):
+        pass
+class WFC3D_UL_EmptyAnyNeighborList(WFC3DObjectList):
+    def __init__(self):
+        pass
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Constraints Editor"""
@@ -130,7 +130,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             c = nc.column()
             c.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name="obj_list"
             c.enabled = sel_count > 0
-            self._draw_list_actions(props, nc, "obj_list")
+            self._draw_list_selection_actions(props, nc, "obj_list")
 
         
             selected =get_selected_items(props.obj_list)
@@ -202,11 +202,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nr = newcol.row()
             nr.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name = "neighbor_list"
             nr.enabled = not props.auto_active_object and sel_count > 0
-            self._draw_list_actions(props, newcol, "neighbor_list")
+            self._draw_list_selection_actions(props, newcol, "neighbor_list")
 
             box.row().prop(props, "allow_neighbor_constraint_violations", icon="VIEW_UNLOCKED")
 
-            if not props.auto_save: box.row().operator("object.wfc_update_neighbor_constraints")
+            if not props.auto_save: box.row().operator("object.wfc_update_neighbor_constraints", icon='IMPORT')
         if obj and not props.info_toggle:
             newbox = box.box()
             newbox.label(text=f"Defined neighbor constraints:")
@@ -264,7 +264,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         newrow.label(text="Inside")
         newrow.prop(props, "inside_none")
 
-        if not props.auto_save: box.operator("object.wfc_update_grid_constraints")
+        if not props.auto_save: box.operator("object.wfc_update_grid_constraints", icon='IMPORT')
     def draw_region_panel(self, props, layout, obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -291,7 +291,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row.prop(props, "region_level_penultimate")
         row.prop(props, "region_level_top")
 
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
     def draw_probability_panel(self, props, layout, obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -301,7 +301,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         box.prop(props, "weight")
         box.prop(props, "auto_weight", icon="MOD_VERTEX_WEIGHT")
 
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
     def draw_transformations_panel(self, props, layout, obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -333,7 +333,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         newbox = box.box()
         newrow = newbox.row()
         newrow.prop(props, "flipping")
-        if not props.auto_save: box.operator('object.wfc_update_constraints')
+        if not props.auto_save: box.operator('object.wfc_update_constraints', icon='IMPORT')
     def draw_frequency_panel(self, props, layout, obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -362,7 +362,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row = newbox.row()
         row.prop(props, "freq_any_axes")
 
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
     def draw_symmetry_panel(self, props, layout, obj, obj_name):
         box = layout.box()
@@ -404,7 +404,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         newbox.row().prop(props, "sym_rotate_axis")
         newbox.prop(props, "sym_rotate_n")
 
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
     def draw_connector_panel(self, props, layout, obj, obj_name):
         box = layout.box()
@@ -422,7 +422,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             if len(get_known_conn_names(None, None)) > 1:
                 box.row().label(text="Known connector names:")
                 box.row().prop(props, "conn_known_names", text="")
-            if not props.auto_save: box.row().operator("object.wfc_update_connector_constraints")
+            if not props.auto_save: box.row().operator("object.wfc_update_connector_constraints", icon='IMPORT')
 
         if obj and not props.info_toggle:
             newbox = box.box()
@@ -441,41 +441,14 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row.label(text=obj_name)
         row.operator("object.wfc_reset_constraints")
         box.row().prop(props, "dim_xyz")
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
+
     def draw_fixed_position_panel(self, props, layout, obj, obj_name):
-        box = layout.box()
-        row = box.row()
-        row.label(text=obj_name)
-        row.operator("object.wfc_reset_constraints")
-        row = box.row()
-        col = row.column()
-        col.template_list("WFC3D_UL_FixedPositionList", "", props, "fixed_position_input_list", props, "fixed_position_input_list_idx")
-        col = row.box().column()
-        col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-        c = col.column()
-        c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-        c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
-        c.enabled = count_selected_items(props.fixed_position_input_list) > 0
-        col.separator()
-        self._draw_list_actions(props, col, "fixed_position_input_list")
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_FixedPositionList","fixed_position_input_list")
+
     def draw_regfreq_panel(self, props, layout, obj, obj_name):
-        box = layout.box()
-        row = box.row()
-        row.label(text=obj_name)
-        row.operator("object.wfc_reset_constraints")
-        row = box.row()
-        col = row.column()
-        col.template_list("WFC3D_UL_RegFreqList", "", props, "regfreq_input_list", props, "regfreq_input_list_idx")
-        col = row.box().column()
-        col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-        c = col.column()
-        c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-        c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
-        c.enabled = count_selected_items(props.regfreq_input_list) > 0
-        col.separator()
-        self._draw_list_actions(props, col, "regfreq_input_list")
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_RegFreqList","regfreq_input_list")
+
     def draw_noise_panel(self, props, layout, obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -492,7 +465,8 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box.row().prop(props, "noise_transf_scale")
 
         box.row().prop(props, "noise_randomize_position")
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
+
     def draw_geometry_panel(self, props, layout, obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -511,41 +485,14 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row = box.row()
         row.prop(props, "geo_tolerance")
         row.prop(props, "geo_threshold")
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
+
     def draw_regprob_panel(self, props, layout, obj, obj_name):
-        box = layout.box()
-        row = box.row()
-        row.label(text=obj_name)
-        row.operator("object.wfc_reset_constraints")
-        row = box.row()
-        col = row.column()
-        col.template_list("WFC3D_UL_RegProbList", "", props, "regprob_input_list", props, "regprob_input_list_idx")
-        col = row.box().column()
-        col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-        c = col.column()
-        c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-        c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
-        c.enabled = count_selected_items(props.regprob_input_list) > 0
-        col.separator()
-        self._draw_list_actions(props, col, "regprob_input_list")
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_RegProbList","regprob_input_list")
+
     def draw_distance_panel(self, props, layout, obj, obj_name):
-        box = layout.box()
-        row = box.row()
-        row.label(text=obj_name)
-        row.operator("object.wfc_reset_constraints")
-        row = box.row()
-        col = row.column()
-        col.template_list("WFC3D_UL_DistanceList", "", props, "distance_input_list", props, "distance_input_list_idx")
-        col = row.box().column()
-        col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
-        c = col.column()
-        c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-        c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
-        c.enabled = count_selected_items(props.distance_input_list) > 0
-        col.separator()
-        self._draw_list_actions(props, col, "distance_input_list")
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_DistanceList","distance_input_list")
+
     def draw_empty_panel(self, props, layout, obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -561,7 +508,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         nc = col.column()
         nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
         nc.enabled = props.edit_type == 'objects'
-        self._draw_list_actions(props, col, "empty_neighbor_list")
+        self._draw_list_selection_actions(props, col, "empty_neighbor_list")
 
         sl = [item.direction.lower() for item in props.empty_neighbor_list if item.selected]
         if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
@@ -575,13 +522,33 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         nc = col.column()
         nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
         nc.enabled = props.edit_type == 'objects'
-        self._draw_list_actions(props, col, "empty_any_neighbor_list")
+        self._draw_list_selection_actions(props, col, "empty_any_neighbor_list")
         sl = [item.direction.lower() for item in props.empty_any_neighbor_list if item.selected]
         if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
 
-        if not props.auto_save: box.operator("object.wfc_update_constraints")
+        if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
-    def _draw_list_actions(self, props, column, list_name):
+    def _draw_list_constraints_panel(self, props, layout, obj, obj_name, ui_list, list_name):
+        box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints")
+        row = box.row()
+        col = row.column()
+        col.template_list(ui_list, "", props, list_name, props, f"{list_name}_idx")
+        self._draw_list_modify_actions(props, row.box().column(), list_name)
+        if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
+
+    def _draw_list_modify_actions(self, props, col, list_name):
+        col.operator("object.wfc_generic_add_list_item", icon="ADD", text="").list_name = list_name
+        c = col.column()
+        c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="").list_name = list_name
+        c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="").list_name = list_name
+        c.enabled = count_selected_items(getattr(props, list_name)) > 0
+        col.separator()
+        self._draw_list_selection_actions(props, col, list_name)
+
+    def _draw_list_selection_actions(self, props, column, list_name):
         lst = getattr(props, list_name)
         nc = column.column()
         nc.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT", text="").list_name = list_name

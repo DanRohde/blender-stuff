@@ -243,14 +243,14 @@ class WFC3D_OT_GenericRemoveListItems(bpy.types.Operator):
     bl_idname = "object.wfc_generic_remove_list_items"
     bl_label = ""
     bl_description = "Remove selected constraint items from list"
+    list_name : bpy.props.StringProperty()
     def execute(self, context):
         props = context.scene.wfc_props
-        constraints = get_constraints(props)
-        lst = getattr(props, LIST_CONSTRAINTS[constraints[0]])
+        lst = getattr(props, self.list_name)
         selected_indices = [i for i, item in enumerate(lst) if item.selected]
         for idx in sorted(selected_indices, reverse=True):
             lst.remove(idx)
-        update_constraints(props, constraints)
+        update_constraints(props, get_constraints(props))
         return {'FINISHED'}
 
 class WFC3D_OT_GenericAddListItem(bpy.types.Operator):
@@ -258,31 +258,25 @@ class WFC3D_OT_GenericAddListItem(bpy.types.Operator):
     bl_idname = "object.wfc_generic_add_list_item"
     bl_label = ""
     bl_description = "Add new constraint item to list"
+    list_name : bpy.props.StringProperty()
     def execute(self, context):
         props = context.scene.wfc_props
-        constraints = get_constraints(props)
-        item = None
-        for c in constraints:
-            if c not in LIST_CONSTRAINTS: continue
-            if item is None:
-                lst = getattr(props, LIST_CONSTRAINTS[c])
-                item = lst.add()
-            setattr(item, c, PROP_DEFAULTS[c])
+        getattr(props, self.list_name).add()
+        update_constraints(props, get_constraints(props))
         return {'FINISHED'}
 class WFC3D_OT_GenericDuplicateListItems(bpy.types.Operator):
     bl_idname = "object.wfc_generic_duplicate_selected_items"
     bl_label = ""
     bl_description = "Duplicate selected constraints"
+    list_name : bpy.props.StringProperty()
     def execute(self, context):
         props = context.scene.wfc_props
-        constraints = get_constraints(props)
-        lst = getattr(props, LIST_CONSTRAINTS[constraints[0]])
-        item = None
+        lst = getattr(props, self.list_name)
         sel_items = [ item for item in lst if item.selected]
         for si in sel_items:
             item = lst.add()
-            for c in constraints:
-                setattr(item, c, getattr(si,c))
+            for k in si.keys():
+                if k != "selected": setattr(item, k, getattr(si,k))
         return {'FINISHED'}
 class WFC3D_OT_OpenWebLink(bpy.types.Operator):
     """Open Web Link"""
