@@ -76,10 +76,10 @@ def draw_empty_neighbor_list_item(layout, item):
     row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
 
 class WFC3D_UL_EmptyNeighborList(bpy.types.UIList):
-    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         draw_empty_neighbor_list_item(layout, item)
 class WFC3D_UL_EmptyAnyNeighborList(bpy.types.UIList):
-    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         draw_empty_neighbor_list_item(layout, item)
 
 class WFC3D_PT_EditPanel(bpy.types.Panel):
@@ -167,7 +167,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         if props.info_toggle: self.draw_info_panel(layout, props, obj)
         row = layout.row()
         row.operator("object.wfc_open_web_link", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
-    def draw_neighbor_panel(self, props, layout, obj, obj_name):
+    def draw_neighbor_panel(self, props, layout, obj, _obj_name):
         box = layout.box()
         row = box.row()
         row.prop(props, "edit_neighbor_constraint")
@@ -217,7 +217,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 c += 1
                 newbox.label(text=f"{DIR_TRANSLATION[d]}: {obj['wfc_' + d.lower()]}")
             if c == 0: newbox.label(text="nothing defined yet")
-    def draw_grid_panel(self, props, layout, obj, obj_name):
+    def draw_grid_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -266,7 +266,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         newrow.prop(props, "inside_none")
 
         if not props.auto_save: box.operator("object.wfc_update_grid_constraints", icon='IMPORT')
-    def draw_region_panel(self, props, layout, obj, obj_name):
+    def draw_region_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -293,7 +293,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row.prop(props, "region_level_top")
 
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
-    def draw_probability_panel(self, props, layout, obj, obj_name):
+    def draw_probability_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -303,7 +303,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         box.prop(props, "auto_weight", icon="MOD_VERTEX_WEIGHT")
 
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
-    def draw_transformations_panel(self, props, layout, obj, obj_name):
+    def draw_transformations_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -335,7 +335,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         newrow = newbox.row()
         newrow.prop(props, "flipping")
         if not props.auto_save: box.operator('object.wfc_update_constraints', icon='IMPORT')
-    def draw_frequency_panel(self, props, layout, obj, obj_name):
+    def draw_frequency_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -365,7 +365,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
 
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
-    def draw_symmetry_panel(self, props, layout, obj, obj_name):
+    def draw_symmetry_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -436,7 +436,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 cf.label(text=f"{d.lower()}: {obj[pn]}")
                 c += 1
             if c == 0: newbox.label(text="nothing defined yet")
-    def draw_dimensions_panel(self, props, layout, obj, obj_name):
+    def draw_dimensions_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -450,7 +450,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
     def draw_regfreq_panel(self, props, layout, obj, obj_name):
         self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_RegFreqList","regfreq_input_list")
 
-    def draw_noise_panel(self, props, layout, obj, obj_name):
+    def draw_noise_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -468,7 +468,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         box.row().prop(props, "noise_randomize_position")
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
-    def draw_geometry_panel(self, props, layout, obj, obj_name):
+    def draw_geometry_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -477,8 +477,9 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         box.row().label(text="Applies only to mesh objects.", icon="INFO_LARGE")
         row = box.row()
         row.column().label(text="Faces:")
+        col = row.column()
         for i, d in enumerate(FACE_DIRECTIONS):
-            if i % 2 == 0: col = row.column()
+            if i !=0 and i % 2 == 0: col = row.column()
             col.prop(props, f"geo_{d.lower()}")
         row = box.row()
         row.prop(props, "geo_match_edges")
@@ -494,7 +495,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
     def draw_distance_panel(self, props, layout, obj, obj_name):
         self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_DistanceList","distance_input_list")
 
-    def draw_empty_panel(self, props, layout, obj, obj_name):
+    def draw_empty_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -529,7 +530,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
 
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
-    def _draw_list_constraints_panel(self, props, layout, obj, obj_name, ui_list, list_name):
+    def _draw_list_constraints_panel(self, props, layout, _obj, obj_name, ui_list, list_name):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
