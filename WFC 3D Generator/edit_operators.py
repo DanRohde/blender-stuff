@@ -190,6 +190,14 @@ class WFC3D_OT_GenericListSelectNone(bpy.types.Operator):
         set_select_all_list_items(getattr(context.scene.wfc_props, self.list_name), False)
         return {'FINISHED'}
 
+class WFC3D_OT_GenericListInvertSelection(bpy.types.Operator):
+    """Invert selection"""
+    bl_idname = "object.wfc_list_invert_selection"
+    bl_label = ""
+    list_name: bpy.props.StringProperty()
+    def execute(self, context):
+        invert_selection(getattr(context.scene.wfc_props, self.list_name))
+        return {'FINISHED'}
 
 class WFC3D_OT_AutoSaveToggle(bpy.types.Operator):
     """Auto save toggle"""
@@ -318,6 +326,7 @@ operators = [
     WFC3D_OT_ResetAllConstraints,
     WFC3D_OT_GenericListSelectAll,
     WFC3D_OT_GenericListSelectNone,
+    WFC3D_OT_GenericListInvertSelection,
     WFC3D_OT_OpenWebLink,
     WFC3D_OT_GenericDuplicateListItems,
     WFC3D_OT_GenericAddListItem,

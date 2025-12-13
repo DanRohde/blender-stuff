@@ -129,6 +129,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nc=newrow.column().box()
             nc.operator("object.wfc_get_selected_object", icon="SELECT_SET").list_name="obj_list"
             nc.prop(props,"auto_active_object", icon="TRIA_RIGHT")
+            nc.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
             nc=newrow.column()
             nc.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
             nc.enabled = not props.auto_active_object
@@ -137,8 +138,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             c.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name="obj_list"
             c.enabled = sel_count > 0
             self._draw_list_actions(props, nc, "obj_list")
-            nc.operator("collection.wfc_update_collection_list",icon="FILE_REFRESH")
-            nc.enabled = not props.auto_active_object
+
         
             selected =get_selected_items(props.obj_list)
             if len(selected) == 0 and props.edit_type == 'objects':
@@ -193,6 +193,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 nc=newcol.column()
                 nc.prop(props,"auto_neighbor_object",icon="TRIA_RIGHT")
                 nc.enabled = not props.auto_active_object
+                newcol.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
                 newcol = row.column()
                 newcol.template_list("WFC3D_UL_EditPanelNeighborMultiSelList", "", props, "neighbor_list", props, "neighbor_list_idx")
                 newcol.enabled = not props.auto_neighbor_object
@@ -203,7 +204,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 nr.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name = "neighbor_list"
                 nr.enabled = not props.auto_active_object and sel_count > 0
                 self._draw_list_actions(props, newcol, "neighbor_list")
-                newcol.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
+
 
                 box.row().prop(props,"allow_neighbor_constraint_violations",icon="VIEW_UNLOCKED")
 
@@ -457,13 +458,13 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             col = row.column()
             col.template_list("WFC3D_UL_FixedPositionList", "", props, "fixed_position_input_list", props, "fixed_position_input_list_idx")
-            col = row.column()
+            col = row.box().column()
             col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
             c = col.column()
             c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-            c.separator()
             c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
             c.enabled = count_selected_items(props.fixed_position_input_list) > 0
+            col.separator()
             self._draw_list_actions(props, col, "fixed_position_input_list")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "regfreq":
@@ -474,13 +475,13 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             col = row.column()
             col.template_list("WFC3D_UL_RegFreqList","", props, "regfreq_input_list", props, "regfreq_input_list_idx")
-            col = row.column().box()
+            col = row.box().column()
             col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
             c = col.column()
             c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-            c.separator()
             c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
             c.enabled = count_selected_items(props.regfreq_input_list) > 0
+            col.separator()
             self._draw_list_actions(props, col, "regfreq_input_list")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "noise":
@@ -527,13 +528,13 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             col = row.column()
             col.template_list("WFC3D_UL_RegProbList", "", props, "regprob_input_list", props, "regprob_input_list_idx")
-            col = row.column().box()
+            col = row.box().column()
             col.operator("object.wfc_generic_add_list_item", icon="ADD", text="")
             c = col.column()
             c.operator("object.wfc_generic_remove_list_items", icon="REMOVE", text="")
-            c.separator()
             c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="")
             c.enabled = count_selected_items(props.regprob_input_list) > 0
+            col.separator()
             self._draw_list_actions(props, col, "regprob_input_list")
             if not props.auto_save: box.operator("object.wfc_update_constraints")
         if props.edit_constraints == "distance":
@@ -599,6 +600,9 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         nc = column.column()
         nc.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT", text="").list_name = list_name
         nc.enabled = count_selected_items(lst) > 0
+        nc = column.column()
+        nc.operator("object.wfc_list_invert_selection", icon="CHECKMARK", text="").list_name = list_name
+        nc.enabled = len(lst) > 0
 
     def _draw_labels(self, layout, labels):
         for label in labels:
