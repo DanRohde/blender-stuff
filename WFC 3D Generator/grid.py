@@ -133,13 +133,13 @@ class WFC3DGrid:
     def is_inside_region_quadrant(self, pos, constraint):
         return not constraint or constraint[self.get_quadrant(pos)]
 
-    def count_obj(self, obj_name, collapsed = True):
+    def count_obj(self, obj_name):
         count = 0
         gx, gy, gz = self.grid_size
         for x in range(gx):
             for y in range(gy):
                 for z in range(gz):
-                    if (not collapsed or self.collapsed[x, y, z]) and obj_name in self.grid[x, y, z]: count += 1
+                    if self.collapsed[x, y, z] and obj_name in self.grid[x, y, z]: count += 1
         return count
 
     def count_neighbors(self, x, y, z, neighbor, dirs):
@@ -274,25 +274,13 @@ class WFC3DGrid:
                     new_options = [n for n in self.grid[x, y, z] if n != obj_name]
                     self.grid[x, y, z] = new_options
 
-    def remove_obj(self, obj_name, pos, d = None):
+    def remove_obj(self, obj_name):
         gx, gy, gz = self.grid_size
-        reduced_cells = []
-        if pos:
-            x, y, z = pos
-            dx, dy, dz = d if d is not None else [0, 0, 0]
-            if self.within_boundaries(x + dx, y + dy, z + dz):
-                obj_list = self.grid[x + dx, y + dy, z + dz]
-                if not self.collapsed[x, y, z] and obj_name in obj_list:
-                    self.grid[x + dx, y + dy, z + dz] = [n for n in obj_list if n != obj_name]
-                    reduced_cells.append((x + dx, y + dy, z + dz))
-        else:
-            for x in range(gx):
-                for y in range(gy):
-                    for z in range(gz):
-                        if not self.collapsed[x, y, z] and obj_name in self.grid[x, y, z]:
-                            self.grid[x, y, z] = [n for n in self.grid[x, y, z] if n != obj_name]
-                            reduced_cells.append((x, y, z))
-        return reduced_cells
+        for x in range(gx):
+            for y in range(gy):
+                for z in range(gz):
+                    if not self.collapsed[x, y, z] and obj_name in self.grid[x, y, z]:
+                        self.grid[x, y, z] = [n for n in self.grid[x, y, z] if n != obj_name]
 
     def mark_collapsed(self, x, y, z):
         self.collapsed[x, y, z] = True
