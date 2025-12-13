@@ -98,7 +98,7 @@ class WFC3DConstraints:
                 df = self.constraints[obj.name]['distance_from'][i]
                 if df not in [0,2]: continue
                 from_object = self.constraints[obj.name]['distance_object'][i] if df == 0 else self.constraints[obj.name]['distance_subcollection'][i]
-                if obj.name == from_object.name: continue
+                if from_object is None or obj.name == from_object.name: continue
                 if from_object.name not in ddd: ddd[from_object.name] = { 'distance': [], 'distance_from': [] , 'distance_object': [], 'distance_subcollection': [], 'distance_type' : [] }
                 ddd[from_object.name]['distance'].append(distance)
                 ddd[from_object.name]['distance_from'].append(0 if obj.name in collection.objects else 2)
