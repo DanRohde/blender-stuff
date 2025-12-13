@@ -6,7 +6,7 @@ class WFC3DGrid:
     def __init__(self, grid_size):
         self.grid_size = grid_size
         self.grid = None
-        self.collapsed = np.empty(self.grid_size)
+        self.collapsed = None
         self.corners = None
         self.edges = None
         self._init_corners()
@@ -15,6 +15,7 @@ class WFC3DGrid:
     def initialize_grid(self, objects, constraints):
         """Initializes the 3D grid"""
         self.grid = np.empty(self.grid_size, dtype=object)
+        self.collapsed =  np.empty(self.grid_size)
         for x in range(self.grid_size[0]):
             for y in range(self.grid_size[1]):
                 for z in range(self.grid_size[2]):
@@ -132,13 +133,13 @@ class WFC3DGrid:
     def is_inside_region_quadrant(self, pos, constraint):
         return not constraint or constraint[self.get_quadrant(pos)]
 
-    def count_obj(self, obj_name):
+    def count_obj(self, obj_name, collapsed = True):
         count = 0
         gx, gy, gz = self.grid_size
         for x in range(gx):
             for y in range(gy):
                 for z in range(gz):
-                    if obj_name in self.grid[x, y, z] and self.collapsed[x, y, z]: count += 1
+                    if (not collapsed or self.collapsed[x, y, z]) and obj_name in self.grid[x, y, z]: count += 1
         return count
 
     def count_neighbors(self, x, y, z, neighbor, dirs):
