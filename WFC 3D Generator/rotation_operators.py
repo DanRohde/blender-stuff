@@ -186,27 +186,5 @@ class WFC3D_OT_RotationSelectDropdownObject(bpy.types.Operator):
         except Exception as e:
             self.report({'WARNING'}, f"Error: {str(e)}")
         return {'FINISHED'}
-class WFC3D_OT_RotationCollectionListSelectAll(bpy.types.Operator):
-    """Select all objects in list"""
-    bl_idname = "rotation.wfc_collection_list_select_all"
-    bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
 
-    def execute(self, context):
-        props = context.scene.wfc_props
-        set_select_all_list_items(props.rt_list, True)
-        return {'FINISHED'}
-
-
-class WFC3D_OT_RotationCollectionListSelectNone(bpy.types.Operator):
-    """Deselect all objects in list"""
-    bl_idname = "rotation.wfc_collection_list_select_none"
-    bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        props = context.scene.wfc_props
-        set_select_all_list_items(props.rt_list, False)
-        return {'FINISHED'}
-
-operators = [ WFC3D_OT_Rotation, WFC3D_OT_RotationCollectionListSelectAll, WFC3D_OT_RotationCollectionListSelectNone, WFC3D_OT_RotationGetSelectedObject, WFC3D_OT_RotationSelectDropdownObject ]
+operators = [ WFC3D_OT_Rotation, WFC3D_OT_RotationGetSelectedObject, WFC3D_OT_RotationSelectDropdownObject ]

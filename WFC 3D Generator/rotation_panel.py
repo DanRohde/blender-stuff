@@ -23,14 +23,17 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
         nc = newrow.column().box()
         nc.operator("rotation.wfc_get_selected_object", icon="SELECT_SET")
         nc.prop(props, "rt_auto_active_object", icon="TRIA_RIGHT")
+        nc.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
         nc = newrow.column()
         nc.template_list("WFC3D_UL_RotationPanelMultiSelList", "", props, "rt_list", props, "rt_list_idx")
         nc.enabled = not props.rt_auto_active_object
         nc = newrow.column().box()
         nc.operator("rotation.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
-        nc.operator("rotation.wfc_collection_list_select_all", icon="CHECKBOX_HLT")
-        nc.operator("rotation.wfc_collection_list_select_none", icon="CHECKBOX_DEHLT")
-        nc.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
+        nc.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT").list_name = "rt_list"
+        nc.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT").list_name = "rt_list"
+        nc.operator("object.wfc_list_invert_selection", icon="CHECKMARK", text="").list_name = "rt_list"
+
+
         nc.enabled = not props.rt_auto_active_object
 
         selected = get_selected_items(props.rt_list)
