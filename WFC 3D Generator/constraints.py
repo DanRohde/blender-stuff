@@ -84,14 +84,14 @@ class WFC3DConstraints:
                     self.constraints[obj_name][c] = PROP_DEFAULTS[c].split(",")
 
             for direction in DIRECTIONS:
-                # init connector exclusion constraints:
+                if direction.startswith("ANY"): continue
+                # init connector exclusion constraints variables:
                 if "conn_excl" not in self.constraints[obj_name]: self.constraints[obj_name]["conn_excl"] = {}
                 if direction not in self.constraints[obj_name]["conn_excl"]: self.constraints[obj_name]["conn_excl"][direction] = []
-                # init multiple connector constraints:
+                # init multiple connector constraints variables:
                 if "mult_conn" not in self.constraints[obj_name]: self.constraints[obj_name]["mult_conn"] = {}
                 if direction not in self.constraints[obj_name]["mult_conn"]: self.constraints[obj_name]["mult_conn"][direction] = []
 
-                if direction.startswith("ANY"): continue
                 dirlower = direction.lower()
                 # load connector constraints:
                 self.constraints[obj_name]["conn_"+dirlower] = self.get_adjacency_property_value(direction, 'conn_', obj, default_obj)
@@ -139,7 +139,16 @@ class WFC3DConstraints:
             enumvalues = ENUM_CONSTRAINTS[f'{prop_prefix}_direction']
             if name == "" or not (0 <= dirpropidx < len(enumvalues)): continue
             dirpropvalue = enumvalues[dirpropidx]
-            self.constraints[obj_name][prop_prefix][dirpropvalue].append(name)
+            if dirpropvalue.startswith("ANY"):
+                if dirpropvalue == "ANY_EDGES": directions = EDGE_DIRECTIONS
+                elif dirpropvalue == "ANY_CORNERS": directions = CORNER_DIRECTIONS
+                elif dirpropvalue == "ANY_FACES": directions = FACE_DIRECTIONS
+                else: directions = DIRECTIONS
+                for d in directions:
+                    if d.startswith("ANY"): continue
+                    self.constraints[obj_name][prop_prefix][d].append(name)
+            else:
+                self.constraints[obj_name][prop_prefix][dirpropvalue].append(name)
 
     def get_adjacency_property_value(self, direction, prefix, obj, default_obj):
         cname = prefix + direction.lower()
@@ -779,58 +788,17 @@ class WFC3DConstraints:
               or self.constraints[current_obj][prop_name] in self.constraints[obj]["conn_excl"][OPPOSITE_DIRECTIONS[direction]]: return False
         if set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) & set(self.constraints[current_obj]['conn_excl'][direction]): return False
         if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['conn_excl'][OPPOSITE_DIRECTIONS[direction]]): return False
-
-        if direction in FACE_DIRECTIONS:
-            if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["conn_excl"]["ANY_FACE"] \
-                or self.constraints[current_obj][prop_name] in self.constraints[obj]["conn_excl"]["ANY_FACE"]: return False
-            if set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) & set(self.constraints[current_obj]['conn_excl']['ANY_FACE']): return False
-            if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['conn_excl']['ANY_FACE']): return False
-        elif direction in EDGE_DIRECTIONS:
-            if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["conn_excl"]["ANY_EDGE"] \
-                  or self.constraints[current_obj][prop_name] in self.constraints[obj]["conn_excl"]["ANY_EDGE"]: return False
-            if set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) & set(self.constraints[current_obj]['conn_excl']['ANY_EDGE']): return False
-            if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['conn_excl']['ANY_EDGE']): return False
-        elif direction in CORNER_DIRECTIONS:
-            if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["conn_excl"]["ANY_CORNER"] \
-                  or self.constraints[current_obj][prop_name] in self.constraints[obj]["conn_excl"]["ANY_CORNER"]: return False
-            if set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) & set(self.constraints[current_obj]['conn_excl']['ANY_CORNER']): return False
-            if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['conn_excl']['ANY_CORNER']): return False
-        if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["conn_excl"]["ANY"] \
-              or self.constraints[current_obj][prop_name] in self.constraints[obj]["conn_excl"]["ANY"]: return False
-        if set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) & set(self.constraints[current_obj]['conn_excl']['ANY']): return False
-        if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['conn_excl']['ANY']): return False
-
         return True
 
     def check_multiple_connection_constraints(self, current_obj, obj, direction, prop_name, opp_prop_name):
-        if direction in FACE_DIRECTIONS:
-            if set(self.constraints[current_obj]['mult_conn']["ANY_FACE"]) & set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]): return True
-            if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['mult_conn']['ANY_FACE']): return True
-            if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["mult_conn"]["ANY_FACE"]: return True
-            if self.constraints[current_obj][prop_name] in self.constraints[obj]["mult_conn"]["ANY_FACE"]: return True
-        elif direction in EDGE_DIRECTIONS:
-            if set(self.constraints[current_obj]['mult_conn']["ANY_EDGE"]) & set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]): return True
-            if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['mult_conn']['ANY_EDGE']): return True
-            if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["mult_conn"]["ANY_EDGE"]: return True
-            if self.constraints[current_obj][prop_name] in self.constraints[obj]["mult_conn"]["ANY_EDGE"]: return True
-        elif direction in CORNER_DIRECTIONS:
-            if set(self.constraints[current_obj]['mult_conn']["ANY_CORNER"]) & set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]): return True
-            if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['mult_conn']['ANY_CORNER']): return True
-            if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["mult_conn"]["ANY_CORNER"]: return True
-            if self.constraints[current_obj][prop_name] in self.constraints[obj]["mult_conn"]["ANY_CORNER"]: return True
-
-        if set(self.constraints[current_obj]['mult_conn']["ANY"]) & set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]): return True
-        if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['mult_conn']['ANY']): return True
-        if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["mult_conn"]["ANY"]: return True
-        if self.constraints[current_obj][prop_name] in self.constraints[obj]["mult_conn"]["ANY"]: return True
-
-        if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["mult_conn"][direction]: return True
-        if self.constraints[current_obj][prop_name] in self.constraints[obj]["mult_conn"][OPPOSITE_DIRECTIONS[direction]]: return True
-        if self.constraints[obj][opp_prop_name] == "" and len(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) == 0: return True
         if self.constraints[current_obj][prop_name] == "" and len(self.constraints[current_obj]['mult_conn'][direction]) == 0: return True
+        if self.constraints[obj][opp_prop_name] == "" and len(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) == 0: return True
+        if self.constraints[current_obj][prop_name] != "":
+            if self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name]: return True
+            if self.constraints[obj][opp_prop_name] != "":
+                if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["mult_conn"][direction] \
+                    and self.constraints[current_obj][prop_name] in self.constraints[obj]["mult_conn"][OPPOSITE_DIRECTIONS[direction]]: return True
         if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]): return True
-
-
         return False
     def propagate_adjacency_constraints(self, cell):
         # propagate neighbor constraints:
@@ -863,12 +831,8 @@ class WFC3DConstraints:
                 prop_name = 'conn_' + dirlower
                 opp_prop_name = 'conn_' + oppdirlower
                 new_options = [obj for obj in new_options
-                               if
-                                ( self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name]
-                                  or self.constraints[obj][opp_prop_name] == ""
-                                  or self.constraints[current_obj][prop_name] == "")
-                                and self.check_connection_exclusion_constraints(current_obj, obj, direction, prop_name, opp_prop_name)
-                                and self.check_multiple_connection_constraints(current_obj, obj, direction, prop_name, opp_prop_name)
+                               if self.check_connection_exclusion_constraints(current_obj, obj, direction, prop_name, opp_prop_name)
+                                  and self.check_multiple_connection_constraints(current_obj, obj, direction, prop_name, opp_prop_name)
                                ]
 
                 # Filter disallowed geometry:
