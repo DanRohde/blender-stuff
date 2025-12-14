@@ -774,7 +774,7 @@ class WFC3DConstraints:
         self.apply_transformation_constraints(position, obj_name, target_obj)
         self.apply_dimensions_draw_constraints(position, spacing, obj_name, target_obj)
 
-    def check_connection_exclusion_constraints(self, current_obj, direction, obj, prop_name, opp_prop_name):
+    def check_connection_exclusion_constraints(self, current_obj, obj, direction, prop_name, opp_prop_name):
         if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["conn_excl"][direction] \
               or self.constraints[current_obj][prop_name] in self.constraints[obj]["conn_excl"][OPPOSITE_DIRECTIONS[direction]]: return False
         if set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) & set(self.constraints[current_obj]['conn_excl'][direction]): return False
@@ -824,10 +824,12 @@ class WFC3DConstraints:
         if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["mult_conn"]["ANY"]: return True
         if self.constraints[current_obj][prop_name] in self.constraints[obj]["mult_conn"]["ANY"]: return True
 
-        if len(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) == 0 or len(self.constraints[current_obj]['mult_conn'][direction]) == 0: return True
-        if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]): return True
         if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["mult_conn"][direction]: return True
         if self.constraints[current_obj][prop_name] in self.constraints[obj]["mult_conn"][OPPOSITE_DIRECTIONS[direction]]: return True
+        if self.constraints[obj][opp_prop_name] == "" and len(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) == 0: return True
+        if self.constraints[current_obj][prop_name] == "" and len(self.constraints[current_obj]['mult_conn'][direction]) == 0: return True
+        if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]): return True
+
 
         return False
     def propagate_adjacency_constraints(self, cell):
@@ -865,7 +867,7 @@ class WFC3DConstraints:
                                 ( self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name]
                                   or self.constraints[obj][opp_prop_name] == ""
                                   or self.constraints[current_obj][prop_name] == "")
-                                and self.check_connection_exclusion_constraints(current_obj, direction, obj, prop_name, opp_prop_name)
+                                and self.check_connection_exclusion_constraints(current_obj, obj, direction, prop_name, opp_prop_name)
                                 and self.check_multiple_connection_constraints(current_obj, obj, direction, prop_name, opp_prop_name)
                                ]
 
