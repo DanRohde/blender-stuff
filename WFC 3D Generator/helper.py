@@ -55,6 +55,8 @@ def get_constraints(props):
         constraints = CONNECTOR_CONSTRAINTS
     elif props.edit_constraints == 'connector_exclusion':
         constraints = CONNECTOR_EXCLUSION_CONSTRAINTS
+    elif props.edit_constraints == 'multiple_connector':
+        constraints = MULTIPLE_CONNECTOR_CONSTRAINTS
     elif props.edit_constraints == 'dimensions':
         constraints = DIMENSIONS_CONSTRAINTS
     elif props.edit_constraints == 'fixed_position':

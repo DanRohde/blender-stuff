@@ -31,6 +31,16 @@ You can define a list of prohibited connector names for a specific direction.
 
 - More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
 
+## Multiple Connector Constraints
+You can define a list of allowed connector names for a specific direction.
+
+| **Parameter**                  | **Description**                                                                                                                 |
+|--------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| Name | The connector name to restrict the possible neighbors. |
+| Direction | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected                                      |
+
+- More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
+
 
 ## Geometry Constraints
 Edges or faces are used to determine whether two objects can be placed next to each other.
@@ -202,13 +212,13 @@ Challenge:
 - When changing the grid size, regions or positions may need to be corrected.
 
 # Adjacency Constraints Comparison
-| *Tasks*                                          | *Neighbor*     | *Connector*      | *Geometry*  |
-|--------------------------------------------------|----------------|------------------|-------------|
-| Implementation                                   | easy  | concept required | very easy   |  
-| Adding, deleting, renaming building blocks       | time-consuming | no problem       | no problem  | 
-| Performance with large number of building blocks | fast | very fast        | (very) slow |
+| *Tasks*                                          | *Neighbor*     | *(Multiple) Connector* | *Geometry*  |
+|--------------------------------------------------|----------------|------------------------|-------------|
+| Implementation                                   | easy  | concept required       | very easy   |  
+| Adding, deleting, renaming building blocks       | time-consuming | no problem             | no problem  | 
+| Performance with large number of building blocks | fast | very fast              | (very) slow |
 
-Recommendation: use connector constraints
+Recommendation: use (multiple) connector constraints
 
 ## Algorithm Phases
 ### Grid Initialization Phase

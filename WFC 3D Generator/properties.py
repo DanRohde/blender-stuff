@@ -40,6 +40,10 @@ def get_conn_directions(_self, _context):
 def get_connector_exclusion_direction_list(_self, _context):
     return get_direction_list([], 'wfc_conn_excl_', with_sep = False)
 
+def get_multiple_connector_direction_list(_self, _context):
+    return get_direction_list([], 'wfc_mult_conn_', with_sep = False)
+
+
 def get_known_conn_names(_self, _context):
     props = bpy.context.scene.wfc_props
     if props.conn_directions == '_NONE_': return '_NONE_','Nothing found','No other connectors found for this (opposite) direction'
@@ -122,6 +126,11 @@ class WFC3DConnectorExclusionListItem(bpy.types.PropertyGroup):
     conn_excl_direction: bpy.props.EnumProperty(name="",description="Direction",items=get_connector_exclusion_direction_list, default=PROP_DEFAULTS["conn_excl_direction"], update=auto_save)
     selected: bpy.props.BoolProperty(default=False)
 
+class WFC3DMultipleConnectorListItem(bpy.types.PropertyGroup):
+    mult_conn_name: bpy.props.StringProperty(name="Name",description="Connector name", default=PROP_DEFAULTS["mult_conn_name"] ,update=auto_save)
+    mult_conn_direction: bpy.props.EnumProperty(name="",description="Direction",items=get_multiple_connector_direction_list, default=PROP_DEFAULTS["mult_conn_direction"], update=auto_save)
+    selected: bpy.props.BoolProperty(default=False)
+
 class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
     regprob_name: bpy.props.StringProperty(name='Name', description='Optional name of the region', default=PROP_DEFAULTS['regprob_name'], update=auto_save)
     regprob_min: bpy.props.IntVectorProperty(size=3, update=auto_save, name="min", description="Region min", default=PROP_DEFAULTS['regprob_min'])
@@ -187,6 +196,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
                ("neighbor","Neighbor Constraints","Neighbor constraints"),
                ('connector', 'Connector Constraints', 'Connector constraints'),
                ('connector_exclusion', 'Connector Exclusion Constraints', 'Connector exclusion constraints'),
+               ('multiple_connector', 'Multiple Connector Constraints', 'Multiple Connector constraints'),
                ('geometry', 'Geometry Constraints', 'Geometry constraints'),
                ('empty', 'Empty Neighbor Constraints', 'Empty Neighbor constraints'),
                None,
@@ -304,6 +314,9 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     conn_excl_input_list: bpy.props.CollectionProperty(type=WFC3DConnectorExclusionListItem)
     conn_excl_input_list_idx: bpy.props.IntProperty()
 
+    mult_conn_input_list: bpy.props.CollectionProperty(type=WFC3DMultipleConnectorListItem)
+    mult_conn_input_list_idx: bpy.props.IntProperty()
+
     auto_save: bpy.props.BoolProperty(name="Auto save",description="Auto save constraint properties")
     info_toggle: bpy.props.BoolProperty(name="Info", description="Shows constraint properties")
     regfreq_input_list: bpy.props.CollectionProperty(type=WFC3DRegionFrequencyListItem)
@@ -414,4 +427,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DMultipleConnectorListItem, WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

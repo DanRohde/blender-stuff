@@ -82,6 +82,8 @@ PROP_DEFAULTS = {
     'conn_any':'','conn_any_face':'','conn_any_edge':'','conn_any_corner':'',
     # connector exclusion constraints:
     'conn_excl_name':'','conn_excl_direction': len(DIRECTIONS)-1,
+    # multiple connector constraints:
+    'mult_conn_name':'','mult_conn_direction': len(DIRECTIONS)-1,
     # dimensions constraints:
     'dim_xyz' : (1,1,1),
     # fixed position constraints:
@@ -137,7 +139,9 @@ CONNECTOR_CONSTRAINTS = ['conn_left','conn_right','conn_front','conn_back','conn
                          'conn_cn_bbl','conn_cn_bbr','conn_cn_btl','conn_cn_btr',
                          'conn_any','conn_any_face','conn_any_edge','conn_any_corner',
 ]
-CONNECTOR_EXCLUSION_CONSTRAINTS = [ 'conn_excl_name', 'conn_excl_direction' ]
+CONNECTOR_EXCLUSION_CONSTRAINTS = [ 'conn_excl_direction', 'conn_excl_name', ]
+
+MULTIPLE_CONNECTOR_CONSTRAINTS = [ 'mult_conn_direction', 'mult_conn_name', ]
 
 DIMENSIONS_CONSTRAINTS = [ 'dim_xyz' ]
 
@@ -172,11 +176,14 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'distance_type' : 'distance_input_list',
                      'conn_excl_name' : 'conn_excl_input_list',
                      'conn_excl_direction' : 'conn_excl_input_list',
+                     'mult_conn_name' : 'mult_conn_input_list',
+                     'mult_conn_direction' : 'mult_conn_input_list',
                    }
 ENUM_CONSTRAINTS = { 'distance_from' : [ 'object', 'position', 'sub-collection'], 'distance_type' : [ 'minimum', 'maximum' ,'equal'],
                      'fixed_position_type' : [ 'absolute', 'pct'],
                      'distance_position_type' : [ 'absolute', 'pct'],
                      'conn_excl_direction' : list(DIRECTIONS.keys()),
+                     'mult_conn_direction' : list(DIRECTIONS.keys()),
                      }
 
 EMPTY_NEIGHBOR_CONSTRAINTS = [ 'empty_neighbor', 'empty_any_neighbor' ]
@@ -192,7 +199,8 @@ NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_s
 GEOMETRY_CONSTRAINTS = [ 'geo_top', 'geo_bottom', 'geo_left', 'geo_right', 'geo_front', 'geo_back', 'geo_match_edges', 'geo_match_faces', 'geo_tolerance', 'geo_threshold']
 
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS
-                   + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS + CONNECTOR_EXCLUSION_CONSTRAINTS
+                   + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS
+                   + CONNECTOR_EXCLUSION_CONSTRAINTS + MULTIPLE_CONNECTOR_CONSTRAINTS
                    + NOISE_CONSTRAINTS + GEOMETRY_CONSTRAINTS + REGPROB_CONSTRAINTS + DISTANCE_CONSTRAINTS + EMPTY_NEIGHBOR_CONSTRAINTS)
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
@@ -240,7 +248,7 @@ HELP = {
                       'regfreq' : 'region-frequency-constraints', 'noise' : 'noise-constraints', 'regprob' : 'region-probability-constraints', 'grid': 'grid-constraints',
                       'dimensions' : 'dimensions-constraints', 'fixed_position' : 'fixed-position-constraints', 'region' : 'region-constraints', 'distance' : 'distance-constraints',
                       'frequency' : 'frequency-constraints', 'symmetry' : 'symmetry-constraints', 'probability' : 'probability-constraints', 'empty':'empty-neighbor-constraints',
-                        'connector_exclusion' : 'connector-exclusion-constraints',
+                        'connector_exclusion' : 'connector-exclusion-constraints', 'multiple_connector' : 'multiple-connector-constraints',
                       }
     }
 }

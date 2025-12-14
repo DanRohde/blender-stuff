@@ -11,13 +11,14 @@
 * Symmetry constraints: 19
 * Connector constraints: 30
 * Connector exclusion constraints: 2
+* Multiple connector constraints: 2
 * Fixed position constraints: 3
 * Dimensions constraints: 1
 * Geometry constraints: 10
 * Noise constraints: 5
 * Distance constraints: 8
 * Empty Neighbor constraints: 2
-* **Sum: 164**
+* **Sum: 166**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -158,6 +159,13 @@
 * Allowed property values:
   * wfc_conn_excl_name_[0..n]: string
   * wfc_conn_excl_direction_[0..n]: integer (0..29)
+
+## Multiple Connector Constraints
+* Used custom properties: `wfc_mult_conn_[name|direction]_[0..n]`
+* Allowed property values:
+  * wfc_mult_conn_name_[0..n]: string
+  * wfc_mult_conn_direction_[0..n]: integer (0..29)
+
 
 ## Geometry Constraints
 * Used custom properties: `wfc_geo_[top|bottom|left|right|front|back],wfc_geo_match_[edges|faces], wfc_geo_[tolerance|threshold]`
