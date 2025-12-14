@@ -38,6 +38,7 @@ You can define a list of allowed connector names for a specific direction.
 |--------------------------------|--------------------------------------------------------------------------------------------|
 | Direction | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected |
 | Name | The connector name to restrict the possible neighbors. Only neighbors with the same name in the opposite direction can be used. Empty names or unspecified directions allow any neighbor.                                    |
+
 - More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
 
 
