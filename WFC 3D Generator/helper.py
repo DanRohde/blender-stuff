@@ -273,11 +273,11 @@ def update_edit_form(_self, _context):
                     try:
                         if c in ENUM_CONSTRAINTS:
                             try:
-                                item[c] = { ENUM_CONSTRAINTS[c][obj[f"wfc_{c}_{idx}"]] }
+                                item[c] = { ENUM_CONSTRAINTS[c][obj.get(f"wfc_{c}_{idx}", PROP_DEFAULTS[c])] }
                             except TypeError:
-                                item[c] = obj[f"wfc_{c}_{idx}"]
+                                item[c] = obj.get(f"wfc_{c}_{idx}", PROP_DEFAULTS[c])
                         else:
-                            setattr(item, c, obj[f"wfc_{c}_{idx}"])
+                            setattr(item, c, obj.get(f"wfc_{c}_{idx}", PROP_DEFAULTS[c]))
                     except TypeError as e:
                         v = obj[f"wfc_{c}_{idx}"]
                         print(f"set of constraint {c} failed for item {item}: {v}: {e}" )
