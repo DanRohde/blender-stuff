@@ -22,7 +22,7 @@ You can define a connector name for any direction that match with the connector 
 - More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
 
 ## Connector Exclusion Constraints
-You can define a list of prohibited connector names for a specific direction.
+You can define a list of prohibited connector names for a specific direction. This works with connector constraints and multiple connector constraints.
 
 | **Parameter**                  | **Description**                                                                                                                 |
 |--------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
@@ -32,7 +32,7 @@ You can define a list of prohibited connector names for a specific direction.
 - More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
 
 ## Multiple Connector Constraints
-You can define a list of allowed connector names for a specific direction.
+You can define a list of allowed connector names for a specific direction. It's possible to combine connector constraints with multiple connector constraints.
 
 | **Parameter**                  | **Description**                                                                            |
 |--------------------------------|--------------------------------------------------------------------------------------------|
