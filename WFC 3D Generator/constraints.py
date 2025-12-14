@@ -852,7 +852,9 @@ class WFC3DConstraints:
                 opp_prop_name = 'conn_' + oppdirlower
                 new_options = [obj for obj in new_options
                                if
-                                (self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name] or self.constraints[obj][opp_prop_name] == "")
+                                ( self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name]
+                                  or self.constraints[obj][opp_prop_name] == ""
+                                  or self.constraints[current_obj][prop_name] == "")
                                 and self.check_connection_exclusion_constraints(current_obj, direction, obj, prop_name, opp_prop_name)
                                 and self.check_multiple_connection_constraints(current_obj, obj, direction)
                                ]

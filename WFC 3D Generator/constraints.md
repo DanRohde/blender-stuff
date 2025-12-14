@@ -26,19 +26,18 @@ You can define a list of prohibited connector names for a specific direction.
 
 | **Parameter**                  | **Description**                                                                                                                 |
 |--------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| Name | The connector name to restrict the possible neighbors. |
 | Direction | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected                                      |
+| Name | The connector name to restrict the possible neighbors. |
 
 - More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
 
 ## Multiple Connector Constraints
 You can define a list of allowed connector names for a specific direction.
 
-| **Parameter**                  | **Description**                                                                                                                 |
-|--------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| Name | The connector name to restrict the possible neighbors. |
-| Direction | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected                                      |
-
+| **Parameter**                  | **Description**                                                                            |
+|--------------------------------|--------------------------------------------------------------------------------------------|
+| Direction | 26 possible directions and 4 direction groups (faces, corners, edges, any) can be selected |
+| Name | The connector name to restrict the possible neighbors. Only neighbors with the same name in the opposite direction can be used. Empty names or unspecified directions allow any neighbor.                                    |
 - More information: [Adjacency Constraints Comparison](#adjacency-constraints-comparison)
 
 
