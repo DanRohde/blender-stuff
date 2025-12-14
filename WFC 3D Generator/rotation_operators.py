@@ -1,6 +1,6 @@
 import bpy
 import math
-from .helper import get_selected_items, get_object_by_name, set_select_all_list_items
+from .helper import get_selected_items, get_object_by_name
 from .constants import ROTATE_DIRECTIONS, PROP_DEFAULTS, FACE_DIRECTIONS
 
 

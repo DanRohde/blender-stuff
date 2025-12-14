@@ -91,9 +91,11 @@ More information about the constraints can be found on [GitHub](https://github.c
 * Region constraints don't work with all symmetry constraint variants
 * Dimensions constraints can cause empty cells, especially in conjunction with symmetry constraints
 * Not all frequency constraints work with dimensions constraints.
+* WFC 3D Rotation Tool does not rotate multiple connector constraints and connector exclusion contraints yet
 
 
 ## Upcoming Features
+* improve WFC 3D Rotation Tool: add multiple connector and connector exclusion constraints rotation feature
 * 3D Viewport constraint visualizer
 * some tutorials and documentation (thx, David-rD, for your feedback)
 * ??? I need more feedback with ideas. You can give me feedback on Blender.org or [GitHub](https://github.com/DanRohde/blender-stuff/discussions) ???
