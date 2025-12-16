@@ -150,6 +150,7 @@ class WFC3DSeedsListItem(bpy.types.PropertyGroup):
     note: bpy.props.StringProperty(name="Note", description="Note")
     timestamp: bpy.props.StringProperty(name="", description="Timestamp")
     selected: bpy.props.BoolProperty(default=False, name="")
+    use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)
 
 class WFC3DDistanceListItem(bpy.types.PropertyGroup):
     distance: bpy.props.IntVectorProperty(name="Distance", description="Minimum cell distance", default=PROP_DEFAULTS['distance'], min=0, update=auto_save)
