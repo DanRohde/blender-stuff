@@ -32,13 +32,14 @@ class WFC3DSeedsPanel(bpy.types.Panel):
 
         row = layout.row()
         col = row.column()
-        col.template_list("WFC3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx")
+        col.template_list("WFC3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx", rows=2, maxrows=3)
 
         col = row.column()
         col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props)[0])
         c = col.column()
         c.operator("object.wfc_remove_seed_list_items", icon="REMOVE", text="")
         c.enabled = count_selected_items(props.seeds_input_list) > 0
+        col.separator()
         draw_list_selection_actions(props, col, "seeds_input_list")
 
 panels = [ WFC3D_UL_SeedsList, WFC3DSeedsPanel ]

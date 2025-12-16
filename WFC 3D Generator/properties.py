@@ -147,7 +147,7 @@ class WFC3DSeedsListItem(bpy.types.PropertyGroup):
     odd_offset: bpy.props.FloatVectorProperty(name="", description="Odd Offset", subtype="TRANSLATION")
     random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False,)
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection)
-    note: bpy.props.StringProperty(name="", description="Note")
+    note: bpy.props.StringProperty(name="Note", description="Note")
     timestamp: bpy.props.StringProperty(name="", description="Timestamp")
     selected: bpy.props.BoolProperty(default=False, name="")
 
