@@ -12,7 +12,10 @@ class WFC3D_UL_SeedsList(bpy.types.UIList):
         row.label(text="Random Start Cell" , icon="CHECKBOX_HLT" if item.random_start_cell else "CHECKBOX_DEHLT")
         col.row().prop(item, "note")
         col.row().label(text=f"Grid Size: {item.grid_size[0]} x {item.grid_size[1]} x {item.grid_size[2]}")
-        col.row().label(text=f"Cell Spacing: {item.spacing[0]}m x {item.spacing[1]}m x {item.spacing[2]}m")
+        if item.auto_detect_spacing:
+            col.row().label(text="Automatic spacing detection", icon="CHECKBOX_HLT")
+        else:
+            col.row().label(text=f"Cell Spacing: {item.spacing[0]}m x {item.spacing[1]}m x {item.spacing[2]}m")
         col.row().label(text=f"Odd Offest: X:{item.odd_offset[0]}m Y:{item.odd_offset[1]}m  Z:{item.odd_offset[2]}m")
         col.row().label(text=f"Source Collection: {item.collection_obj.name}")
         col.row().label(text="Use Constraints", icon="CHECKBOX_HLT" if item.use_constraints else "CHECKBOX_DEHLT")

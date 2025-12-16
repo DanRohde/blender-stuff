@@ -429,6 +429,7 @@ def handle_seed_selection(self, context):
     self.random_start_cell = item.random_start_cell
     self.grid_size = item.grid_size
     self.spacing = item.spacing
+    self.auto_detect_spacing = item.auto_detect_spacing
     self.odd_offset = item.odd_offset
     self.use_constraints = item.use_constraints
     self.seed = item.seed
@@ -436,10 +437,12 @@ def handle_seed_selection(self, context):
 def seed_in_seeds_list(props):
     seed_idx = [ idx for idx, item in enumerate(props.seeds_input_list)
               if item.seed == props.seed
+                 and item.use_constraints == props.use_constraints
+                 and item.auto_detect_spacing == props.auto_detect_spacing
+                 and item.random_start_cell == props.random_start_cell
+                 and item.collection_obj == props.collection_obj
                  and list(item.grid_size) == list(props.grid_size)
                  and list(item.spacing) == list(props.spacing)
                  and list(item.odd_offset) == list(props.odd_offset)
-                 and item.use_constraints == props.use_constraints
-                 and item.random_start_cell == props.random_start_cell
-                 and item.collection_obj == props.collection_obj ]
+                 ]
     return len(seed_idx) > 0, seed_idx
