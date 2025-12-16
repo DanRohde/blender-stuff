@@ -84,6 +84,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         r.enabled = not props.search_running
         col = row.column()
         col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props)[0])
+        if len(props.seeds_input_list) > 0: row.prop(props, "seeds", icon="BOOKMARKS", text="")
         if prefs.cherry_picking_delay > 0:
             col = row.column()
             col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
@@ -91,9 +92,6 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         col = row.column()
         col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
         col.enabled = render_allowed and not props.cherry_picking_running and not props.search_running
-        if len(props.seeds_input_list) > 0:
-            row = box.row()
-            row.prop(props, "seeds", icon="BOOKMARKS")
 
         layout.separator(type="LINE", factor=0.2)
 
