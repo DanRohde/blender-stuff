@@ -414,3 +414,17 @@ def init_empty_neighbor_lists(props):
         item.direction = d
         item = props.empty_any_neighbor_list.add()
         item.direction = d
+
+def get_seeds(_self, context):
+    props = context.scene.wfc_props
+    ret = []
+    for idx, item in enumerate(props.seeds_input_list):
+        ret.append((f"{item.seed}", f"{item.seed}", item.note, 'BOOKMARKS', item.seed))
+    return ret
+
+def handle_seed_selection(self, context):
+    self.seed = int(self.seeds)
+
+def seed_in_seeds_list(props, seed):
+    seeds = [ item.seed for item in props.seeds_input_list ]
+    return seed in seeds

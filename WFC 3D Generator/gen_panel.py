@@ -1,4 +1,5 @@
 import bpy
+from .helper import seed_in_seeds_list
 class WFC3DGeneratePanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Generator"
@@ -78,8 +79,11 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             row.operator("object.wfc_3d_reset_search_result",icon="PANEL_CLOSE")
         row = box.row()
         col = row.column()
-        col.prop(props, "seed")
-        col.enabled = not props.search_running
+        r = col.row()
+        r.prop(props, "seed")
+        r.enabled = not props.search_running
+        col = row.column()
+        col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props, props.seed))
         if prefs.cherry_picking_delay > 0:
             col = row.column()
             col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
@@ -87,6 +91,9 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         col = row.column()
         col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
         col.enabled = render_allowed and not props.cherry_picking_running and not props.search_running
+        if len(props.seeds_input_list) > 0:
+            row = box.row()
+            row.prop(props, "seeds")
 
         layout.separator(type="LINE", factor=0.2)
 

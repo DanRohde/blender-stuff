@@ -146,7 +146,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             c = nc.column()
             c.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name="obj_list"
             c.enabled = sel_count > 0
-            self._draw_list_selection_actions(props, nc, "obj_list")
+            draw_list_selection_actions(props, nc, "obj_list")
 
         
             selected =get_selected_items(props.obj_list)
@@ -218,7 +218,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nr = newcol.row()
             nr.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name = "neighbor_list"
             nr.enabled = not props.auto_active_object and sel_count > 0
-            self._draw_list_selection_actions(props, newcol, "neighbor_list")
+            draw_list_selection_actions(props, newcol, "neighbor_list")
 
             box.row().prop(props, "allow_neighbor_constraint_violations", icon="VIEW_UNLOCKED")
 
@@ -531,7 +531,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         nc = col.column()
         nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
         nc.enabled = props.edit_type == 'objects'
-        self._draw_list_selection_actions(props, col, "empty_neighbor_list")
+        draw_list_selection_actions(props, col, "empty_neighbor_list")
 
         sl = [item.direction.lower() for item in props.empty_neighbor_list if item.selected]
         if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
@@ -545,7 +545,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         nc = col.column()
         nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
         nc.enabled = props.edit_type == 'objects'
-        self._draw_list_selection_actions(props, col, "empty_any_neighbor_list")
+        draw_list_selection_actions(props, col, "empty_any_neighbor_list")
         sl = [item.direction.lower() for item in props.empty_any_neighbor_list if item.selected]
         if len(sl) > 0: nbox.row().label(text=f"Selected direction(s): " + ", ".join(sl))
 
@@ -569,19 +569,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         c.operator("object.wfc_generic_duplicate_selected_items", icon="DUPLICATE", text="").list_name = list_name
         c.enabled = count_selected_items(getattr(props, list_name)) > 0
         col.separator()
-        self._draw_list_selection_actions(props, col, list_name)
-
-    def _draw_list_selection_actions(self, props, column, list_name):
-        lst = getattr(props, list_name)
-        nc = column.column()
-        nc.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT", text="").list_name = list_name
-        nc.enabled = len(lst) > 0
-        nc = column.column()
-        nc.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT", text="").list_name = list_name
-        nc.enabled = count_selected_items(lst) > 0
-        nc = column.column()
-        nc.operator("object.wfc_list_invert_selection", icon="CHECKMARK", text="").list_name = list_name
-        nc.enabled = len(lst) > 0
+        draw_list_selection_actions(props, col, list_name)
 
     def _draw_labels(self, layout, labels):
         for label in labels:
@@ -691,7 +679,17 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             row = box.row()
             row.enabled = False
             row.prop(props, p)
-
+def draw_list_selection_actions(props, column, list_name):
+    lst = getattr(props, list_name)
+    nc = column.column()
+    nc.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT", text="").list_name = list_name
+    nc.enabled = len(lst) > 0
+    nc = column.column()
+    nc.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT", text="").list_name = list_name
+    nc.enabled = count_selected_items(lst) > 0
+    nc = column.column()
+    nc.operator("object.wfc_list_invert_selection", icon="CHECKMARK", text="").list_name = list_name
+    nc.enabled = len(lst) > 0
 panels = [ WFC3D_UL_MultipleConnectorList, WFC3D_UL_ConnectorExclusionList, WFC3D_UL_EmptyNeighborList, WFC3D_UL_EmptyAnyNeighborList, WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
         
