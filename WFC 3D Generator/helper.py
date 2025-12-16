@@ -419,12 +419,25 @@ def get_seeds(_self, context):
     props = context.scene.wfc_props
     ret = []
     for idx, item in enumerate(props.seeds_input_list):
-        ret.append((f"{item.seed}", f"{item.seed}", item.note, 'BOOKMARKS', item.seed))
+        ret.append((f"{idx}", f"{item.seed}", item.note))
     return ret
 
 def handle_seed_selection(self, context):
-    self.seed = int(self.seeds)
+    item = self.seeds_input_list[int(self.seeds)]
 
-def seed_in_seeds_list(props, seed):
-    seeds = [ item.seed for item in props.seeds_input_list ]
-    return seed in seeds
+    self.seed = item.seed
+    self.collection_obj = item.collection_obj
+    self.random_start_cell = item.random_start_cell
+    self.grid_size = item.grid_size
+    self.spacing = item.spacing
+    self.odd_offset = item.odd_offset
+
+def seed_in_seeds_list(props):
+    seed_idx = [ idx for idx, item in enumerate(props.seeds_input_list)
+              if item.seed == props.seed
+                 and list(item.grid_size) == list(props.grid_size)
+                 and list(item.spacing) == list(props.spacing)
+                 and list(item.odd_offset) == list(props.odd_offset)
+                 and item.random_start_cell == props.random_start_cell
+                 and item.collection_obj == props.collection_obj ]
+    return len(seed_idx) > 0, seed_idx

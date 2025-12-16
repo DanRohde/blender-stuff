@@ -1,6 +1,8 @@
 import bpy
 import time
 
+from .helper import seed_in_seeds_list
+
 class WFC3D_OT_RemoveSeedListItems(bpy.types.Operator):
     bl_idname = "object.wfc_remove_seed_list_items"
     bl_label = ""
@@ -18,13 +20,19 @@ class WFC3D_OT_AddSeedListItem(bpy.types.Operator):
     bl_description = "Add/Remove current random seed to/from random seeds list."
     def execute(self, context):
         props = context.scene.wfc_props
-        seeds = [ item.seed for item in props.seeds_input_list ]
-        if props.seed in seeds:
-            props.seeds_input_list.remove(seeds.index(props.seed))
+        seed_is_in_list, seeds =  seed_in_seeds_list(props)
+        if seed_is_in_list:
+            props.seeds_input_list.remove(seeds[0])
             return {'FINISHED'}
         item = props.seeds_input_list.add()
         item.seed = props.seed
-        item.note = time.strftime("%Y-%m-%d %H:%M:%S")
+        item.grid_size = list(props.grid_size)
+        item.spacing = list(props.spacing)
+        item.odd_offset = list(props.odd_offset)
+        item.random_start_cell = props.random_start_cell
+        item.collection_obj = props.collection_obj
+        item.note = ""
+        item.timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         return {'FINISHED'}
 
 operators = [ WFC3D_OT_AddSeedListItem, WFC3D_OT_RemoveSeedListItems, ]

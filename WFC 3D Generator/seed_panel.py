@@ -6,8 +6,16 @@ class WFC3D_UL_SeedsList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row()
         row.prop(item, "selected", icon="BOOKMARKS")
-        row.prop(item, "seed")
-        row.prop(item, "note")
+        col = row.column()
+        row = col.row()
+        row.label(text=f"Seed: {item.seed}")
+        row.label(text="Random Start Cell" , icon="CHECKBOX_HLT" if item.random_start_cell else "CHECKBOX_DEHLT")
+        col.row().prop(item, "note")
+        col.row().label(text=f"Grid Size: {item.grid_size[0]} x {item.grid_size[1]} x {item.grid_size[2]}")
+        col.row().label(text=f"Cell Spacing: {item.spacing[0]}m x {item.spacing[1]}m x {item.spacing[2]}m")
+        col.row().label(text=f"Odd Offest: X:{item.odd_offset[0]}m Y:{item.odd_offset[1]}m  Z:{item.odd_offset[2]}m")
+        col.row().label(text=f"Source Collection: {item.collection_obj.name}")
+        col.row().label(text=f"Timestamp: {item.timestamp}")
 
 class WFC3DSeedsPanel(bpy.types.Panel):
     """User interface for WFC 3D Seeds"""
@@ -21,16 +29,13 @@ class WFC3DSeedsPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         props = context.scene.wfc_props
-        layout.prop(props,"collection_obj")
-
-        if props.collection_obj is None: return
 
         row = layout.row()
         col = row.column()
         col.template_list("WFC3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx")
 
         col = row.column()
-        col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props, props.seed))
+        col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props)[0])
         c = col.column()
         c.operator("object.wfc_remove_seed_list_items", icon="REMOVE", text="")
         c.enabled = count_selected_items(props.seeds_input_list) > 0

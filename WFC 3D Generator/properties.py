@@ -142,7 +142,13 @@ class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
 
 class WFC3DSeedsListItem(bpy.types.PropertyGroup):
     seed: bpy.props.IntProperty(name="", description="Random seed")
+    grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3)
+    spacing: bpy.props.FloatVectorProperty(name="", description="Size of a Grid Cell", subtype="TRANSLATION",)
+    odd_offset: bpy.props.FloatVectorProperty(name="", description="Odd Offset", subtype="TRANSLATION")
+    random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False,)
+    collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection)
     note: bpy.props.StringProperty(name="", description="Note")
+    timestamp: bpy.props.StringProperty(name="", description="Timestamp")
     selected: bpy.props.BoolProperty(default=False, name="")
 
 class WFC3DDistanceListItem(bpy.types.PropertyGroup):
@@ -173,7 +179,6 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     running_delayed_renderer : bpy.props.BoolProperty(name="Running Delayed Renderer", description="Running Delayed Renderer", default=False,)
     paused_delayed_renderer: bpy.props.BoolProperty(name="Paused Delayed Renderer", description="Paused Delayed Renderer", default=False,)
     random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False, update=handle_seed_change)
-    random_direction: bpy.props.BoolProperty(name="Random Direction", description="Random direction", default=False,)
     seed: bpy.props.IntProperty(name="Random Seed", description="Random seed", default=0, update=handle_seed_change)
     auto_generate: bpy.props.BoolProperty(name="Automatic Model Generation when Random Seed Changes", default=False,)
     cherry_picking_running: bpy.props.BoolProperty(name="Cherry Picking Running", default=False,)
