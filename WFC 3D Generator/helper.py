@@ -424,13 +424,13 @@ def get_seeds(_self, context):
 
 def handle_seed_selection(self, context):
     item = self.seeds_input_list[int(self.seeds)]
-
-    self.seed = item.seed
+    # the order matters!
     self.collection_obj = item.collection_obj
     self.random_start_cell = item.random_start_cell
     self.grid_size = item.grid_size
     self.spacing = item.spacing
     self.odd_offset = item.odd_offset
+    self.seed = item.seed
 
 def seed_in_seeds_list(props):
     seed_idx = [ idx for idx, item in enumerate(props.seeds_input_list)
