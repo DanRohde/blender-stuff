@@ -93,7 +93,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         col.enabled = render_allowed and not props.cherry_picking_running and not props.search_running
         if len(props.seeds_input_list) > 0:
             row = box.row()
-            row.prop(props, "seeds")
+            row.prop(props, "seeds", icon="BOOKMARKS")
 
         layout.separator(type="LINE", factor=0.2)
 
