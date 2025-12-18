@@ -7,6 +7,7 @@ class WFC3D_OT_RemoveSeedListItems(bpy.types.Operator):
     bl_idname = "object.wfc_remove_seed_list_items"
     bl_label = ""
     bl_description = "Remove selected random seeds from random seeds list."
+    bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
         selected_indices = [i for i, item in enumerate(props.seeds_input_list) if item.selected]
@@ -18,6 +19,7 @@ class WFC3D_OT_AddSeedListItem(bpy.types.Operator):
     bl_idname = "object.wfc_add_seed_list_item"
     bl_label = ""
     bl_description = "Add/Remove current random seed to/from random seeds list."
+    bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
         seed_is_in_list, seeds =  seed_in_seeds_list(props)

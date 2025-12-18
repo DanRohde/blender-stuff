@@ -60,7 +60,6 @@ class WFC3D_OT_Update_Connector_Constraint(bpy.types.Operator):
     bl_idname = "object.wfc_update_connector_constraints"
     bl_label = "Save Connector"
     bl_options = {'REGISTER', 'UNDO'}
-
     def execute(self, context):
         update_connector_constraints(context.scene.wfc_props)
         self.report({'INFO'}, f"Connector constraints has been updated.")
@@ -83,7 +82,6 @@ class WFC3D_OT_UpdateConstraints(bpy.types.Operator):
     bl_idname = "object.wfc_update_constraints"
     bl_label = "Save Constraints"
     bl_options = {'REGISTER', 'UNDO'}
-
     def execute(self, context):
         props = context.scene.wfc_props
         update_constraints(props, get_constraints(props))
@@ -97,7 +95,6 @@ class WFC3D_OT_ResetConstraints(bpy.types.Operator):
     bl_label = "Reset"
     bl_description = "Reset selected constraints"
     bl_options = {'REGISTER', 'UNDO'}
-
     def execute(self, context):
         props = context.scene.wfc_props
         _reset_constraints(props, get_constraints(props))
@@ -166,7 +163,6 @@ class WFC3D_OT_UpdateCollectionList(bpy.types.Operator):
     bl_idname = "collection.wfc_update_collection_list"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
-
     def execute(self, context):
         handle_update_collection(self, context)
         return {'FINISHED'}
@@ -214,8 +210,6 @@ class WFC3D_OT_InfoToggle(bpy.types.Operator):
     """Show/Hide Constraints Information"""
     bl_idname = "collection.wfc_info_toggle"
     bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
-
     def execute(self, context):
         props = context.scene.wfc_props
         props.info_toggle = not props.info_toggle
@@ -315,8 +309,33 @@ class WFC3D_OT_ResetAllConstraints(bpy.types.Operator):
         return {'FINISHED'}
 
 
-
+class WFC3D_OT_GenericListOrderUp(bpy.types.Operator):
+    bl_idname = "object.wfc_generic_order_up"
+    bl_label = ""
+    bl_description = "Move selected items up"
+    list_name : bpy.props.StringProperty()
+    def execute(self, context):
+        props = context.scene.wfc_props
+        lst = getattr(props, self.list_name)
+        selected_indexes = [ idx for idx, item in enumerate(lst) if item.selected ]
+        for idx in selected_indexes:
+            if idx > 0: lst.move(idx, idx-1)
+        return {'FINISHED'}
+class WFC3D_OT_GenericListOrderDown(bpy.types.Operator):
+    bl_idname = "object.wfc_generic_order_down"
+    bl_label = ""
+    bl_description = "Move selected items down"
+    list_name : bpy.props.StringProperty()
+    def execute(self, context):
+        props = context.scene.wfc_props
+        lst = getattr(props, self.list_name)
+        selected_indexes = [ idx for idx, item in enumerate(lst) if item.selected ]
+        for idx in selected_indexes:
+            if idx < len(lst) - 1: lst.move(idx, idx+1)
+        return {'FINISHED'}
 operators = [
+    WFC3D_OT_GenericListOrderUp,
+    WFC3D_OT_GenericListOrderDown,
     WFC3D_OT_ResetAllConstraints,
     WFC3D_OT_GenericListSelectAll,
     WFC3D_OT_GenericListSelectNone,

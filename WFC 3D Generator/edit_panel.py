@@ -559,6 +559,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row = box.row()
         col = row.column()
         col.template_list(ui_list, "", props, list_name, props, f"{list_name}_idx")
+        draw_list_order_actions(props, col, list_name)
         self._draw_list_modify_actions(props, row.box().column(), list_name)
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
@@ -690,6 +691,14 @@ def draw_list_selection_actions(props, column, list_name):
     nc = column.column()
     nc.operator("object.wfc_list_invert_selection", icon="CHECKMARK", text="").list_name = list_name
     nc.enabled = len(lst) > 0
+
+def draw_list_order_actions(props, column, list_name):
+    lst = getattr(props, list_name)
+    row = column.row()
+    row.enabled = len(lst) > 1
+    row.operator("object.wfc_generic_order_up", icon="TRIA_UP").list_name = list_name
+    row.operator("object.wfc_generic_order_down", icon="TRIA_DOWN").list_name = list_name
+
 panels = [ WFC3D_UL_MultipleConnectorList, WFC3D_UL_ConnectorExclusionList, WFC3D_UL_EmptyNeighborList, WFC3D_UL_EmptyAnyNeighborList, WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
         
