@@ -378,13 +378,14 @@ class WFC3DConstraints:
         return mp, flipping
     def apply_symmetry_constraints(self, cell):
         """Apply symmetry to collapsed cells"""
+        collapsed = []
+        if "symmetry" not in self.active_constraints: return collapsed
         x, y, z = cell
-        if len(self.grid.grid[x,y,z])==0: return []
+        if len(self.grid.grid[x,y,z])==0: return collapsed
 
         mirror_axes = self.constraints[self.grid.grid[x,y,z][0]]["sym_mirror_axes"]
         rotate_n = self.constraints[self.grid.grid[x,y,z][0]]["sym_rotate_n"]
         rotate_axis = self.constraints[self.grid.grid[x, y, z][0]]["sym_rotate_axis"] if rotate_n and rotate_n > 0 else None
-        collapsed = []
 
         if mirror_axes or rotate_axis:
             points = self.mirror_and_rotate_3d(cell, self.grid.grid_size, mirror_axes, rotate_axis, rotate_n)
@@ -400,6 +401,7 @@ class WFC3DConstraints:
         return collapsed
 
     def _check_dimensions(self, cell, dimensions, flipping):
+        if "dimensions" not in self.active_constraints: return True
         if sum(dimensions) == 3: return True
         x, y, z = cell
         for nx in range(dimensions[0]):
@@ -417,6 +419,7 @@ class WFC3DConstraints:
         return options
 
     def check_empty_neighbors(self, cell, options):
+        if "empty" not in self.active_constraints: return options
         x, y, z = cell
         new_options = []
         for option in options:
@@ -440,6 +443,7 @@ class WFC3DConstraints:
 
     def apply_dimensions_constraints(self, cell):
         collapsed = []
+        if "dimensions" not in self.active_constraints: return collapsed
         x, y, z = cell
         if not self.grid.within_boundaries(x,y,z): return collapsed
         if len(self.grid.grid[x,y,z]) == 0: return collapsed
@@ -480,6 +484,7 @@ class WFC3DConstraints:
                 return v[random.randrange(0,len(v))]
             else:
                 return vmin + (vmax - vmin) * random.random()
+        if "transformations" not in self.active_constraints: return
         x,y,z = cell
         if obj_name not in self.constraints: return
         constraints = self.constraints[obj_name]
@@ -581,6 +586,7 @@ class WFC3DConstraints:
             for p in self.sympartner[x, y, z]: self.symtransform[p[0], p[1], p[2]] = symtransmat
 
     def propagate_frequency_constraints(self, cell):
+        if "frequency" not in self.active_constraints: return
         x, y, z = cell
         if len(self.grid.grid[x,y,z])==0: return []
         current_obj = self.grid.grid[x,y,z][0]
@@ -629,6 +635,7 @@ class WFC3DConstraints:
                 if diff < 0: self.grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i])
 
     def propagate_region_frequency_constraints(self, cell):
+        if "regfreq" not in self.active_constraints: return
         x, y, z = cell
         if len(self.grid.grid[x,y,z])==0: return
         obj_name = self.grid.grid[x,y,z][0]
@@ -645,6 +652,7 @@ class WFC3DConstraints:
                 self.grid.remove_max_region_neighbors(x,y,z,maxfreq,rmin,rmax)
 
     def propagate_distance_from_object_constraints(self, cell):
+        if "distance" not in self.active_constraints: return
         mgx, mgy, mgz = self.grid.grid_size[0] - 1, self.grid.grid_size[1] - 1, self.grid.grid_size[2] - 1
         x, y, z = cell
         if len(self.grid.grid[x, y, z]) == 0: return
@@ -731,6 +739,7 @@ class WFC3DConstraints:
 
     def apply_fixed_position_constraints(self, obj):
         collapsed = []
+        if "fixed_position" not in self.active_constraints: return collapsed
         for idx,p in enumerate(self.constraints[obj.name]["fixed_position_xyz"]):
             if self.constraints[obj.name]["fixed_position_type"][idx] == 0:
                 fp = self.grid.fix_position(p)
@@ -744,6 +753,7 @@ class WFC3DConstraints:
 
     def apply_distance_from_position_constraints(self, obj):
         collapsed = []
+        if "distance" not in self.active_constraints: return collapsed
         for i, distance in enumerate(self.constraints[obj.name]["distance"]):
             if self.constraints[obj.name]["distance_from"][i] == 1:
                 gs = self.grid.grid_size
@@ -768,6 +778,7 @@ class WFC3DConstraints:
         return collapsed
 
     def apply_dimensions_draw_constraints(self, position, spacing, obj_name, new_obj):
+        if "dimensions" not in self.active_constraints: return
         x, y, z = position
         if sum(self.constraints[obj_name]["dim_xyz"])==3: return
         d = self.constraints[obj_name]["dim_xyz"]
@@ -844,9 +855,10 @@ class WFC3DConstraints:
                                ]
 
                 # Filter disallowed geometry:
-                if self.constraints[current_obj]['geo_match_edges'] or self.constraints[current_obj]['geo_match_faces']:
-                    if direction in FACE_DIRECTIONS and self.constraints[current_obj][f"geo_{dirlower}"]:
-                        new_options = [obj for obj in new_options if self.compare_geometry(current_obj, obj, direction)]
+                if "geometry" in self.active_constraints:
+                    if self.constraints[current_obj]['geo_match_edges'] or self.constraints[current_obj]['geo_match_faces']:
+                        if direction in FACE_DIRECTIONS and self.constraints[current_obj][f"geo_{dirlower}"]:
+                            new_options = [obj for obj in new_options if self.compare_geometry(current_obj, obj, direction)]
 
                 if len(new_options) >= len(neighbor_options): continue
                 self.grid.grid[nx, ny, nz] = new_options
@@ -895,10 +907,11 @@ class WFC3DConstraints:
         return collapsed
     def propagate_post_gen_constraints(self):
         ## propagate empty neighbor constraints:
-        for x in range(self.grid.grid_size[0]):
-            for y in range(self.grid.grid_size[1]):
-                for z in range(self.grid.grid_size[2]):
-                    self.grid.grid[x,y,z] = self.check_empty_neighbors((x,y,z), self.grid.grid[x,y,z])
+        if "empty" in self.active_constraints:
+            for x in range(self.grid.grid_size[0]):
+                for y in range(self.grid.grid_size[1]):
+                    for z in range(self.grid.grid_size[2]):
+                        self.grid.grid[x,y,z] = self.check_empty_neighbors((x,y,z), self.grid.grid[x,y,z])
     def clean(self):
         self.grid = None
         self.constraints = None

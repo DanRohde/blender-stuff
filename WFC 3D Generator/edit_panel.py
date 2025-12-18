@@ -1,5 +1,5 @@
 import bpy
-from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name, count_selected_items
+from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name, count_selected_items, get_active_constraints
 from .properties import get_known_conn_names
 from .constants import *
 
@@ -192,6 +192,10 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row.operator('collection.wfc_auto_save_toggle',icon='IMPORT',depress = props.auto_save)
 
         if hasattr(self, f"draw_{props.edit_constraints}_panel") and callable(getattr(self, f"draw_{props.edit_constraints}_panel")):
+            if props.edit_constraints not in get_active_constraints():
+                box.label(text="These constraints are disabled.", icon="INFO_LARGE")
+                box = box.box()
+                box.enabled = False
             draw_method = getattr(self, f"draw_{props.edit_constraints}_panel")
             draw_method(props, box, obj, obj_name)
 
