@@ -694,7 +694,7 @@ def draw_list_selection_actions(props, column, list_name):
 
 def draw_list_order_actions(props, column, list_name):
     lst = getattr(props, list_name)
-    row = column.row()
+    row = column.box().row()
     row.enabled = len(lst) > 1 and count_selected_items(lst) > 0
     row.operator("object.wfc_generic_order_up", icon="TRIA_UP").list_name = list_name
     row.operator("object.wfc_generic_order_down", icon="TRIA_DOWN").list_name = list_name
