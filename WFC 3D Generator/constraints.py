@@ -499,28 +499,29 @@ class WFC3DConstraints:
         if obj_name not in self.constraints: return
         constraints = self.constraints[obj_name]
 
-        if self.symtransform[x, y, z] is not None:
-            mat = self.symtransform[x, y, z]
-            tmat, smat, rmat, fmat = mat[:3], mat[3:6], mat[6:9], mat[9:]
-            if self.symflip[x, y, z] is not None:
-                smat = [ a*b for a,b in zip(smat, self.symflip[x, y, z]) ]
-                if constraints['sym_mirror_flip_transl']: tmat = [ a*b for a,b in zip(tmat, self.symflip[x, y, z]) ]
-            for i in range(3):
-                target_obj.location[i] += tmat[i]
-            target_obj.scale.x, target_obj.scale.y, target_obj.scale.z = smat
-            axis = ['X','Y','Z']
-            for i in range(len(axis)):
-                if rmat[i] != 0: target_obj.rotation_euler.rotate_axis(axis[i], rmat[i])
+        if "symmetry" in self.active_constraints:
+            if self.symtransform[x, y, z] is not None:
+                mat = self.symtransform[x, y, z]
+                tmat, smat, rmat, fmat = mat[:3], mat[3:6], mat[6:9], mat[9:]
+                if self.symflip[x, y, z] is not None:
+                    smat = [ a*b for a,b in zip(smat, self.symflip[x, y, z]) ]
+                    if constraints['sym_mirror_flip_transl']: tmat = [ a*b for a,b in zip(tmat, self.symflip[x, y, z]) ]
+                for i in range(3):
+                    target_obj.location[i] += tmat[i]
+                target_obj.scale.x, target_obj.scale.y, target_obj.scale.z = smat
+                axis = ['X','Y','Z']
+                for i in range(len(axis)):
+                    if rmat[i] != 0: target_obj.rotation_euler.rotate_axis(axis[i], rmat[i])
 
-            target_obj.scale.x *= fmat[0]
-            target_obj.scale.y *= fmat[1]
-            target_obj.scale.z *= fmat[2]
-            return
+                target_obj.scale.x *= fmat[0]
+                target_obj.scale.y *= fmat[1]
+                target_obj.scale.z *= fmat[2]
+                return
+
         symtransmat = []
         noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_noise(self.apply_noise_randomize_position_constraint(obj_name, cell), constraints["noise_transf_basis"], constraints["noise_transf_scale"])
 
         if "transformations" in self.active_constraints:
-
             if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
                 tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
                 tmax = constraints.get("translation_max",PROP_DEFAULTS["translation_max"])
