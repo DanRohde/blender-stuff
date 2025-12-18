@@ -2,7 +2,7 @@ import bpy
 
 from .constants import *
 from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection, get_noise_basis, \
-    is_sub_element, get_seeds, handle_seed_selection, handle_active_constraints_changes
+    is_sub_element, get_seeds, handle_seed_selection, handle_active_constraints_changes, get_active_constraints
 
 from .gen_operators import  handle_seed_change
 
@@ -84,7 +84,7 @@ def take_known_conn_name(_self, _context):
 def get_constraints_menu(_self, context):
     props = bpy.context.scene.wfc_props
     if props.show_inactive_constraints_menu_items: return CONSTRAINTS_MENU
-    active_menu_items = [ item.constraint_id for item in props.active_constraints_input_list if item.selected ]
+    active_menu_items = get_active_constraints()
     return [ item for item in CONSTRAINTS_MENU if item is None or item[0] == '_none_' or item[0] in active_menu_items ]
 
 class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):

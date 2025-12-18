@@ -192,51 +192,59 @@ class WFC3DConstraints:
         return [a*b for a, b in zip(self.noise_pos[0], pos)]
 
     def are_grid_constraints_satisfied(self, name, pos):
-        if self.constraints[name]['freq_grid'] == 0: return False
-        if self.constraints[name]['freq_grid_pct'] == 0: return False
-        if self.constraints[name]['probability'] == 0 or self.constraints[name]['weight'] == 0: return False
-        if not self.grid.is_inside_region(pos, self.constraints[name].get('region_min', None), self.constraints[name].get('region_max', None)): return False
-        if not self.grid.is_inside_region_quadrant(pos, self.constraints[name]['region_quadrant']): return False
-        if not self.constraints[name]['region_level_ground'] and pos[2] == 0: return False
-        if not self.constraints[name]['region_level_first'] and pos[2] == 1: return False
-        if not self.constraints[name]['region_level_second'] and pos[2] == 2: return False
-        if not self.constraints[name]['region_level_mid'] and 2  < pos[2] < self.grid.grid_size[2]-2: return False
-        if not self.constraints[name]['region_level_penultimate'] and pos[2] == self.grid.grid_size[2]-2: return False
-        if not self.constraints[name]['region_level_top'] and pos[2] == self.grid.grid_size[2]-1: return False
-        if self.constraints[name]['noise_prob_basis'] > 1:
-            n = get_noise(self.apply_noise_randomize_position_constraint(name, pos), self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
-            return n >= self.constraints[name]['noise_prob_threshold']
-        if self.grid.is_corner(pos) and len(self.constraints[name]['corners']) > 0:
-            ret = False
-            for c in self.constraints[name]['corners']:
-                if c == '' and len(self.constraints[name]['corners']) == 1: ret = True
-                if c != '-' and self.grid.is_on_given_corner(pos, c): ret = True
-            if not ret: return ret
-        if self.grid.is_edge(pos) and len(self.constraints[name]['edges']) > 0:
-            ret = False
-            for e in self.constraints[name]['edges']:
-                if e == '' and len(self.constraints[name]['edges']) == 1: ret = True
-                if e != '-' and self.grid.is_on_given_edge(pos, e): ret = True
-            if not ret: return ret
-        if self.grid.is_inside(pos):
-            for inside in self.constraints[name]['inside']:
-                if inside == '-' or inside == 'None' or inside == 'False': return False
-        if self.grid.is_face(pos):
-            ret = False
-            for f in self.constraints[name]['faces']:
-                if f == '' and len(self.constraints[name]['faces']) == 1: ret = True
-                if f != '-' and self.grid.is_on_specific_face(pos, f): ret = True
-            if not ret: return ret
 
-        for i in range(len(self.constraints[name]['regprob_probability'])):
-            if self.constraints[name]['regprob_probability'][i] != 0 and self.constraints[name]['regprob_weight'][i] != 0: continue
-            if self.grid.is_inside_region(pos, self.grid.fix_position(self.constraints[name]['regprob_min'][i]), self.grid.fix_position(self.constraints[name]['regprob_max'][i])): return False
-        for i in range(len(self.constraints[name]['regfreq_freq'])):
-            if ((self.constraints[name]['regfreq_freq'][i] == 0 or (i < len(self.constraints[name]['regfreq_freq_pct']) and self.constraints[name]['regfreq_freq_pct'][i] == 0))
-                    and  self.grid.is_inside_region(pos, self.grid.fix_position(self.constraints[name]['regfreq_min'][i]), self.grid.fix_position(self.constraints[name]['regfreq_max'][i]))): return False
+        if "frequency" in self.active_constraints:
+            if self.constraints[name]['freq_grid'] == 0: return False
+            if self.constraints[name]['freq_grid_pct'] == 0: return False
+        if "probability" in self.active_constraints:
+            if self.constraints[name]['probability'] == 0 or self.constraints[name]['weight'] == 0: return False
+        if "region" in self.active_constraints:
+            if not self.grid.is_inside_region(pos, self.constraints[name].get('region_min', None), self.constraints[name].get('region_max', None)): return False
+            if not self.grid.is_inside_region_quadrant(pos, self.constraints[name]['region_quadrant']): return False
+            if not self.constraints[name]['region_level_ground'] and pos[2] == 0: return False
+            if not self.constraints[name]['region_level_first'] and pos[2] == 1: return False
+            if not self.constraints[name]['region_level_second'] and pos[2] == 2: return False
+            if not self.constraints[name]['region_level_mid'] and 2  < pos[2] < self.grid.grid_size[2]-2: return False
+            if not self.constraints[name]['region_level_penultimate'] and pos[2] == self.grid.grid_size[2]-2: return False
+            if not self.constraints[name]['region_level_top'] and pos[2] == self.grid.grid_size[2]-1: return False
+        if "noise" in self.active_constraints:
+            if self.constraints[name]['noise_prob_basis'] > 1:
+                n = get_noise(self.apply_noise_randomize_position_constraint(name, pos), self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
+                return n >= self.constraints[name]['noise_prob_threshold']
+        if "grid" in self.active_constraints:
+            if self.grid.is_corner(pos) and len(self.constraints[name]['corners']) > 0:
+                ret = False
+                for c in self.constraints[name]['corners']:
+                    if c == '' and len(self.constraints[name]['corners']) == 1: ret = True
+                    if c != '-' and self.grid.is_on_given_corner(pos, c): ret = True
+                if not ret: return ret
+            if self.grid.is_edge(pos) and len(self.constraints[name]['edges']) > 0:
+                ret = False
+                for e in self.constraints[name]['edges']:
+                    if e == '' and len(self.constraints[name]['edges']) == 1: ret = True
+                    if e != '-' and self.grid.is_on_given_edge(pos, e): ret = True
+                if not ret: return ret
+            if self.grid.is_inside(pos):
+                for inside in self.constraints[name]['inside']:
+                    if inside == '-' or inside == 'None' or inside == 'False': return False
+            if self.grid.is_face(pos):
+                ret = False
+                for f in self.constraints[name]['faces']:
+                    if f == '' and len(self.constraints[name]['faces']) == 1: ret = True
+                    if f != '-' and self.grid.is_on_specific_face(pos, f): ret = True
+                if not ret: return ret
+        if "regprob" in self.active_constraints:
+            for i in range(len(self.constraints[name]['regprob_probability'])):
+                if self.constraints[name]['regprob_probability'][i] != 0 and self.constraints[name]['regprob_weight'][i] != 0: continue
+                if self.grid.is_inside_region(pos, self.grid.fix_position(self.constraints[name]['regprob_min'][i]), self.grid.fix_position(self.constraints[name]['regprob_max'][i])): return False
+        if "regfreq" in self.active_constraints:
+            for i in range(len(self.constraints[name]['regfreq_freq'])):
+                if ((self.constraints[name]['regfreq_freq'][i] == 0 or (i < len(self.constraints[name]['regfreq_freq_pct']) and self.constraints[name]['regfreq_freq_pct'][i] == 0))
+                        and  self.grid.is_inside_region(pos, self.grid.fix_position(self.constraints[name]['regfreq_min'][i]), self.grid.fix_position(self.constraints[name]['regfreq_max'][i]))): return False
         return True
 
     def get_auto_weight(self, name):
+        if "probability" not in self.active_constraints: return 0
         if not self.constraints[name].get('auto_weight', False): return 0
         if self.auto_weights.get(name, -1) != -1: return self.auto_weights.get(name)
 
@@ -270,6 +278,7 @@ class WFC3DConstraints:
         return weight
 
     def get_region_weight(self, position, element):
+        if "regprob" not in self.active_constraints: return -1
         if 'regprob_weight' not in self.constraints[element]: return -1
         for r in range(len(self.constraints[element]['regprob_weight'])):
             if self.grid.is_inside_region(position, self.grid.fix_position(self.constraints[element]['regprob_min'][r]), self.grid.fix_position(self.constraints[element]['regprob_max'][r])): return self.constraints[element]['regprob_weight'][r]
@@ -277,12 +286,13 @@ class WFC3DConstraints:
 
     def get_weighted_options(self, position, elements):
         options = []
+        active_probability = "probability" in self.active_constraints
         for name in elements:
             weight = self.get_auto_weight(name)
             region_weight = self.get_region_weight(position, name)
             if region_weight != -1: weight = region_weight
             if self.constraints[name].get('weight',-1) > -1 or weight > 0:
-                weight += self.constraints[name].get('weight',1)
+                if active_probability: weight += self.constraints[name].get('weight',1)
                 option = [name for _ in range(weight)]
                 options.extend(option)
             else:
@@ -290,6 +300,7 @@ class WFC3DConstraints:
         return options
 
     def get_region_probability(self, position, element):
+        if "regprop" not in self.active_constraints: return -1
         if 'regprob_probability' not in self.constraints[element]: return -1
         for r in range(len(self.constraints[element]['regprob_probability'])):
             if self.grid.is_inside_region(position, self.grid.fix_position(self.constraints[element]['regprob_min'][r]), self.grid.fix_position(self.constraints[element]['regprob_max'][r])): return self.constraints[element]['regprob_probability'][r]
@@ -300,7 +311,7 @@ class WFC3DConstraints:
         rand = random.random()
         random.shuffle(elements)
         for name in elements:
-            p = self.constraints[name]['probability']
+            p = self.constraints[name]['probability'] if "probability" in self.active_constraints else 1
             rp = self.get_region_probability(position, name)
             if rp != -1: p = rp
             if p is not None and p < 1:
@@ -484,7 +495,6 @@ class WFC3DConstraints:
                 return v[random.randrange(0,len(v))]
             else:
                 return vmin + (vmax - vmin) * random.random()
-        if "transformations" not in self.active_constraints: return
         x,y,z = cell
         if obj_name not in self.constraints: return
         constraints = self.constraints[obj_name]
@@ -509,81 +519,85 @@ class WFC3DConstraints:
         symtransmat = []
         noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_noise(self.apply_noise_randomize_position_constraint(obj_name, cell), constraints["noise_transf_basis"], constraints["noise_transf_scale"])
 
-        if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
-            tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
-            tmax = constraints.get("translation_max",PROP_DEFAULTS["translation_max"])
-            ts = constraints.get("translation_steps",PROP_DEFAULTS["translation_steps"])
-            loc = target_obj.location
-            newloc = [0.0, 0.0, 0.0]
-            for i in range(3):
-                newloc[i] = _get_mapped_random_values(tmin[i], tmax[i], ts[i])
-                if tmin[i]!=tmax[i] and noisefactor!=1: newloc[i] = remap(noisefactor, -1, 1, tmin[i], tmax[i])
-                loc[i] += newloc[i] if self.symflip[x, y, z] is None or not constraints['sym_mirror_flip_transl'] else newloc[i] * self.symflip[x, y, z][i]
-            target_obj.location = loc
-            symtransmat.extend(newloc)
-        else:
-            symtransmat.extend([0.0, 0.0, 0.0])
-        if constraints["scale_type"] is not None and constraints["scale_type"] > 0:
-            sm = [0.0, 0.0, 0.0]
-            if constraints["scale_type"] == 1 and constraints["scale_uni"] is not None:
-                if noisefactor == 1:
-                    s = _get_mapped_random_values(constraints["scale_uni"][0], constraints["scale_uni"][1], constraints["scale_uni"][2])
-                else:
-                    s = remap(noisefactor, -1, 1, constraints["scale_uni"][0], constraints["scale_uni"][1])
-                sm = [s,s,s]
-            if constraints["scale_type"] == 2 and constraints["scale_min"] is not None and constraints["scale_max"] is not None and constraints["scale_steps"] is not None:
-                smin = constraints["scale_min"]
-                smax = constraints["scale_max"]
-                ss = constraints["scale_steps"]
-                sm = [_get_mapped_random_values(smin[0], smax[0], ss[0]), _get_mapped_random_values(smin[1], smax[1], ss[1]), _get_mapped_random_values(smin[2], smax[2], ss[2])]
-                if noisefactor !=1:
-                    if smin[0] != smax[0]: sm[0] = remap(noisefactor, -1, 1, smin[0], smax[0])
-                    if smin[1] != smax[1]: sm[1] = remap(noisefactor, -1, 1, smin[1], smax[1])
-                    if smin[2] != smax[2]: sm[2] = remap(noisefactor, -1, 1, smin[2], smax[2])
-            target_obj.scale.x = sm[0]
-            target_obj.scale.y = sm[1]
-            target_obj.scale.z = sm[2]
-            symtransmat.extend(sm)
-        else:
-            symtransmat.extend([1.0, 1.0, 1.0])
+        if "transformations" in self.active_constraints:
 
-        if self.symflip[x, y, z] is not None:
-            target_obj.scale.x *= self.symflip[x, y, z][0]
-            target_obj.scale.y *= self.symflip[x, y, z][1]
-            target_obj.scale.z *= self.symflip[x, y, z][2]
+            if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
+                tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
+                tmax = constraints.get("translation_max",PROP_DEFAULTS["translation_max"])
+                ts = constraints.get("translation_steps",PROP_DEFAULTS["translation_steps"])
+                loc = target_obj.location
+                newloc = [0.0, 0.0, 0.0]
+                for i in range(3):
+                    newloc[i] = _get_mapped_random_values(tmin[i], tmax[i], ts[i])
+                    if tmin[i]!=tmax[i] and noisefactor!=1: newloc[i] = remap(noisefactor, -1, 1, tmin[i], tmax[i])
+                    loc[i] += newloc[i] if self.symflip[x, y, z] is None or not constraints['sym_mirror_flip_transl'] else newloc[i] * self.symflip[x, y, z][i]
+                target_obj.location = loc
+                symtransmat.extend(newloc)
+            else:
+                symtransmat.extend([0.0, 0.0, 0.0])
+            if constraints["scale_type"] is not None and constraints["scale_type"] > 0:
+                sm = [0.0, 0.0, 0.0]
+                if constraints["scale_type"] == 1 and constraints["scale_uni"] is not None:
+                    if noisefactor == 1:
+                        s = _get_mapped_random_values(constraints["scale_uni"][0], constraints["scale_uni"][1], constraints["scale_uni"][2])
+                    else:
+                        s = remap(noisefactor, -1, 1, constraints["scale_uni"][0], constraints["scale_uni"][1])
+                    sm = [s,s,s]
+                if constraints["scale_type"] == 2 and constraints["scale_min"] is not None and constraints["scale_max"] is not None and constraints["scale_steps"] is not None:
+                    smin = constraints["scale_min"]
+                    smax = constraints["scale_max"]
+                    ss = constraints["scale_steps"]
+                    sm = [_get_mapped_random_values(smin[0], smax[0], ss[0]), _get_mapped_random_values(smin[1], smax[1], ss[1]), _get_mapped_random_values(smin[2], smax[2], ss[2])]
+                    if noisefactor !=1:
+                        if smin[0] != smax[0]: sm[0] = remap(noisefactor, -1, 1, smin[0], smax[0])
+                        if smin[1] != smax[1]: sm[1] = remap(noisefactor, -1, 1, smin[1], smax[1])
+                        if smin[2] != smax[2]: sm[2] = remap(noisefactor, -1, 1, smin[2], smax[2])
+                target_obj.scale.x = sm[0]
+                target_obj.scale.y = sm[1]
+                target_obj.scale.z = sm[2]
+                symtransmat.extend(sm)
+            else:
+                symtransmat.extend([1.0, 1.0, 1.0])
 
-        if constraints["rotation_min"] is not None or constraints["rotation_max"] is not None or constraints["rotation_steps"] is not None:
-            rmin = constraints.get("rotation_min",PROP_DEFAULTS["rotation_min"])
-            rmax = constraints.get("rotation_max",PROP_DEFAULTS["rotation_max"])
-            rs = constraints.get("rotation_steps",PROP_DEFAULTS["rotation_steps"])
-            axis=['X','Y','Z']
-            rotmat = [0.0, 0.0, 0.0]
-            for i in range(3):
-                if noisefactor == 1:
-                    a = _get_mapped_random_values(rmin[i], rmax[i], rs[i])
-                else:
-                    a = remap(noisefactor, -1, 1, rmin[i], rmax[i])
-                rotmat[i] = a
-                if a!=0: target_obj.rotation_euler.rotate_axis(axis[i], a)
-            symtransmat.extend(rotmat)
-        else:
-            symtransmat.extend([0.0, 0.0, 0.0])
+            if constraints["rotation_min"] is not None or constraints["rotation_max"] is not None or constraints["rotation_steps"] is not None:
+                rmin = constraints.get("rotation_min",PROP_DEFAULTS["rotation_min"])
+                rmax = constraints.get("rotation_max",PROP_DEFAULTS["rotation_max"])
+                rs = constraints.get("rotation_steps",PROP_DEFAULTS["rotation_steps"])
+                axis=['X','Y','Z']
+                rotmat = [0.0, 0.0, 0.0]
+                for i in range(3):
+                    if noisefactor == 1:
+                        a = _get_mapped_random_values(rmin[i], rmax[i], rs[i])
+                    else:
+                        a = remap(noisefactor, -1, 1, rmin[i], rmax[i])
+                    rotmat[i] = a
+                    if a!=0: target_obj.rotation_euler.rotate_axis(axis[i], a)
+                symtransmat.extend(rotmat)
+            else:
+                symtransmat.extend([0.0, 0.0, 0.0])
 
-        if constraints["flipping"] is not None and sum(constraints["flipping"]) > 0:
-            rv = np.random.rand(3)
-            fv = [1, 1, 1]
-            pv = constraints["flipping"]
-            for i in range(3):
-                if (1 - pv[i]) < rv[i]: fv[i] = -1
-            target_obj.scale.x *= fv[0]
-            target_obj.scale.y *= fv[1]
-            target_obj.scale.z *= fv[2]
-            symtransmat.extend(fv)
-        else:
-            symtransmat.extend([1.0, 1.0, 1.0])
-        # transfer transformations to symmetry partners:
-        if self.constraints[obj_name]['sym_mirror_trans'] and self.sympartner[x, y, z] is not None:
-            for p in self.sympartner[x, y, z]: self.symtransform[p[0], p[1], p[2]] = symtransmat
+            if constraints["flipping"] is not None and sum(constraints["flipping"]) > 0:
+                rv = np.random.rand(3)
+                fv = [1, 1, 1]
+                pv = constraints["flipping"]
+                for i in range(3):
+                    if (1 - pv[i]) < rv[i]: fv[i] = -1
+                target_obj.scale.x *= fv[0]
+                target_obj.scale.y *= fv[1]
+                target_obj.scale.z *= fv[2]
+                symtransmat.extend(fv)
+            else:
+                symtransmat.extend([1.0, 1.0, 1.0])
+
+        if "symmetry" in self.active_constraints:
+            if self.symflip[x, y, z] is not None:
+                target_obj.scale.x *= self.symflip[x, y, z][0]
+                target_obj.scale.y *= self.symflip[x, y, z][1]
+                target_obj.scale.z *= self.symflip[x, y, z][2]
+
+            # transfer transformations to symmetry partners:
+            if self.constraints[obj_name]['sym_mirror_trans'] and self.sympartner[x, y, z] is not None:
+                for p in self.sympartner[x, y, z]: self.symtransform[p[0], p[1], p[2]] = symtransmat
 
     def propagate_frequency_constraints(self, cell):
         if "frequency" not in self.active_constraints: return
@@ -845,7 +859,8 @@ class WFC3DConstraints:
                                    ]
                     if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
                         new_options = [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
-
+                else:
+                    new_options = neighbor_options
                 # Filter disallowed connector options:
                 prop_name = 'conn_' + dirlower
                 opp_prop_name = 'conn_' + oppdirlower

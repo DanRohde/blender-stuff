@@ -385,7 +385,7 @@ def handle_update_collection(_self, context = None):
 
 def init_active_constraints(props):
     default_obj = get_default_empty_object(props.collection_obj, False)
-    active_constraints = get_active_constraints() if default_obj is None else default_obj.get("wfc_active_constraints", ",".join(get_active_constraints())).split(",")
+    active_constraints = get_active_constraints() if default_obj is None or "wfc_active_constraints" not in default_obj else default_obj["wfc_active_constraints"].split(",")
 
     props.active_constraints_input_list.clear()
     for menu_item in CONSTRAINTS_MENU:
