@@ -292,7 +292,7 @@ class WFC3DConstraints:
             region_weight = self.get_region_weight(position, name)
             if region_weight != -1: weight = region_weight
             if self.constraints[name].get('weight',-1) > -1 or weight > 0:
-                if active_probability: weight += self.constraints[name].get('weight',1)
+                weight += self.constraints[name].get('weight',1) if active_probability else 1
                 option = [name for _ in range(weight)]
                 options.extend(option)
             else:
@@ -822,16 +822,21 @@ class WFC3DConstraints:
         return True
 
     def check_multiple_connector_constraints(self, current_obj, obj, direction, prop_name, opp_prop_name):
-        if "connector" in self.active_constraints:
-            if self.constraints[current_obj][prop_name] == "" and len(self.constraints[current_obj]['mult_conn'][direction]) == 0: return True
-        if "multiple_connector" not in self.active_constraints: return True
-        if self.constraints[obj][opp_prop_name] == "" and len(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) == 0: return True
+        if "connector" not in self.active_constraints and "multiple_connector" not in self.active_constraints: return True
+        if self.constraints[current_obj][prop_name] == "" and len(self.constraints[current_obj]['mult_conn'][direction]) == 0: return True
+        multiple_connector = "multiple_connector" in self.active_constraints
+        if multiple_connector:
+            if self.constraints[obj][opp_prop_name] == "" and len(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) == 0: return True
         if self.constraints[current_obj][prop_name] != "":
-            if self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name]: return True
-            if self.constraints[obj][opp_prop_name] != "":
-                if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["mult_conn"][direction] \
-                    and self.constraints[current_obj][prop_name] in self.constraints[obj]["mult_conn"][OPPOSITE_DIRECTIONS[direction]]: return True
-        if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]): return True
+            if "connector" in self.active_constraints:
+                if self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name]: return True
+
+            if multiple_connector:
+                if self.constraints[obj][opp_prop_name] != "":
+                    if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["mult_conn"][direction] \
+                        and self.constraints[current_obj][prop_name] in self.constraints[obj]["mult_conn"][OPPOSITE_DIRECTIONS[direction]]: return True
+
+        if multiple_connector and set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]): return True
         return False
     def propagate_adjacency_constraints(self, cell):
         # propagate neighbor constraints:
