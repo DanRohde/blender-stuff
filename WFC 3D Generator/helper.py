@@ -284,6 +284,7 @@ def update_edit_form(_self, _context):
                         pass
                 idx += 1
     init_empty_neighbor_lists(props)
+    if len(props.active_constraints_input_list) == 0: init_active_constraints(props)
     props.auto_save = auto_save
 
 
@@ -377,6 +378,44 @@ def handle_update_collection(_self, context = None):
         item = props.rt_list.add()
         item.obj = obj
         item.selected = obj.name in sel_rt_items
+    auto_save = props.auto_save
+    props.auto_save = False
+    init_active_constraints(props)
+    props.auto_save = auto_save
+
+def init_active_constraints(props):
+    default_obj = get_default_empty_object(props.collection_obj, False)
+    active_constraints = get_active_constraints() if default_obj is None else default_obj.get("wfc_active_constraints", ",".join(get_active_constraints())).split(",")
+
+    props.active_constraints_input_list.clear()
+    for menu_item in CONSTRAINTS_MENU:
+        if menu_item is None or menu_item[0] == '_none_': continue
+        list_item = props.active_constraints_input_list.add()
+        list_item.constraint_id = menu_item[0]
+        list_item.constraint = menu_item[1]
+        list_item.constraint_description = menu_item[2]
+        list_item.selected = menu_item[0] in active_constraints
+
+    props.show_inactive_constraints_menu_items = False \
+        if default_obj is None or "wfc_show_inactive_constraints_menu_items" not in default_obj or default_obj["wfc_show_inactive_constraints_menu_items"] == "" \
+        else default_obj["wfc_show_inactive_constraints_menu_items"]
+
+def save_active_constraints_changes(props):
+    default_obj = get_default_empty_object(props.collection_obj, True)
+    default_obj["wfc_active_constraints"] = ",".join(get_active_constraints())
+    default_obj["wfc_show_inactive_constraints_menu_items"] = props.show_inactive_constraints_menu_items
+
+def handle_active_constraints_changes(_self, context):
+    props = context.scene.wfc_props
+    if props.auto_save: save_active_constraints_changes(props)
+
+def get_active_constraints():
+    props = bpy.context.scene.wfc_props
+    if len(props.active_constraints_input_list) == 0:
+        active_constraints = [ item[0] for item in CONSTRAINTS_MENU if item is not None and item != '_none_' ]
+    else:
+        active_constraints = [ item.constraint_id for item in props.active_constraints_input_list if item.selected ]
+    return active_constraints
 
 def get_noise_basis(_self, _context = None):
     ret = [('_NONE_','Please select a noise basis','Please select a noise basis'),None]

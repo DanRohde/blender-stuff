@@ -252,3 +252,26 @@ HELP = {
                       }
     }
 }
+
+CONSTRAINTS_MENU = [("_none_","Select a Constraint Type","Select a constraint type"),
+               None,
+               ("neighbor","Neighbor Constraints","Neighbor constraints"),
+               ('connector', 'Connector Constraints', 'Connector constraints'),
+               ('connector_exclusion', 'Connector Exclusion Constraints', 'Connector exclusion constraints'),
+               ('multiple_connector', 'Multiple Connector Constraints', 'Multiple Connector constraints'),
+               ('geometry', 'Geometry Constraints', 'Geometry constraints'),
+               ('empty', 'Empty Neighbor Constraints', 'Empty Neighbor constraints'),
+               None,
+               ('dimensions', 'Dimensions Constraints', 'Dimensions constraints'),
+               ('fixed_position', 'Fixed Position Constraints', 'Fixed position constraints'),
+               ("grid","Grid Constraints","Grid constraints"),("region","Region Constraints","Region constraints"),
+               ('distance','Distance Constraints','Distance constraints'),
+               ('frequency',"Frequency Constraints","Frequency constraints"), ('regfreq','Region Frequency Constraints','Region Frequency constraints'),
+               ("symmetry","Symmetry Constraints","Symmetry constraints"),
+               None,
+               ("probability", "Probability Constraints", "Probability constraints"),
+               ("regprob", "Region Probability Constraints", "Region Probability constraints"),
+               None,
+               ("transformations", "Transformations", "Transformations"),
+               ("noise","Noise Constraints","Noise constraints"),
+               ]

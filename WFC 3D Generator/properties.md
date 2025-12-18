@@ -18,7 +18,8 @@
 * Noise constraints: 5
 * Distance constraints: 8
 * Empty Neighbor constraints: 2
-* **Sum: 166**
+* Active Constraints: 2
+* **Sum: 168**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -181,3 +182,9 @@
   * wfc_noise_prob_threshold: float value between 0 and 1
   * wfc_noise_transf_scale: float value 0..inf
   * wfc_noise_randomize_position: boolean
+
+## Active Constraints
+* Used custom properties: `wfc_active_constraints,show_inactive_constraints_menu_items`
+* Allowed property values:
+  * wfc_active_constraints: string with a comma separeted list of constraint ID's
+  * show_inactive_constraints_menu_items: boolean

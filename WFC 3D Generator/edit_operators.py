@@ -333,7 +333,16 @@ class WFC3D_OT_GenericListOrderDown(bpy.types.Operator):
         for idx in selected_indexes:
             if idx < len(lst) - 1: lst.move(idx, idx+1)
         return {'FINISHED'}
+class WFC3D_OT_SaveActiveConstraints(bpy.types.Operator):
+    bl_idname = "object.wfc_save_active_constraints"
+    bl_label = "Save active constraints"
+    bl_description = "Save active constraints."
+    def execute(self, context):
+        save_active_constraints_changes(context.scene.wfc_props)
+        return {'FINISHED'}
+
 operators = [
+    WFC3D_OT_SaveActiveConstraints,
     WFC3D_OT_GenericListOrderUp,
     WFC3D_OT_GenericListOrderDown,
     WFC3D_OT_ResetAllConstraints,

@@ -84,6 +84,9 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
             col.row().prop(item, "distance_subcollection")
         col.prop(item, "distance_type")
 
+class WFC3D_UL_ActiveConstraintsList(bpy.types.UIList):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+        layout.row(align=True).prop(item, "selected", text=item.constraint, icon="SETTINGS")
 
 def draw_empty_neighbor_list_item(layout, item):
     row = layout.row(align=True)
@@ -121,6 +124,19 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             
         box = col.box()
         box.prop(props,"edit_type", icon="OBJECT_DATA")
+
+        if props.edit_type == 'constraints':
+            box = layout.box()
+            row = box.row(align=True)
+            col = row.column(align=True)
+            col.template_list("WFC3D_UL_ActiveConstraintsList","", props, "active_constraints_input_list", props, "active_constraints_input_list_idx",rows=18, maxrows=18)
+            col = row.box().column(align=True)
+            col.operator('collection.wfc_auto_save_toggle', icon='IMPORT', depress=props.auto_save)
+            col.separator()
+            draw_list_selection_actions(props, col,"active_constraints_input_list")
+            box.prop(props, "show_inactive_constraints_menu_items")
+            if not props.auto_save: box.operator("object.wfc_save_active_constraints", icon='IMPORT')
+            return
 
         if props.edit_type == 'reset':
             box = layout.box()
@@ -699,6 +715,7 @@ def draw_list_order_actions(props, column, list_name):
     row.operator("object.wfc_generic_order_up", icon="TRIA_UP").list_name = list_name
     row.operator("object.wfc_generic_order_down", icon="TRIA_DOWN").list_name = list_name
 
-panels = [ WFC3D_UL_MultipleConnectorList, WFC3D_UL_ConnectorExclusionList, WFC3D_UL_EmptyNeighborList, WFC3D_UL_EmptyAnyNeighborList, WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList, WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
+panels = [ WFC3D_UL_ActiveConstraintsList, WFC3D_UL_MultipleConnectorList, WFC3D_UL_ConnectorExclusionList, WFC3D_UL_EmptyNeighborList, WFC3D_UL_EmptyAnyNeighborList, WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList,\
+           WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
 
         

@@ -2,7 +2,7 @@ import bpy
 
 from .constants import *
 from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection, get_noise_basis, \
-    is_sub_element, get_seeds, handle_seed_selection
+    is_sub_element, get_seeds, handle_seed_selection, handle_active_constraints_changes
 
 from .gen_operators import  handle_seed_change
 
@@ -80,6 +80,12 @@ def take_known_conn_name(_self, _context):
     props = bpy.context.scene.wfc_props
     if props.conn_known_names == '_NONE_': return
     props.conn_name = props.conn_known_names
+
+def get_constraints_menu(_self, context):
+    props = bpy.context.scene.wfc_props
+    if props.show_inactive_constraints_menu_items: return CONSTRAINTS_MENU
+    active_menu_items = [ item.constraint_id for item in props.active_constraints_input_list if item.selected ]
+    return [ item for item in CONSTRAINTS_MENU if item is None or item[0] == '_none_' or item[0] in active_menu_items ]
 
 class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
     obj: bpy.props.PointerProperty(type=bpy.types.ID)
@@ -167,6 +173,12 @@ class WFC3DDistanceListItem(bpy.types.PropertyGroup):
     distance_type: bpy.props.EnumProperty(update=auto_save, name="Type", description="Distancy type", items=[('minimum', 'Minimum distance', 'Minimum distance'),('maximum', 'Maximum distance', 'Maximum distance'),('equal', 'Equal distance', 'Equal distance')])
     selected: bpy.props.BoolProperty(default=False, name="")
 
+class WFC3DActiveConstraintsListItem(bpy.types.PropertyGroup):
+    selected: bpy.props.BoolProperty(default=False, name="", update=handle_active_constraints_changes)
+    constraint: bpy.props.StringProperty(name="Constraint", description="Constraint")
+    constraint_id: bpy.props.StringProperty(name="Constraint ID", description="Constraint ID")
+    constraint_description: bpy.props.StringProperty(name="Constraint Description", description="Constraint description")
+
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1,)
@@ -203,35 +215,13 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     obj_list: bpy.props.CollectionProperty(type=WFC3DEditPanelMultiSelItem)
     obj_list_idx: bpy.props.IntProperty()
     edit_type: bpy.props.EnumProperty(name="", description="Select constraints type",
-        items=[('objects','Object Constraints','Object constraints'),('defaults','Collection Defaults','Collection defaults'),('reset','Reset Constraints','Reset constraints')],
+        items=[('objects','Object Constraints','Object constraints'),
+               ('defaults','Collection Defaults','Collection defaults'),
+               ('constraints','Active Constraints','Active constraints'),
+               ('reset','Reset Constraints','Reset constraints')],
         update=update_edit_form,
     )
-    edit_constraints: bpy.props.EnumProperty(
-        name="", description = "Select constraint type",
-        items=[("_none_","Select a Constraint Type","Select a constraint type"),
-               None,
-               ("neighbor","Neighbor Constraints","Neighbor constraints"),
-               ('connector', 'Connector Constraints', 'Connector constraints'),
-               ('connector_exclusion', 'Connector Exclusion Constraints', 'Connector exclusion constraints'),
-               ('multiple_connector', 'Multiple Connector Constraints', 'Multiple Connector constraints'),
-               ('geometry', 'Geometry Constraints', 'Geometry constraints'),
-               ('empty', 'Empty Neighbor Constraints', 'Empty Neighbor constraints'),
-               None,
-               ('dimensions', 'Dimensions Constraints', 'Dimensions constraints'),
-               ('fixed_position', 'Fixed Position Constraints', 'Fixed position constraints'),
-               ("grid","Grid Constraints","Grid constraints"),("region","Region Constraints","Region constraints"),
-               ('distance','Distance Constraints','Distance constraints'),
-               ('frequency',"Frequency Constraints","Frequency constraints"), ('regfreq','Region Frequency Constraints','Region Frequency constraints'),
-               ("symmetry","Symmetry Constraints","Symmetry constraints"),
-               None,
-               ("probability", "Probability Constraints", "Probability constraints"),
-               ("regprob", "Region Probability Constraints", "Region Probability constraints"),
-               None,
-               ("transformations", "Transformations", "Transformations"),
-               ("noise","Noise Constraints","Noise constraints"),
-               ],
-        update = update_edit_form
-    )
+    edit_constraints: bpy.props.EnumProperty(name="", description = "Select constraint type", items=get_constraints_menu, update = update_edit_form )
     edit_neighbor_constraint: bpy.props.EnumProperty(name="", description="Select a Neighbor Constraint", items=get_neighbor_constraint_items, update=handle_edit_neighbor_constraint_update,)
     neighbor_list: bpy.props.CollectionProperty(type=WFC3DEditPanelNeighborMultiSelItem)
     neighbor_list_idx: bpy.props.IntProperty()
@@ -404,6 +394,10 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     progress_running: bpy.props.BoolProperty(default=False)
     progress_paused: bpy.props.BoolProperty(default=False)
 
+    show_inactive_constraints_menu_items : bpy.props.BoolProperty(name="Show inactive constraints menu items", default=False, update=handle_active_constraints_changes)
+    active_constraints_input_list: bpy.props.CollectionProperty(type=WFC3DActiveConstraintsListItem)
+    active_constraints_input_list_idx: bpy.props.IntProperty()
+
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
 
@@ -445,4 +439,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DSeedsListItem, WFC3DMultipleConnectorListItem, WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DActiveConstraintsListItem, WFC3DSeedsListItem, WFC3DMultipleConnectorListItem, WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

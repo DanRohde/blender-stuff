@@ -6,7 +6,7 @@ import random
 from collections import deque
 
 from .constants import *
-from .helper import get_default_empty_object, get_default_empty_name, get_noise, remap
+from .helper import get_default_empty_object, get_default_empty_name, get_noise, remap, get_active_constraints
 from .geometry import compare_edges, compare_faces
 
 class WFC3DConstraints:
@@ -23,6 +23,7 @@ class WFC3DConstraints:
         self.collection = None
         self.spacing = None
         self.noise_pos = None
+        self.active_constraints = None
     
     def initialize_constraints(self, grid, collection, objects, spacing):
         """Loads constraints from custom properties"""
@@ -35,6 +36,9 @@ class WFC3DConstraints:
         self.symtransform = np.empty(grid.grid_size, dtype=object)
         self.symflip = np.empty(grid.grid_size, dtype=object)
         self.spacing = spacing
+
+        self.active_constraints = get_active_constraints()
+
         for obj in objects:
             obj_name = obj.name
             self.constraints[obj_name] = {}
@@ -783,15 +787,18 @@ class WFC3DConstraints:
         self.apply_transformation_constraints(position, obj_name, target_obj)
         self.apply_dimensions_draw_constraints(position, spacing, obj_name, target_obj)
 
-    def check_connection_exclusion_constraints(self, current_obj, obj, direction, prop_name, opp_prop_name):
+    def check_connector_exclusion_constraints(self, current_obj, obj, direction, prop_name, opp_prop_name):
+        if "connector_exclusion" not in self.active_constraints: return True
         if self.constraints[obj][opp_prop_name] in self.constraints[current_obj]["conn_excl"][direction] \
               or self.constraints[current_obj][prop_name] in self.constraints[obj]["conn_excl"][OPPOSITE_DIRECTIONS[direction]]: return False
         if set(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) & set(self.constraints[current_obj]['conn_excl'][direction]): return False
         if set(self.constraints[current_obj]['mult_conn'][direction]) & set(self.constraints[obj]['conn_excl'][OPPOSITE_DIRECTIONS[direction]]): return False
         return True
 
-    def check_multiple_connection_constraints(self, current_obj, obj, direction, prop_name, opp_prop_name):
-        if self.constraints[current_obj][prop_name] == "" and len(self.constraints[current_obj]['mult_conn'][direction]) == 0: return True
+    def check_multiple_connector_constraints(self, current_obj, obj, direction, prop_name, opp_prop_name):
+        if "connector" in self.active_constraints:
+            if self.constraints[current_obj][prop_name] == "" and len(self.constraints[current_obj]['mult_conn'][direction]) == 0: return True
+        if "multiple_connector" not in self.active_constraints: return True
         if self.constraints[obj][opp_prop_name] == "" and len(self.constraints[obj]['mult_conn'][OPPOSITE_DIRECTIONS[direction]]) == 0: return True
         if self.constraints[current_obj][prop_name] != "":
             if self.constraints[current_obj][prop_name] == self.constraints[obj][opp_prop_name]: return True
@@ -819,20 +826,21 @@ class WFC3DConstraints:
                 oppdirlower = OPPOSITE_DIRECTIONS[direction].lower()
 
                 # Filter disallowed neighbor options
-                new_options = [obj
-                               for obj in neighbor_options
-                               if (self.constraints[current_obj][dirlower] is None or obj in self.constraints[current_obj][dirlower])
-                               and (self.constraints[obj][oppdirlower] is None or current_obj in self.constraints[obj][oppdirlower])
-                               ]
-                if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
-                    new_options = [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
+                if "neighbor" in self.active_constraints:
+                    new_options = [obj
+                                   for obj in neighbor_options
+                                   if (self.constraints[current_obj][dirlower] is None or obj in self.constraints[current_obj][dirlower])
+                                   and (self.constraints[obj][oppdirlower] is None or current_obj in self.constraints[obj][oppdirlower])
+                                   ]
+                    if len(new_options) == 0 and self.constraints[current_obj]['allow_neighbor_constraint_violations']:
+                        new_options = [obj for obj in neighbor_options if self.constraints[obj]['allow_neighbor_constraint_violations']]
 
                 # Filter disallowed connector options:
                 prop_name = 'conn_' + dirlower
                 opp_prop_name = 'conn_' + oppdirlower
                 new_options = [obj for obj in new_options
-                               if self.check_connection_exclusion_constraints(current_obj, obj, direction, prop_name, opp_prop_name)
-                                  and self.check_multiple_connection_constraints(current_obj, obj, direction, prop_name, opp_prop_name)
+                               if self.check_connector_exclusion_constraints(current_obj, obj, direction, prop_name, opp_prop_name)
+                                  and self.check_multiple_connector_constraints(current_obj, obj, direction, prop_name, opp_prop_name)
                                ]
 
                 # Filter disallowed geometry:
@@ -904,3 +912,4 @@ class WFC3DConstraints:
         self.collection = None
         self.spacing = None
         self.noise_pos = None
+        self.active_constraints = None
