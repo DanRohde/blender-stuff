@@ -518,7 +518,7 @@ class WFC3DConstraints:
                 target_obj.scale.z *= fmat[2]
                 return
 
-        symtransmat = []
+        symtransmat = [0.0, 0.0, 0.0 , 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1, 1, 1]
         noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_noise(self.apply_noise_randomize_position_constraint(obj_name, cell), constraints["noise_transf_basis"], constraints["noise_transf_scale"])
 
         if "transformations" in self.active_constraints:
@@ -533,9 +533,8 @@ class WFC3DConstraints:
                     if tmin[i]!=tmax[i] and noisefactor!=1: newloc[i] = remap(noisefactor, -1, 1, tmin[i], tmax[i])
                     loc[i] += newloc[i] if self.symflip[x, y, z] is None or not constraints['sym_mirror_flip_transl'] else newloc[i] * self.symflip[x, y, z][i]
                 target_obj.location = loc
-                symtransmat.extend(newloc)
-            else:
-                symtransmat.extend([0.0, 0.0, 0.0])
+                symtransmat[0:3] = newloc
+
             if constraints["scale_type"] is not None and constraints["scale_type"] > 0:
                 sm = [0.0, 0.0, 0.0]
                 if constraints["scale_type"] == 1 and constraints["scale_uni"] is not None:
@@ -556,9 +555,7 @@ class WFC3DConstraints:
                 target_obj.scale.x = sm[0]
                 target_obj.scale.y = sm[1]
                 target_obj.scale.z = sm[2]
-                symtransmat.extend(sm)
-            else:
-                symtransmat.extend([1.0, 1.0, 1.0])
+                symtransmat[3:6] = sm
 
             if constraints["rotation_min"] is not None or constraints["rotation_max"] is not None or constraints["rotation_steps"] is not None:
                 rmin = constraints.get("rotation_min",PROP_DEFAULTS["rotation_min"])
@@ -573,9 +570,7 @@ class WFC3DConstraints:
                         a = remap(noisefactor, -1, 1, rmin[i], rmax[i])
                     rotmat[i] = a
                     if a!=0: target_obj.rotation_euler.rotate_axis(axis[i], a)
-                symtransmat.extend(rotmat)
-            else:
-                symtransmat.extend([0.0, 0.0, 0.0])
+                symtransmat[6:9] = rotmat
 
             if constraints["flipping"] is not None and sum(constraints["flipping"]) > 0:
                 rv = np.random.rand(3)
@@ -586,9 +581,7 @@ class WFC3DConstraints:
                 target_obj.scale.x *= fv[0]
                 target_obj.scale.y *= fv[1]
                 target_obj.scale.z *= fv[2]
-                symtransmat.extend(fv)
-            else:
-                symtransmat.extend([1.0, 1.0, 1.0])
+                symtransmat[9:12] = fv
 
         if "symmetry" in self.active_constraints:
             if self.symflip[x, y, z] is not None:

@@ -417,8 +417,8 @@ def get_constraints_menu(_self, context):
 
 def handle_active_constraints_changes(_self, context):
     props = context.scene.wfc_props
-    m = get_constraints_menu(_self, context)
-    props.edit_constraints = m[0][0]
+    if props.edit_constraints == "":
+        props.edit_constraints = "_none_"
     if props.auto_save: save_active_constraints_changes(props)
 
 def get_active_constraints():

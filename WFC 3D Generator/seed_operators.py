@@ -37,6 +37,8 @@ class WFC3D_OT_AddSeedListItem(bpy.types.Operator):
         item.collection_obj = props.collection_obj
         item.note = ""
         item.timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+
+        props.seeds = f"{len(props.seeds_input_list) - 1}"
         return {'FINISHED'}
 
 operators = [ WFC3D_OT_AddSeedListItem, WFC3D_OT_RemoveSeedListItems, ]
