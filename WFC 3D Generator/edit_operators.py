@@ -330,7 +330,7 @@ class WFC3D_OT_GenericListOrderDown(bpy.types.Operator):
         props = context.scene.wfc_props
         lst = getattr(props, self.list_name)
         selected_indexes = [ idx for idx, item in enumerate(lst) if item.selected ]
-        for idx in selected_indexes:
+        for idx in sorted(selected_indexes, reverse=True):
             if idx < len(lst) - 1: lst.move(idx, idx+1)
         return {'FINISHED'}
 class WFC3D_OT_SaveActiveConstraints(bpy.types.Operator):
