@@ -204,6 +204,11 @@ def update_edit_form(_self, _context):
         if obj is None: obj = default_obj
         if obj is None: return
     else:
+        if len(props.active_constraints_input_list) == 0:
+            auto_save = props.auto_save
+            props.auto_save = False
+            init_active_constraints(props)
+            props.auto_save = auto_save
         return
     if props.edit_constraints == '_none_': return
 
@@ -284,7 +289,6 @@ def update_edit_form(_self, _context):
                         pass
                 idx += 1
     init_empty_neighbor_lists(props)
-    if len(props.active_constraints_input_list) == 0: init_active_constraints(props)
     props.auto_save = auto_save
 
 
