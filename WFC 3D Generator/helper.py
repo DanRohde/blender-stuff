@@ -405,8 +405,16 @@ def save_active_constraints_changes(props):
     default_obj["wfc_active_constraints"] = ",".join(get_active_constraints())
     default_obj["wfc_show_inactive_constraints_menu_items"] = props.show_inactive_constraints_menu_items
 
+def get_constraints_menu(_self, context):
+    props = bpy.context.scene.wfc_props
+    if props.show_inactive_constraints_menu_items: return CONSTRAINTS_MENU
+    active_menu_items = get_active_constraints()
+    return [ item for item in CONSTRAINTS_MENU if item is None or item[0] == '_none_' or item[0] in active_menu_items ]
+
 def handle_active_constraints_changes(_self, context):
     props = context.scene.wfc_props
+    m = get_constraints_menu(_self, context)
+    props.edit_constraints = m[0][0]
     if props.auto_save: save_active_constraints_changes(props)
 
 def get_active_constraints():
