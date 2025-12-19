@@ -518,7 +518,7 @@ class WFC3DConstraints:
                 target_obj.scale.z *= fmat[2]
                 return
 
-        symtransmat = [0.0, 0.0, 0.0 , 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1, 1, 1]
+        symtransmat = [0.0, 0.0, 0.0 , 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1, 1, 1] # transformations, scale, rotation, flipping
         noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_noise(self.apply_noise_randomize_position_constraint(obj_name, cell), constraints["noise_transf_basis"], constraints["noise_transf_scale"])
 
         if "transformations" in self.active_constraints:
