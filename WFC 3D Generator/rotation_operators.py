@@ -1,13 +1,13 @@
 import bpy
 import math
 from .helper import get_selected_items, get_object_by_name
-from .constants import ROTATE_DIRECTIONS, PROP_DEFAULTS, FACE_DIRECTIONS
+from .constants import ROTATE_DIRECTIONS, PROP_DEFAULTS, FACE_DIRECTIONS, DIRECTIONS
 
 
 def rotate_properties(props, obj, axis, angle):
     angles = [ 90, 180, 270 ]
     rd = ROTATE_DIRECTIONS[axis]
-
+    directions = list(DIRECTIONS)
     ## read custom properties:
     objprops = {}
     for d in ROTATE_DIRECTIONS[axis]:
@@ -15,6 +15,18 @@ def rotate_properties(props, obj, axis, angle):
         if d in FACE_DIRECTIONS: objprops[f"geo_{dl}"] = obj.get(f"wfc_geo_{dl}", PROP_DEFAULTS[f"geo_{dl}"])
         objprops[f"conn_{dl}"] = obj.get(f"wfc_conn_{dl}", PROP_DEFAULTS[f"conn_{dl}"])
         objprops[dl] = obj.get(f"wfc_{dl}", PROP_DEFAULTS[dl])
+
+    objprops["conn_excl"] = []
+    idx = 0
+    while f"wfc_conn_excl_direction_{idx}" in obj:
+        objprops["conn_excl"].append(obj[f"wfc_conn_excl_direction_{idx}"])
+        idx += 1
+
+    objprops["mult_conn"] = []
+    idx = 0
+    while f"wfc_mult_conn_direction_{idx}" in obj:
+        objprops["mult_conn"].append(obj[f"wfc_mult_conn_direction_{idx}"])
+        idx += 1
 
     ## rotate:
     for a in angles:
@@ -37,6 +49,12 @@ def rotate_properties(props, obj, axis, angle):
                     rpn = f"wfc_geo_{rdl}"
                     obj[rpn] = objprops[f"geo_{dl}"]
                     if objprops[f"geo_{dl}"] == PROP_DEFAULTS[f"geo_{dl}"]: del obj[rpn]
+            if props.rt_conn_excl:
+                for idx in range(len(objprops["conn_excl"])):
+                    obj[f"wfc_conn_excl_direction_{idx}"] = directions.index(rd[directions[objprops["conn_excl"][idx]]])
+            if props.rt_mult_conn:
+                for idx in range(len(objprops["mult_conn"])):
+                    obj[f"wfc_mult_conn_direction_{idx}"] = directions.index(rd[directions[objprops["mult_conn"][idx]]])
         ## rotate object properties:
         cache = {}
         for d in rd:
@@ -57,7 +75,12 @@ def rotate_properties(props, obj, axis, angle):
                 if d in FACE_DIRECTIONS:
                     cache[f"geo_{rdl}"] = objprops[f"geo_{rdl}"]
                     objprops[f"geo_{rdl}"] = objprops[f"geo_{dl}"]
-
+        if props.rt_mult_conn:
+            for idx in range(len(objprops["conn_excl"])):
+                objprops["conn_excl"][idx] = directions.index(rd[directions[objprops["conn_excl"][idx]]])
+        if props.rt_mult_conn:
+            for idx in range(len(objprops["mult_conn"])):
+                objprops["mult_conn"][idx] = directions.index(rd[directions[objprops["mult_conn"][idx]]])
 
 
 def rotate_object(props, obj, offset):

@@ -380,7 +380,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     rt_neighbor : bpy.props.BoolProperty(name="Neighbor", description="Rotate neighbor constraints", default=True)
     rt_connector: bpy.props.BoolProperty(name="Connector", description="Rotate connector constraints", default=True)
     rt_geometry: bpy.props.BoolProperty(name="Geometry", description="Rotate geometry constraints", default=True)
-
+    rt_conn_excl: bpy.props.BoolProperty(name="Connector Exclusion", description="Rotate connector exclusion constraints", default=True)
+    rt_mult_conn: bpy.props.BoolProperty(name="Multiple Connector", description="Rotate multiple connector constraints", default=True)
 
     empty_neighbor_list: bpy.props.CollectionProperty(type=WFC3DEmptyNeighborListItem)
     empty_neighbor_list_idx: bpy.props.IntProperty()
