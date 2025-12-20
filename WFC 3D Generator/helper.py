@@ -482,6 +482,7 @@ def handle_seed_selection(self, context):
     self.auto_detect_spacing = item.auto_detect_spacing
     self.odd_offset = item.odd_offset
     self.use_constraints = item.use_constraints
+    self.entropy_type = item.entropy_type
     self.seed = item.seed
 
 def seed_in_seeds_list(props):
@@ -491,6 +492,7 @@ def seed_in_seeds_list(props):
                  and item.auto_detect_spacing == props.auto_detect_spacing
                  and item.random_start_cell == props.random_start_cell
                  and item.collection_obj == props.collection_obj
+                 and item.entropy_type == props.entropy_type
                  and list(item.grid_size) == list(props.grid_size)
                  and list(item.spacing) == list(props.spacing)
                  and list(item.odd_offset) == list(props.odd_offset)

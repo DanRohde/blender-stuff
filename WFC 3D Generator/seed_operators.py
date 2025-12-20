@@ -35,6 +35,7 @@ class WFC3D_OT_AddSeedListItem(bpy.types.Operator):
         item.use_constraints = props.use_constraints
         item.random_start_cell = props.random_start_cell
         item.collection_obj = props.collection_obj
+        item.entropy_type = props.entropy_type
         item.note = ""
         item.timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
 

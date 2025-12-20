@@ -9,7 +9,9 @@ class WFC3D_UL_SeedsList(bpy.types.UIList):
         col = row.column()
         row = col.row()
         row.label(text=f"Seed: {item.seed}")
+        row = col.row()
         row.label(text="Random Start Cell" , icon="CHECKBOX_HLT" if item.random_start_cell else "CHECKBOX_DEHLT")
+        row.label(text=f"Entropy: {item.entropy_type}")
         col.row().prop(item, "note")
         col.row().label(text=f"Grid Size: {item.grid_size[0]} x {item.grid_size[1]} x {item.grid_size[2]}")
         if item.auto_detect_spacing:
