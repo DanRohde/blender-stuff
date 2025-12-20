@@ -278,10 +278,12 @@ class WFC3DConstraints:
 
         weight = 0
         for d in DIRECTIONS:
-            if d not in self.constraints[name] or self.constraints[name][d] == "":
+            dl = d.lower()
+            if dl not in self.constraints[name] or self.constraints[name][dl] == "":
                 weight += len(self.objects)
             else:
-                weight += len(self.constraints[name][d])
+                weight += len(self.constraints[name][dl])
+
         for c in CONNECTOR_CONSTRAINTS:
             if c not in self.constraints[name] or self.constraints[name][c] == "":
                 weight += len(self.objects)
@@ -296,12 +298,13 @@ class WFC3DConstraints:
             if c not in self.constraints[name] or self.constraints[name][c] == "":
                 weight += len(self.objects)
 
+        weight += len(self.constraints[name]['mult_conn'])
+        weight -= len(self.constraints[name]['conn_excl'])
+
         weight += len(self.constraints[name][DISTANCE_CONSTRAINTS[0]]) * len(DISTANCE_CONSTRAINTS)
 
         if sum(self.constraints[name]['dim_xyz'])==3: weight += 1
-        maxlen = (len(CONNECTOR_CONSTRAINTS+GRID_CONSTRAINTS+REGION_CONSTRAINTS+DISTANCE_CONSTRAINTS)+len(DIRECTIONS)+1)*len(self.objects)
-        weight = int(round(len(self.objects) * weight/ maxlen))
-
+        weight = int(round(remap(weight, 1,1000, 1, 20*len(self.objects) )))
         self.auto_weights[name] = weight
         return weight
 
@@ -321,8 +324,7 @@ class WFC3DConstraints:
             if region_weight != -1: weight = region_weight
             if self.constraints[name].get('weight',-1) > -1 or weight > 0:
                 weight += self.constraints[name].get('weight',1) if active_probability else 1
-                option = [name for _ in range(weight)]
-                options.extend(option)
+                options.extend([name,]*weight)
             else:
                 options.extend(elements)
         return options
