@@ -96,6 +96,5 @@ More information about the constraints can be found on [GitHub](https://github.c
 
 
 ## Upcoming Features
-* 3D Viewport constraint visualizer
 * some tutorials and documentation (thx, David-rD, for your feedback)
 * ??? I need more feedback with ideas. You can give me feedback on Blender.org or [GitHub](https://github.com/DanRohde/blender-stuff/discussions) ???

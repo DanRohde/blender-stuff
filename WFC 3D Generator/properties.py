@@ -174,6 +174,14 @@ class WFC3DActiveConstraintsListItem(bpy.types.PropertyGroup):
     constraint_id: bpy.props.StringProperty(name="Constraint ID", description="Constraint ID")
     constraint_description: bpy.props.StringProperty(name="Constraint Description", description="Constraint description")
 
+class WFC3DRenderResult(bpy.types.PropertyGroup):
+    cell_count: bpy.props.IntProperty()
+    empty_cells: bpy.props.IntProperty()
+    gen_start_time: bpy.props.FloatProperty()
+    gen_duration: bpy.props.FloatProperty()
+    render_start_time: bpy.props.FloatProperty()
+    render_duration: bpy.props.FloatProperty()
+
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1,)
@@ -203,6 +211,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     search_running: bpy.props.BoolProperty(default=False)
     search_paused: bpy.props.BoolProperty(default=False)
     search_running_iterations: bpy.props.IntProperty(default=0)
+    render_result: bpy.props.PointerProperty(type=WFC3DRenderResult)
 
     seeds: bpy.props.EnumProperty(items=get_seeds, name="Random Seeds", description="Select a saved random seed.", update=handle_seed_selection)
     seeds_input_list: bpy.props.CollectionProperty(type=WFC3DSeedsListItem)
@@ -436,4 +445,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DActiveConstraintsListItem, WFC3DSeedsListItem, WFC3DMultipleConnectorListItem, WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DRenderResult, WFC3DActiveConstraintsListItem, WFC3DSeedsListItem, WFC3DMultipleConnectorListItem, WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

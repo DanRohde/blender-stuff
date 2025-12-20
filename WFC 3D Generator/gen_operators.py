@@ -14,13 +14,30 @@ def hide_old_target_collections(props):
         return True
     return False
 
+def init_render_result(props):
+    props.render_result.cell_count = props.grid_size[0] * props.grid_size[1] * props.grid_size[2]
+    props.render_result.gen_start_time = time.perf_counter()
+    props.render_result.empty_cells = -1
+    props.render_result.gen_duration = -1
+    props.render_result.render_start_time = -1
+    props.render_result.render_duration = -1
+
+def start_render_result(props, generator):
+    props.render_result.gen_duration = time.perf_counter() - props.render_result.gen_start_time
+    props.render_result.empty_cells = generator.grid.count_empty_cells()
+    props.render_result.render_start_time = time.perf_counter()
+
+def end_render_result(props):
+    props.render_result.render_duration = time.perf_counter() - props.render_result.render_start_time
+
 def generate_model(props, context):
     progress_offset = 0
     if not hide_old_target_collections(props) and props.target_collection in bpy.data.collections:
         progress_offset += len(bpy.data.collections[props.target_collection].objects)
     gs = props.grid_size[0]*props.grid_size[1]*props.grid_size[2]
-    progress = WFC3DProgress(progress_offset + 2*gs, context, cursor = not props.background_generation)
+    progress = WFC3DProgress(progress_offset + 2*gs, context, cursor = not props.background_generation, end_callback = functools.partial(end_render_result, props))
     progress.begin()
+    init_render_result(props)
     generator = WFC3DGenerator(props)
     if props.background_generation:
         generator.init_task()
@@ -30,6 +47,7 @@ def generate_model(props, context):
     else:
         generator.generate_model(progress)
         renderer = WFC3DRenderer(generator, props)
+        start_render_result(props, generator)
         renderer.render(progress)
         if props.render_delay == 0:
             progress.end()
@@ -65,6 +83,7 @@ def generate_model_task(props, generator, progress):
         if generator.generate_task(progress): continue
         renderer = WFC3DRenderer(generator, props)
         renderer.init_target_collection(progress)
+        start_render_result(props, generator)
         bpy.app.timers.register(functools.partial(render_model_task, props, renderer, progress))
         return None
     return 0
@@ -88,13 +107,15 @@ class WFC3D_OT_Generate(bpy.types.Operator):
         return {'FINISHED'}
 
 class WFC3DProgress:
-    def __init__(self, max_count, context, prop_prefix = '', cursor = True):
+    def __init__(self, max_count, context, prop_prefix = '', cursor = True, end_callback = None):
         self.max_count = max_count
         self.context = context
         self.start_time = 0
         self.last_count = 0
         self.prop_prefix = prop_prefix
         self.cursor = cursor
+        self.end_callback = end_callback
+
     def begin(self):
         if self.cursor: self.context.window_manager.progress_begin(0, 100)
         setattr(self.context.scene.wfc_props, self.prop_prefix+"progress", 0)
@@ -110,6 +131,7 @@ class WFC3DProgress:
     def end(self):
         if self.cursor: self.context.window_manager.progress_end()
         setattr(self.context.scene.wfc_props, self.prop_prefix+'progress', 0)
+        if self.end_callback is not None and callable(self.end_callback): self.end_callback()
     def update_inc(self, count = 1):
         self.last_count += count
         self.update(self.last_count)

@@ -3,12 +3,12 @@ from .edit_panel import draw_list_selection_actions, draw_list_order_actions
 from .helper import count_selected_items, seed_in_seeds_list
 
 class WFC3D_UL_SeedsList(bpy.types.UIList):
-    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row()
         row.prop(item, "selected", icon="BOOKMARKS")
         col = row.column()
         row = col.row()
-        row.label(text=f"Seed: {item.seed}")
+        row.label(text=f"{index+1}: Seed: {item.seed}")
         row = col.row()
         row.label(text="Random Start Cell" , icon="CHECKBOX_HLT" if item.random_start_cell else "CHECKBOX_DEHLT")
         row.label(text=f"Entropy: {item.entropy_type}")
@@ -39,7 +39,9 @@ class WFC3DSeedsPanel(bpy.types.Panel):
         row = layout.row()
         col = row.column()
         col.template_list("WFC3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx", rows=1, maxrows=2)
-        draw_list_order_actions(props, col, "seeds_input_list")
+        r = col.row()
+        draw_list_order_actions(props, r, "seeds_input_list")
+        r.label(text=f"Number of Random Seed Bookmarks: {len(props.seeds_input_list)}")
         col = row.column()
         col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props)[0])
         c = col.column()
@@ -47,6 +49,7 @@ class WFC3DSeedsPanel(bpy.types.Panel):
         c.enabled = count_selected_items(props.seeds_input_list) > 0
         col.separator()
         draw_list_selection_actions(props, col, "seeds_input_list")
+
     def draw_header(self, context):
         self.layout.row().label(text="WFC 3D Random Seeds", icon="BOOKMARKS")
 
