@@ -126,7 +126,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             result += f" / {props.render_result.render_duration:.2f}s" if props.render_result.render_duration > -1 else ""
             result += f" ∑ {props.render_result.gen_duration + props.render_result.render_duration:.2f}s" if props.render_result.gen_duration > -1 and props.render_result.render_duration > -1 else ""
             row.label(text=result, icon="RENDER_RESULT")
-            row.operator("object.wfc_3d_reset_render_result", icon="PANEL_CLOSE")
+            if props.render_result.render_duration > -1: row.operator("object.wfc_3d_reset_render_result", icon="PANEL_CLOSE")
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon="INFO_LARGE")
         if props.collection_obj is not None and props.collection_obj.name == props.target_collection:
