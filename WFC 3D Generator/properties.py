@@ -187,6 +187,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     running_delayed_renderer : bpy.props.BoolProperty(name="Running Delayed Renderer", description="Running Delayed Renderer", default=False,)
     paused_delayed_renderer: bpy.props.BoolProperty(name="Paused Delayed Renderer", description="Paused Delayed Renderer", default=False,)
     random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False, update=handle_seed_change)
+    entropy_type: bpy.props.EnumProperty(name="Entropy", items=[('number','Number','Number of permitted elements.'),('optimized','Optimized','Optimized weight-based entropy.'),('shannon','Shannon','Shannon-based entropy.')])
     seed: bpy.props.IntProperty(name="Random Seed", description="Random seed", default=0, update=handle_seed_change)
     auto_generate: bpy.props.BoolProperty(name="Automatic Model Generation when Random Seed Changes", default=False,)
     cherry_picking_running: bpy.props.BoolProperty(name="Cherry Picking Running", default=False,)

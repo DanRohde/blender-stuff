@@ -186,6 +186,34 @@ class WFC3DConstraints:
                 val = default_obj[any_prop_name]
         return val
 
+    def sum_weights(self, cell):
+        x, y, z = cell
+        total = 0
+        weights = []
+        for element in self.grid.grid[x, y, z]:
+            weight = self.get_auto_weight(element)
+            if weight == 0: weight = self.constraints[element]['weight']
+            weights.append(weight)
+            total += weight
+        return total, weights
+
+    def get_shannon_entropy(self, cell):
+        x, y, z = cell
+        total, weights = self.sum_weights(cell)
+        if total == 0: return 0.0
+        shannon_entropy = 0
+        for w in weights:
+            if w <= 0: continue
+            p = w / total
+            shannon_entropy -= p * np.log(p)
+        return shannon_entropy
+
+    def get_optimized_entropy(self, cell):
+        total, weights = self.sum_weights(cell)
+        if total == 0: return 0.0
+        sum_w_log_w = sum(w * np.log(w) for w in weights if w > 0)
+        return np.log(total) - sum_w_log_w / total
+
     def apply_noise_randomize_position_constraint(self, obj_name, pos):
         if not self.constraints[obj_name]['noise_randomize_position']: return pos
         if self.noise_pos is None: self.noise_pos = np.random.rand(1,3)

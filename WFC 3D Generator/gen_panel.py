@@ -63,7 +63,11 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             row.label(text=f"Min. rendering time: {render_time:.2f} second(s).")
 
         box = layout.box()
-        box.prop(props, "random_start_cell")
+        row = box.row()
+        row.prop(props, "random_start_cell")
+        col = row.column()
+        col.prop(props, "entropy_type")
+        col.enabled = props.use_constraints
         row = box.row()
         if props.search_running:
             row.progress(factor=props.search_progress,text=f"{round(props.search_progress*100)}% (et: {round(props.search_progress_elapsed_time,0):.0f}s/eta: {props.search_progress_eta:.0f}s)", type="BAR")

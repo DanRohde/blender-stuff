@@ -49,6 +49,9 @@ class WFC3DGenerator:
     
     def get_entropy(self, x, y, z):
         """Calculates the entropy (number of possible states) of a cell"""
+        if self.use_constraints:
+            if self.props.entropy_type == "optimized": return self.constraints.get_optimized_entropy((x, y, z))
+            if self.props.entropy_type == "shannon": return self.constraints.get_shannon_entropy((x, y, z))
         return len(self.grid.grid[x, y, z])
 
     def get_lowest_entropy_cell(self):
