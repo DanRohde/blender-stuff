@@ -106,6 +106,21 @@ class WFC3D_OT_Generate(bpy.types.Operator):
         self.report({'INFO'}, "WFC 3D model successfully generated!")
         return {'FINISHED'}
 
+class WFC3D_OT_ResetRenderResult(bpy.types.Operator):
+    """Reset render result"""
+    bl_idname = "object.wfc_3d_reset_render_result"
+    bl_label = ""
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        props.render_result.cell_count = -1
+        props.render_result.empty_cells = -1
+        props.render_result.gen_start_time = -1
+        props.render_result.gen_duration = -1
+        props.render_result.render_start_time = -1
+        props.render_result.render_duration = -1
+        return {'FINISHED'}
+
 class WFC3DProgress:
     def __init__(self, max_count, context, prop_prefix = '', cursor = True, end_callback = None):
         self.max_count = max_count
@@ -271,4 +286,4 @@ class WFC3D_OT_CherryPicking(bpy.types.Operator):
         return {'FINISHED'}
 
 
-operators = [ WFC3D_OT_AutoGenerateToggle, WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]
+operators = [ WFC3D_OT_ResetRenderResult, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]
