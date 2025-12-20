@@ -82,8 +82,8 @@ def generate_model_task(props, generator, progress):
         idx += 1
         if generator.generate_task(progress): continue
         renderer = WFC3DRenderer(generator, props)
-        renderer.init_target_collection(progress)
         start_render_result(props, generator)
+        renderer.init_target_collection(progress)
         bpy.app.timers.register(functools.partial(render_model_task, props, renderer, progress))
         return None
     return 0

@@ -121,7 +121,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         if props.render_result.cell_count > 0:
             result = f"{props.render_result.cell_count}"
             result += f" / ∅ {props.render_result.empty_cells}" if props.render_result.empty_cells > -1 else ""
-            result += f"  ⏲ {props.render_result.gen_duration:.02f}s" if props.render_result.gen_duration > -1 else ""
+            result += f"  ⏲ {props.render_result.gen_duration:.2f}s" if props.render_result.gen_duration > -1 else ""
             result += f" / {props.render_result.render_duration:.2f}s" if props.render_result.render_duration > -1 else ""
             result += f" ∑ {props.render_result.gen_duration + props.render_result.render_duration:.2f}s" if props.render_result.gen_duration > -1 and props.render_result.render_duration > -1 else ""
             layout.label(text=result, icon="RENDER_RESULT")
