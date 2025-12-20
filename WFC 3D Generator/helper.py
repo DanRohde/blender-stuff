@@ -474,7 +474,10 @@ def get_seeds(_self, context):
 
 def handle_seed_selection(self, context):
     item = self.seeds_input_list[int(self.seeds)]
-    # the order matters!
+
+    auto_generate = self.auto_generate
+    self.auto_generate = False
+
     self.collection_obj = item.collection_obj
     self.random_start_cell = item.random_start_cell
     self.grid_size = item.grid_size
@@ -483,6 +486,8 @@ def handle_seed_selection(self, context):
     self.odd_offset = item.odd_offset
     self.use_constraints = item.use_constraints
     self.entropy_type = item.entropy_type
+
+    self.auto_generate = auto_generate
     self.seed = item.seed
 
 def seed_in_seeds_list(props):
