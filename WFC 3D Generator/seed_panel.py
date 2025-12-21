@@ -63,7 +63,7 @@ class WFC3DSeedsPanel(bpy.types.Panel):
         r.label(text=f"Number of Random Seed Bookmarks: {len(props.seeds_input_list)}")
         col = row.column()
         c = col.column()
-        c.operator("object.wfc_set_seed", icon="TRIA_UP")
+        c.operator("object.wfc_set_seed", icon="RIGHTARROW")
         c.enabled = sel_count == 1
         col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props)[0])
         c = col.column()
