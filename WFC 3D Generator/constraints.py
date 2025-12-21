@@ -279,23 +279,23 @@ class WFC3DConstraints:
         weight = 0
         for d in DIRECTIONS:
             dl = d.lower()
-            if dl not in self.constraints[name] or self.constraints[name][dl] == "":
+            if dl not in self.constraints[name] or self.constraints[name][dl] == "" or self.constraints[name][dl] is None:
                 weight += len(self.objects)
             else:
                 weight += len(self.constraints[name][dl])
 
         for c in CONNECTOR_CONSTRAINTS:
-            if c not in self.constraints[name] or self.constraints[name][c] == "":
+            if c not in self.constraints[name] or self.constraints[name][c] == "" or self.constraints[name][c] is None:
                 weight += len(self.objects)
             else:
                 weight += 1
         for c in GRID_CONSTRAINTS:
-            if c not in self.constraints[name] or self.constraints[name][c] == "":
+            if c not in self.constraints[name] or self.constraints[name][c] == "" or self.constraints[name][c] is None:
                 weight += len(self.objects)
             else:
                 weight += len(self.constraints[name][c])
         for c in REGION_CONSTRAINTS:
-            if c not in self.constraints[name] or self.constraints[name][c] == "":
+            if c not in self.constraints[name] or self.constraints[name][c] == "" or self.constraints[name][c] is None:
                 weight += len(self.objects)
 
         weight += len(self.constraints[name]['mult_conn'])
