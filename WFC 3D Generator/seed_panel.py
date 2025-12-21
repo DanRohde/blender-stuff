@@ -7,7 +7,9 @@ class WFC3D_UL_SeedsList(bpy.types.UIList):
         row = layout.row()
         col = row.column()
         row = col.row()
-        row.prop(item, "selected", text=f"{index+1}) Seed: {item.seed}", icon="BOOKMARKS",)
+        c = row.column()
+        c.alignment = "LEFT"
+        c.prop(item, "selected", text=f"{index+1}) Seed: {item.seed}", icon="BOOKMARKS",)
         row.prop(item, "note", text="")
         row = col.row()
         row.label(text=f"Source: {item.collection_obj.name}")
