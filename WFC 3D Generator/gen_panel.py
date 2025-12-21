@@ -120,7 +120,8 @@ class WFC3DGeneratePanel(bpy.types.Panel):
                 row.operator("object.wfc_3d_toggle_button", icon='PAUSE', depress=props.paused_delayed_renderer).prop_name="paused_delayed_renderer"
                 row.operator("object.wfc_3d_stop_button", text="",icon='EVENT_MEDIASTOP').prop_name="running_delayed_renderer"
         if props.render_result.cell_count > 0:
-            row = layout.row()
+            box = layout.box()
+            row = box.row()
             result = f"{props.render_result.cell_count}"
             result += f" / ∅ {props.render_result.empty_cells}" if props.render_result.empty_cells > -1 else ""
             result += f"  ⏲ {props.render_result.gen_duration:.2f}s" if props.render_result.gen_duration > -1 else ""
@@ -129,10 +130,10 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             row.label(text=result, icon="RENDER_RESULT")
             if props.render_result.render_duration > -1: row.operator("object.wfc_3d_reset_render_result", icon="PANEL_CLOSE")
             if props.render_result.object_count != "":
-                row = layout.grid_flow(columns=3)
+                gf = box.grid_flow(columns=3)
                 oc = json.loads(props.render_result.object_count)
                 for o in sorted(oc.items(), key=lambda x: x[0]):
-                    row.label(text=f"{o[0]}: {o[1]}")
+                    gf.label(text=f"{o[0]}: {o[1]}")
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon="INFO_LARGE")
         if props.collection_obj is not None and props.collection_obj.name == props.target_collection:

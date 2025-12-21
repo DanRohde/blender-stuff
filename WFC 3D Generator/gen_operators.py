@@ -3,6 +3,7 @@ import time
 import gc
 import functools
 import json
+import numpy as np
 from .generator import WFC3DGenerator
 from .renderer import WFC3DRenderer
 
@@ -35,6 +36,10 @@ def start_render_result(props, generator):
         for y in range(generator.grid.grid_size[1]):
             for z in range(generator.grid.grid_size[2]):
                 if len(generator.grid.grid[x, y, z]) == 1: counts[generator.grid.grid[x, y, z][0]] += 1
+    if "dimensions" in generator.constraints.active_constraints:
+        for o in generator.objects:
+            counts[o.name] = int(counts[o.name] / np.prod(generator.constraints.constraints[o.name]["dim_xyz"]))
+
     props.render_result.object_count = json.dumps(counts)
 
 def end_render_result(props):

@@ -629,7 +629,7 @@ class WFC3DConstraints:
         if len(self.grid.grid[x,y,z])==0: return []
         current_obj = self.grid.grid[x,y,z][0]
         dimensions = self.constraints[current_obj]["dim_xyz"]
-        dim_fac = dimensions[0] * dimensions[1] * dimensions[2]
+        dim_fac = np.prod(dimensions)
         # grid frequency
         if self.constraints[current_obj]["freq_grid"]>-1:
             count = self.grid.count_obj(current_obj) / dim_fac
@@ -637,7 +637,7 @@ class WFC3DConstraints:
 
         if self.constraints[current_obj]["freq_grid_pct"] > -1:
             count = self.grid.count_obj(current_obj) / dim_fac
-            max_count = self.constraints[current_obj]["freq_grid_pct"]/100 * self.grid.grid_size[0] * self.grid.grid_size[1] * self.grid.grid_size[2]
+            max_count = self.constraints[current_obj]["freq_grid_pct"]/100 * np.prod(self.grid.grid_size)
             if count >= max_count: self.grid.remove_obj(current_obj)
 
         # neighbor frequency
