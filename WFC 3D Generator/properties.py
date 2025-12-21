@@ -149,7 +149,7 @@ class WFC3DSeedsListItem(bpy.types.PropertyGroup):
     random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False,)
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection)
     entropy_type: bpy.props.EnumProperty(name="Entropy", items=[('number', 'Number', 'Number of permitted elements.'), ('optimized', 'Optimized', 'Optimized weight-based entropy.'), ('shannon', 'Shannon', 'Shannon-based entropy.')])
-    note: bpy.props.StringProperty(name="Note", description="Note")
+    note: bpy.props.StringProperty(name="Note", description="Optional note shown as a tooltip")
     timestamp: bpy.props.StringProperty(name="", description="Timestamp")
     selected: bpy.props.BoolProperty(default=False, name="")
     use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)
