@@ -47,7 +47,7 @@ class WFC3DSeedsPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         props = context.scene.wfc_props
-
+        sel_count = count_selected_items(props.seeds_input_list)
         row = layout.row()
         col = row.column()
         col.template_list("WFC3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx", rows=1, maxrows=2)
@@ -55,10 +55,13 @@ class WFC3DSeedsPanel(bpy.types.Panel):
         draw_list_order_actions(props, r, "seeds_input_list")
         r.label(text=f"Number of Random Seed Bookmarks: {len(props.seeds_input_list)}")
         col = row.column()
+        c = col.column()
+        c.operator("object.wfc_set_seed", icon="TRIA_UP")
+        c.enabled = sel_count == 1
         col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props)[0])
         c = col.column()
         c.operator("object.wfc_remove_seed_list_items", icon="REMOVE", text="")
-        c.enabled = count_selected_items(props.seeds_input_list) > 0
+        c.enabled = sel_count > 0
         col.separator()
         draw_list_selection_actions(props, col, "seeds_input_list")
 

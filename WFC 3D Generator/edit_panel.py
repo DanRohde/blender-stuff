@@ -202,7 +202,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         if props.info_toggle: self.draw_info_panel(layout, props, obj)
         if props.edit_constraints != "":
             row = layout.row()
-            row.operator("object.wfc_open_web_link", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
+            row.operator("object.wfc_open_web_link", icon="URL", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
     def draw_neighbor_panel(self, props, layout, obj, _obj_name):
         box = layout.box()
         row = box.row()
