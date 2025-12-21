@@ -181,6 +181,7 @@ class WFC3DRenderResult(bpy.types.PropertyGroup):
     gen_duration: bpy.props.FloatProperty()
     render_start_time: bpy.props.FloatProperty()
     render_duration: bpy.props.FloatProperty()
+    object_count: bpy.props.StringProperty()
 
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)

@@ -1,4 +1,5 @@
 import bpy
+import json
 from .helper import seed_in_seeds_list
 class WFC3DGeneratePanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
@@ -127,6 +128,11 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             result += f" ∑ {props.render_result.gen_duration + props.render_result.render_duration:.2f}s" if props.render_result.gen_duration > -1 and props.render_result.render_duration > -1 else ""
             row.label(text=result, icon="RENDER_RESULT")
             if props.render_result.render_duration > -1: row.operator("object.wfc_3d_reset_render_result", icon="PANEL_CLOSE")
+            if props.render_result.object_count != "":
+                row = layout.grid_flow(columns=3)
+                oc = json.loads(props.render_result.object_count)
+                for o in sorted(oc.items(), key=lambda x: x[0]):
+                    row.label(text=f"{o[0]}: {o[1]}")
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon="INFO_LARGE")
         if props.collection_obj is not None and props.collection_obj.name == props.target_collection:

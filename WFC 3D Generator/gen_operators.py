@@ -2,6 +2,7 @@ import bpy
 import time
 import gc
 import functools
+import json
 from .generator import WFC3DGenerator
 from .renderer import WFC3DRenderer
 
@@ -21,11 +22,20 @@ def init_render_result(props):
     props.render_result.gen_duration = -1
     props.render_result.render_start_time = -1
     props.render_result.render_duration = -1
+    props.render_result.object_count = ""
 
 def start_render_result(props, generator):
     props.render_result.gen_duration = time.perf_counter() - props.render_result.gen_start_time
     props.render_result.empty_cells = generator.grid.count_empty_cells()
     props.render_result.render_start_time = time.perf_counter()
+    counts = {}
+    for o in generator.objects:
+        counts[o.name] = 0
+    for x in range(generator.grid.grid_size[0]):
+        for y in range(generator.grid.grid_size[1]):
+            for z in range(generator.grid.grid_size[2]):
+                if len(generator.grid.grid[x, y, z]) == 1: counts[generator.grid.grid[x, y, z][0]] += 1
+    props.render_result.object_count = json.dumps(counts)
 
 def end_render_result(props):
     props.render_result.render_duration = time.perf_counter() - props.render_result.render_start_time
@@ -119,6 +129,7 @@ class WFC3D_OT_ResetRenderResult(bpy.types.Operator):
         props.render_result.gen_duration = -1
         props.render_result.render_start_time = -1
         props.render_result.render_duration = -1
+        props.render_result.object_count = ""
         return {'FINISHED'}
 
 class WFC3DProgress:
