@@ -1,7 +1,7 @@
 import bpy
 from datetime import datetime
 
-from .constants import DIRECTIONS, OPPOSITE_DIRECTIONS, GRID_CONSTRAINTS
+from .constants import DIRECTIONS, OPPOSITE_DIRECTIONS, GRID_CONSTRAINTS, FACE_DIRECTIONS, EDGE_DIRECTIONS, CORNER_DIRECTIONS
 
 def add_log_entry(severity, entry, description = ""):
     props = bpy.context.scene.wfc_props
@@ -16,19 +16,41 @@ def clear_log():
     log = props.validator_output_list
     log.clear()
 
-def collect_connector_names(obj, d, conn_names, conn_obj_names):
-    if 'wfc_conn_' + d.lower() in obj:
-        cp = 'wfc_conn_' + d.lower()
-        if d in conn_names:
-            if obj[cp] not in conn_names[d]: conn_names[d].append(obj[cp])
-            if obj[cp] in conn_obj_names[d]:
-                conn_obj_names[d][obj[cp]].append(obj.name)
-            else:
-                conn_obj_names[d][obj[cp]] = [obj.name]
+def _set_connector_names(obj, direction, connector_name, conn_names, conn_obj_names):
+    if direction.startswith("ANY"):
+        if direction == "ANY": directions = { **FACE_DIRECTIONS, **EDGE_DIRECTIONS , **CORNER_DIRECTIONS }
+        elif direction == "ANY_FACE": directions = FACE_DIRECTIONS
+        elif direction == "ANY_EDGE": directions = EDGE_DIRECTIONS
+        elif direction == "ANY_CORNER": directions = CORNER_DIRECTIONS
+        else: directions = []
+        for d in directions:
+            _set_connector_names(obj, d, connector_name, conn_names, conn_obj_names)
+        return
+    if direction in conn_names:
+        if connector_name not in conn_names[direction]: conn_names[direction].append(connector_name)
+        if connector_name in conn_obj_names[direction]:
+            conn_obj_names[direction][connector_name].append(obj.name)
         else:
-            conn_names[d] = [obj[cp]]
-            conn_obj_names[d] = {obj[cp]: [obj.name]}
+            conn_obj_names[direction][connector_name] = [obj.name]
+    else:
+        conn_names[direction] = [connector_name]
+        conn_obj_names[direction] = {connector_name: [obj.name]}
 
+
+def collect_connector_names(obj, direction, conn_names, conn_obj_names):
+    if 'wfc_conn_' + direction.lower() in obj:
+        cp = 'wfc_conn_' + direction.lower()
+        connector_name = obj[cp]
+        _set_connector_names(obj, direction, connector_name, conn_names, conn_obj_names)
+
+def collect_multiple_connector_names(obj, conn_names, conn_obj_names):
+    directions = list(DIRECTIONS)
+    idx = 0
+    while f"wfc_mult_conn_direction_{idx}" in obj:
+        direction = directions[obj[f"wfc_mult_conn_direction_{idx}"]]
+        connector_name = obj[f"wfc_mult_conn_name_{idx}"]
+        _set_connector_names(obj, direction, connector_name, conn_names, conn_obj_names)
+        idx += 1
 def check_adjacency_constraints(collection, obj, conn_names, conn_obj_names):
     warn_count  = 0
     for d in DIRECTIONS:
@@ -184,6 +206,7 @@ def check_collection(collection):
         warn_count += check_region_frequency_constraints(obj)
         warn_count += check_noise_constraints(obj)
         warn_count += check_distance_constraints(obj)
+        collect_multiple_connector_names(obj, conn_names, conn_obj_names)
     warn_count += check_connector_names(conn_names, conn_obj_names)
     return warn_count, error_count
 
