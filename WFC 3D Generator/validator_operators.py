@@ -51,6 +51,7 @@ def collect_multiple_connector_names(obj, conn_names, conn_obj_names):
         connector_name = obj[f"wfc_mult_conn_name_{idx}"]
         _set_connector_names(obj, direction, connector_name, conn_names, conn_obj_names)
         idx += 1
+
 def check_adjacency_constraints(collection, obj, conn_names, conn_obj_names):
     warn_count  = 0
     for d in DIRECTIONS:
