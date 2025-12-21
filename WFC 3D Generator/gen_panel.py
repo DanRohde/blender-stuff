@@ -49,7 +49,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         col = row.column()
         col.prop(props, "copy_modifiers")
         col.enabled = props.link_objects
-        
+
         row = box.row()
         row.prop(props, "remove_target_collection")
         col = row.column()
