@@ -36,18 +36,25 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row.enabled = not props.auto_detect_spacing
         box.label(text="Odd Offset")
         box.row().prop(props, "odd_offset")
-        
+        box.label(text="Location")
+        box.row().prop(props, "location")
+
         box.prop(props, "use_constraints")
         
         layout.label(text="Target Collection")
         box = layout.box()
         box.prop(props, "target_collection")
-        box.prop(props, "link_objects")
-        row=box.row()
-        row.prop(props, "copy_modifiers")
-        row.enabled = props.link_objects
-        box.prop(props, "remove_target_collection")
-
+        row = box.row()
+        row.prop(props, "link_objects")
+        col = row.column()
+        col.prop(props, "copy_modifiers")
+        col.enabled = props.link_objects
+        
+        row = box.row()
+        row.prop(props, "remove_target_collection")
+        col = row.column()
+        col.prop(props, "hide_last_target_collections")
+        col.enabled = not props.remove_target_collection
 
         box = layout.box()
         row = box.row()

@@ -12,6 +12,7 @@ class WFC3DRenderer:
         self.collapsed_cells = self.generator.collapsed_cells
         self.target_collection_obj = None
         self.odd_offset = self.props.odd_offset
+        self.location = self.props.location
         self.link_objects = self.props.link_objects
         self.spacing = self.generator.spacing
         self.progress = None
@@ -109,7 +110,8 @@ class WFC3DRenderer:
                 new_obj = original_obj.copy()
                 new_obj.data = original_obj.data.copy()
 
-            new_location = [x * self.spacing[0] + (self.odd_offset[0] * (y % 2)), y * self.spacing[1] + (self.odd_offset[1] * (x % 2)), z * self.spacing[2] + (self.odd_offset[2] * (x % 2))]
+            lx, ly, lz = self.location
+            new_location = [lx + x * self.spacing[0] + (self.odd_offset[0] * (y % 2)), ly + y * self.spacing[1] + (self.odd_offset[1] * (x % 2)), lz + z * self.spacing[2] + (self.odd_offset[2] * (x % 2))]
 
             new_obj.location = tuple(new_location)
 
@@ -124,5 +126,7 @@ class WFC3DRenderer:
         self.grid = None
         self.props = None
         self.spacing = None
+        self.odd_offset = None
+        self.location = None
         self.target_collection_obj = None
         self.progress = None

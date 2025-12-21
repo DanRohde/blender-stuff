@@ -475,15 +475,9 @@ def get_seeds(_self, context):
 def set_generator_properties_from_bookmark(props, item):
     auto_generate = props.auto_generate
     props.auto_generate = False
-
-    props.collection_obj = item.collection_obj
-    props.random_start_cell = item.random_start_cell
-    props.grid_size = item.grid_size
-    props.spacing = item.spacing
-    props.auto_detect_spacing = item.auto_detect_spacing
-    props.odd_offset = item.odd_offset
-    props.use_constraints = item.use_constraints
-    props.entropy_type = item.entropy_type
+    for k in item.keys():
+        if k == 'seeds' or k == 'selected': continue
+        setattr(props, k, getattr(item, k))
 
     props.auto_generate = auto_generate
     props.seed = item.seed
@@ -502,5 +496,6 @@ def seed_in_seeds_list(props):
                  and list(item.grid_size) == list(props.grid_size)
                  and list(item.spacing) == list(props.spacing)
                  and list(item.odd_offset) == list(props.odd_offset)
+                 and list(item.location) == list(props.location)
                  ]
     return len(seed_idx) > 0, seed_idx

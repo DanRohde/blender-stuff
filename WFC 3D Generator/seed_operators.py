@@ -43,6 +43,7 @@ class WFC3D_OT_AddSeedListItem(bpy.types.Operator):
         item.spacing = list(props.spacing)
         item.auto_detect_spacing = props.auto_detect_spacing
         item.odd_offset = list(props.odd_offset)
+        item.location = list(props.location)
         item.use_constraints = props.use_constraints
         item.random_start_cell = props.random_start_cell
         item.collection_obj = props.collection_obj

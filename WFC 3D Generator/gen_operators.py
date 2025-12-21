@@ -9,7 +9,7 @@ from .renderer import WFC3DRenderer
 
 
 def hide_old_target_collections(props):
-    if not props.remove_target_collection:
+    if not props.remove_target_collection and props.hide_last_target_collections:
         vl = bpy.context.view_layer
         for c in vl.layer_collection.children:
             if c.name.startswith(props.target_collection): c.hide_viewport = True
