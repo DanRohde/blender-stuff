@@ -23,7 +23,7 @@ class WFC3D_UL_SeedsList(bpy.types.UIList):
             col.row().label(text="Automatic spacing detection", icon="CHECKBOX_HLT")
         else:
             row = col.row(align=True)
-            row.column(align=True).label(text=f"Cell Spacing: ")
+            row.column(align=True).label(text=f"Space: ")
             row.column(align=True).label(text=f"{item.spacing[0]:5.2f} m")
             row.column(align=True).label(text=f"{item.spacing[1]:5.2f} m")
             row.column(align=True).label(text=f"{item.spacing[2]:5.2f} m")
