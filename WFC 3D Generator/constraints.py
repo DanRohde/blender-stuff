@@ -235,10 +235,7 @@ class WFC3DConstraints:
             if not self.constraints[name]['region_level_mid'] and 2  < pos[2] < self.grid.grid_size[2]-2: return False
             if not self.constraints[name]['region_level_penultimate'] and pos[2] == self.grid.grid_size[2]-2: return False
             if not self.constraints[name]['region_level_top'] and pos[2] == self.grid.grid_size[2]-1: return False
-        if "noise" in self.active_constraints:
-            if self.constraints[name]['noise_prob_basis'] > 1:
-                n = get_noise(self.apply_noise_randomize_position_constraint(name, pos), self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
-                return n >= self.constraints[name]['noise_prob_threshold']
+
         if "grid" in self.active_constraints:
             if self.grid.is_corner(pos) and len(self.constraints[name]['corners']) > 0:
                 ret = False
@@ -269,6 +266,10 @@ class WFC3DConstraints:
             for i in range(len(self.constraints[name]['regfreq_freq'])):
                 if ((self.constraints[name]['regfreq_freq'][i] == 0 or (i < len(self.constraints[name]['regfreq_freq_pct']) and self.constraints[name]['regfreq_freq_pct'][i] == 0))
                         and  self.grid.is_inside_region(pos, self.grid.fix_position(self.constraints[name]['regfreq_min'][i]), self.grid.fix_position(self.constraints[name]['regfreq_max'][i]))): return False
+        if "noise" in self.active_constraints:
+            if self.constraints[name]['noise_prob_basis'] > 1:
+                n = get_noise(self.apply_noise_randomize_position_constraint(name, pos), self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
+                return n >= self.constraints[name]['noise_prob_threshold']
         return True
 
     def get_auto_weight(self, name):
