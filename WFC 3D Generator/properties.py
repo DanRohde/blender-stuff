@@ -144,7 +144,7 @@ class WFC3DSeedsListItem(bpy.types.PropertyGroup):
     seed: bpy.props.IntProperty(name="", description="Random seed")
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3)
     spacing: bpy.props.FloatVectorProperty(name="", description="Size of a Grid Cell", subtype="TRANSLATION",)
-    auto_detect_spacing: bpy.props.BoolProperty(name="Auto-detect", description="Automatic spacing detection", default=False,)
+    auto_detect_spacing: bpy.props.BoolProperty(name="Auto-detect", description="Automatic cell space detection", default=False,)
     odd_offset: bpy.props.FloatVectorProperty(name="", description="Odd Offset", subtype="TRANSLATION")
     location: bpy.props.FloatVectorProperty(name="", description="Location", subtype="TRANSLATION", default=(0.0, 0.0, 0.0), precision=3)
     random_start_cell: bpy.props.BoolProperty(name="Random Start Cell", description="Random start cell", default=False,)
