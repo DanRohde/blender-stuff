@@ -4,6 +4,7 @@ import gc
 import functools
 import json
 import numpy as np
+import re
 from .generator import WFC3DGenerator
 from .renderer import WFC3DRenderer
 
@@ -301,5 +302,23 @@ class WFC3D_OT_CherryPicking(bpy.types.Operator):
             props.cherry_picking_running = False
         return {'FINISHED'}
 
-
-operators = [ WFC3D_OT_ResetRenderResult, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]
+class WFC3D_OT_TargetCollectionIncNumber(bpy.types.Operator):
+    bl_idname = "object.wfc3d_target_collection_inc_number"
+    bl_label = ""
+    bl_description = "Increment/Decrement Number in Name"
+    operator_name: bpy.props.StringProperty(default="+")
+    def execute(self, context):
+        props = context.scene.wfc_props
+        match = re.search(r'(\d+)$', props.target_collection)
+        summand = 1 if self.operator_name != "-" else -1
+        if match:
+            number = match.group(1)
+            if self.operator_name == "-" and int(number) == 0:
+                props.target_collection = props.target_collection[:match.start()]
+                return {'FINISHED'}
+            new_number = str(int(number) + summand).zfill(len(number))
+            props.target_collection = props.target_collection[:match.start()] + new_number
+        else:
+            props.target_collection = props.target_collection + "000"
+        return {'FINISHED'}
+operators = [ WFC3D_OT_TargetCollectionIncNumber, WFC3D_OT_ResetRenderResult, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]

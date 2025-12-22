@@ -41,12 +41,16 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         col.prop(props, "location")
 
         row = box.row()
-        row.prop(props, "use_constraints")
         row.prop(props, "auto_detect_spacing")
+        row.prop(props, "use_constraints")
 
         layout.label(text="Target Collection")
         box = layout.box()
-        box.prop(props, "target_collection")
+        row = box.row()
+        row.prop(props, "target_collection")
+        row.operator("object.wfc3d_target_collection_inc_number", icon="REMOVE").operator_name = "-"
+        row.operator("object.wfc3d_target_collection_inc_number", icon="ADD").operator_name = "+"
+        
         row = box.row()
         row.prop(props, "link_objects")
         col = row.column()
