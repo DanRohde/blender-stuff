@@ -78,7 +78,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         col.enabled = props.use_constraints
         row = box.row()
         if props.search_running:
-            row.progress(factor=props.search_progress,text=f"{round(props.search_progress*100)}% (et: {round(props.search_progress_elapsed_time,0):.0f}s/eta: {props.search_progress_eta:.0f}s)", type="BAR")
+            row.progress(factor=props.search_progress,text=f"{round(props.search_progress*100)}% (et {round(props.search_progress_elapsed_time,0):.0f}s/eta {props.search_progress_eta:.0f}s)", type="BAR")
             row.operator("object.wfc_3d_toggle_button", icon="PAUSE", depress=props.search_paused).prop_name = 'search_paused'
             row.operator("object.wfc_3d_stop_button", icon="EVENT_MEDIASTOP").prop_name = 'search_running'
         else:
