@@ -29,18 +29,21 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             row.prop(props, "background_generation")
             row.prop(props, "background_iterations")
         row = box.row()
-        row.label(text="Grid Cell Space")
-        row.prop(props, "auto_detect_spacing")
-        row = box.row()
-        row.prop(props, "spacing")
-        row.enabled = not props.auto_detect_spacing
-        box.label(text="Odd Offset")
-        box.row().prop(props, "odd_offset")
-        box.label(text="Location")
-        box.row().prop(props, "location")
+        col = row.column()
+        col.label(text="Space")
+        col.prop(props, "spacing")
+        col.enabled = not props.auto_detect_spacing
+        col = row.column()
+        col.label(text="Odd Offset")
+        col.prop(props, "odd_offset")
+        col = row.column()
+        col.label(text="Location")
+        col.prop(props, "location")
 
-        box.prop(props, "use_constraints")
-        
+        row = box.row()
+        row.prop(props, "use_constraints")
+        row.prop(props, "auto_detect_spacing")
+
         layout.label(text="Target Collection")
         box = layout.box()
         box.prop(props, "target_collection")
