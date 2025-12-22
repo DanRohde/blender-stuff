@@ -48,8 +48,8 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         box = layout.box()
         row = box.row()
         row.prop(props, "target_collection")
-        row.operator("object.wfc3d_target_collection_inc_number", icon="REMOVE").operator_name = "-"
-        row.operator("object.wfc3d_target_collection_inc_number", icon="ADD").operator_name = "+"
+        row.operator("object.wfc3d_target_collection_inc_number", icon="REMOVE").operator = "-"
+        row.operator("object.wfc3d_target_collection_inc_number", icon="ADD").operator = "+"
 
         row = box.row()
         row.prop(props, "link_objects")
@@ -133,11 +133,11 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         if props.render_result.cell_count > 0:
             box = layout.box()
             row = box.row()
-            result = f"{props.render_result.cell_count}"
-            result += f" / ∅ {props.render_result.empty_cells}" if props.render_result.empty_cells > -1 else ""
-            result += f"  ⏲ {props.render_result.gen_duration:.2f}s" if props.render_result.gen_duration > -1 else ""
-            result += f" / {props.render_result.render_duration:.2f}s" if props.render_result.render_duration > -1 else ""
-            result += f" ∑ {props.render_result.gen_duration + props.render_result.render_duration:.2f}s" if props.render_result.gen_duration > -1 and props.render_result.render_duration > -1 else ""
+            result = f"C:{props.render_result.cell_count}"
+            result += f" E:{props.render_result.empty_cells}" if props.render_result.empty_cells > -1 else ""
+            result += f" T:{props.render_result.gen_duration:.2f}s" if props.render_result.gen_duration > -1 else ""
+            result += f"/{props.render_result.render_duration:.2f}s" if props.render_result.render_duration > -1 else ""
+            result += f"/{props.render_result.gen_duration + props.render_result.render_duration:.2f}s" if props.render_result.gen_duration > -1 and props.render_result.render_duration > -1 else ""
             row.label(text=result, )
             if props.render_result.render_duration > -1: row.operator("object.wfc_3d_reset_render_result", icon="PANEL_CLOSE")
             if props.render_result.object_count != "":

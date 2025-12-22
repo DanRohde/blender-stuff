@@ -179,7 +179,7 @@ class WFC3DBackgroundSearch:
     def __init__(self):
         self.progress = None
         self.props = None
-        self.auto_generator = False
+        self.auto_generate = False
         self.mincount = 2**63 - 1
         self.minseed = 0
         self.context = None
@@ -306,14 +306,14 @@ class WFC3D_OT_TargetCollectionIncNumber(bpy.types.Operator):
     bl_idname = "object.wfc3d_target_collection_inc_number"
     bl_label = ""
     bl_description = "Increment/Decrement Number in Name"
-    operator_name: bpy.props.StringProperty(default="+")
+    operator:  bpy.props.StringProperty(default="+")
     def execute(self, context):
         props = context.scene.wfc_props
         match = re.search(r'(\d+)$', props.target_collection)
-        summand = 1 if self.operator_name != "-" else -1
+        summand = 1 if self.operator != "-" else -1
         if match:
             number = match.group(1)
-            if self.operator_name == "-" and int(number) == 0:
+            if self.operator == "-" and int(number) == 0:
                 props.target_collection = props.target_collection[:match.start()]
                 return {'FINISHED'}
             new_number = str(int(number) + summand).zfill(len(number))
