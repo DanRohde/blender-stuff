@@ -50,7 +50,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row.prop(props, "target_collection")
         row.operator("object.wfc3d_target_collection_inc_number", icon="REMOVE").operator_name = "-"
         row.operator("object.wfc3d_target_collection_inc_number", icon="ADD").operator_name = "+"
-        
+
         row = box.row()
         row.prop(props, "link_objects")
         col = row.column()
@@ -138,7 +138,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             result += f"  ⏲ {props.render_result.gen_duration:.2f}s" if props.render_result.gen_duration > -1 else ""
             result += f" / {props.render_result.render_duration:.2f}s" if props.render_result.render_duration > -1 else ""
             result += f" ∑ {props.render_result.gen_duration + props.render_result.render_duration:.2f}s" if props.render_result.gen_duration > -1 and props.render_result.render_duration > -1 else ""
-            row.label(text=result, icon="RENDER_RESULT")
+            row.label(text=result, )
             if props.render_result.render_duration > -1: row.operator("object.wfc_3d_reset_render_result", icon="PANEL_CLOSE")
             if props.render_result.object_count != "":
                 gf = box.grid_flow(columns=3)

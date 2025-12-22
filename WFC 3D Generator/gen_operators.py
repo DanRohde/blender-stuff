@@ -119,7 +119,7 @@ class WFC3D_OT_Generate(bpy.types.Operator):
     def execute(self, context):
         props = context.scene.wfc_props
         generate_model(props, context)
-        self.report({'INFO'}, "WFC 3D model successfully generated!")
+        self.report({'INFO'}, "The WFC 3D model was successfully generated.")
         return {'FINISHED'}
 
 class WFC3D_OT_ResetRenderResult(bpy.types.Operator):
