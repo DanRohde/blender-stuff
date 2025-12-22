@@ -92,6 +92,12 @@ class WFC3DRenderer:
             if self.link_objects:
                 try:
                     new_obj = bpy.data.objects.new(name=original_obj.name, object_data=original_obj.data)
+
+                    new_obj.rotation_mode = original_obj.rotation_mode
+                    new_obj.scale = original_obj.scale.copy()
+                    new_obj.rotation_euler = original_obj.rotation_euler.copy()
+                    new_obj.rotation_quaternion = original_obj.rotation_quaternion.copy()
+                    new_obj.rotation_axis_angle = original_obj.rotation_axis_angle[:]
                 except:
                     new_obj = original_obj.copy()
                     new_obj.data = original_obj.data.copy()

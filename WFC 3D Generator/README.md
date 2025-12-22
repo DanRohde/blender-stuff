@@ -92,8 +92,7 @@ More information about the constraints can be found on [GitHub](https://github.c
 * Region constraints don't work with all symmetry constraint variants
 * Dimensions constraints can cause empty cells, especially in conjunction with symmetry constraints
 * Not all frequency constraints work with dimensions constraints.
-* WFC 3D Rotation Tool does not rotate multiple connector constraints and connector exclusion constraints yet
-
+* Geometry constraints only work when transformations such as scaling and rotation have been applied.
 
 ## Upcoming Features
 * some tutorials and documentation (thx, David-rD, for your feedback)
