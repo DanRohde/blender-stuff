@@ -70,17 +70,17 @@ def rotate_properties(props, obj, axis, angle):
             rdl = rd[d].lower()
 
             if dl in cache:
-                objprops[rdl] = cache[dl]
-                objprops[f"conn_{rdl}"] = cache[f"conn_{dl}"]
-                if d in FACE_DIRECTIONS: objprops[f"geo_{rdl}"] = cache[f"geo_{dl}"]
+                if props.rt_neighbor: objprops[rdl] = cache[dl]
+                if props.rt_connector: objprops[f"conn_{rdl}"] = cache[f"conn_{dl}"]
+                if props.rt_geometry and d in FACE_DIRECTIONS: objprops[f"geo_{rdl}"] = cache[f"geo_{dl}"]
             else:
-                cache[rdl] = objprops[rdl]
-                objprops[rdl] = objprops[dl]
-
-                cache[f"conn_{rdl}"] = objprops[f"conn_{rdl}"]
-                objprops[f"conn_{rdl}"] = objprops[f"conn_{dl}"]
-
-                if d in FACE_DIRECTIONS:
+                if props.rt_neighbor:
+                    cache[rdl] = objprops[rdl]
+                    objprops[rdl] = objprops[dl]
+                if props.rt_connector:
+                    cache[f"conn_{rdl}"] = objprops[f"conn_{rdl}"]
+                    objprops[f"conn_{rdl}"] = objprops[f"conn_{dl}"]
+                if props.rt_geometry and d in FACE_DIRECTIONS:
                     cache[f"geo_{rdl}"] = objprops[f"geo_{rdl}"]
                     objprops[f"geo_{rdl}"] = objprops[f"geo_{dl}"]
         if props.rt_conn_excl:

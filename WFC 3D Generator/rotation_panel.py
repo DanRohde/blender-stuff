@@ -54,7 +54,7 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
         row.column(align=True).prop(props, "rt_mult_conn")
         row.column(align=True).prop(props, "rt_empty")
 
-        if not props.rt_neighbor and not props.rt_connector and not props.rt_geometry: return
+        if not props.rt_neighbor and not props.rt_connector and not props.rt_geometry and not props.rt_conn_excl and not props.rt_mult_conn and not props.rt_empty: return
 
         layout.separator()
 
