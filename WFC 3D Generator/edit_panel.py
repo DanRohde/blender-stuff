@@ -31,14 +31,17 @@ class WFC3D_UL_RegFreqList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
-        col.row().prop(item,"selected", text=f"{index}.")
-        col = row.column(align=True)
-        col.row().prop(item,"regfreq_name")
+        row = col.row()
+        row.alignment = 'LEFT'
+        row.column(align=True).prop(item,"selected", text=f"{index}.")
+        row.column(align=True).prop(item,"regfreq_name", text="")
         col.row().prop(item,"regfreq_min")
         col.row().prop(item,"regfreq_max")
-        r = col.row()
-        r.prop(item,"regfreq_freq")
-        r.prop(item,"regfreq_freq_pct")
+        row = col.row()
+        row.prop(item,"regfreq_freq")
+        row.prop(item,"regfreq_freq_pct")
+        row = col.row()
+        row.separator()
 
 class WFC3D_UL_FixedPositionList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
@@ -54,14 +57,17 @@ class WFC3D_UL_RegProbList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
-        col.row().prop(item, "selected", text=f"{index}.")
-        col = row.column(align=True)
-        col.row().prop(item,"regprob_name")
-        col.row().prop(item,"regprob_min")
-        col.row().prop(item,"regprob_max")
-        nr = col.row()
-        nr.prop(item, "regprob_probability")
-        nr.prop(item, "regprob_weight")
+        row = col.row(align=True)
+        row.alignment = 'LEFT'
+        row.column(align=True).prop(item, "selected", text=f"{index}.")
+        row.column(align=True).prop(item,"regprob_name", text="")
+        col.row(align=True).prop(item,"regprob_min")
+        col.row(align=True).prop(item,"regprob_max")
+        row = col.row()
+        row.prop(item, "regprob_probability")
+        row.prop(item, "regprob_weight")
+        row = col.row()
+        row.separator()
 
 class WFC3D_UL_DistanceList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
