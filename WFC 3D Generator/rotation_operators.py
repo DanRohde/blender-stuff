@@ -12,21 +12,26 @@ def rotate_properties(props, obj, axis, angle):
     objprops = {}
     for d in ROTATE_DIRECTIONS[axis]:
         dl = d.lower()
-        if d in FACE_DIRECTIONS: objprops[f"geo_{dl}"] = obj.get(f"wfc_geo_{dl}", PROP_DEFAULTS[f"geo_{dl}"])
-        objprops[f"conn_{dl}"] = obj.get(f"wfc_conn_{dl}", PROP_DEFAULTS[f"conn_{dl}"])
-        objprops[dl] = obj.get(f"wfc_{dl}", PROP_DEFAULTS[dl])
+        if props.rt_geometry and d in FACE_DIRECTIONS: objprops[f"geo_{dl}"] = obj.get(f"wfc_geo_{dl}", PROP_DEFAULTS[f"geo_{dl}"])
+        if props.rt_connector: objprops[f"conn_{dl}"] = obj.get(f"wfc_conn_{dl}", PROP_DEFAULTS[f"conn_{dl}"])
+        if props.rt_neighbor: objprops[dl] = obj.get(f"wfc_{dl}", PROP_DEFAULTS[dl])
 
-    objprops["conn_excl"] = []
-    idx = 0
-    while f"wfc_conn_excl_direction_{idx}" in obj:
-        objprops["conn_excl"].append(obj[f"wfc_conn_excl_direction_{idx}"])
-        idx += 1
+    if props.rt_conn_excl:
+        objprops["conn_excl"] = []
+        idx = 0
+        while f"wfc_conn_excl_direction_{idx}" in obj:
+            objprops["conn_excl"].append(obj[f"wfc_conn_excl_direction_{idx}"])
+            idx += 1
 
-    objprops["mult_conn"] = []
-    idx = 0
-    while f"wfc_mult_conn_direction_{idx}" in obj:
-        objprops["mult_conn"].append(obj[f"wfc_mult_conn_direction_{idx}"])
-        idx += 1
+    if props.rt_mult_conn:
+        objprops["mult_conn"] = []
+        idx = 0
+        while f"wfc_mult_conn_direction_{idx}" in obj:
+            objprops["mult_conn"].append(obj[f"wfc_mult_conn_direction_{idx}"])
+            idx += 1
+    if props.rt_empty:
+        objprops["empty"] = obj[f"wfc_empty_neighbor"].split(",")  if f"wfc_empty_neighbor" in obj else []
+        objprops["empty_any"] = obj[f"wfc_empty_any_neighbor"].split(",") if f"wfc_empty_any_neighbor" in obj else []
 
     ## rotate:
     for a in angles:
@@ -55,6 +60,9 @@ def rotate_properties(props, obj, axis, angle):
             if props.rt_mult_conn:
                 for idx in range(len(objprops["mult_conn"])):
                     obj[f"wfc_mult_conn_direction_{idx}"] = directions.index(rd[directions[objprops["mult_conn"][idx]]])
+            if props.rt_empty:
+                if len(objprops["empty"]) > 0: obj["wfc_empty_neighbor"] = ",".join([rd[d] for d in objprops["empty"]])
+                if len(objprops["empty_any"]) > 0: obj["wfc_empty_any_neighbor"] = ",".join([rd[d] for d in objprops["empty_any"]])
         ## rotate object properties:
         cache = {}
         for d in rd:
@@ -81,7 +89,9 @@ def rotate_properties(props, obj, axis, angle):
         if props.rt_mult_conn:
             for idx in range(len(objprops["mult_conn"])):
                 objprops["mult_conn"][idx] = directions.index(rd[directions[objprops["mult_conn"][idx]]])
-
+        if props.rt_empty:
+            if len(objprops["empty"]) > 0 : objprops["empty"] = [ rd[d] for d in objprops["empty"]]
+            if len(objprops["empty_any"]) > 0: objprops["empty_any"] = [rd[d] for d in objprops["empty_any"]]
 
 def rotate_object(props, obj, offset):
     created_objects = []

@@ -1,24 +1,24 @@
 # WFC 3D Generator - Custom Properties Overview
 ## Statistics: Constraint Properties per Object
-* Neighbor constraints: 31
-* Grid constraints: 4
-* Region constraints: 9
-* Probability constraints: 3
-* Region probability constraints: 5
-* Transformations: 12
-* Frequency constraints: 12
-* Region frequency constraints: 5
-* Symmetry constraints: 19
-* Connector constraints: 30
-* Connector exclusion constraints: 2
-* Multiple connector constraints: 2
-* Fixed position constraints: 3
-* Dimensions constraints: 1
-* Geometry constraints: 10
-* Noise constraints: 5
-* Distance constraints: 8
-* Empty Neighbor constraints: 2
-* Active Constraints: 2
+* [Neighbor constraints](#neighbor-constraints): 31
+* [Grid constraints](#grid-constraints): 4
+* [Region constraints](#region-constraints): 9
+* [Probability constraints](#probability-constraints): 3
+* [Region probability constraints](#region-probability-constraints): 5
+* [Transformations](#transformations): 12
+* [Frequency constraints](#frequency-constraints): 12
+* [Region frequency constraints](#region-frequency-constraints): 5
+* [Symmetry constraints](#symmetry-constraints): 19
+* [Connector constraints](#connector-constraints): 30
+* [Connector exclusion constraints](#connector-exclusion-constraints): 2
+* [Multiple connector constraints](#multiple-connector-constraints): 2
+* [Fixed position constraints](#fixed position constraints): 3
+* [Dimensions constraints](#dimensions-constraints): 1
+* [Geometry constraints](#geometry-constraints): 10
+* [Noise constraints](#noise-constraints): 5
+* [Distance constraints](#distance-constraints): 8
+* [Empty Neighbor constraints](#empty-neighbor-constraints): 2
+* [Active Constraints](#active-constraints): 2
 * **Sum: 168**
 
 ## Neighbor Constraints
