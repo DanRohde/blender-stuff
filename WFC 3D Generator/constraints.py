@@ -260,12 +260,20 @@ class WFC3DConstraints:
                 if not ret: return ret
         if "regprob" in self.active_constraints:
             for i in range(len(self.constraints[name]['regprob_probability'])):
-                if self.constraints[name]['regprob_probability'][i] != 0 and self.constraints[name]['regprob_weight'][i] != 0: continue
-                if self.grid.is_inside_region(pos, self.grid.fix_position(self.constraints[name]['regprob_min'][i]), self.grid.fix_position(self.constraints[name]['regprob_max'][i])): return False
+                pmin = self.grid.fix_position(self.constraints[name]['regprob_min'][i])
+                pmax = self.grid.fix_position(self.constraints[name]['regprob_max'][i])
+                if self.constraints[name]['regprob_probability'][i] != 0 and self.constraints[name]['regprob_weight'][i] != 0:
+                    if self.grid.is_inside_region(pos, pmin, pmax): break
+                    continue
+                if self.grid.is_inside_region(pos, pmin, pmax): return False
         if "regfreq" in self.active_constraints:
             for i in range(len(self.constraints[name]['regfreq_freq'])):
+                pmin = self.grid.fix_position(self.constraints[name]['regfreq_min'][i])
+                pmax =  self.grid.fix_position(self.constraints[name]['regfreq_max'][i])
+                if ((self.constraints[name]['regfreq_freq'][i] > 0 and (i < len(self.constraints[name]['regfreq_freq_pct']) or self.constraints[name]['regfreq_freq_pct'][i] > 0))
+                        and self.grid.is_inside_region(pos, pmin, pmax)): break
                 if ((self.constraints[name]['regfreq_freq'][i] == 0 or (i < len(self.constraints[name]['regfreq_freq_pct']) and self.constraints[name]['regfreq_freq_pct'][i] == 0))
-                        and  self.grid.is_inside_region(pos, self.grid.fix_position(self.constraints[name]['regfreq_min'][i]), self.grid.fix_position(self.constraints[name]['regfreq_max'][i]))): return False
+                        and self.grid.is_inside_region(pos, pmin, pmax)): return False
         if "noise" in self.active_constraints:
             if self.constraints[name]['noise_prob_basis'] > 1:
                 n = get_noise(self.apply_noise_randomize_position_constraint(name, pos), self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
@@ -684,9 +692,9 @@ class WFC3DConstraints:
             rmax = self.grid.fix_position(self.constraints[obj_name]["regfreq_max"][i])
             freq = self.constraints[obj_name]["regfreq_freq"][i]
             freqpct = self.constraints[obj_name]["regfreq_freq_pct"][i] if "regfreq_freq_pct" in self.constraints[obj_name] and i < len(self.constraints[obj_name]["regfreq_freq_pct"]) else -1
-            if freq >=0 and self.grid.is_inside_region(cell, rmin, rmax):
+            if freq > 0 and self.grid.is_inside_region(cell, rmin, rmax):
                 self.grid.remove_max_region_neighbors(x,y,z,freq,rmin,rmax)
-            if freqpct >=0 and self.grid.is_inside_region(cell, rmin, rmax):
+            if freqpct > 0 and self.grid.is_inside_region(cell, rmin, rmax):
                 maxfreq = int(freqpct / 100 * abs(rmax[0] - rmin[0] + 1) * abs(rmax[1] - rmin[1] + 1) * abs(rmax[2] - rmin[2] + 1))
                 self.grid.remove_max_region_neighbors(x,y,z,maxfreq,rmin,rmax)
 
