@@ -72,9 +72,9 @@ class WFC3D_UL_RegProbList(bpy.types.UIList):
 class WFC3D_UL_DistanceList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
-        col = row.column(align=True)
-        col.row().prop(item, "selected", text=f"{index}.")
-        col = row.column(align=True)
+        ocol = row.column(align=True)
+        ocol.row().prop(item, "selected", text=f"{index}.")
+        col = ocol.column(align=True)
         col.row().prop(item, "distance")
         col.prop(item, "distance_from")
         if item.distance_from == 'object':
@@ -89,7 +89,8 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
         else:
             col.row().prop(item, "distance_subcollection")
         col.prop(item, "distance_type")
-
+        row = ocol.row()
+        row.separator()
 class WFC3D_UL_ActiveConstraintsList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.constraint, icon="SETTINGS")
