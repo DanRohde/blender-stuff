@@ -84,7 +84,8 @@ class WFC3DRenderer:
                 original_obj = self.constraints.get_random_object_from_collection(pos, bpy.data.collections[obj_name])
             else:
                 c = bpy.data.collections[obj_name]
-                original_obj = random.choice([o for o in c.objects if not o.name.startswith(get_default_empty_name())])
+                objects = [o for o in c.objects if not o.name.startswith(get_default_empty_name())]
+                original_obj = random.choice(objects) if len(objects) > 0 else None
         else:
             original_obj = next((obj for obj in self.generator.objects if obj.name == obj_name), None)
 
