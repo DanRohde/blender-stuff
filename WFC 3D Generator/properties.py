@@ -123,7 +123,7 @@ class WFC3DEmptyAnyNeighborListItem(bpy.types.PropertyGroup):
     selected: bpy.props.BoolProperty(default=False, update=auto_save)
 
 class WFC3DConnectorExclusionListItem(bpy.types.PropertyGroup):
-    conn_excl_name: bpy.props.StringProperty(name="Name",description="Connector name to exclude", default=PROP_DEFAULTS["conn_excl_name"] ,update=auto_save)
+    conn_excl_name: bpy.props.StringProperty(name="",description="Connector name to exclude", default=PROP_DEFAULTS["conn_excl_name"] ,update=auto_save)
     conn_excl_direction: bpy.props.EnumProperty(name="",description="Direction",items=get_connector_exclusion_direction_list, default=PROP_DEFAULTS["conn_excl_direction"], update=auto_save)
     selected: bpy.props.BoolProperty(default=False, name="")
 
