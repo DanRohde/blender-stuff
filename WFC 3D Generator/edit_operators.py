@@ -359,6 +359,7 @@ class WFC3D_OT_CopyConstraintsFromObject(bpy.types.Operator):
 
         for target_object in target_objects:
             if target_object == src_object: continue
+            if target_object.name in props.collection_obj.children: target_object = get_default_empty_object(props.collection_obj.children[target_object.name], True)
             constraints = get_constraints(props)
             if props.copy_constraints == "all" or len(constraints) == 0:
                 if props.copy_overwrite:
