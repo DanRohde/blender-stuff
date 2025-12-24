@@ -345,7 +345,7 @@ class WFC3D_OT_SaveActiveConstraints(bpy.types.Operator):
 class WFC3D_OT_CopyConstraintsFromObject(bpy.types.Operator):
     bl_idname = "object.wfc_3d_copy_constraints_from_object"
     bl_label = ""
-    bl_description = "Copy constraints from object"
+    bl_description = "Copy constraints from object to selected object(s)."
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
