@@ -104,9 +104,9 @@ class WFC3D_OT_ResetConstraints(bpy.types.Operator):
 
 
 class WFC3D_OT_SelectDropdownObject(bpy.types.Operator):
-    """Select objects in 3D Viewport"""
     bl_idname = "object.wfc_select_dropdown_object"
     bl_label = ""
+    bl_description = "Select objects in the 3D Viewport"
     list_name : bpy.props.StringProperty()
     def execute(self, context):
         props = context.scene.wfc_props
@@ -135,9 +135,9 @@ class WFC3D_OT_SelectDropdownObject(bpy.types.Operator):
         return {'FINISHED'}
 
 class WFC3D_OT_GetSelectedObject(bpy.types.Operator):
-    """Select objects selected in 3D Viewport"""
     bl_idname = "object.wfc_get_selected_object"
     bl_label = ""
+    bl_description = "Select objects selected in the 3D Viewport"
     list_name: bpy.props.StringProperty()
     def execute(self, context):
         props = context.scene.wfc_props

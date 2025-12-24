@@ -166,9 +166,9 @@ class WFC3D_OT_Rotation(bpy.types.Operator):
 
         return {'FINISHED'}
 class WFC3D_OT_RotationGetSelectedObject(bpy.types.Operator):
-    """Select objects selected in 3D Viewport"""
     bl_idname = "rotation.wfc_get_selected_object"
     bl_label = ""
+    bl_description = "Select objects selected in the 3D Viewport"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props
@@ -189,9 +189,9 @@ class WFC3D_OT_RotationGetSelectedObject(bpy.types.Operator):
         return {'FINISHED'}
 
 class WFC3D_OT_RotationSelectDropdownObject(bpy.types.Operator):
-    """Select objects in 3D Viewport"""
     bl_idname = "rotation.wfc_select_dropdown_object"
     bl_label = ""
+    bl_description = "Select objects in the 3D Viewport"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
