@@ -190,7 +190,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     background_generation: bpy.props.BoolProperty(name="Background Processing", description="Generate the model in a background process so that it can be canceled or paused.", default=False)
     background_iterations: bpy.props.IntProperty(name="Grid Cells", description="Generate the selected number of cells at once before pausing or canceling is possible.", min=1, default=1000)
     spacing: bpy.props.FloatVectorProperty(name="", description="Size of a Grid Cell", subtype="TRANSLATION", default=(2.0,2.0,2.0), min=0.1, precision=3)
-    auto_detect_spacing: bpy.props.BoolProperty(name="Auto-detect", description="Automatic spacing detection", default=False,)
+    auto_detect_spacing: bpy.props.BoolProperty(name="Space Detection", description="Automatic cell space detection", default=False,)
     odd_offset: bpy.props.FloatVectorProperty(name="", description="Odd Offset", subtype="TRANSLATION", default=(0.0,0.0,0.0), precision=3)
     location: bpy.props.FloatVectorProperty(name="", description="Location", subtype="TRANSLATION", default=(0.0, 0.0, 0.0), precision=3)
     use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)
