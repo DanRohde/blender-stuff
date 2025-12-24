@@ -314,26 +314,28 @@ class WFC3D_OT_GenericListOrderUp(bpy.types.Operator):
     bl_label = ""
     bl_description = "Move selected items up"
     list_name : bpy.props.StringProperty()
+    call_auto_save : bpy.props.BoolProperty()
     def execute(self, context):
         props = context.scene.wfc_props
         lst = getattr(props, self.list_name)
         selected_indexes = [ idx for idx, item in enumerate(lst) if item.selected ]
         for idx in selected_indexes:
             if idx > 0: lst.move(idx, idx-1)
-        auto_save(self, context)
+        if self.call_auto_save: auto_save(self, context)
         return {'FINISHED'}
 class WFC3D_OT_GenericListOrderDown(bpy.types.Operator):
     bl_idname = "object.wfc_generic_order_down"
     bl_label = ""
     bl_description = "Move selected items down"
     list_name : bpy.props.StringProperty()
+    call_auto_save : bpy.props.BoolProperty()
     def execute(self, context):
         props = context.scene.wfc_props
         lst = getattr(props, self.list_name)
         selected_indexes = [ idx for idx, item in enumerate(lst) if item.selected ]
         for idx in sorted(selected_indexes, reverse=True):
             if idx < len(lst) - 1: lst.move(idx, idx+1)
-        auto_save(self, context)
+        if self.call_auto_save: auto_save(self, context)
         return {'FINISHED'}
 class WFC3D_OT_SaveActiveConstraints(bpy.types.Operator):
     bl_idname = "object.wfc_save_active_constraints"

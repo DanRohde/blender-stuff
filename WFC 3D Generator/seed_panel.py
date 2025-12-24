@@ -59,7 +59,7 @@ class WFC3DSeedsPanel(bpy.types.Panel):
         col = row.column()
         col.template_list("WFC3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx", rows=1, maxrows=2)
         r = col.row()
-        draw_list_order_actions(props, r, "seeds_input_list")
+        draw_list_order_actions(props, r, "seeds_input_list", call_auto_save=False)
         r.label(text=f"Number of Random Seed Bookmarks: {len(props.seeds_input_list)}")
         col = row.column()
         c = col.column()

@@ -226,10 +226,10 @@ All these constraints reduce entropy in grid cells:
 1. Frequency constraints: frequency == 0 or percentage == 0
 2. Probability constraints: weight == 0 or probability == 0
 3. Region constraints
-4. Noise constraints
-5. Grid constraints
-6. Region probability constraints: weight == 0 or probability == 0
-7. Region frequency constraints: frequency == 0 or percentage == 0
+4. Grid constraints
+5. Region probability constraints: weight == 0 or probability == 0
+6. Region frequency constraints: frequency == 0 or percentage == 0
+7. Noise constraints
 
 ### Post Initialization Phase
 1. Fixed position constraints (collapse cells)

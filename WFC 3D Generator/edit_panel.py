@@ -726,12 +726,16 @@ def draw_list_selection_actions(props, column, list_name):
     nc.operator("object.wfc_list_invert_selection", icon="CHECKMARK", text="").list_name = list_name
     nc.enabled = len(lst) > 0
 
-def draw_list_order_actions(props, column, list_name):
+def draw_list_order_actions(props, column, list_name, call_auto_save = True):
     lst = getattr(props, list_name)
     row = column.box().row()
     row.enabled = len(lst) > 1 and count_selected_items(lst) > 0
-    row.operator("object.wfc_generic_order_up", icon="TRIA_UP").list_name = list_name
-    row.operator("object.wfc_generic_order_down", icon="TRIA_DOWN").list_name = list_name
+    op = row.operator("object.wfc_generic_order_up", icon="TRIA_UP")
+    op.list_name = list_name
+    op.call_auto_save = call_auto_save
+    op = row.operator("object.wfc_generic_order_down", icon="TRIA_DOWN")
+    op.list_name = list_name
+    op.call_auto_save = call_auto_save
 
 panels = [ WFC3D_UL_ActiveConstraintsList, WFC3D_UL_MultipleConnectorList, WFC3D_UL_ConnectorExclusionList, WFC3D_UL_EmptyNeighborList, WFC3D_UL_EmptyAnyNeighborList, WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList,\
            WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
