@@ -229,7 +229,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         col.enabled = props.edit_type == 'objects'
 
         newrow = row.row()
-        newrow.operator("object.wfc_reset_constraints", text="", icon="PRESET")
+        newrow.operator("object.wfc_reset_constraints", text="Reset")
         newrow.enabled = props.edit_type == 'defaults' or (obj and props.edit_neighbor_constraint in obj)
 
         if props.edit_neighbor_constraint and props.edit_neighbor_constraint != "_NONE_":
