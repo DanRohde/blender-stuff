@@ -444,7 +444,7 @@ class WFC3DConstraints:
                 if x==nx and y==ny and z==nz: continue
                 mp, flipping = self.get_mirror_partner_and_flipping(self.grid.grid[x,y,z][0], cell, point)
                 self.grid.grid[nx, ny, nz] = [ mp ]
-                collapsed.append(self.grid.mark_collapsed(nx,ny,nz))
+                if not self.grid.collapsed[nx,ny,nz]: collapsed.append(self.grid.mark_collapsed(nx,ny,nz))
                 self.sympartner[nx, ny, nz] = [[x,y,z]]
                 self.symflip[nx, ny, nz] = flipping
         self.sympartner[x,y,z] = collapsed
@@ -508,10 +508,10 @@ class WFC3DConstraints:
                     gx,gy,gz = x+nx*fac[0],y+ny*fac[1],z+nz*fac[2]
                     if not self.grid.within_boundaries(gx,gy,gz) or (((nx!=0)or(ny!=0)or(nz!=0)) and self.grid.collapsed[gx,gy,gz]): continue
                     coll.append([gx,gy,gz])
-        if len(coll) == d[0]*d[1]*d[2]:
+        if len(coll) == np.prod(d):
             for c in coll:
                 self.grid.grid[c[0], c[1], c[2]] = self.grid.grid[x, y, z]
-                collapsed.append(self.grid.mark_collapsed(c[0], c[1], c[2]))
+                if not self.grid.collapsed[c[0],c[1],c[2]]: collapsed.append(self.grid.mark_collapsed(c[0], c[1], c[2]))
         else:
             self.grid.grid[x, y, z] = []
             print(f"Ooops, cell {x},{y},{z} did not collapse as expected. {obj_name} does not fit.")

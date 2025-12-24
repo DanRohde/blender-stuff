@@ -18,7 +18,7 @@ def hide_old_target_collections(props):
     return False
 
 def init_render_result(props):
-    props.render_result.cell_count = props.grid_size[0] * props.grid_size[1] * props.grid_size[2]
+    props.render_result.cell_count = np.prod(props.grid_size)
     props.render_result.gen_start_time = time.perf_counter()
     props.render_result.empty_cells = -1
     props.render_result.gen_duration = -1
@@ -50,7 +50,7 @@ def generate_model(props, context):
     progress_offset = 0
     if not hide_old_target_collections(props) and props.target_collection in bpy.data.collections:
         progress_offset += len(bpy.data.collections[props.target_collection].objects)
-    gs = props.grid_size[0]*props.grid_size[1]*props.grid_size[2]
+    gs = np.prod(props.grid_size)
     progress = WFC3DProgress(progress_offset + 2*gs, context, cursor = not props.background_generation, end_callback = functools.partial(end_render_result, props))
     progress.begin()
     init_render_result(props)
