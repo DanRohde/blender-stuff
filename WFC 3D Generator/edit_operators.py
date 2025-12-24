@@ -357,12 +357,12 @@ class WFC3D_OT_CopyConstraintsFromObject(bpy.types.Operator):
 
         for target_object in target_objects:
             if target_object == src_object: continue
-            if props.copy_constraints == "all":
+            constraints = get_constraints(props)
+            if props.copy_constraints == "all" or len(constraints) == 0:
                 for k in src_object.keys():
                     if not k.startswith("wfc_"): continue
                     target_object[k] = src_object[k]
             else:
-                constraints = get_constraints(props)
                 for c in constraints:
                     prop_name = f"wfc_{c}" if not c.startswith("wfc_") else c
                     if c in LIST_CONSTRAINTS:
