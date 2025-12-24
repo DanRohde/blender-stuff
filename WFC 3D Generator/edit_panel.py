@@ -220,24 +220,19 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         if props.edit_constraints != "":
             row = layout.row()
             row.operator("object.wfc_open_web_link", icon="URL", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
-    def draw_neighbor_panel(self, props, layout, obj, _obj_name):
+    def draw_neighbor_panel(self, props, layout, obj, obj_name):
         box = layout.box()
+        row = box.row()
+        row.label(text=obj_name)
+        row.operator("object.wfc_reset_constraints", text="Reset")
         row = box.row()
         row.prop(props, "edit_neighbor_constraint")
         col = row.column()
         col.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
         col.enabled = props.edit_type == 'objects'
 
-        newrow = row.row()
-        newrow.operator("object.wfc_reset_constraints", text="Reset")
-        newrow.enabled = props.edit_type == 'defaults' or (obj and props.edit_neighbor_constraint in obj)
 
         if props.edit_neighbor_constraint and props.edit_neighbor_constraint != "_NONE_":
-            if obj and props.edit_neighbor_constraint in obj:
-                box.label(text="Neighbors: " + obj[props.edit_neighbor_constraint])
-            else:
-                box.label(text="Neighbors:")
-
             box.prop(props, "no_neighbor_allowed", icon="VIEW_LOCKED")
             row = box.row()
             row.enabled = not props.no_neighbor_allowed

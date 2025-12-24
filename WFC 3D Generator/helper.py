@@ -50,7 +50,7 @@ def get_constraints(props):
     elif props.edit_constraints == 'grid':
         constraints = GRID_CONSTRAINTS
     elif props.edit_constraints == 'neighbor':
-        constraints = [props.edit_neighbor_constraint] + ADD_NEIGHBOR_CONSTRAINTS
+        constraints = [ d.lower() for d in DIRECTIONS ] + ADD_NEIGHBOR_CONSTRAINTS
     elif props.edit_constraints == 'connector':
         constraints = CONNECTOR_CONSTRAINTS
     elif props.edit_constraints == 'connector_exclusion':

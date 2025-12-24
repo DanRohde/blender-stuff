@@ -216,9 +216,9 @@ class WFC3D_OT_InfoToggle(bpy.types.Operator):
         return {'FINISHED'}
 
 class WFC3DVisDirections(bpy.types.Operator):
-    """Show directions"""
     bl_idname = "object.wfc_vis_directions"
     bl_label = ""
+    bl_description = "Show directions in the 3D Viewport."
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         props = context.scene.wfc_props

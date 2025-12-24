@@ -128,7 +128,7 @@ class WFC3DConnectorExclusionListItem(bpy.types.PropertyGroup):
     selected: bpy.props.BoolProperty(default=False, name="")
 
 class WFC3DMultipleConnectorListItem(bpy.types.PropertyGroup):
-    mult_conn_name: bpy.props.StringProperty(name="Name",description="Connector name", default=PROP_DEFAULTS["mult_conn_name"] ,update=auto_save)
+    mult_conn_name: bpy.props.StringProperty(name="",description="Connector name", default=PROP_DEFAULTS["mult_conn_name"] ,update=auto_save)
     mult_conn_direction: bpy.props.EnumProperty(name="",description="Direction",items=get_multiple_connector_direction_list, default=PROP_DEFAULTS["mult_conn_direction"], update=auto_save)
     selected: bpy.props.BoolProperty(default=False, name="")
 
@@ -339,7 +339,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     regfreq_input_list: bpy.props.CollectionProperty(type=WFC3DRegionFrequencyListItem)
     regfreq_input_list_idx: bpy.props.IntProperty()
 
-    vis_directions : bpy.props.BoolProperty(name="",description="Show directions", default = False)
+    vis_directions : bpy.props.BoolProperty(name="",description="Show directions in the 3D Viewport", default = False)
 
     validator_output_list: bpy.props.CollectionProperty(type=WFC3DValidatorOutputItem)
     validator_output_list_idx: bpy.props.IntProperty()
