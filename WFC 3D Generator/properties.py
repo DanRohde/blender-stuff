@@ -411,6 +411,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
 
     copy_from: bpy.props.PointerProperty(type=bpy.types.Object, name="", description="Copy constraints from object", poll=is_sub_element)
     copy_constraints : bpy.props.EnumProperty(items=[("current","Copy selected constraints from", "Copy the currently selected constraints from object"),("all","Copy all constraints from","Copy all constraints from object")], name="")
+    copy_overwrite: bpy.props.BoolProperty(name="", description="Overwrite existing constraints", default=False)
 
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props

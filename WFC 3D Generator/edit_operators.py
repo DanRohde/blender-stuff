@@ -1,5 +1,5 @@
 import bpy
-
+import re
 from .constants import *
 from .properties import handle_update_collection
 from .helper import *
@@ -359,20 +359,38 @@ class WFC3D_OT_CopyConstraintsFromObject(bpy.types.Operator):
             if target_object == src_object: continue
             constraints = get_constraints(props)
             if props.copy_constraints == "all" or len(constraints) == 0:
+                if props.copy_overwrite:
+                    for k in list(target_object.keys()):
+                        if k.startswith("wfc_"): del target_object[k]
                 for k in src_object.keys():
                     if not k.startswith("wfc_"): continue
-                    target_object[k] = src_object[k]
+                    constraint_name = re.sub(r"^wfc_(.*?)(_\d+)?$", r"\1", k)
+                    if constraint_name in LIST_CONSTRAINTS:
+                        idx_target = int(re.sub(r"^.*_(\d+)$", r"\1", k))
+                        if not props.copy_overwrite:
+                            while f"wfc_{constraint_name}_{idx_target}" in target_object:
+                                idx_target += 1
+                        target_object[f"wfc_{constraint_name}_{idx_target}"] = src_object[k]
+                    elif props.copy_overwrite or k not in target_object:
+                        target_object[k] = src_object[k]
             else:
                 for c in constraints:
                     prop_name = f"wfc_{c}" if not c.startswith("wfc_") else c
                     if c in LIST_CONSTRAINTS:
-                        idx = 0
-                        while f"{prop_name}_{idx}" in src_object:
-                            list_prop_name = f"{prop_name}_{idx}"
-                            target_object[list_prop_name] = src_object[list_prop_name]
-                            idx += 1
-                    else:
-                        if prop_name in src_object: target_object[prop_name] = src_object[prop_name]
+                        idx_target = 0
+                        if not props.copy_overwrite:
+                            while f"{prop_name}_{idx_target}" in target_object:
+                                idx_target += 1
+                        idx_src = 0
+                        while f"{prop_name}_{idx_src}" in src_object:
+                            target_object[f"{prop_name}_{idx_target}"] = src_object[f"{prop_name}_{idx_src}"]
+                            idx_src, idx_target = idx_src + 1, idx_target + 1
+                        if props.copy_overwrite:
+                            while f"{prop_name}_{idx_target}" in target_object:
+                                del target_object[f"{prop_name}_{idx_target}"]
+                                idx_target += 1
+                    elif prop_name in src_object and (props.copy_overwrite or prop_name not in target_object):
+                        target_object[prop_name] = src_object[prop_name]
         update_edit_form(self, context)
         self.report({'INFO'}, f"Constraints have been copied.")
         return {'FINISHED'}
