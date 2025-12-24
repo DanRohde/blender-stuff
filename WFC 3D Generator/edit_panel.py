@@ -212,10 +212,10 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         if props.edit_constraints != '_none_':
             row.prop(props, "copy_constraints")
         else:
-            row.label(text="Copy all")
+            row.label(text="Copy all constraints from")
         row.prop(props, "copy_from")
         col = row.column()
-        col.operator("object.wfc_3d_copy_constraints_from_object", icon="RIGHTARROW")
+        col.operator("object.wfc_3d_copy_constraints_from_object", icon="COPYDOWN")
         col.enabled = props.copy_from is not None
         if props.edit_constraints != "":
             row = layout.row()
