@@ -12,7 +12,7 @@
 * [Connector constraints](#connector-constraints): 30
 * [Connector exclusion constraints](#connector-exclusion-constraints): 2
 * [Multiple connector constraints](#multiple-connector-constraints): 2
-* [Fixed position constraints](#fixed position constraints): 3
+* [Fixed position constraints](#fixed-position-constraints): 3
 * [Dimensions constraints](#dimensions-constraints): 1
 * [Geometry constraints](#geometry-constraints): 10
 * [Noise constraints](#noise-constraints): 5
