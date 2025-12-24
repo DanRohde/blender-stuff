@@ -409,6 +409,9 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     active_constraints_input_list: bpy.props.CollectionProperty(type=WFC3DActiveConstraintsListItem)
     active_constraints_input_list_idx: bpy.props.IntProperty()
 
+    copy_from: bpy.props.PointerProperty(type=bpy.types.Object, name=" constraints from ", description="Copy constraints from object", poll=is_sub_element)
+    copy_constraints : bpy.props.EnumProperty(items=[("current","currently selected", "Copy the currently selected constraints from object"),("all","all","Copy all constraints from object")], name="Copy")
+
 def handle_update_pref(self, _context=None):
     props = bpy.context.scene.wfc_props
 

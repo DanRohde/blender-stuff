@@ -207,6 +207,16 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             draw_method(props, box, obj, obj_name)
 
         if props.info_toggle: self.draw_info_panel(layout, props, obj)
+        row = layout.box().row()
+        row.alignment = "LEFT"
+        if props.edit_constraints != '_none_':
+            row.prop(props, "copy_constraints")
+        else:
+            row.label(text="Copy all")
+        row.prop(props, "copy_from")
+        col = row.column()
+        col.operator("object.wfc_3d_copy_constraints_from_object", icon="RIGHTARROW")
+        col.enabled = props.copy_from is not None
         if props.edit_constraints != "":
             row = layout.row()
             row.operator("object.wfc_open_web_link", icon="URL", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]

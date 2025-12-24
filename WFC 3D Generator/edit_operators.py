@@ -340,8 +340,45 @@ class WFC3D_OT_SaveActiveConstraints(bpy.types.Operator):
     def execute(self, context):
         save_active_constraints_changes(context.scene.wfc_props)
         return {'FINISHED'}
+class WFC3D_OT_CopyConstraintsFromObject(bpy.types.Operator):
+    bl_idname = "object.wfc_3d_copy_constraints_from_object"
+    bl_label = ""
+    bl_description = "Copy constraints from object"
+    bl_options = {'REGISTER', 'UNDO'}
+    def execute(self, context):
+        props = context.scene.wfc_props
+        src_object = props.copy_from
+        if props.edit_type == 'objects':
+            target_objects = [item.obj for item in props.obj_list if item.selected]
+        elif props.edit_type == 'defaults':
+            target_objects = [ get_default_empty_object(props.collection_obj, True)]
+        else:
+            target_objects = []
+
+        for target_object in target_objects:
+            if target_object == src_object: continue
+            if props.copy_constraints == "all":
+                for k in src_object.keys():
+                    if not k.startswith("wfc_"): continue
+                    target_object[k] = src_object[k]
+            else:
+                constraints = get_constraints(props)
+                for c in constraints:
+                    prop_name = f"wfc_{c}" if not c.startswith("wfc_") else c
+                    if c in LIST_CONSTRAINTS:
+                        idx = 0
+                        while f"{prop_name}_{idx}" in src_object:
+                            list_prop_name = f"{prop_name}_{idx}"
+                            target_object[list_prop_name] = src_object[list_prop_name]
+                            idx += 1
+                    else:
+                        if prop_name in src_object: target_object[prop_name] = src_object[prop_name]
+        update_edit_form(self, context)
+        self.report({'INFO'}, f"Constraints have been copied.")
+        return {'FINISHED'}
 
 operators = [
+    WFC3D_OT_CopyConstraintsFromObject,
     WFC3D_OT_SaveActiveConstraints,
     WFC3D_OT_GenericListOrderUp,
     WFC3D_OT_GenericListOrderDown,
