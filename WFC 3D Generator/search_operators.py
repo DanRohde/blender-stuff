@@ -34,7 +34,7 @@ class WFC3DBackgroundSearch:
         self.result = result
         self.seed = seed
 
-        props.search_result.result = self.result if self.result is not None else 0
+        props.search_result.result = self.result if self.result is not None else -1
         props.search_result.seed = self.seed
         props.search_result.steps = props.search_iterations - props.search_running_iterations
         props.search_result.duration = time.perf_counter() - props.search_result.start_time
@@ -114,6 +114,7 @@ class WFC3D_OT_ResetSearchResult(bpy.types.Operator):
         props.search_result.seed = -1
         props.search_result.empty_cells = -1
         props.search_result.steps = -1
+        props.search_result.result = -1
         return {'FINISHED'}
 
 

@@ -22,15 +22,18 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
         if not props.auto_generate: render_generate_button(props, layout.row(), render_allowed and not props.search_running)
         box = layout.box()
         box.enabled = render_allowed and not props.cherry_picking_running and props.use_constraints
-        box.row().prop(props, "search_iterations", text="Iterations", slider=True)
-        box.row().prop(props.search_options, "search_operator")
         box.row().prop(props.search_options, "search_scope")
+
         row = box.row()
         row.prop(props.search_options, "search_object")
         row.enabled = props.search_options.search_scope == 'number'
+        box.row().prop(props.search_options, "search_operator")
+
         row = box.row()
         row.prop(props.search_options, "search_count")
         row.enabled = props.search_options.search_operator not in ["min","max"]
+        box.row().prop(props, "search_iterations", text="Iterations", slider=True)
+
         if props.search_running:
             row = box.row(align=True)
             row.progress(factor=props.search_progress, text=f"{round(props.search_progress * 100)}% (et {round(props.search_progress_elapsed_time, 0):.0f}s/eta {props.search_progress_eta:.0f}s)", type="BAR")
@@ -48,12 +51,15 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
             row = box.row(align=True)
             row.column().label(text="Search Result")
             row.column().operator("object.wfc_3d_reset_search_result", icon="PANEL_CLOSE")
-            row = box.row(align=True)
-            row.column(align=True).label(text=f"Seed: {props.search_result.seed}")
-            row.column(align=True).label(text=f"Step(s): {props.search_result.steps}")
-            row = box.row(align=True)
+            if props.search_result.result == -1:
+                box.row().label(text=f"Sorry, Nothing found")
+            else:
+                row = box.row(align=True)
+                row.column(align=True).label(text=f"Seed: {props.search_result.seed}")
+                row.column(align=True).label(text=f"Step(s): {props.search_result.steps}")
+                row = box.row(align=True)
 
-            row.column(align=True).label(text=f"Result: {props.search_result.result}")
-            row.column(align=True).label(text=f"Duration: {props.search_result.duration:.3f} s")
+                row.column(align=True).label(text=f"Result: {props.search_result.result}")
+                row.column(align=True).label(text=f"Duration: {props.search_result.duration:.3f} s")
 
 panels = [ WFC3D_PT_SearchPanel ]
