@@ -91,9 +91,9 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         else:
             row.prop(props, "search_iterations",text="Iterations")
             op = row.operator("object.wfc_3d_search",text="Search Seed")
-            op.search_type, op.search_scope, op.search_object = "max", "occupancy", ""
+            op.search_operator, op.search_scope, op.search_object = "max", "occupancy", ""
             row.enabled = render_allowed and not props.cherry_picking_running and props.use_constraints
-        if props.search_result.steps > -1:
+        if props.search_result.steps > -1 and props.search_result.search_scope == "occupancy" and props.search_result.search_operator == "max":
             row = box.row()
             row.label(text=f"Seed {props.search_result.seed} found in {props.search_result.steps} steps with {props.search_result.result} empty cell(s).")
             row.operator("object.wfc_3d_reset_search_result",icon="PANEL_CLOSE")

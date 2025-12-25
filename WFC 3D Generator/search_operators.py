@@ -6,10 +6,11 @@ import time
 from .gen_operators import generate_model, WFC3DProgress, WFC3DGenerator
 
 class WFC3DBackgroundSearch:
-    def __init__(self, search_type = "max", search_scope = "occupancy", search_object = ""):
-        self.search_type = search_type
+    def __init__(self, search_operator = "max", search_scope = "occupancy", search_object = "", search_count = -1):
+        self.search_operator = search_operator
         self.search_scope = search_scope
         self.search_object = search_object
+        self.search_count = search_count
         self.progress = None
         self.props = None
         self.auto_generate = False
@@ -19,11 +20,11 @@ class WFC3DBackgroundSearch:
         self.context = None
         self.generator = None
         pass
-    def _done(self, props):
+    def _done(self, props, result = None, seed = None):
         self.progress.end()
         self.progress = None
         self.generator.clean()
-        self._set_result(props, self.result, self.seed)
+        self._set_result(props, self.result if result is None else result, self.seed if seed is None else seed)
         props.auto_generate = self.auto_generate
         props.seed = self.seed
         props.search_running = False
@@ -33,10 +34,18 @@ class WFC3DBackgroundSearch:
         self.result = result
         self.seed = seed
 
-        props.search_result.result = self.result
+        props.search_result.result = self.result if self.result is not None else 0
         props.search_result.seed = self.seed
         props.search_result.steps = props.search_iterations - props.search_running_iterations
         props.search_result.duration = time.perf_counter() - props.search_result.start_time
+
+    def _compare_value_with_search_count(self, v):
+        if self.search_operator == "<" and v < self.search_count: return True
+        elif self.search_operator == "<=" and v <= self.search_count: return True
+        elif self.search_operator == "=" and v == self.search_count: return True
+        elif self.search_operator == ">=" and v >= self.search_count: return True
+        elif self.search_operator == ">" and v > self.search_count: return True
+        return False
 
     def _search(self):
         props = bpy.context.scene.wfc_props
@@ -46,14 +55,16 @@ class WFC3DBackgroundSearch:
         self.generator.generate_model(self.progress)
         if self.search_scope == "occupancy":
             ec = self.generator.grid.count_empty_cells()
-            if (self.search_type == "max" and (self.result is None or ec < self.result)) or (self.search_type == "min" and (self.result is None or ec > self.result)):
+            if (self.search_operator == "max" and (self.result is None or ec < self.result)) or (self.search_operator == "min" and (self.result is None or ec > self.result)):
                 self._set_result(props, ec, props.seed)
-            if (self.search_type == "max" and ec == 0) or (self.search_type == "min" and ec == self.gs): return self._done(props)
+            elif (self.search_operator == "max" and ec == 0) or (self.search_operator == "min" and ec == self.gs): return self._done(props)
+            elif self._compare_value_with_search_count(self.gs - ec): return self._done(props, result = self.gs - ec, seed = props.seed)
         else:
             oc = self.generator.grid.count_obj(self.search_object)
-            if (self.search_type == "max" and (self.result is None or oc > self.result)) or (self.search_type == "min" and (self.result is None or oc < self.result)):
+            if (self.search_operator == "max" and (self.result is None or oc > self.result)) or (self.search_operator == "min" and (self.result is None or oc < self.result)):
                 self._set_result(props, oc, props.seed)
-            if (self.search_type == "max" and oc == self.gs) or (self.search_type == "min" and oc == 0): return self._done(props)
+            elif (self.search_operator == "max" and oc == self.gs) or (self.search_operator == "min" and oc == 0): return self._done(props)
+            elif self._compare_value_with_search_count(oc): return self._done(props, result = oc, seed = props.seed)
         props.seed += 1
         props.search_running_iterations -= 1
         return 0
@@ -70,7 +81,7 @@ class WFC3DBackgroundSearch:
 
         props.search_result.search_scope = self.search_scope
         props.search_result.search_object = self.search_object
-        props.search_result.search_type = self.search_type
+        props.search_result.search_operator = self.search_operator
 
         self.gs = np.prod(props.grid_size)
         self.progress = WFC3DProgress(props.search_iterations * self.gs, context, prop_prefix="search_", cursor=False)
@@ -84,11 +95,12 @@ class WFC3D_OT_Search(bpy.types.Operator):
     """Search for a random seed with maximum grid occupancy"""
     bl_idname = "object.wfc_3d_search"
     bl_label = "Search"
-    search_type : bpy.props.StringProperty(default="min")
+    search_operator : bpy.props.StringProperty(default="min")
     search_scope : bpy.props.StringProperty(default="occupancy")
     search_object : bpy.props.StringProperty(default="")
+    search_count : bpy.props.IntProperty(default=-1)
     def execute(self, context):
-        search = WFC3DBackgroundSearch(search_type = self.search_type, search_scope = self.search_scope, search_object = self.search_object)
+        search = WFC3DBackgroundSearch(search_operator = self.search_operator, search_scope = self.search_scope, search_object = self.search_object, search_count = self.search_count)
         search.start_search(context)
         return {'FINISHED'}
 

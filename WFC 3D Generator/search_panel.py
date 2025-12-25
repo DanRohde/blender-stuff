@@ -22,13 +22,15 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
         if not props.auto_generate: render_generate_button(props, layout.row(), render_allowed and not props.search_running)
         box = layout.box()
         box.enabled = render_allowed and not props.cherry_picking_running and props.use_constraints
-        box.row().prop(props, "search_iterations",text="Iterations")
-        box.row().prop(props.search_options, "search_type")
+        box.row().prop(props, "search_iterations", text="Iterations", slider=True)
+        box.row().prop(props.search_options, "search_operator")
         box.row().prop(props.search_options, "search_scope")
         row = box.row()
         row.prop(props.search_options, "search_object")
         row.enabled = props.search_options.search_scope == 'number'
-
+        row = box.row()
+        row.prop(props.search_options, "search_count")
+        row.enabled = props.search_options.search_operator not in ["min","max"]
         if props.search_running:
             row = box.row(align=True)
             row.progress(factor=props.search_progress, text=f"{round(props.search_progress * 100)}% (et {round(props.search_progress_elapsed_time, 0):.0f}s/eta {props.search_progress_eta:.0f}s)", type="BAR")
@@ -38,7 +40,9 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
             row = box.row()
             row.enabled = props.search_options.search_scope == 'occupancy' or props.search_options.search_object is not None
             op = row.operator("object.wfc_3d_search", text="Search Seed")
-            op.search_type, op.search_scope, op.search_object = props.search_options.search_type, props.search_options.search_scope, props.search_options.search_object.name if props.search_options.search_object else ""
+            op.search_operator, op.search_scope, op.search_object, op.search_count = \
+                props.search_options.search_operator, props.search_options.search_scope, \
+                    props.search_options.search_object.name if props.search_options.search_object else "", props.search_options.search_count
         if props.search_result.steps > -1:
             box = layout.box()
             row = box.row(align=True)
@@ -48,10 +52,8 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
             row.column(align=True).label(text=f"Seed: {props.search_result.seed}")
             row.column(align=True).label(text=f"Step(s): {props.search_result.steps}")
             row = box.row(align=True)
-            if props.search_result.search_scope == "occupancy":
-                row.column(align=True).label(text=f"Empty Cell(s): {props.search_result.result}")
-            else:
-                row.column(align=True).label(text=f"Object count: {props.search_result.result}")
+
+            row.column(align=True).label(text=f"Result: {props.search_result.result}")
             row.column(align=True).label(text=f"Duration: {props.search_result.duration:.3f} s")
 
 panels = [ WFC3D_PT_SearchPanel ]

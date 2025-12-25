@@ -191,13 +191,14 @@ class WFC3DSearchResult(bpy.types.PropertyGroup):
     start_time:  bpy.props.FloatProperty()
     duration: bpy.props.FloatProperty()
     search_scope: bpy.props.StringProperty()
-    search_type: bpy.props.StringProperty()
+    search_operator: bpy.props.StringProperty()
     search_object: bpy.props.StringProperty()
 
 class WFC3DSearchOptions(bpy.types.PropertyGroup):
-    search_type: bpy.props.EnumProperty(items=[("max","Maximum","Maximum"),("min","Minimum","Minimum")], name="Type", description="Search Type")
-    search_scope: bpy.props.EnumProperty(items=[("occupancy","Occupancy","Occupancy"),("number","Number","Number")], name="Scope", description="Search Scope")
+    search_operator: bpy.props.EnumProperty(items=[("max","Maximum","Maximum"),("min","Minimum","Minimum"),("<","<","less than"),("<=","<=", "less than or equal",),("=","=","equal"),(">=",">=","greater than or equal"),(">",">","greater than")], name="Operator", description="Search Operator")
+    search_scope: bpy.props.EnumProperty(items=[("occupancy","Occupancy","Grid Occupancy"),("number","Number","Number of Objects")], name="Scope", description="Search Scope")
     search_object: bpy.props.PointerProperty(type=bpy.types.Object, name="Object", description="Object from the source collection", poll=is_sub_element)
+    search_count: bpy.props.IntProperty(name="Count", description="Count of occupied cells or objects", min=-1, default=-1)
 
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
