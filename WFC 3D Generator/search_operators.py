@@ -62,8 +62,8 @@ class WFC3DBackgroundSearch:
             oc = self.generator.grid.count_obj(self.search_object)
         if (self.search_operator == "max" and (self.result is None or oc > self.result)) or (self.search_operator == "min" and (self.result is None or oc < self.result)):
             self._set_result(props, oc, props.seed)
-        elif (self.search_operator == "max" and oc == self.gs) or (self.search_operator == "min" and oc == 0): return self._done(props)
-        elif self._compare_value_with_search_count(oc): return self._done(props, result = oc, seed = props.seed)
+        if (self.search_operator == "max" and oc == self.gs) or (self.search_operator == "min" and oc == 0): return self._done(props)
+        if self._compare_value_with_search_count(oc): return self._done(props, result = oc, seed = props.seed)
         props.seed += 1
         props.search_running_iterations -= 1
         return 0

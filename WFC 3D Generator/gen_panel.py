@@ -95,7 +95,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             row.enabled = render_allowed and not props.cherry_picking_running and props.use_constraints
         if props.search_result.steps > -1 and props.search_result.search_scope == "occupancy" and props.search_result.search_operator == "max":
             row = box.row()
-            row.label(text=f"Seed {props.search_result.seed} found in {props.search_result.steps} steps with {props.search_result.result} empty cell(s).")
+            row.label(text=f"Seed {props.search_result.seed} found in {props.search_result.steps} steps with {props.search_result.result} occupied cell(s).")
             row.operator("object.wfc_3d_reset_search_result",icon="PANEL_CLOSE")
 
         render_seed_selection(props, prefs,box.row(), render_allowed)
