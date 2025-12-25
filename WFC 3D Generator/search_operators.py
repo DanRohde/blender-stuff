@@ -19,16 +19,19 @@ class WFC3DBackgroundSearch:
         self.seed = 0
         self.context = None
         self.generator = None
-        pass
+        self.orig_seed = 0
+
     def _done(self, props, result = None, seed = None):
         self.progress.end()
         self.progress = None
         self.generator.clean()
         self._set_result(props, self.result if result is None else result, self.seed if seed is None else seed)
+        if self.result is None: props.seed = self.orig_seed
         props.auto_generate = self.auto_generate
-        props.seed = self.seed
         props.search_running = False
-        if not props.auto_generate: generate_model(props, self.context)
+        if self.result is not None:
+            props.seed = self.seed
+            if not props.auto_generate: generate_model(props, self.context)
         return None
     def _set_result(self, props, result, seed):
         self.result = result
@@ -54,20 +57,17 @@ class WFC3DBackgroundSearch:
         self.generator.set_seed(props.seed)
         self.generator.generate_model(self.progress)
         if self.search_scope == "occupancy":
-            ec = self.generator.grid.count_empty_cells()
-            if (self.search_operator == "max" and (self.result is None or ec < self.result)) or (self.search_operator == "min" and (self.result is None or ec > self.result)):
-                self._set_result(props, ec, props.seed)
-            elif (self.search_operator == "max" and ec == 0) or (self.search_operator == "min" and ec == self.gs): return self._done(props)
-            elif self._compare_value_with_search_count(self.gs - ec): return self._done(props, result = self.gs - ec, seed = props.seed)
+            oc = self.gs - self.generator.grid.count_empty_cells()
         else:
             oc = self.generator.grid.count_obj(self.search_object)
-            if (self.search_operator == "max" and (self.result is None or oc > self.result)) or (self.search_operator == "min" and (self.result is None or oc < self.result)):
-                self._set_result(props, oc, props.seed)
-            elif (self.search_operator == "max" and oc == self.gs) or (self.search_operator == "min" and oc == 0): return self._done(props)
-            elif self._compare_value_with_search_count(oc): return self._done(props, result = oc, seed = props.seed)
+        if (self.search_operator == "max" and (self.result is None or oc > self.result)) or (self.search_operator == "min" and (self.result is None or oc < self.result)):
+            self._set_result(props, oc, props.seed)
+        elif (self.search_operator == "max" and oc == self.gs) or (self.search_operator == "min" and oc == 0): return self._done(props)
+        elif self._compare_value_with_search_count(oc): return self._done(props, result = oc, seed = props.seed)
         props.seed += 1
         props.search_running_iterations -= 1
         return 0
+
     def start_search(self, context):
         self.context = context
         props = bpy.context.scene.wfc_props
@@ -83,6 +83,7 @@ class WFC3DBackgroundSearch:
         props.search_result.search_object = self.search_object
         props.search_result.search_operator = self.search_operator
 
+        self.orig_seed = props.seed
         self.gs = np.prod(props.grid_size)
         self.progress = WFC3DProgress(props.search_iterations * self.gs, context, prop_prefix="search_", cursor=False)
         self.progress.begin()
