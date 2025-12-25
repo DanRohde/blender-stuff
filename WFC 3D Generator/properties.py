@@ -186,8 +186,8 @@ class WFC3DRenderResult(bpy.types.PropertyGroup):
 
 class WFC3DSearchResult(bpy.types.PropertyGroup):
     seed: bpy.props.IntProperty()
-    steps: bpy.props.IntProperty()
-    result: bpy.props.IntProperty()
+    steps: bpy.props.IntProperty(default=-1)
+    result: bpy.props.IntProperty(default=-1)
     start_time:  bpy.props.FloatProperty()
     duration: bpy.props.FloatProperty()
     search_scope: bpy.props.StringProperty()
