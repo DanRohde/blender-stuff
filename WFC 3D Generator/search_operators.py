@@ -1,5 +1,3 @@
-from encodings import search_function
-
 import bpy
 import numpy as np
 import time
