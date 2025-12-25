@@ -1,5 +1,5 @@
 import bpy
-from .gen_panel import render_seed_selection, render_generate_button
+from .gen_panel import render_seed_selection, render_generate_button, render_render_result
 class WFC3D_PT_SearchPanel(bpy.types.Panel):
     bl_label = "WFC 3D Random Seed Search"
     bl_idname = "VIEW3D_PT_wfc_3d_search"
@@ -61,5 +61,5 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
 
                 row.column(align=True).label(text=f"Result: {props.search_result.result} {'Objects' if props.search_result.search_scope == 'number' else 'occupied cells'}")
                 row.column(align=True).label(text=f"Duration: {props.search_result.duration:.3f} s")
-
+        render_render_result(props, layout)
 panels = [ WFC3D_PT_SearchPanel ]

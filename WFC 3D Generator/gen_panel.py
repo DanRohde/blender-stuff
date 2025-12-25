@@ -107,21 +107,8 @@ class WFC3DGeneratePanel(bpy.types.Panel):
 
         render_generate_button(props, layout.row(), render_allowed)
 
-        if props.render_result.cell_count > 0:
-            box = layout.box()
-            row = box.row()
-            result = f"C:{props.render_result.cell_count}"
-            result += f" E:{props.render_result.empty_cells}" if props.render_result.empty_cells > -1 else ""
-            result += f" T:{props.render_result.gen_duration:.2f}s" if props.render_result.gen_duration > -1 else ""
-            result += f"/{props.render_result.render_duration:.2f}s" if props.render_result.render_duration > -1 else ""
-            result += f"/{props.render_result.gen_duration + props.render_result.render_duration:.2f}s" if props.render_result.gen_duration > -1 and props.render_result.render_duration > -1 else ""
-            row.label(text=result, )
-            if props.render_result.render_duration > -1: row.operator("object.wfc_3d_reset_render_result", icon="PANEL_CLOSE")
-            if props.render_result.object_count != "":
-                gf = box.grid_flow(columns=3)
-                oc = json.loads(props.render_result.object_count)
-                for o in sorted(oc.items(), key=lambda x: x[0]):
-                    gf.label(text=f"{o[0]}: {o[1]}")
+        render_render_result(props, layout)
+
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon="INFO_LARGE")
         if props.collection_obj is not None and props.collection_obj.name == props.target_collection:
@@ -129,7 +116,22 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         if props.collection_obj and len(props.collection_obj.objects)==0 and len(props.collection_obj.children)==0:
             layout.label(text="Please select a non-empty source collection.", icon="INFO_LARGE")
             
-
+def render_render_result(props, layout):
+    if props.render_result.cell_count > 0:
+        box = layout.box()
+        row = box.row()
+        result = f"C:{props.render_result.cell_count}"
+        result += f" E:{props.render_result.empty_cells}" if props.render_result.empty_cells > -1 else ""
+        result += f" T:{props.render_result.gen_duration:.2f}s" if props.render_result.gen_duration > -1 else ""
+        result += f"/{props.render_result.render_duration:.2f}s" if props.render_result.render_duration > -1 else ""
+        result += f"/{props.render_result.gen_duration + props.render_result.render_duration:.2f}s" if props.render_result.gen_duration > -1 and props.render_result.render_duration > -1 else ""
+        row.label(text=result, )
+        if props.render_result.render_duration > -1: row.operator("object.wfc_3d_reset_render_result", icon="PANEL_CLOSE")
+        if props.render_result.object_count != "":
+            gf = box.grid_flow(columns=3)
+            oc = json.loads(props.render_result.object_count)
+            for o in sorted(oc.items(), key=lambda x: x[0]):
+                gf.label(text=f"{o[0]}: {o[1]}")
 def render_seed_selection(props, prefs, row, render_allowed):
     if len(props.seeds_input_list) > 0: row.prop(props, "seeds", icon="BOOKMARKS", text="")
     row.prop(props, "seed")
