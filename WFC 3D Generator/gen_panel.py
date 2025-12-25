@@ -146,11 +146,10 @@ def render_seed_selection(props, prefs, row, render_allowed):
     col.enabled = render_allowed and not props.cherry_picking_running and not props.search_running
 
 def render_generate_button(props, row, render_allowed):
-    row.enabled = render_allowed and not props.running_delayed_renderer and not props.search_running
     if not props.progress_running and not props.running_delayed_renderer:
+        row.enabled = render_allowed and not props.running_delayed_renderer and not props.search_running
         row.operator("object.wfc_3d_generate")
     else:
-        row = layout.row()
         row.progress(factor=props.progress, text=f"{round(props.progress * 100)}% (et: {round(props.progress_elapsed_time, 0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
         if props.progress_running:
             row.operator("object.wfc_3d_toggle_button", icon='PAUSE', depress=props.progress_paused).prop_name = "progress_paused"
