@@ -3,12 +3,12 @@
 import bpy
 
 from . import properties, edit_operators, edit_panel, gen_operators, gen_panel, handler, validator_panel, validator_operators, backup_panel, backup_operators, rotation_panel, rotation_operators, \
-    seed_operators, seed_panel
+    search_operators, search_panel, seed_operators, seed_panel
 
 
 classes = (properties.properties + edit_operators.operators + edit_panel.panels + gen_operators.operators
            + gen_panel.panels + validator_panel.panels + validator_operators.operators + backup_panel.panels + backup_operators.operators
-           + rotation_panel.panels + rotation_operators.operators + seed_operators.operators + seed_panel.panels )
+           + rotation_panel.panels + rotation_operators.operators + search_operators.operators +  search_panel.panels + seed_operators.operators + seed_panel.panels )
 
 def register():
     for cls in classes:

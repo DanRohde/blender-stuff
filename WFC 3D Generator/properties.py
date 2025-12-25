@@ -184,6 +184,21 @@ class WFC3DRenderResult(bpy.types.PropertyGroup):
     render_duration: bpy.props.FloatProperty()
     object_count: bpy.props.StringProperty()
 
+class WFC3DSearchResult(bpy.types.PropertyGroup):
+    seed: bpy.props.IntProperty()
+    steps: bpy.props.IntProperty()
+    result: bpy.props.IntProperty()
+    start_time:  bpy.props.FloatProperty()
+    duration: bpy.props.FloatProperty()
+    search_scope: bpy.props.StringProperty()
+    search_type: bpy.props.StringProperty()
+    search_object: bpy.props.StringProperty()
+
+class WFC3DSearchOptions(bpy.types.PropertyGroup):
+    search_type: bpy.props.EnumProperty(items=[("max","Maximum","Maximum"),("min","Minimum","Minimum")], name="Type", description="Search Type")
+    search_scope: bpy.props.EnumProperty(items=[("occupancy","Occupancy","Occupancy"),("number","Number","Number")], name="Scope", description="Search Scope")
+    search_object: bpy.props.PointerProperty(type=bpy.types.Object, name="Object", description="Object from the source collection", poll=is_sub_element)
+
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1,)
@@ -208,7 +223,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     remove_target_collection: bpy.props.BoolProperty(name="Remove Target Collection", description="Remove existing target collection",)
     hide_last_target_collections: bpy.props.BoolProperty(name="Hide Last", description="Hide last target collection(s)", default=True,)
     search_iterations: bpy.props.IntProperty(name="Search Iterations", description="Search iterations", min=1, default=100, max=1000)
-    search_result: bpy.props.IntVectorProperty(name="Search Result", description="Search result", default=(-1,-1,-1), size=3)
+    search_result: bpy.props.PointerProperty(type=WFC3DSearchResult)
+    search_options: bpy.props.PointerProperty(type=WFC3DSearchOptions)
     search_progress: bpy.props.FloatProperty(default=0, min=0, max=1)
     search_progress_elapsed_time: bpy.props.FloatProperty(default=0)
     search_progress_eta: bpy.props.FloatProperty(default=0)
@@ -454,4 +470,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DRenderResult, WFC3DActiveConstraintsListItem, WFC3DSeedsListItem, WFC3DMultipleConnectorListItem, WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DSearchOptions, WFC3DSearchResult, WFC3DRenderResult, WFC3DActiveConstraintsListItem, WFC3DSeedsListItem, WFC3DMultipleConnectorListItem, WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]

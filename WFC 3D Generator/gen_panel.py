@@ -90,46 +90,23 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             row.operator("object.wfc_3d_stop_button", icon="EVENT_MEDIASTOP").prop_name = 'search_running'
         else:
             row.prop(props, "search_iterations",text="Iterations")
-            row.operator("object.wfc_3d_search",text="Search Seed")
+            op = row.operator("object.wfc_3d_search",text="Search Seed")
+            op.search_type, op.search_scope, op.search_object = "max", "occupancy", ""
             row.enabled = render_allowed and not props.cherry_picking_running and props.use_constraints
-        if props.search_result[1] > -1:
+        if props.search_result.steps > -1:
             row = box.row()
-            row.label(text=f"Seed {props.search_result[0]} found in {props.search_result[1]} steps with {props.search_result[2]} empty cell(s).")
+            row.label(text=f"Seed {props.search_result.seed} found in {props.search_result.steps} steps with {props.search_result.result} empty cell(s).")
             row.operator("object.wfc_3d_reset_search_result",icon="PANEL_CLOSE")
-        row = box.row()
-        if len(props.seeds_input_list) > 0: row.prop(props, "seeds", icon="BOOKMARKS", text="")
-        row.prop(props, "seed")
-        col = row.column()
-        col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props)[0])
-        col.enabled = render_allowed and not props.search_running
-        row.enabled = not props.search_running
-        if prefs.cherry_picking_delay > 0:
-            col = row.column()
-            col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
-            col.enabled = render_allowed and not props.search_running
-        col = row.column()
-        col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress = props.auto_generate)
-        col.enabled = render_allowed and not props.cherry_picking_running and not props.search_running
 
+        render_seed_selection(props, prefs,box.row(), render_allowed)
         layout.separator(type="LINE", factor=0.2)
 
         if props.remove_target_collection and props.target_collection != "" and props.target_collection in bpy.data.collections:
             layout.box().label(text="Target collection will be removed!", icon="WARNING_LARGE")
             
 
-        row = layout.row()
-        row.enabled = render_allowed and not props.running_delayed_renderer and not props.search_running
-        if not props.progress_running and not props.running_delayed_renderer:
-            row.operator("object.wfc_3d_generate")
-        else:
-            row = layout.row()
-            row.progress(factor=props.progress, text=f"{round(props.progress*100)}% (et: {round(props.progress_elapsed_time,0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
-            if props.progress_running:
-                row.operator("object.wfc_3d_toggle_button", icon='PAUSE', depress=props.progress_paused).prop_name = "progress_paused"
-                row.operator("object.wfc_3d_stop_button", text="", icon='EVENT_MEDIASTOP').prop_name = "progress_running"
-            if props.running_delayed_renderer:
-                row.operator("object.wfc_3d_toggle_button", icon='PAUSE', depress=props.paused_delayed_renderer).prop_name="paused_delayed_renderer"
-                row.operator("object.wfc_3d_stop_button", text="",icon='EVENT_MEDIASTOP').prop_name="running_delayed_renderer"
+        render_generate_button(props, layout.row(), render_allowed)
+
         if props.render_result.cell_count > 0:
             box = layout.box()
             row = box.row()
@@ -153,5 +130,32 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             layout.label(text="Please select a non-empty source collection.", icon="INFO_LARGE")
             
 
+def render_seed_selection(props, prefs, row, render_allowed):
+    if len(props.seeds_input_list) > 0: row.prop(props, "seeds", icon="BOOKMARKS", text="")
+    row.prop(props, "seed")
+    col = row.column()
+    col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props)[0])
+    col.enabled = render_allowed and not props.search_running
+    row.enabled = not props.search_running
+    if prefs.cherry_picking_delay > 0:
+        col = row.column()
+        col.operator("object.wfc_3d_cherry_picking", icon='PLAY' if not props.cherry_picking_running else 'PAUSE', depress=props.cherry_picking_running)
+        col.enabled = render_allowed and not props.search_running
+    col = row.column()
+    col.operator("object.wfc_3d_auto_generate_toggle", icon='AUTO', depress=props.auto_generate)
+    col.enabled = render_allowed and not props.cherry_picking_running and not props.search_running
 
+def render_generate_button(props, row, render_allowed):
+    row.enabled = render_allowed and not props.running_delayed_renderer and not props.search_running
+    if not props.progress_running and not props.running_delayed_renderer:
+        row.operator("object.wfc_3d_generate")
+    else:
+        row = layout.row()
+        row.progress(factor=props.progress, text=f"{round(props.progress * 100)}% (et: {round(props.progress_elapsed_time, 0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
+        if props.progress_running:
+            row.operator("object.wfc_3d_toggle_button", icon='PAUSE', depress=props.progress_paused).prop_name = "progress_paused"
+            row.operator("object.wfc_3d_stop_button", text="", icon='EVENT_MEDIASTOP').prop_name = "progress_running"
+        if props.running_delayed_renderer:
+            row.operator("object.wfc_3d_toggle_button", icon='PAUSE', depress=props.paused_delayed_renderer).prop_name = "paused_delayed_renderer"
+            row.operator("object.wfc_3d_stop_button", text="", icon='EVENT_MEDIASTOP').prop_name = "running_delayed_renderer"
 panels = [ WFC3DGeneratePanel ]

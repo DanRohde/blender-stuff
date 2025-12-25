@@ -175,79 +175,6 @@ class WFC3DProgress:
         if self.last_count <= 0: return 0
         return (self.max_count - self.last_count) * ( time.perf_counter() - self.start_time ) /  self.last_count
 
-class WFC3DBackgroundSearch:
-    def __init__(self):
-        self.progress = None
-        self.props = None
-        self.auto_generate = False
-        self.mincount = 2**63 - 1
-        self.minseed = 0
-        self.context = None
-        self.generator = None
-        pass
-    def _done(self, props):
-        self.progress.end()
-        self.progress = None
-        self.generator.clean()
-        props.search_result = (self.minseed, props.search_iterations - props.search_running_iterations, self.mincount)
-        props.auto_generate = self.auto_generate
-        props.seed = self.minseed
-        props.search_running = False
-        if not props.auto_generate: generate_model(props, self.context)
-
-    def _search(self):
-        props = bpy.context.scene.wfc_props
-        if props.search_running_iterations == 0 or not props.search_running:
-            self._done(props)
-            return None
-        if props.search_paused: return 0.01
-        self.generator.set_seed(props.seed)
-        self.generator.generate_model(self.progress)
-        c = self.generator.grid.count_empty_cells()
-        if c < self.mincount:
-            self.minseed = props.seed
-            self.mincount = c
-            props.search_result = (self.minseed, props.search_iterations - props.search_running_iterations, self.mincount)
-        if c == 0:
-            self._done(props)
-            return None
-        props.seed += 1
-        props.search_running_iterations -= 1
-        return 0
-    def start_search(self, context):
-        self.context = context
-        props = bpy.context.scene.wfc_props
-        props.search_running_iterations = props.search_iterations
-        self.auto_generate = props.auto_generate
-        props.auto_generate = False
-        props.search_result = (-1, -1, -1)
-        self.progress = WFC3DProgress(props.search_iterations * props.grid_size[0] * props.grid_size[1] * props.grid_size[2], context, prop_prefix="search_", cursor=False)
-        self.progress.begin()
-        props.search_running = True
-        props.search_paused = False
-        self.generator = WFC3DGenerator(props)
-        bpy.app.timers.register(self._search, first_interval=0)
-
-class WFC3D_OT_Search(bpy.types.Operator):
-    """Search for a random seed with maximum grid occupancy"""
-    bl_idname = "object.wfc_3d_search"
-    bl_label = "Search"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        search = WFC3DBackgroundSearch()
-        search.start_search(context)
-        return {'FINISHED'}
-
-class WFC3D_OT_ResetSearchResult(bpy.types.Operator):
-    """Reset search result"""
-    bl_idname = "object.wfc_3d_reset_search_result"
-    bl_label = ""
-    bl_options = {'REGISTER', 'UNDO'}
-    def execute(self, context):
-        props = context.scene.wfc_props
-        props.search_result = (-1, -1, -1)
-        return {'FINISHED'}
 
 class WFC3D_OT_StopButton(bpy.types.Operator):
     bl_idname = "object.wfc_3d_stop_button"
@@ -321,4 +248,4 @@ class WFC3D_OT_TargetCollectionIncNumber(bpy.types.Operator):
         else:
             props.target_collection = props.target_collection + "000"
         return {'FINISHED'}
-operators = [ WFC3D_OT_TargetCollectionIncNumber, WFC3D_OT_ResetRenderResult, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_ResetSearchResult, WFC3D_OT_Search, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]
+operators = [ WFC3D_OT_TargetCollectionIncNumber, WFC3D_OT_ResetRenderResult, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]
