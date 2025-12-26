@@ -1,17 +1,16 @@
 import bpy
 import time
 
-from .helper import seed_in_seeds_list, get_selected_items, set_generator_properties_from_bookmark
+from .helper import seed_in_seeds_list, set_generator_properties_from_bookmark
 
-class WFC3D_OT_SetSeed(bpy.types.Operator):
-    bl_idname = "object.wfc_set_seed"
+class WFC3D_OT_SetSeedDirect(bpy.types.Operator):
+    bl_idname = "object.wfc_set_seed_direct"
     bl_label = ""
     bl_description = "Apply random seed"
-    bl_options = {'REGISTER', 'UNDO'}
+    item_idx : bpy.props.IntProperty()
     def execute(self, context):
         props = context.scene.wfc_props
-        items = [ item for item in props.seeds_input_list if item.selected ]
-        if len(items) > 0: set_generator_properties_from_bookmark(props, items[0])
+        set_generator_properties_from_bookmark(props, props.seeds_input_list[self.item_idx])
         return {'FINISHED'}
 
 class WFC3D_OT_RemoveSeedListItems(bpy.types.Operator):
@@ -57,4 +56,4 @@ class WFC3D_OT_AddSeedListItem(bpy.types.Operator):
         props.auto_generate = auto_generate
         return {'FINISHED'}
 
-operators = [ WFC3D_OT_SetSeed, WFC3D_OT_AddSeedListItem, WFC3D_OT_RemoveSeedListItems, ]
+operators = [ WFC3D_OT_SetSeedDirect, WFC3D_OT_AddSeedListItem, WFC3D_OT_RemoveSeedListItems, ]

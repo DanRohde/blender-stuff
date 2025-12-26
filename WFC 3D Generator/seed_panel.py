@@ -9,8 +9,11 @@ class WFC3D_UL_SeedsList(bpy.types.UIList):
         row = col.row()
         c = row.column()
         c.alignment = "LEFT"
-        c.prop(item, "selected", text=f"{index+1}) Seed: {item.seed}", icon="BOOKMARKS",)
+        c.prop(item, "selected", text=f"{item.seed}", icon="BOOKMARKS",)
         row.prop(item, "note", text="")
+        row.operator("object.wfc_set_seed_direct", icon="PLAY").item_idx = index
+        row.prop(item, "collapsed", emboss=False, icon="TRIA_LEFT" if item.collapsed else "TRIA_DOWN")
+        if item.collapsed: return
         row = col.row()
         row.label(text=f"Source: {item.collection_obj.name}")
         row.label(text=f"Entropy: {item.entropy_type}")
@@ -60,11 +63,8 @@ class WFC3DSeedsPanel(bpy.types.Panel):
         col.template_list("WFC3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx", rows=1, maxrows=2)
         r = col.row()
         draw_list_order_actions(props, r, "seeds_input_list", call_auto_save=False)
-        r.label(text=f"Number of Random Seed Bookmarks: {len(props.seeds_input_list)}")
+        r.label(text=f"Random Seeds: {len(props.seeds_input_list)}")
         col = row.column()
-        c = col.column()
-        c.operator("object.wfc_set_seed", icon="RIGHTARROW")
-        c.enabled = sel_count == 1
         col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props)[0])
         c = col.column()
         c.operator("object.wfc_remove_seed_list_items", icon="REMOVE", text="")
