@@ -476,7 +476,7 @@ def set_generator_properties_from_bookmark(props, item):
     auto_generate = props.auto_generate
     props.auto_generate = False
     for k in item.keys():
-        if k == 'seeds' or k == 'selected': continue
+        if k in ['seed','selected','collapsed','timestamp','note']: continue
         setattr(props, k, getattr(item, k))
 
     props.auto_generate = auto_generate
