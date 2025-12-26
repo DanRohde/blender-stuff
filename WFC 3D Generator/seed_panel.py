@@ -7,12 +7,11 @@ class WFC3D_UL_SeedsList(bpy.types.UIList):
         row = layout.row()
         col = row.column()
         row = col.row()
-        c = row.column()
-        c.alignment = "LEFT"
-        c.prop(item, "selected", text=f"{item.seed}", icon="BOOKMARKS",)
+        row.prop(item, "collapsed", emboss=False, icon="RIGHTARROW" if item.collapsed else "DOWNARROW_HLT")
+        row.prop(item, "selected", text=f"{item.seed}", icon="BOOKMARKS",)
         row.prop(item, "note", text="")
         row.operator("object.wfc_set_seed_direct", icon="PLAY").item_idx = index
-        row.prop(item, "collapsed", emboss=False, icon="TRIA_LEFT" if item.collapsed else "TRIA_DOWN")
+
         if item.collapsed: return
         row = col.row()
         row.label(text=f"Source: {item.collection_obj.name}")
