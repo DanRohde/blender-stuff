@@ -214,6 +214,11 @@ class WFC3DConstraints:
         sum_w_log_w = sum(w * np.log(w) for w in weights if w > 0)
         return np.log(total) - sum_w_log_w / total
 
+    def get_entropy(self, cell, entropy_type):
+        if entropy_type == "optimized": return self.get_optimized_entropy(cell)
+        if entropy_type == "shannon": return self.get_shannon_entropy(cell)
+        return len(self.grid.grid[cell[0], cell[1], cell[2]])
+
     def apply_noise_randomize_position_constraint(self, obj_name, pos):
         if not self.constraints[obj_name]['noise_randomize_position']: return pos
         if self.noise_pos is None: self.noise_pos = np.random.rand(1,3)
