@@ -122,15 +122,16 @@ class WFC3DGeneratePanel(bpy.types.Panel):
 def render_render_result(props, layout):
     if props.render_result.cell_count > 0:
         box = layout.box()
-        row = box.row()
+        row = box.row(align=True)
+        row.prop(props.render_result, "object_count_collapsed", emboss=False, text="", icon="RIGHTARROW" if props.render_result.object_count_collapsed else "DOWNARROW_HLT")
         result = f"C:{props.render_result.cell_count}"
         result += f" E:{props.render_result.empty_cells}" if props.render_result.empty_cells > -1 else ""
         result += f" T:{props.render_result.gen_duration:.2f}s" if props.render_result.gen_duration > -1 else ""
         result += f"/{props.render_result.render_duration:.2f}s" if props.render_result.render_duration > -1 else ""
         result += f"/{props.render_result.gen_duration + props.render_result.render_duration:.2f}s" if props.render_result.gen_duration > -1 and props.render_result.render_duration > -1 else ""
         row.label(text=result, )
-        if props.render_result.render_duration > -1: row.operator("object.wfc_3d_reset_render_result", icon="PANEL_CLOSE")
-        if props.render_result.object_count != "":
+        row.operator("object.wfc_3d_reset_render_result", icon="PANEL_CLOSE")
+        if props.render_result.object_count != "" and not props.render_result.object_count_collapsed :
             gf = box.grid_flow(columns=3)
             oc = json.loads(props.render_result.object_count)
             for o in sorted(oc.items(), key=lambda x: x[0]):

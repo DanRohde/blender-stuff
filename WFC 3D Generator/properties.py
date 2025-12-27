@@ -183,6 +183,7 @@ class WFC3DRenderResult(bpy.types.PropertyGroup):
     render_start_time: bpy.props.FloatProperty()
     render_duration: bpy.props.FloatProperty()
     object_count: bpy.props.StringProperty()
+    object_count_collapsed: bpy.props.BoolProperty(default=True)
 
 class WFC3DSearchResult(bpy.types.PropertyGroup):
     seed: bpy.props.IntProperty()
