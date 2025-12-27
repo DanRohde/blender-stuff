@@ -57,7 +57,7 @@ class WFC3DBackgroundSearch:
         if self.search_scope == "occupancy":
             oc = self.gs - self.generator.grid.count_empty_cells()
         else:
-            oc = self.generator.grid.count_obj(self.search_object)
+            oc = int(self.generator.grid.count_obj(self.search_object) / np.prod(self.generator.constraints.constraints[self.search_object]["dim_xyz"]))
         if (self.search_operator == "max" and (self.result is None or oc > self.result)) or (self.search_operator == "min" and (self.result is None or oc < self.result)):
             self._set_result(props, oc, props.seed)
         if (self.search_operator == "max" and oc == self.gs) or (self.search_operator == "min" and oc == 0): return self._done(props)
