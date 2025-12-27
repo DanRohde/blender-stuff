@@ -317,7 +317,7 @@ class WFC3DConstraints:
 
         weight += len(self.constraints[name][DISTANCE_CONSTRAINTS[0]]) * len(DISTANCE_CONSTRAINTS)
 
-        if sum(self.constraints[name]['dim_xyz'])==3: weight += 1
+        weight -= sum(self.constraints[name]['dim_xyz']) - 4
         weight = int(round(remap(weight, 1,1000, 1, 20*len(self.objects) )))
         self.auto_weights[name] = weight
         return weight

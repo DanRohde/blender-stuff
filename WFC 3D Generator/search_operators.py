@@ -56,11 +56,13 @@ class WFC3DBackgroundSearch:
         self.generator.generate_model(self.progress)
         if self.search_scope == "occupancy":
             oc = self.gs - self.generator.grid.count_empty_cells()
+            cellcount = oc
         else:
-            oc = int(self.generator.grid.count_obj(self.search_object) / np.prod(self.generator.constraints.constraints[self.search_object]["dim_xyz"]))
+            cellcount = self.generator.grid.count_obj(self.search_object)
+            oc = int(cellcount / np.prod(self.generator.constraints.constraints[self.search_object]["dim_xyz"]))
         if (self.search_operator == "max" and (self.result is None or oc > self.result)) or (self.search_operator == "min" and (self.result is None or oc < self.result)):
             self._set_result(props, oc, props.seed)
-        if (self.search_operator == "max" and oc == self.gs) or (self.search_operator == "min" and oc == 0): return self._done(props)
+        if (self.search_operator == "max" and cellcount == self.gs) or (self.search_operator == "min" and oc == 0): return self._done(props)
         if self._compare_value_with_search_count(oc): return self._done(props, result = oc, seed = props.seed)
         props.seed += 1
         props.search_running_iterations -= 1
