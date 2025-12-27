@@ -11,6 +11,7 @@ class WFC3D_PT_BackupPanel(bpy.types.Panel):
         layout = self.layout
         props = context.scene.wfc_props
         render_source_collection(context, layout)
+        if props.collection_obj is None: return
         box = layout.box()
         box.label(text="Export constraints")
         box.operator("wfc3d.export_json")
