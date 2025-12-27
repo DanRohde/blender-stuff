@@ -1,12 +1,13 @@
 import bpy
 import math
 from .helper import get_selected_items, get_object_by_name
-from .constants import ROTATE_DIRECTIONS, PROP_DEFAULTS, FACE_DIRECTIONS, DIRECTIONS
+from .constants import ROTATE_DIRECTIONS, ROTATE_DIMENSIONS, PROP_DEFAULTS, FACE_DIRECTIONS, DIRECTIONS
 
 
 def rotate_properties(props, obj, axis, angle):
     angles = [ 90, 180, 270 ]
     rd = ROTATE_DIRECTIONS[axis]
+    rdim = ROTATE_DIMENSIONS[axis]
     directions = list(DIRECTIONS)
     ## read custom properties:
     objprops = {}
@@ -30,9 +31,10 @@ def rotate_properties(props, obj, axis, angle):
             objprops["mult_conn"].append(obj[f"wfc_mult_conn_direction_{idx}"])
             idx += 1
     if props.rt_empty:
-        objprops["empty"] = obj[f"wfc_empty_neighbor"].split(",")  if f"wfc_empty_neighbor" in obj else []
-        objprops["empty_any"] = obj[f"wfc_empty_any_neighbor"].split(",") if f"wfc_empty_any_neighbor" in obj else []
-
+        objprops["empty"] = obj["wfc_empty_neighbor"].split(",")  if "wfc_empty_neighbor" in obj else []
+        objprops["empty_any"] = obj["wfc_empty_any_neighbor"].split(",") if "wfc_empty_any_neighbor" in obj else []
+    if props.rt_dimensions:
+        objprops["dimensions"] = list(obj["wfc_dim_xyz"]) if "wfc_dim_xyz" in obj else None
     ## rotate:
     for a in angles:
         if a == angle:
@@ -63,6 +65,8 @@ def rotate_properties(props, obj, axis, angle):
             if props.rt_empty:
                 if len(objprops["empty"]) > 0: obj["wfc_empty_neighbor"] = ",".join([rd[d] for d in objprops["empty"]])
                 if len(objprops["empty_any"]) > 0: obj["wfc_empty_any_neighbor"] = ",".join([rd[d] for d in objprops["empty_any"]])
+            if props.rt_dimensions and objprops["dimensions"] is not None:
+                obj["wfc_dim_xyz"] = [objprops["dimensions"][rdim[0]], objprops["dimensions"][rdim[1]], objprops["dimensions"][rdim[2]]]
         ## rotate object properties:
         cache = {}
         for d in rd:
@@ -92,6 +96,8 @@ def rotate_properties(props, obj, axis, angle):
         if props.rt_empty:
             if len(objprops["empty"]) > 0 : objprops["empty"] = [ rd[d] for d in objprops["empty"]]
             if len(objprops["empty_any"]) > 0: objprops["empty_any"] = [rd[d] for d in objprops["empty_any"]]
+        if props.rt_dimensions and objprops["dimensions"] is not None:
+            objprops["dimensions"] = [objprops["dimensions"][rdim[0]], objprops["dimensions"][rdim[1]], objprops["dimensions"][rdim[2]]]
 
 def rotate_object(props, obj, offset):
     created_objects = []

@@ -409,6 +409,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     rt_conn_excl: bpy.props.BoolProperty(name="Connector Exclusion", description="Rotate connector exclusion constraints", default=True)
     rt_mult_conn: bpy.props.BoolProperty(name="Multiple Connector", description="Rotate multiple connector constraints", default=True)
     rt_empty: bpy.props.BoolProperty(name="Empty Neighbor", description="Rotate empty neighbor constraints", default=True)
+    rt_dimensions: bpy.props.BoolProperty(name="Dimensions", description="Rotate dimensions constraints", default=True)
 
     empty_neighbor_list: bpy.props.CollectionProperty(type=WFC3DEmptyNeighborListItem)
     empty_neighbor_list_idx: bpy.props.IntProperty()

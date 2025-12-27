@@ -41,7 +41,11 @@ ROTATE_DIRECTIONS = {
               'EN_LT' : 'EN_BT', 'EN_RB' : 'EN_FB', 'EN_LB' : 'EN_BB', 'EN_RT' : 'EN_FT', 'ANY' : 'ANY', 'ANY_FACE':'ANY_FACE', 'ANY_EDGE':'ANY_EDGE', 'ANY_CORNER':'ANY_CORNER',
     },
 }
-
+ROTATE_DIMENSIONS = {
+    'X' : { 0 : 0, 1 : 2, 2 : 1 },
+    'Y' : { 0 : 2, 1 : 1, 2 : 0 },
+    'Z' : { 0 : 1, 1 : 0, 2 : 2 },
+}
 PROP_DEFAULTS = {
     # neighbor constraints
     'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '',
