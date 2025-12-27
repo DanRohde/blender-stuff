@@ -212,9 +212,14 @@ DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
 DIR_TRANSLATION = { 'TOP': 'top face', 'BOTTOM' : 'bottom face', 'LEFT' : 'left face', 'RIGHT': 'right face', 'FRONT' : 'front face', 'BACK' : 'back face',
                  'FBL':'front bottom left corner', 'FBR' : 'front bottom right corner', 'FTL' : 'front top left corner', 'FTR' : 'front top right corner',
                  'BBL':'back bottom left corner', 'BBR' : 'back bottom right corner', 'BTL' : 'back top left corner', 'BTR' : 'back top right corner',
+                 'CN_FBL':'front bottom left corner', 'CN_FBR' : 'front bottom right corner', 'CN_FTL' : 'front top left corner', 'CN_FTR' : 'front top right corner',
+                 'CN_BBL':'back bottom left corner', 'CN_BBR' : 'back bottom right corner', 'CN_BTL' : 'back top left corner', 'CN_BTR' : 'back top right corner',
                  'FL':'front left edge', 'FR': 'front right edge', 'FB' : 'front bottom edge', 'FT' : 'front top edge',
                  'BL':'back left edge', 'BR': 'back right edge', 'BB' : 'back bottom edge', 'BT' : 'back top edge',
                  'LT':'left top edge', 'LB' : 'left bottom edge', 'RT' : 'right top edge', 'RB' : 'right bottom edge',
+                 'EN_FL':'front left edge', 'EN_FR': 'front right edge', 'EN_FB' : 'front bottom edge', 'EN_FT' : 'front top edge',
+                 'EN_BL':'back left edge', 'EN_BR': 'back right edge', 'EN_BB' : 'back bottom edge', 'EN_BT' : 'back top edge',
+                 'EN_LT':'left top edge', 'EN_LB' : 'left bottom edge', 'EN_RT' : 'right top edge', 'EN_RB' : 'right bottom edge',
                  'ANY': 'any direction', 'ANY_FACE' : 'any face direction', 'ANY_EDGE' : 'any edge direction', 'ANY_CORNER' : 'any corner direction',
 }
 
