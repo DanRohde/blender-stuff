@@ -79,6 +79,7 @@ class WFC3DBackgroundSearch:
 
         props.search_result.search_scope = self.search_scope
         props.search_result.search_object = self.search_object
+        props.search_result.search_count = self.search_count
         props.search_result.search_operator = self.search_operator
 
         self.orig_seed = props.seed

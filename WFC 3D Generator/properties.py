@@ -193,6 +193,7 @@ class WFC3DSearchResult(bpy.types.PropertyGroup):
     search_scope: bpy.props.StringProperty()
     search_operator: bpy.props.StringProperty()
     search_object: bpy.props.StringProperty()
+    search_count: bpy.props.IntProperty()
 
 class WFC3DSearchOptions(bpy.types.PropertyGroup):
     search_operator: bpy.props.EnumProperty(items=[("max","Maximum","Maximum"),("min","Minimum","Minimum"),("<","<","less than"),("<=","<=", "less than or equal",),("=","=","equal"),(">=",">=","greater than or equal"),(">",">","greater than")], name="Operator", description="Search Operator")

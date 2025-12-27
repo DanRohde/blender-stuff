@@ -49,7 +49,7 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
         if props.search_result.steps > -1:
             box = layout.box()
             row = box.row(align=True)
-            row.column().label(text="Search Result")
+            row.column().label(text=f"Search Result for {self.build_search_request_string(props)}")
             row.column().operator("object.wfc_3d_reset_search_result", icon="PANEL_CLOSE")
             if props.search_result.result == -1:
                 box.row().label(text=f"Sorry, nothing found.")
@@ -62,4 +62,17 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
                 row.column(align=True).label(text=f"Result: {props.search_result.result} {'Objects' if props.search_result.search_scope == 'number' else 'occupied cells'}")
                 row.column(align=True).label(text=f"Duration: {props.search_result.duration:.3f} s")
         render_render_result(props, layout)
+
+    def build_search_request_string(self, props):
+        if props.search_result.search_operator in ["min","max"]:
+            if props.search_result.search_scope == "occupancy":
+                ret = f"{props.search_result.search_operator}(Occupancy)"
+            else:
+                ret = f"{props.search_result.search_operator}(Number[{props.search_result.search_object}])"
+        else:
+            if props.search_result.search_scope == "occupancy":
+                ret = f"Occupancy {props.search_result.search_operator} {props.search_result.search_count}"
+            else:
+                ret = f"Number[{props.search_result.search_object}] {props.search_result.search_operator} {props.search_result.search_count}"
+        return ret
 panels = [ WFC3D_PT_SearchPanel ]
