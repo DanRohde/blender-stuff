@@ -5,6 +5,7 @@ import functools
 import json
 import numpy as np
 import re
+import random
 from .generator import WFC3DGenerator
 from .renderer import WFC3DRenderer
 
@@ -248,4 +249,14 @@ class WFC3D_OT_TargetCollectionIncNumber(bpy.types.Operator):
         else:
             props.target_collection = props.target_collection + "000"
         return {'FINISHED'}
-operators = [ WFC3D_OT_TargetCollectionIncNumber, WFC3D_OT_ResetRenderResult, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]
+class WFC3D_OT_RandomSeed(bpy.types.Operator):
+    bl_idname = "object.wfc_random_seed"
+    bl_label = ""
+    bl_description = "Set a random random seed"
+    def execute(self, context):
+        props = context.scene.wfc_props
+        random.seed()
+        props.seed = random.randint(-0x7fffffff-1, 0x7fffffff)
+        return {'FINISHED'}
+
+operators = [ WFC3D_OT_RandomSeed, WFC3D_OT_TargetCollectionIncNumber, WFC3D_OT_ResetRenderResult, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]

@@ -98,7 +98,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             row.label(text=f"Seed {props.search_result.seed} found in {props.search_result.steps} steps with {props.search_result.result} occupied cell(s).")
             row.operator("object.wfc_3d_reset_search_result",icon="PANEL_CLOSE")
 
-        render_seed_selection(props, prefs,box.row(), render_allowed)
+        render_seed_selection(props, prefs,box.row(align=True), render_allowed)
         layout.separator(type="LINE", factor=0.2)
 
         if props.remove_target_collection and props.target_collection != "" and props.target_collection in bpy.data.collections:
@@ -135,6 +135,7 @@ def render_render_result(props, layout):
 def render_seed_selection(props, prefs, row, render_allowed):
     if len(props.seeds_input_list) > 0: row.prop(props, "seeds", icon="BOOKMARKS", text="")
     row.prop(props, "seed")
+    row.operator("object.wfc_random_seed", icon="DOT", text="")
     col = row.column()
     col.operator("object.wfc_add_seed_list_item", icon="BOOKMARKS", text="", depress=seed_in_seeds_list(props)[0])
     col.enabled = render_allowed and not props.search_running
