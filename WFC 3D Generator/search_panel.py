@@ -26,7 +26,7 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
 
         row = box.row()
         row.prop(props.search_options, "search_object")
-        row.enabled = props.search_options.search_scope == 'number'
+        row.enabled = props.search_options.search_scope == 'count'
         box.row().prop(props.search_options, "search_operator")
 
         row = box.row()
@@ -70,11 +70,11 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
             if props.search_result.search_scope == "occupancy":
                 ret = f"{props.search_result.search_operator.title()}(Occupancy)"
             else:
-                ret = f"{props.search_result.search_operator.title()}(Number[{props.search_result.search_object}])"
+                ret = f"{props.search_result.search_operator.title()}(Count[{props.search_result.search_object}])"
         else:
             if props.search_result.search_scope == "occupancy":
                 ret = f"Occupancy {props.search_result.search_operator} {props.search_result.search_count}"
             else:
-                ret = f"Number[{props.search_result.search_object}] {props.search_result.search_operator} {props.search_result.search_count}"
+                ret = f"Count[{props.search_result.search_object}] {props.search_result.search_operator} {props.search_result.search_count}"
         return ret
 panels = [ WFC3D_PT_SearchPanel ]
