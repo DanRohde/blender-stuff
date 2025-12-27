@@ -29,7 +29,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         col = row.column()
         r = col.row(align=True)
         r.label(text="Space")
-        r.prop(props, "auto_detect_spacing", text="", icon="SHADING_BBOX")
+        r.prop(props, "auto_detect_spacing", text="", icon="CUBE")
         c = col.column(align=True)
         c.prop(props, "spacing")
         c.enabled = not props.auto_detect_spacing
