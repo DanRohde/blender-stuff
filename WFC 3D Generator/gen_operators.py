@@ -60,7 +60,7 @@ def generate_model(props, context):
         generator.init_task()
         props.progress_running = True
         props.progress_paused = False
-        bpy.app.timers.register(functools.partial(generate_model_task, props, generator, progress), first_interval=0)
+        bpy.app.timers.register(functools.partial(generate_model_task, props, generator, progress), first_interval=0.1)
     else:
         generator.generate_model(progress)
         renderer = WFC3DRenderer(generator, props)
@@ -76,7 +76,7 @@ def generate_model(props, context):
 
 def render_model_task(props, renderer, progress):
     if props.progress_running:
-        if props.progress_paused: return 0.01
+        if props.progress_paused: return 0.1
         idx = 0
         done = False
         while idx < props.background_iterations:
@@ -84,7 +84,7 @@ def render_model_task(props, renderer, progress):
             if renderer.render_object(progress): continue
             done = True
             break
-        if not done: return 0
+        if not done: return 0.01
     renderer.clean()
     props.progress_running = False
     props.progress_paused = False
@@ -93,7 +93,7 @@ def render_model_task(props, renderer, progress):
 
 def generate_model_task(props, generator, progress):
     if not props.progress_running: return None
-    if props.progress_paused: return 0.01
+    if props.progress_paused: return 0.1
     idx = 0
     while idx < props.background_iterations:
         idx += 1
@@ -103,7 +103,7 @@ def generate_model_task(props, generator, progress):
         renderer.init_target_collection(progress)
         bpy.app.timers.register(functools.partial(render_model_task, props, renderer, progress))
         return None
-    return 0
+    return 0.01
 
 
 def handle_seed_change(_self, context):
@@ -120,7 +120,7 @@ class WFC3D_OT_Generate(bpy.types.Operator):
     def execute(self, context):
         props = context.scene.wfc_props
         generate_model(props, context)
-        self.report({'INFO'}, "The WFC 3D model was successfully generated.")
+        if not props.background_generation: self.report({'INFO'}, "The WFC 3D model was successfully generated.")
         return {'FINISHED'}
 
 class WFC3D_OT_ResetRenderResult(bpy.types.Operator):
