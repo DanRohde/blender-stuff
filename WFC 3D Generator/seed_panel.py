@@ -4,13 +4,12 @@ from .helper import count_selected_items, seed_in_seeds_list
 
 class WFC3D_UL_SeedsList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
-        row = layout.row()
-        col = row.column()
-        row = col.row()
-        row.alignment = "LEFT"
+        row = layout.row(align=True)
+        col = row.column(align=True)
+        row = col.row(align=True)
         row.prop(item, "collapsed", emboss=False, icon="RIGHTARROW" if item.collapsed else "DOWNARROW_HLT")
         row.prop(item, "selected", text=f"{item.seed}", icon="BOOKMARKS",)
-        c = row.column()
+        c = row.column(align=True)
         c.alignment = "EXPAND"
         c.prop(item, "note", text="")
         row.operator("object.wfc_set_seed_direct", icon="PLAY").item_idx = index

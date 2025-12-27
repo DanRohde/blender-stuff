@@ -14,14 +14,14 @@ class WFC3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
 
 class WFC3D_UL_ConnectorExclusionList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
-        row = layout.row()
+        row = layout.row(align=True)
         row.prop(item, "selected", text="")
         row.prop(item, "conn_excl_direction")
         row.prop(item, "conn_excl_name")
 
 class WFC3D_UL_MultipleConnectorList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
-        row = layout.row()
+        row = layout.row(align=True)
         row.prop(item, "selected", text="")
         row.prop(item, "mult_conn_direction")
         row.prop(item, "mult_conn_name")
@@ -31,13 +31,12 @@ class WFC3D_UL_RegFreqList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
-        row = col.row()
-        row.alignment = 'LEFT'
+        row = col.row(align=True)
         row.column(align=True).prop(item,"selected", text=f"{index}.")
         row.column(align=True).prop(item,"regfreq_name", text="")
         col.row().prop(item,"regfreq_min")
         col.row().prop(item,"regfreq_max")
-        row = col.row()
+        row = col.row(align=True)
         row.prop(item,"regfreq_freq")
         row.prop(item,"regfreq_freq_pct")
         row = col.row()
@@ -63,7 +62,7 @@ class WFC3D_UL_RegProbList(bpy.types.UIList):
         row.column(align=True).prop(item,"regprob_name", text="")
         col.row(align=True).prop(item,"regprob_min")
         col.row(align=True).prop(item,"regprob_max")
-        row = col.row()
+        row = col.row(align=True)
         row.prop(item, "regprob_probability")
         row.prop(item, "regprob_weight")
         row = col.row()
@@ -73,9 +72,9 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         ocol = row.column(align=True)
-        ocol.row().prop(item, "selected", text=f"{index}.")
+        ocol.row(align=True).prop(item, "selected", text=f"{index}.")
         col = ocol.column(align=True)
-        col.row().prop(item, "distance")
+        col.row(align=True).prop(item, "distance")
         col.prop(item, "distance_from")
         if item.distance_from == 'object':
             col.prop(item, "distance_object")
@@ -87,7 +86,7 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
             else:
                 row.prop(item, "distance_position_pct")
         else:
-            col.row().prop(item, "distance_subcollection")
+            col.row(align=True).prop(item, "distance_subcollection")
         col.prop(item, "distance_type")
         row = ocol.row()
         row.separator()
