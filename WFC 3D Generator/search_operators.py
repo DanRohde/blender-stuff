@@ -94,9 +94,9 @@ class WFC3DBackgroundSearch:
         bpy.app.timers.register(self._search, first_interval=0)
 
 class WFC3D_OT_Search(bpy.types.Operator):
-    """Search for a random seed with maximum grid occupancy"""
     bl_idname = "object.wfc_3d_search"
     bl_label = "Search"
+    bl_description = "Search for a random seed"
     search_operator : bpy.props.StringProperty(default="min")
     search_scope : bpy.props.StringProperty(default="occupancy")
     search_object : bpy.props.StringProperty(default="")
