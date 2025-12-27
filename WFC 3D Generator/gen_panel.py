@@ -47,26 +47,24 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         c.prop(props, "location")
         c.enabled = not props.use_cursor
 
-        layout.label(text="Target Collection")
         box = layout.box()
         row = box.row(align=True)
-        row.prop(props, "target_collection")
-        row.operator("object.wfc3d_target_collection_inc_number", emboss=False, icon="REMOVE").operator = "-"
-        row.operator("object.wfc3d_target_collection_inc_number", emboss=False, icon="ADD").operator = "+"
+        row.label(text="Target Collection")
 
-        render_collection_actions(context, row, props.target_collection if props.target_collection != "" else None)
-
-        row = box.row()
         row.prop(props, "link_objects", icon="LINKED", text="")
         col = row.column()
         col.prop(props, "copy_modifiers", icon="MODIFIER", text="")
         col.enabled = props.link_objects
-
-        #row = box.row()
         row.prop(props, "remove_target_collection", icon="TRASH", text="")
         col = row.column()
         col.prop(props, "hide_last_target_collections", icon="HIDE_ON", text="")
         col.enabled = not props.remove_target_collection
+
+        row = box.row(align=True)
+        row.prop(props, "target_collection")
+        row.operator("object.wfc3d_target_collection_inc_number", emboss=False, icon="REMOVE").operator = "-"
+        row.operator("object.wfc3d_target_collection_inc_number", emboss=False, icon="ADD").operator = "+"
+        render_collection_actions(context, row, props.target_collection if props.target_collection != "" else None)
 
         box = layout.box()
         row = box.row()
