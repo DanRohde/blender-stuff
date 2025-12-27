@@ -1,4 +1,5 @@
 import bpy
+import numpy as np
 import json
 from .helper import seed_in_seeds_list, render_source_collection, render_collection_actions
 class WFC3DGeneratePanel(bpy.types.Panel):
@@ -18,8 +19,10 @@ class WFC3DGeneratePanel(bpy.types.Panel):
 
         render_source_collection(context,layout)
         box = layout.box()
-       
-        box.label(text="Grid Size (width/depth/height)")
+        row = box.row()
+        row.alignment = "LEFT"
+        row.label(text="Grid Size (width/depth/height)")
+        row.label(text=f"{np.prod(props.grid_size)} Cells")
         box.row().prop(props, "grid_size")
         if props.grid_size[0] * props.grid_size[1] * props.grid_size[2] > 3000 or props.background_generation:
             row = box.row()
