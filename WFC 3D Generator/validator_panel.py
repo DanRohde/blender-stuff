@@ -1,5 +1,5 @@
 import bpy
-
+from .helper import render_source_collection
 class WFC3D_PT_ValidatorPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Validator"
@@ -11,7 +11,7 @@ class WFC3D_PT_ValidatorPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         props = context.scene.wfc_props
-        layout.prop(props, "collection_obj")
+        render_source_collection(context, layout)
         if props.collection_obj:
             layout.operator("object.wfc3d_validator")
             layout.separator()

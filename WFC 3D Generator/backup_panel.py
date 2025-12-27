@@ -1,5 +1,5 @@
 import bpy
-
+from .helper import render_source_collection
 class WFC3D_PT_BackupPanel(bpy.types.Panel):
     bl_idname = "VIEW3D_PT_wfc_3d_backup"
     bl_label = "WFC 3D Backup"
@@ -10,7 +10,7 @@ class WFC3D_PT_BackupPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         props = context.scene.wfc_props
-        layout.prop(props, "collection_obj")
+        render_source_collection(context, layout)
         box = layout.box()
         box.label(text="Export constraints")
         box.operator("wfc3d.export_json")

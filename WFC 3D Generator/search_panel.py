@@ -1,5 +1,7 @@
 import bpy
 from .gen_panel import render_seed_selection, render_generate_button, render_render_result
+from .helper import render_source_collection
+
 class WFC3D_PT_SearchPanel(bpy.types.Panel):
     bl_label = "WFC 3D Random Seed Search"
     bl_idname = "VIEW3D_PT_wfc_3d_search"
@@ -15,9 +17,9 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
         prefs = bpy.context.preferences.addons[__package__].preferences
 
         render_allowed = props.collection_obj is not None and len(props.obj_list) != 0 and props.collection_obj.name != props.target_collection
-        layout.label(text="Source Collection")
 
-        layout.prop(props, "collection_obj")
+        render_source_collection(context, layout)
+
         render_seed_selection(props, prefs, layout.row(align=True), render_allowed)
         render_generate_button(props, layout.row(), render_allowed and not props.search_running)
         box = layout.box()

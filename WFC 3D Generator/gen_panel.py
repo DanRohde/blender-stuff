@@ -1,6 +1,6 @@
 import bpy
 import json
-from .helper import seed_in_seeds_list
+from .helper import seed_in_seeds_list, render_source_collection, render_collection_actions
 class WFC3DGeneratePanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Generator"
@@ -16,10 +16,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
 
         render_allowed = props.collection_obj is not None and len(props.obj_list) != 0 and props.collection_obj.name != props.target_collection
 
-        layout.label(text="Source Collection")
-        
-        layout.prop(props, "collection_obj")
-       
+        render_source_collection(context,layout)
         box = layout.box()
        
         box.label(text="Grid Size (width/depth/height)")
@@ -46,10 +43,12 @@ class WFC3DGeneratePanel(bpy.types.Panel):
 
         layout.label(text="Target Collection")
         box = layout.box()
-        row = box.row()
+        row = box.row(align=True)
         row.prop(props, "target_collection")
         row.operator("object.wfc3d_target_collection_inc_number", icon="REMOVE").operator = "-"
         row.operator("object.wfc3d_target_collection_inc_number", icon="ADD").operator = "+"
+
+        render_collection_actions(context, row, props.target_collection if props.target_collection != "" else None)
 
         row = box.row()
         row.prop(props, "link_objects")
@@ -115,7 +114,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             layout.label(text="Source and target collection should not be the same.", icon="WARNING_LARGE")
         if props.collection_obj and len(props.collection_obj.objects)==0 and len(props.collection_obj.children)==0:
             layout.label(text="Please select a non-empty source collection.", icon="INFO_LARGE")
-            
+
 def render_render_result(props, layout):
     if props.render_result.cell_count > 0:
         box = layout.box()

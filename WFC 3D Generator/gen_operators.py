@@ -258,5 +258,20 @@ class WFC3D_OT_RandomSeed(bpy.types.Operator):
         random.seed()
         props.seed = random.randint(-0x7fffffff-1, 0x7fffffff)
         return {'FINISHED'}
+class WFC3D_OT_ToggleHideCollection(bpy.types.Operator):
+    bl_idname = "object.wfc_toggle_hide_collection"
+    bl_label = ""
+    bl_description = "Show/Hide Collection"
+    collection_name: bpy.props.StringProperty(default="")
+    attribute_name: bpy.props.StringProperty(default="hide_viewport")
+    def execute(self, context):
+        if self.collection_name != "":
+            if self.attribute_name == "hide_render":
+                bpy.data.collections[self.collection_name].hide_render = not bpy.data.collections[self.collection_name].hide_render
+            elif self.collection_name in context.view_layer.layer_collection.children:
+                setattr(context.view_layer.layer_collection.children[self.collection_name], self.attribute_name, not getattr(context.view_layer.layer_collection.children[self.collection_name],self.attribute_name))
 
-operators = [ WFC3D_OT_RandomSeed, WFC3D_OT_TargetCollectionIncNumber, WFC3D_OT_ResetRenderResult, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]
+
+
+        return {'FINISHED'}
+operators = [ WFC3D_OT_ToggleHideCollection, WFC3D_OT_RandomSeed, WFC3D_OT_TargetCollectionIncNumber, WFC3D_OT_ResetRenderResult, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]

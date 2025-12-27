@@ -1,5 +1,5 @@
 import bpy
-from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name, count_selected_items, get_active_constraints
+from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name, count_selected_items, get_active_constraints, render_source_collection
 from .properties import get_known_conn_names
 from .constants import *
 
@@ -118,8 +118,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         props = context.scene.wfc_props
-        layout.label(text="Source Collection")
-        layout.prop(props, "collection_obj")
+        render_source_collection(context, layout)
         col = layout.column(align=True)
         if not props.collection_obj:
             layout.label(text="Choose a Source Collection", icon='INFO')

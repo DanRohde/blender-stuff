@@ -1,5 +1,5 @@
 import bpy
-from .helper import get_icon_name, get_selected_items
+from .helper import get_icon_name, get_selected_items, render_source_collection
 
 class WFC3D_UL_RotationPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
@@ -16,7 +16,7 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         props = context.scene.wfc_props
-        layout.prop(props, "collection_obj")
+        render_source_collection(context, layout)
 
         if not props.collection_obj: return
         newrow = layout.box().row()
