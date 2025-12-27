@@ -192,9 +192,10 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             obj = get_default_empty_object(props.collection_obj)
             obj_name = 'Collection Defaults'
 
-        row = box.box().row()
+        row = box.box().row(align=True)
         row.operator('collection.wfc_info_toggle',icon='INFO_LARGE', depress = props.info_toggle)
         row.prop(props,"edit_constraints",icon="SETTINGS")
+        row.operator("object.wfc_open_web_link", icon="URL", text="").url = HELP["constraints"]["url"] + "#" + HELP["constraints"]["anchormap"][props.edit_constraints]
         row.operator('collection.wfc_auto_save_toggle',icon='IMPORT',depress = props.auto_save)
 
         if hasattr(self, f"draw_{props.edit_constraints}_panel") and callable(getattr(self, f"draw_{props.edit_constraints}_panel")):
