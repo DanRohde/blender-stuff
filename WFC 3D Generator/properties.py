@@ -183,7 +183,7 @@ class WFC3DRenderResult(bpy.types.PropertyGroup):
     render_start_time: bpy.props.FloatProperty()
     render_duration: bpy.props.FloatProperty()
     object_count: bpy.props.StringProperty()
-    object_count_collapsed: bpy.props.BoolProperty(default=True, name="Show/Hide Object Count Statistics")
+    object_count_collapsed: bpy.props.BoolProperty(default=True, description="C: Cell count, E: Empty cells, T: Time - gen./render/sum, Click to show/hide object statistics.")
 
 class WFC3DSearchResult(bpy.types.PropertyGroup):
     seed: bpy.props.IntProperty()
