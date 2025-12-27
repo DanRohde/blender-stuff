@@ -638,19 +638,11 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             self._draw_labels(sbox.column_flow(columns=3, align=True), labels)
         self._draw_list_properties(props, box, "Connector exclusion constraints", CONNECTOR_EXCLUSION_CONSTRAINTS)
         self._draw_list_properties(props, box, "Multiple connector constraints", MULTIPLE_CONNECTOR_CONSTRAINTS)
-
-
-
         self._draw_properties(props, box, "Geometry constraints", GEOMETRY_CONSTRAINTS)
 
-        sbox = box.box()
-        for p in EMPTY_NEIGHBOR_CONSTRAINTS:
-            if f"wfc_{p}" in obj: sbox.row().label(text=f"{p}: {obj[f'wfc_{p}']}")
+        self._draw_selection_properties(props, box, "Empty neighbor constraints", EMPTY_NEIGHBOR_CONSTRAINTS)
 
-        if sum(props.dim_xyz) > 3:
-            row = box.box().row()
-            row.enabled = False
-            row.prop(props,"dim_xyz")
+        self._draw_properties(props, box, "Dimensions constraints", DIMENSIONS_CONSTRAINTS)
 
         self._draw_list_properties(props, box, "Fixed position constraints", FIXED_POSITION_CONSTRAINTS)
 
@@ -701,6 +693,26 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
                 if j == 0: row.label(text=f"{i}.")
                 row.prop(lst[i], constraints[j])
 
+    def _draw_selection_properties(self, props, layout, name, constraints):
+        result = {}
+        render = False
+        for c in constraints:
+            result[c] = []
+            lst = getattr(props, SELECTION_CONSTRAINTS[c])
+            result[c] = [item for item in lst if item.selected]
+            render = render or len(result[c]) > 0
+
+        if not render: return
+        box = layout.box()
+        box.label(text=name)
+        for r in result:
+            if len(result[r]) == 0: continue
+            row = box.row()
+            row.enabled = False
+            row.label(text=f"{r}")
+            for item in result[r]:
+                for k in item.keys():
+                    if k != "selected": row.prop(item, k, text="")
     def _draw_properties(self, props, layout, name, constraints):
         f = []
         for p in constraints:
