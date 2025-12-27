@@ -505,21 +505,21 @@ def render_collection_actions(context, row, collection_name):
 
     col = row.column(align=True)
     is_src_excluded = view_layer is None or view_layer.exclude
-    op = col.operator("object.wfc_toggle_hide_collection", icon="CHECKBOX_DEHLT" if is_src_excluded else "CHECKBOX_HLT")
+    op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="CHECKBOX_DEHLT" if is_src_excluded else "CHECKBOX_HLT")
     op.collection_name = collection_name if collection_name is not None else ""
     op.attribute_name = "exclude"
     col.enabled = collection_name is not None
 
     col = row.column(align=True)
     is_src_hidden = view_layer is None or view_layer.hide_viewport
-    op = col.operator("object.wfc_toggle_hide_collection", icon="HIDE_ON" if is_src_hidden else "HIDE_OFF")
+    op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="HIDE_ON" if is_src_hidden else "HIDE_OFF")
     op.collection_name = collection_name if collection_name is not None else ""
     op.attribute_name = "hide_viewport"
     col.enabled = collection_name is not None
 
     col = row.column(align=True)
     is_src_rendered = view_layer is None or not bpy.data.collections[collection_name].hide_render
-    op = col.operator("object.wfc_toggle_hide_collection", icon="RESTRICT_RENDER_OFF" if is_src_rendered else "RESTRICT_RENDER_ON")
+    op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="RESTRICT_RENDER_OFF" if is_src_rendered else "RESTRICT_RENDER_ON")
     op.collection_name = collection_name if collection_name is not None else ""
     op.attribute_name = "hide_render"
     col.enabled = collection_name is not None and collection_name in bpy.data.collections

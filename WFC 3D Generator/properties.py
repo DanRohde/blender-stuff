@@ -210,6 +210,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     auto_detect_spacing: bpy.props.BoolProperty(name="Space Detection", description="Automatic cell space detection", default=False,)
     odd_offset: bpy.props.FloatVectorProperty(name="", description="Odd Offset", subtype="TRANSLATION", default=(0.0,0.0,0.0), precision=3)
     location: bpy.props.FloatVectorProperty(name="", description="Location", subtype="TRANSLATION", default=(0.0, 0.0, 0.0), precision=3)
+    use_cursor: bpy.props.BoolProperty(name="Use Cursor", description="Use Cursor location (rotation will be ignored)", default=False,)
     use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)
     target_collection: bpy.props.StringProperty(name="", description="Target collection for 3D grid", default="WFC_Generated",)
     render_delay: bpy.props.FloatProperty(name="Render Delay", description="Render Delay in milliseconds", default=0, min=0,step=10,precision=2)

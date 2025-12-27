@@ -27,26 +27,32 @@ class WFC3DGeneratePanel(bpy.types.Panel):
             row.prop(props, "background_iterations")
         row = box.row()
         col = row.column()
-        col.label(text="Space")
-        col.prop(props, "spacing")
-        col.enabled = not props.auto_detect_spacing
+        r = col.row(align=True)
+        r.label(text="Space")
+        r.prop(props, "auto_detect_spacing", text="", icon="SHADING_BBOX")
+        c = col.column(align=True)
+        c.prop(props, "spacing")
+        c.enabled = not props.auto_detect_spacing
         col = row.column()
         col.label(text="Odd Offset")
         col.prop(props, "odd_offset")
         col = row.column()
-        col.label(text="Location")
-        col.prop(props, "location")
+        r = col.row(align=True)
+        r.label(text="Location")
+        r.prop(props, "use_cursor", text="", icon="CURSOR")
+        c = col.column(align=True)
+        c.prop(props, "location")
+        c.enabled = not props.use_cursor
 
         row = box.row()
-        row.prop(props, "auto_detect_spacing")
         row.prop(props, "use_constraints")
 
         layout.label(text="Target Collection")
         box = layout.box()
         row = box.row(align=True)
         row.prop(props, "target_collection")
-        row.operator("object.wfc3d_target_collection_inc_number", icon="REMOVE").operator = "-"
-        row.operator("object.wfc3d_target_collection_inc_number", icon="ADD").operator = "+"
+        row.operator("object.wfc3d_target_collection_inc_number", emboss=False, icon="REMOVE").operator = "-"
+        row.operator("object.wfc3d_target_collection_inc_number", emboss=False, icon="ADD").operator = "+"
 
         render_collection_actions(context, row, props.target_collection if props.target_collection != "" else None)
 

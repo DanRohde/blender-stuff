@@ -16,6 +16,7 @@ class WFC3DRenderer:
         self.link_objects = self.props.link_objects
         self.spacing = self.generator.spacing
         self.progress = None
+        self.use_cursor = self.props.use_cursor
 
     def render(self, progress=None):
         self.init_target_collection(progress)
@@ -117,7 +118,8 @@ class WFC3DRenderer:
                 new_obj = original_obj.copy()
                 new_obj.data = original_obj.data.copy()
 
-            lx, ly, lz = self.location
+            lx, ly, lz = self.location if not self.use_cursor else bpy.context.scene.cursor.location
+
             new_location = [lx + x * self.spacing[0] + (self.odd_offset[0] * (y % 2)), ly + y * self.spacing[1] + (self.odd_offset[1] * (x % 2)), lz + z * self.spacing[2] + (self.odd_offset[2] * (x % 2))]
 
             new_obj.location = tuple(new_location)
