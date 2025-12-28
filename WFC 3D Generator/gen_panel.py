@@ -14,7 +14,7 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         layout = self.layout
         props = context.scene.wfc_props
         prefs = bpy.context.preferences.addons[__package__].preferences
-
+        grid_size = np.prod(props.grid_size)
         render_allowed = props.collection_obj is not None and len(props.obj_list) != 0 and props.collection_obj.name != props.target_collection
 
         render_source_collection(context,layout)
@@ -22,9 +22,9 @@ class WFC3DGeneratePanel(bpy.types.Panel):
         row = box.row()
         row.alignment = "LEFT"
         row.label(text="Grid Size (width/depth/height)")
-        row.label(text=f"{np.prod(props.grid_size)} Cells")
+        row.label(text=f"{grid_size} Cells")
         box.row().prop(props, "grid_size")
-        if props.grid_size[0] * props.grid_size[1] * props.grid_size[2] > 3000 or props.background_generation:
+        if grid_size > 3000 or props.background_generation:
             row = box.row()
             row.prop(props, "background_generation")
             row.prop(props, "background_iterations")

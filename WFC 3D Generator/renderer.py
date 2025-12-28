@@ -72,11 +72,8 @@ class WFC3DRenderer:
 
     def place_object(self, pos):
         x, y, z = pos
-        if len(self.grid.grid[x, y, z]) > 0:
-            obj_name = self.grid.grid[x, y, z][0]
-        else:
-            return
-
+        if len(self.grid.grid[x, y, z]) == 0: return
+        obj_name = self.grid.grid[x, y, z][0]
         collection = self.target_collection_obj
 
         # pick random objects from a collection
@@ -120,14 +117,12 @@ class WFC3DRenderer:
 
             lx, ly, lz = self.location if not self.use_cursor else bpy.context.scene.cursor.location
 
-            new_location = [lx + x * self.spacing[0] + (self.odd_offset[0] * (y % 2)), ly + y * self.spacing[1] + (self.odd_offset[1] * (x % 2)), lz + z * self.spacing[2] + (self.odd_offset[2] * (x % 2))]
+            new_obj.location = (lx + x * self.spacing[0] + (self.odd_offset[0] * (y % 2)), ly + y * self.spacing[1] + (self.odd_offset[1] * (x % 2)), lz + z * self.spacing[2] + (self.odd_offset[2] * (x % 2)))
 
-            new_obj.location = tuple(new_location)
-
-            if self.props.use_constraints:
-                self.constraints.apply_draw_constraints((x, y, z), self.props.spacing, obj_name, new_obj)
+            if self.props.use_constraints: self.constraints.apply_draw_constraints((x, y, z), self.props.spacing, obj_name, new_obj)
 
             collection.objects.link(new_obj)
+
     def clean(self):
         self.generator.clean()
         self.generator = None
