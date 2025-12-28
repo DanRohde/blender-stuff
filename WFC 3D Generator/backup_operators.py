@@ -18,10 +18,7 @@ def put_data_into_object(data, p, obj):
         if '_object_link_' in data:
             obj[p] = bpy.data.objects[data["_object_link_"]]
         else:
-            if len(data) == 1:
-                obj[p] = data[0]
-            else:
-                obj[p] = data
+            obj[p] = data[0] if len(data) == 1 else data
     except Exception:
         obj[p] = data
 
@@ -55,8 +52,7 @@ class WFC3D_OT_ImportJson(bpy.types.Operator, ImportHelper):
     def execute(self, context):
         filepath = self.filepath
         try:
-            with open(filepath, "r", encoding='utf-8') as fp:
-                data = json.load(fp)
+            with open(filepath, "r", encoding='utf-8') as fp: data = json.load(fp)
 
             import_data(context.scene.wfc_props, data)
             self.report({'INFO'}, f"Imported constraints from json file {fp.name}.")
@@ -74,15 +70,9 @@ def get_property_data(obj):
                     prop_data[p] = obj[p]
                     continue
                 iter(obj[p])
-                if len(obj[p]) == 1:
-                    prop_data[p] = obj[p][0]
-                else:
-                    prop_data[p] = list(obj[p])
+                prop_data[p] = obj[p][0] if len(obj[p]) == 1 else list(obj[p])
             except Exception:
-                if isinstance(obj[p], bpy.types.Object):
-                    prop_data[p] = { '_object_link_' : obj[p].name }
-                else:
-                    prop_data[p] = obj[p]
+                prop_data[p] = { '_object_link_' : obj[p].name } if isinstance(obj[p], bpy.types.Object) else obj[p]
     return prop_data
 
 def get_export_data(props):

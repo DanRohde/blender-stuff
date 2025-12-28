@@ -56,12 +56,9 @@ class WFC3DGrid:
             if d != 0:
                 t_values.append(dp / d)
             else:
-                if dp != 0:
-                    return False
-        if not t_values:
-            return False
-        if not all(abs(t - t_values[0]) < 1e-9 for t in t_values):
-            return False
+                if dp != 0: return False
+        if not t_values: return False
+        if not all(abs(t - t_values[0]) < 1e-9 for t in t_values): return False
         t = t_values[0]
         return 0 <= t <= 1
 
@@ -209,8 +206,7 @@ class WFC3DGrid:
             if not self.within_boundaries(nx, ny, nz) or len(self.grid[nx, ny, nz]) < 1: continue
             neighbors_pos.append([nx, ny, nz])
 
-        if max_count > len(neighbors_pos):
-            max_count = len(neighbors_pos)
+        if max_count > len(neighbors_pos): max_count = len(neighbors_pos)
 
         ## randomize neighbor positions and remove first max_count neighbors
         random.shuffle(neighbors_pos)

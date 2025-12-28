@@ -147,10 +147,8 @@ class WFC3D_OT_GetSelectedObject(bpy.types.Operator):
             selected_object_names = [obj.name for obj in selected_objects]
             for obj in selected_objects:
                 for child in props.collection_obj.children:
-                    if obj.name in child.objects:
-                        selected_object_names.append(child.name)
-            for item in getattr(props, self.list_name):
-                item.selected = item.obj.name in selected_object_names
+                    if obj.name in child.objects: selected_object_names.append(child.name)
+            for item in getattr(props, self.list_name): item.selected = item.obj.name in selected_object_names
             props.obj_list_idx = -1
         else:
             self.report({'WARNING'}, "No active object found")

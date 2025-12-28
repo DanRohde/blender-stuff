@@ -13,8 +13,7 @@ def get_default_empty_object(collection, create = False) -> Any | None:
         return collection.objects[get_default_empty_name()]
     else:
         for o in collection.objects:
-            if o.name.startswith(get_default_empty_name()):
-                return o
+            if o.name.startswith(get_default_empty_name()): return o
         if not create: return None
         obj = bpy.data.objects.new(get_default_empty_name(), None)
         collection.objects.link(obj)
@@ -144,10 +143,7 @@ def update_grid_constraints(props):
         obj["wfc_corners"] = _get_new_prop_val(props, "corner", CORNER_DIRECTIONS)
         obj["wfc_edges"] = _get_new_prop_val(props, "edge", EDGE_DIRECTIONS)
         obj["wfc_faces"] = _get_new_prop_val(props, "face", FACE_DIRECTIONS)
-        if props["inside_none"]:
-            obj["wfc_inside"] = "-"
-        else:
-            obj["wfc_inside"] = ""
+        obj["wfc_inside"] = "-" if props["inside_none"] else ""
 
     if props.edit_type == 'objects':
         for item in get_selected_items(props.obj_list):
@@ -252,7 +248,6 @@ def update_edit_form(_self, _context):
                 items = obj[cp].split(",") if cp in obj else PROP_DEFAULTS[c]
                 for i in getattr(props, SELECTION_CONSTRAINTS[c]):
                     i.selected = i.direction in items
-
             elif cp in obj:
                 try:
                     props[c] = obj[cp]

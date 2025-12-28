@@ -837,8 +837,7 @@ class WFC3DConstraints:
         # align element:
         loc = new_obj.location
         fac = (1, 1, 1) if self.symflip[x, y, z] is None else self.symflip[x, y, z]
-        newloc = [ loc[0] + (d[0]-1)/2 * spacing[0] * fac[0], loc[1] + (d[1]-1)/2 * spacing[1] * fac[1], loc[2] + (d[2]-1)/2 * spacing[2] * fac[2] ]
-        new_obj.location = newloc
+        new_obj.location = ( loc[0] + (d[0]-1)/2 * spacing[0] * fac[0], loc[1] + (d[1]-1)/2 * spacing[1] * fac[1], loc[2] + (d[2]-1)/2 * spacing[2] * fac[2] )
 
         # prevent drawing:
         for nx in range(d[0]):

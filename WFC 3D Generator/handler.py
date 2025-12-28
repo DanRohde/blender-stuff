@@ -7,10 +7,8 @@ def _update_list(itemlist, selected_object_names):
     # caution: any item.selected change fires an event => only do necessary updates
     for item in itemlist:
         if item.obj.name in selected_object_names:
-            if not item.selected:
-                item.selected = True
-        elif item.selected:
-            item.selected = False
+            if not item.selected: item.selected = True
+        elif item.selected: item.selected = False
 
 @persistent
 def update_handler(_scene, _depsgraph):
