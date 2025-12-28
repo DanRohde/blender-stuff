@@ -25,7 +25,7 @@ class WFC3DRenderer:
             bpy.context.scene.wfc_props.running_delayed_renderer = True
             bpy.app.timers.register(self.place_delayed_objects, first_interval=self.props.render_delay/1000)
         else:
-            while len(self.collapsed_cells)>0:
+            while len(self.collapsed_cells) > 0:
                 self.place_object(self.collapsed_cells.pop(0))
                 progress.update_inc()
 
@@ -87,41 +87,41 @@ class WFC3DRenderer:
         else:
             original_obj = next((obj for obj in self.generator.objects if obj.name == obj_name), None)
 
-        if original_obj:
-            if self.link_objects:
-                try:
-                    new_obj = bpy.data.objects.new(name=original_obj.name, object_data=original_obj.data)
+        if not original_obj: return
 
-                    new_obj.rotation_mode = original_obj.rotation_mode
-                    new_obj.scale = original_obj.scale.copy()
-                    new_obj.rotation_euler = original_obj.rotation_euler.copy()
-                    new_obj.rotation_quaternion = original_obj.rotation_quaternion.copy()
-                    new_obj.rotation_axis_angle = original_obj.rotation_axis_angle[:]
-                except:
-                    new_obj = original_obj.copy()
-                    new_obj.data = original_obj.data.copy()
+        if self.link_objects:
+            try:
+                new_obj = bpy.data.objects.new(name=original_obj.name, object_data=original_obj.data)
 
-                if self.props.copy_modifiers:
-                    for mod in original_obj.modifiers:
-                        new_mod = new_obj.modifiers.new(name=mod.name, type=mod.type)
-                        for attr in dir(mod):
-                            if attr.startswith("_"):
-                                continue
-                            try:
-                                setattr(new_mod, attr, getattr(mod, attr))
-                            except Exception:
-                                pass
-            else:
+                new_obj.rotation_mode = original_obj.rotation_mode
+                new_obj.scale = original_obj.scale.copy()
+                new_obj.rotation_euler = original_obj.rotation_euler.copy()
+                new_obj.rotation_quaternion = original_obj.rotation_quaternion.copy()
+                new_obj.rotation_axis_angle = original_obj.rotation_axis_angle[:]
+            except:
                 new_obj = original_obj.copy()
                 new_obj.data = original_obj.data.copy()
 
-            lx, ly, lz = self.location if not self.use_cursor else bpy.context.scene.cursor.location
+            if self.props.copy_modifiers:
+                for mod in original_obj.modifiers:
+                    new_mod = new_obj.modifiers.new(name=mod.name, type=mod.type)
+                    for attr in dir(mod):
+                        if attr.startswith("_"): continue
+                        try:
+                            setattr(new_mod, attr, getattr(mod, attr))
+                        except Exception:
+                            pass
+        else:
+            new_obj = original_obj.copy()
+            new_obj.data = original_obj.data.copy()
 
-            new_obj.location = (lx + x * self.spacing[0] + (self.odd_offset[0] * (y % 2)), ly + y * self.spacing[1] + (self.odd_offset[1] * (x % 2)), lz + z * self.spacing[2] + (self.odd_offset[2] * (x % 2)))
+        lx, ly, lz = self.location if not self.use_cursor else bpy.context.scene.cursor.location
 
-            if self.props.use_constraints: self.constraints.apply_draw_constraints((x, y, z), self.props.spacing, obj_name, new_obj)
+        new_obj.location = (lx + x * self.spacing[0] + (self.odd_offset[0] * (y % 2)), ly + y * self.spacing[1] + (self.odd_offset[1] * (x % 2)), lz + z * self.spacing[2] + (self.odd_offset[2] * (x % 2)))
 
-            collection.objects.link(new_obj)
+        if self.props.use_constraints: self.constraints.apply_draw_constraints((x, y, z), self.props.spacing, obj_name, new_obj)
+
+        collection.objects.link(new_obj)
 
     def clean(self):
         self.generator.clean()
