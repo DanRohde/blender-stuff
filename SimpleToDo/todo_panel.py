@@ -29,6 +29,7 @@ class STODO_UL_TaskList(bpy.types.UIList):
             c = row.column(align=True)
             c.alignment = "LEFT"
             duration = item.duration if item.start_time == -1 else item.duration + time.time()-item.start_time
+            if duration < 0: duration = 0
             c.label(text=format_duration(duration))
             if item.time_required_days + item.time_required_hours + item.time_required_minutes > 0:
                 tr = item.time_required_days * 86400 + item.time_required_hours * 3600 + item.time_required_minutes * 60
