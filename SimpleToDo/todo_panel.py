@@ -28,7 +28,7 @@ class STODO_UL_TaskList(bpy.types.UIList):
             row.column()
             c = row.column(align=True)
             c.alignment = "LEFT"
-            duration = item.duration if item.start_time == -1 else item.duration + time.perf_counter()-item.start_time
+            duration = item.duration if item.start_time == -1 else item.duration + time.time()-item.start_time
             c.label(text=format_duration(duration))
             if item.time_required_days + item.time_required_hours + item.time_required_minutes > 0:
                 tr = item.time_required_days * 86400 + item.time_required_hours * 3600 + item.time_required_minutes * 60
@@ -52,6 +52,7 @@ class STODO_UL_TaskList(bpy.types.UIList):
         c = row.column(align=True)
         c.prop(item, "duration", text="Duration (s):")
         c.enabled = item.start_time == -1
+        if item.start_time > 0: col.row().label(text=f"Started on {time.strftime('%x at %X', time.localtime(item.start_time))}")
 
 
 class STODO_PT_Panel(bpy.types.Panel):
@@ -65,7 +66,7 @@ class STODO_PT_Panel(bpy.types.Panel):
         layout = self.layout
         props = context.scene.stodo_props
         selected_items = [item for item in props.task_list if item.selected]
-
+        started_items = [item for item in props.task_list if item.start_time > 0]
 
         row = layout.row()
         row.operator("object.stodo_add_task", text="Add Task", icon="ADD")
@@ -94,5 +95,5 @@ class STODO_PT_Panel(bpy.types.Panel):
         row.operator("object.stodo_toggle_select_tasks", icon="CHECKBOX_HLT").select = True
         row.operator("object.stodo_toggle_select_tasks", icon="CHECKBOX_DEHLT").select = False
         row.operator("object.stodo_invert_selected_tasks", icon="CHECKMARK")
-        box.row().label(text=f"{len(selected_items)} of {len(props.task_list)} task(s) selected.")
+        box.row().label(text=f"{len(selected_items)} of {len(props.task_list)} task(s) selected. {len(started_items)} task(s) started.")
 panels = [ STODO_UL_TaskList, STODO_PT_Panel ]

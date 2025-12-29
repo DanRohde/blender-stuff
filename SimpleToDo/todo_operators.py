@@ -17,9 +17,9 @@ class STODO_OT_ToggleRunningTask(bpy.types.Operator):
     def execute(self, context):
         item = context.scene.stodo_props.task_list[self.task_index]
         if item.start_time == -1:
-            item.start_time = time.perf_counter()
+            item.start_time = time.time()
         else:
-            item.duration += time.perf_counter() - item.start_time
+            item.duration += time.time() - item.start_time
             item.start_time = -1
         return {'FINISHED'}
 

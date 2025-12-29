@@ -1,11 +1,11 @@
 import bpy
 from .constants import PRIORITIES
 class SimpleToDoTaskItem(bpy.types.PropertyGroup):
-    task: bpy.props.StringProperty(name="Task")
-    description: bpy.props.StringProperty(name="", description="Description")
+    task: bpy.props.StringProperty(name="", description="Task", default="")
+    description: bpy.props.StringProperty(name="", description="Description", default="")
     priority: bpy.props.EnumProperty(name="Priority", description="Priority", items=PRIORITIES, default="normal")
-    done: bpy.props.BoolProperty(name="", description="Status")
-    selected: bpy.props.BoolProperty()
+    done: bpy.props.BoolProperty(name="", description="Status", default=False)
+    selected: bpy.props.BoolProperty(name="", description="select", default=False)
     start_time: bpy.props.FloatProperty(name="Start Time", default=-1)
     duration: bpy.props.FloatProperty(name="Duration", default=0)
     time_required_days: bpy.props.IntProperty(name="D", description="Planned time required in days", default=0, min=0)
