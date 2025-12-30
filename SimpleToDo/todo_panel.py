@@ -18,7 +18,7 @@ class STODO_UL_TaskList(bpy.types.UIList):
         c.operator("object.stodo_toggle_running_task", emboss=False, icon="PLAY" if item.start_time == -1 else "EVENT_MEDIASTOP" ).task_index = index
         c.enabled = not item.done
         c = row.column(align=True)
-        c.prop(item, "done", emboss=True, text="", icon="STRIP_COLOR_04" if item.done else "STRIP_COLOR_03")
+        c.prop(item, "done", text="", icon="STRIP_COLOR_05" if item.done else "STRIP_COLOR_03")
 
         if not item.collapsed or item.duration > 0 or item.start_time > 0 : col = col.box()
 
