@@ -1,9 +1,9 @@
-schema_version = "1.0.1"
+schema_version = "1.0.0"
 
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "simple_todo"
-version = "1.0.0"
+version = "1.0.1"
 name = "SimpleToDo"
 tagline = "A simple task manager with time tracking"
 maintainer = "Dan Rohde <d.rohde@web.de>"
