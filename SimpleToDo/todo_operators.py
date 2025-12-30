@@ -81,8 +81,8 @@ class STODO_OT_ImportCSV(bpy.types.Operator, ImportHelper):
     bl_idname = "object.stodo_import_csv"
     bl_label = "Import Tasks"
     bl_description = "Import tasks from a CSV file"
-    filename_ext = ".json"
-    filter_glob = bpy.props.StringProperty(default="*.json", options={'HIDDEN'})
+    filename_ext = ".csv"
+    filter_glob: bpy.props.StringProperty(default="*.csv", options={"HIDDEN"})
     def execute(self, context):
         props = context.scene.stodo_props
         try:
@@ -93,16 +93,17 @@ class STODO_OT_ImportCSV(bpy.types.Operator, ImportHelper):
                     for key, value in row.items():
                         if not hasattr(item, key): continue
                         prop = item.bl_rna.properties[key]
-                        if prop.type == 'FLOAT':
+                        if prop.type == "FLOAT":
                             value = float(value)
-                        elif prop.type == 'INT':
+                        elif prop.type == "INT":
                             value = int(value)
-                        elif prop.type == 'BOOLEAN':
+                        elif prop.type == "BOOLEAN":
                             value = value.lower() in {"1", "true", "yes"}
                         setattr(item, key, value)
         except Exception as e:
             self.report({'ERROR'}, f"Import tasks from CSV file failed: {e}")
-            return {'CANCELLED'}
+            return {"CANCELLED"}
+        self.report({'INFO'}, "Import from CSV complete.")
         return {"FINISHED"}
 
 class STODO_OT_ExportCSV(bpy.types.Operator, ExportHelper):
@@ -110,7 +111,7 @@ class STODO_OT_ExportCSV(bpy.types.Operator, ExportHelper):
     bl_label = "Export Tasks"
     bl_description = "Export tasks to a CSV"
     filename_ext = ".csv"
-    filter_glob = bpy.props.StringProperty(default="*.csv", options={'HIDDEN'})
+    filter_glob: bpy.props.StringProperty(default="*.csv", options={"HIDDEN"})
     def execute(self, context):
         props = context.scene.stodo_props
         if len(props.task_list) == 0:
@@ -126,11 +127,10 @@ class STODO_OT_ExportCSV(bpy.types.Operator, ExportHelper):
                 for item in props.task_list:
                     row = [ getattr(item, k) for k in keys ]
                     csvwriter.writerow(row)
-            self.report({'INFO'}, "Export to CSV complete.")
-            return {'FINISHED'}
         except Exception as e:
             self.report({'ERROR'}, f"Export task to CSV file failed: {e}")
             return {'CANCELLED'}
+        self.report({'INFO'}, "Export to CSV complete.")
         return {"FINISHED"}
 
 operators = [ STODO_OT_ImportCSV, STODO_OT_ExportCSV, STODO_OT_RemoveSelectedTasks, STODO_OT_InvertSelectTasks, STODO_OT_MoveDownTasks,
