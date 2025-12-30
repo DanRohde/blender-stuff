@@ -19,7 +19,7 @@ class STODO_OT_ToggleRunningTask(bpy.types.Operator):
         if item.start_time == -1:
             item.start_time = time.time()
         else:
-            item.duration += time.time() - item.start_time
+            item.duration += min(0, time.time() - item.start_time)
             item.start_time = -1
         return {'FINISHED'}
 

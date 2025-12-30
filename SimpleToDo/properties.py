@@ -1,5 +1,7 @@
 import bpy
 from .constants import PRIORITIES
+def handle_dummy_update(self, context):
+    return None
 class SimpleToDoTaskItem(bpy.types.PropertyGroup):
     task: bpy.props.StringProperty(name="", description="Task", default="")
     description: bpy.props.StringProperty(name="", description="Description", default="")
@@ -16,5 +18,6 @@ class SimpleToDoTaskItem(bpy.types.PropertyGroup):
 class SimpleToDoProperties(bpy.types.PropertyGroup):
     task_list: bpy.props.CollectionProperty(type=SimpleToDoTaskItem)
     task_list_idx: bpy.props.IntProperty()
+    refresh_dummy : bpy.props.FloatProperty(update=handle_dummy_update)
 
 properties = [ SimpleToDoTaskItem, SimpleToDoProperties ]
