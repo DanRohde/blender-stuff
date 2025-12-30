@@ -97,4 +97,6 @@ class STODO_PT_Panel(bpy.types.Panel):
         row.operator("object.stodo_toggle_select_tasks", icon="CHECKBOX_DEHLT").select = False
         row.operator("object.stodo_invert_selected_tasks", icon="CHECKMARK")
         box.row().label(text=f"{len(selected_items)} of {len(props.task_list)} task(s) selected. {len(started_items)} task(s) started.")
+        box.row().operator("object.stodo_export_csv")
+        box.row().operator("object.stodo_import_csv")
 panels = [ STODO_UL_TaskList, STODO_PT_Panel ]

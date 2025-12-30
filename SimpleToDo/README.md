@@ -8,5 +8,4 @@ This simple Add-on allows you to manage tasks and track time.
 
 
 ## Upcoming Features
-- CSV import/export
 - Ideas are welcome.

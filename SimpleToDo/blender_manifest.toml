@@ -3,7 +3,7 @@ schema_version = "1.0.0"
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "simple_todo"
-version = "1.0.1"
+version = "1.0.2"
 name = "SimpleToDo"
 tagline = "A simple task manager with time tracking"
 maintainer = "Dan Rohde <d.rohde@web.de>"
@@ -58,9 +58,9 @@ license = [
 # # Keep this a single short sentence without a period (.) at the end.
 # # For longer explanations use the documentation or detail page.
 #
-# [permissions]
+[permissions]
 # network = "Need to sync motion-capture data to server"
-# files = "Import/export FBX from/to disk"
+files = "Import/export Tasks from/to a CSV file"
 # clipboard = "Copy and paste bone transforms"
 
 # # Optional: advanced build settings.
