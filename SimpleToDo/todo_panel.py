@@ -17,12 +17,10 @@ class STODO_UL_TaskList(bpy.types.UIList):
         c = row.column(align=True)
         c.operator("object.stodo_toggle_running_task", emboss=False, icon="PLAY" if item.start_time == -1 else "EVENT_MEDIASTOP" ).task_index = index
         c.enabled = not item.done
-        c = row.column(align=True)
-        c.prop(item, "done", text="", icon="STRIP_COLOR_05" if item.done else "STRIP_COLOR_03")
+        row.column(align=True).prop(item, "done", text="", icon="STRIP_COLOR_05" if item.done else "STRIP_COLOR_03")
 
         if not item.collapsed or item.duration > 0 or item.start_time > 0 : col = col.box()
 
-        c.enabled = item.start_time == -1
         if item.duration > 0 or item.start_time > 0:
             row = col.row(align=True)
             row.column()
@@ -54,7 +52,7 @@ class STODO_UL_TaskList(bpy.types.UIList):
         c.prop(item, "duration", text="Duration (s):")
         c.enabled = item.start_time == -1
         if item.start_time > 0: col.row().label(text=f"Started on {time.strftime('%x at %X', time.localtime(item.start_time))}")
-
+        if item.created > 0: col.row().label(text=f"Created on {time.strftime('%x at %X', time.localtime(item.created))}")
 
 class STODO_PT_Panel(bpy.types.Panel):
     bl_idname = "VIEW3D_PT_simple_todo_panel"
@@ -97,6 +95,8 @@ class STODO_PT_Panel(bpy.types.Panel):
         row.operator("object.stodo_toggle_select_tasks", icon="CHECKBOX_DEHLT").select = False
         row.operator("object.stodo_invert_selected_tasks", icon="CHECKMARK")
         box.row().label(text=f"{len(selected_items)} of {len(props.task_list)} task(s) selected. {len(started_items)} task(s) started.")
-        box.row().operator("object.stodo_export_csv")
+        row = box.row()
+        row.operator("object.stodo_export_csv")
+        row.enabled = len(props.task_list) > 0
         box.row().operator("object.stodo_import_csv")
 panels = [ STODO_UL_TaskList, STODO_PT_Panel ]

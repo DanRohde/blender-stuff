@@ -8,7 +8,8 @@ class STODO_OT_AddTask(bpy.types.Operator):
     bl_label = "Add Task"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
-        context.scene.stodo_props.task_list.add()
+        item = context.scene.stodo_props.task_list.add()
+        item.created = time.time()
         return {'FINISHED'}
 
 class STODO_OT_ToggleRunningTask(bpy.types.Operator):
@@ -21,7 +22,7 @@ class STODO_OT_ToggleRunningTask(bpy.types.Operator):
         if item.start_time == -1:
             item.start_time = time.time()
         else:
-            item.duration += min(0, time.time() - item.start_time)
+            item.duration += abs(time.time() - item.start_time)
             item.start_time = -1
         return {'FINISHED'}
 
@@ -101,7 +102,7 @@ class STODO_OT_ImportCSV(bpy.types.Operator, ImportHelper):
                             value = value.lower() in {"1", "true", "yes"}
                         setattr(item, key, value)
         except Exception as e:
-            self.report({'ERROR'}, f"Import tasks from CSV file failed: {e}")
+            self.report({'ERROR'}, f"Importing tasks from CSV file {self.filepath} failed: {e}")
             return {"CANCELLED"}
         self.report({'INFO'}, "Import from CSV complete.")
         return {"FINISHED"}
@@ -128,7 +129,7 @@ class STODO_OT_ExportCSV(bpy.types.Operator, ExportHelper):
                     row = [ getattr(item, k) for k in keys ]
                     csvwriter.writerow(row)
         except Exception as e:
-            self.report({'ERROR'}, f"Export task to CSV file failed: {e}")
+            self.report({'ERROR'}, f"Exporting tasks to CSV file {self.filepath} failed: {e}")
             return {'CANCELLED'}
         self.report({'INFO'}, "Export to CSV complete.")
         return {"FINISHED"}
