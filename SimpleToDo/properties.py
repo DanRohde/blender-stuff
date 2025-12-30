@@ -18,7 +18,7 @@ class SimpleToDoTaskItem(bpy.types.PropertyGroup):
     done: bpy.props.BoolProperty(name="", description="Status", default=False, update=handle_done_update)
     selected: bpy.props.BoolProperty(name="", description="(De)select task.", default=False)
     start_time: bpy.props.FloatProperty(name="Start Time", default=-1)
-    duration: bpy.props.FloatProperty(name="Duration", default=0)
+    duration: bpy.props.FloatProperty(name="Duration", description="Time used so far", default=0)
     time_required_days: bpy.props.IntProperty(name="D", description="Planned time required in days", default=0, min=0)
     time_required_hours: bpy.props.IntProperty(name="H", description="Planned time required in hours", default=0, min=0, max=24)
     time_required_minutes: bpy.props.IntProperty(name="M", description="Planned time required in minutes", default=0, min=0, max=60)

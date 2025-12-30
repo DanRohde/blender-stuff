@@ -42,7 +42,7 @@ class STODO_UL_TaskList(bpy.types.UIList):
         col.row().prop(item, "priority")
 
         row = col.row()
-        row.label(text="Required:")
+        row.label(text="Planned:")
         row.prop(item, "time_required_days")
         row.prop(item, "time_required_hours")
         row.prop(item, "time_required_minutes")
