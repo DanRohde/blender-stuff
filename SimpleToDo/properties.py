@@ -18,11 +18,6 @@ def handle_quick_add_update(self, context):
     item.task = self.quick_add_task
     self.quick_add_task = ""
 
-def get_quick_task_list(self, context):
-    items = []
-    for idx, item in enumerate(self.task_list):
-        items.append((f"{idx}", item.task, item.description, PRIORITY_ICONS[item.priority], idx ))
-    return items
 class SimpleToDoTaskItem(bpy.types.PropertyGroup):
     task: bpy.props.StringProperty(name="", description="Task", default="")
     description: bpy.props.StringProperty(name="", description="Description", default="")
@@ -42,7 +37,6 @@ class SimpleToDoProperties(bpy.types.PropertyGroup):
     task_list_idx: bpy.props.IntProperty()
     refresh_dummy : bpy.props.FloatProperty(update=handle_dummy_update)
     quick_add_task: bpy.props.StringProperty(name="", description="Task", default="", update=handle_quick_add_update)
-    quick_tasks: bpy.props.EnumProperty(name="", description="Tasks", items=get_quick_task_list)
 
 class SimpleToDoAddonPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__

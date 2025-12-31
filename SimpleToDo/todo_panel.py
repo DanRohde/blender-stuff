@@ -79,7 +79,7 @@ class STODO_PT_Panel(bpy.types.Panel):
         c = row.column()
         c.operator("object.stodo_remove_selected_tasks", icon="REMOVE", text="")
         c.enabled = len(selected_items) > 0
-        layout.template_list("STODO_UL_TaskList","", props, "task_list", props, "task_list_idx", rows=10)
+        layout.template_list("STODO_UL_TaskList","", props, "task_list", props, "task_list_idx")
         if len(props.task_list) > 0:
             done = len([i for i in props.task_list if i.done ])
             progress =  done / len(props.task_list) if len(props.task_list) > 0 else 0
@@ -103,8 +103,7 @@ class STODO_PT_Panel(bpy.types.Panel):
         row.operator("object.stodo_toggle_select_tasks", icon="CHECKBOX_DEHLT").select = False
         row.operator("object.stodo_invert_selected_tasks", icon="CHECKMARK")
         row.separator()
-        row.operator("object.stodo_toggle_collapse_tasks", icon="RIGHTARROW"). collapse = True
-        row.operator("object.stodo_toggle_collapse_tasks", icon="DOWNARROW_HLT").collapse = False
+        row.operator("object.stodo_collapse_tasks", icon="RIGHTARROW")
         box.row().label(text=f"{len(selected_items)} of {len(props.task_list)} task(s) selected. {len(started_items)} task(s) started.")
         row = box.row()
         row.operator("object.stodo_export_csv")
@@ -119,9 +118,18 @@ def draw_top_bar(self, context):
     if prefs.show_quick_add:
         layout.prop(props, "quick_add_task", icon="NODE_SOCKET_COLLECTION")
     if prefs.show_quick_tasks and len(props.task_list) > 0:
-        layout.prop(props, "quick_tasks")
-        task_index = int(props.quick_tasks)
+        running_tasks = [ idx for idx, item in enumerate(props.task_list) if item.start_time > -1 ]
+        if len(running_tasks) > 0:
+            task_index = running_tasks[0]
+        else:
+            todo_tasks = [idx for idx, item in enumerate(props.task_list) if not item.done]
+            if len(todo_tasks) > 0:
+                task_index = todo_tasks[0]
+            else:
+                layout.label(text="All tasks have been done.", icon="INFO_LARGE")
+                return
         item = props.task_list[task_index]
+        layout.prop(item, "task", icon=PRIORITY_ICONS[item.priority])
         draw_task_actions(layout, item, task_index)
         draw_task_progress(layout, item)
 

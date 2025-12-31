@@ -36,14 +36,13 @@ class STODO_OT_ToggleSelectTasks(bpy.types.Operator):
             item.selected = self.select
         return {'FINISHED'}
 
-class STODO_OT_ToggleCollapseTasks(bpy.types.Operator):
-    bl_idname = "object.stodo_toggle_collapse_tasks"
+class STODO_OT_CollapseTasks(bpy.types.Operator):
+    bl_idname = "object.stodo_collapse_tasks"
     bl_label = ""
-    bl_description = "(Un)Collapse all tasks"
-    collapse: bpy.props.BoolProperty(default=True)
+    bl_description = "Collapse all tasks"
     def execute(self, context):
         for item in context.scene.stodo_props.task_list:
-            item.collapsed = self.collapse
+            item.collapsed = True
         return {'FINISHED'}
 
 
@@ -145,5 +144,5 @@ class STODO_OT_ExportCSV(bpy.types.Operator, ExportHelper):
         self.report({'INFO'}, "Export to CSV complete.")
         return {"FINISHED"}
 
-operators = [ STODO_OT_ToggleCollapseTasks, STODO_OT_ImportCSV, STODO_OT_ExportCSV, STODO_OT_RemoveSelectedTasks, STODO_OT_InvertSelectTasks, STODO_OT_MoveDownTasks,
+operators = [ STODO_OT_CollapseTasks, STODO_OT_ImportCSV, STODO_OT_ExportCSV, STODO_OT_RemoveSelectedTasks, STODO_OT_InvertSelectTasks, STODO_OT_MoveDownTasks,
               STODO_OT_MoveUpTasks, STODO_OT_ToggleSelectTasks, STODO_OT_ToggleRunningTask, STODO_OT_AddTask ]
