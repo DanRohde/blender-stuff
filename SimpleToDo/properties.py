@@ -36,7 +36,7 @@ class SimpleToDoProperties(bpy.types.PropertyGroup):
     task_list: bpy.props.CollectionProperty(type=SimpleToDoTaskItem)
     task_list_idx: bpy.props.IntProperty()
     refresh_dummy : bpy.props.FloatProperty(update=handle_dummy_update)
-    quick_add_task: bpy.props.StringProperty(name="", description="Task", default="", update=handle_quick_add_update)
+    quick_add_task: bpy.props.StringProperty(name="", description="Quickly add a new task.", default="", update=handle_quick_add_update)
 
 class SimpleToDoAddonPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
