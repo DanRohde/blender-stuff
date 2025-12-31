@@ -6,6 +6,7 @@ import csv
 class STODO_OT_AddTask(bpy.types.Operator):
     bl_idname = "object.stodo_add_task"
     bl_label = "Add Task"
+    bl_description = "Add a new task to the task list."
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         item = context.scene.stodo_props.task_list.add()
