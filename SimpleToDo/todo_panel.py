@@ -28,6 +28,13 @@ def draw_task_progress(layout, item):
             layout.progress(factor=p, text=f"{p * 100:03.1f}% used, {format_duration(tr - duration)} remaining", type="RING")
         else:
             layout.label(text=f"Time expired {format_duration(abs(tr - duration))} ago.", icon="WARNING_LARGE")
+
+def draw_tasks_progress(layout, props):
+    if len(props.task_list) > 0:
+        done = len([i for i in props.task_list if i.done])
+        progress = done / len(props.task_list) if len(props.task_list) > 0 else 0
+        layout.progress(factor=progress, text=f"{progress * 100:03.1f} % ({done} of {len(props.task_list)}) done.")
+
 class STODO_UL_TaskList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         col = layout.row().column(align=True)
@@ -80,10 +87,7 @@ class STODO_PT_Panel(bpy.types.Panel):
         c.operator("object.stodo_remove_selected_tasks", icon="REMOVE", text="")
         c.enabled = len(selected_items) > 0
         layout.template_list("STODO_UL_TaskList","", props, "task_list", props, "task_list_idx")
-        if len(props.task_list) > 0:
-            done = len([i for i in props.task_list if i.done ])
-            progress =  done / len(props.task_list) if len(props.task_list) > 0 else 0
-            layout.progress(factor = progress, text=f"{progress*100:03.1f} % ({done} of {len(props.task_list)}) done.")
+        draw_tasks_progress(layout, props)
         row = layout.row()
         row.operator("object.stodo_add_task", text="Add Task", icon="ADD")
         c = row.column()
@@ -132,5 +136,6 @@ def draw_top_bar(self, context):
         layout.prop(item, "task", icon=PRIORITY_ICONS[item.priority])
         draw_task_actions(layout, item, task_index)
         draw_task_progress(layout, item)
+        if prefs.show_tasks_progress: draw_tasks_progress(layout, props)
 
 panels = [ STODO_UL_TaskList, STODO_PT_Panel ]

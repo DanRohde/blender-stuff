@@ -42,9 +42,11 @@ class SimpleToDoAddonPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
     show_quick_add: bpy.props.BoolProperty(name="Show quick task addition", description="Show quick task addition in the top bar", default=False)
     show_quick_tasks: bpy.props.BoolProperty(name="Show quick task actions", description="Show quick task actions in the top bar", default=True)
+    show_tasks_progress: bpy.props.BoolProperty(name="Show tasks progress", description="Show tasks progress in the top bar", default=False)
     def draw(self, context):
         layout = self.layout
         layout.prop(self, "show_quick_add")
         layout.prop(self, "show_quick_tasks")
+        layout.prop(self, "show_tasks_progress")
 
 properties = [ SimpleToDoAddonPreferences, SimpleToDoTaskItem, SimpleToDoProperties ]
