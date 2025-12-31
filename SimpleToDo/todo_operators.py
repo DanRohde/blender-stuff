@@ -121,7 +121,7 @@ class STODO_OT_ImportCSV(bpy.types.Operator, ImportHelper):
 class STODO_OT_ExportCSV(bpy.types.Operator, ExportHelper):
     bl_idname = "object.stodo_export_csv"
     bl_label = "Export Tasks"
-    bl_description = "Export tasks to a CSV"
+    bl_description = "Export tasks to a CSV file"
     filename_ext = ".csv"
     filter_glob: bpy.props.StringProperty(default="*.csv", options={"HIDDEN"})
     def execute(self, context):
