@@ -12,7 +12,7 @@ def draw_task_actions(layout, item, task_index):
     c = layout.column(align=True)
     c.operator("object.stodo_toggle_running_task", emboss=False, icon="PLAY" if item.start_time == -1 else "EVENT_MEDIASTOP").task_index = task_index
     c.enabled = not item.done
-    layout.column(align=True).prop(item, "done", text="", icon="STRIP_COLOR_05" if item.done else "STRIP_COLOR_03")
+    layout.column(align=True).prop(item, "done", text="")#, icon="STRIP_COLOR_05" if item.done else "STRIP_COLOR_03")
 
 def draw_task_progress(layout, item):
     if item.duration == 0 and item.start_time <= 0: return

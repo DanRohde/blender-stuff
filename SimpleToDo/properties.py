@@ -22,7 +22,7 @@ class SimpleToDoTaskItem(bpy.types.PropertyGroup):
     task: bpy.props.StringProperty(name="", description="Task", default="")
     description: bpy.props.StringProperty(name="", description="Description", default="")
     priority: bpy.props.EnumProperty(name="Priority", description="Priority", items=PRIORITIES, default="normal")
-    done: bpy.props.BoolProperty(name="", description="Status", default=False, update=handle_done_update)
+    done: bpy.props.BoolProperty(name="", description="Click to change status from 'to do' to 'done' or vice versa.", default=False, update=handle_done_update)
     selected: bpy.props.BoolProperty(name="", description="(De)select task.", default=False)
     start_time: bpy.props.FloatProperty(name="Start Time", default=-1)
     duration: bpy.props.FloatProperty(name="Duration", description="Time used so far", default=0, min=0)
