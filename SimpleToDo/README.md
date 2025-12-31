@@ -11,7 +11,7 @@ This simple Add-on allows you to manage tasks and track time.
 - Simple time tracking
 - Setting task priorities.
 - Quick Add feature: If enabled in the add-on preferences, you can add new tasks via the top bar.
-- Quick Task Actions feature: You can manage your tasks in the top bar.
+- Quick Task Actions feature: You can manage your tasks in the top bar to the right of the workspaces.
 
 ## Upcoming Features
 - Ideas are welcome.
