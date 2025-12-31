@@ -131,7 +131,7 @@ class STODO_OT_ExportCSV(bpy.types.Operator, ExportHelper):
             return {'FINISHED'}
 
         try:
-            keys =  [p.identifier for p in props.task_list[0].bl_rna.properties if p.identifier not in {"rna_type"}]
+            keys =  [p.identifier for p in props.task_list[0].bl_rna.properties if p.identifier not in {"rna_type", "name"}]
             with open(self.filepath, "w", encoding="utf-8") as csvfile:
                 csvwriter = csv.writer(csvfile, delimiter=",", quoting=csv.QUOTE_ALL)
                 csvwriter.writerow(keys)
