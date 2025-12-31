@@ -2,7 +2,7 @@ import bpy
 
 from .constants import *
 from .helper import auto_save, update_edit_form, handle_edit_neighbor_constraint_update, handle_conn_directions_update, handle_update_collection, get_noise_basis, \
-    is_sub_element, get_seeds, handle_seed_selection, handle_active_constraints_changes, get_constraints_menu
+    is_sub_element, get_seeds, handle_seed_selection, handle_active_constraints_changes, get_constraints_menu, get_default_empty_name
 
 from .gen_operators import  handle_seed_change
 
@@ -44,7 +44,35 @@ def get_connector_exclusion_direction_list(_self, _context):
 def get_multiple_connector_direction_list(_self, _context):
     return get_direction_list([], 'wfc_mult_conn_', with_sep = False)
 
-
+def _get_connector_names_from_object(obj, s, cache):
+    items = []
+    idx = 0
+    while f"wfc_mult_conn_direction_{idx}" in obj:
+        name = obj[f"wfc_mult_conn_name_{idx}"]
+        idx += 1
+        if s == "" or name.startswith(s):
+            if name in cache or name == "": continue
+            items.append(name)
+            cache[name] = True
+    for d in DIRECTIONS:
+        dl = d.lower()
+        if f"wfc_conn_{dl}" in obj:
+            name = obj[f"wfc_conn_{dl}"]
+            if name in cache or name == "": continue
+            items.append(name)
+            cache[name] = True
+    return items
+def search_multiple_connector_names(self, context, s):
+    items = []
+    props = context.scene.wfc_props
+    cache = { }
+    for obj in props.collection_obj.objects:
+        items.extend(_get_connector_names_from_object(obj, s, cache))
+    for child in props.collection_obj.children:
+        for obj in child.objects:
+            if not obj.name.startswith(get_default_empty_name()): continue
+            items.extend(_get_connector_names_from_object(obj, s, cache))
+    return sorted(items)
 def get_known_conn_names(_self, _context):
     props = bpy.context.scene.wfc_props
     if props.conn_directions == '_NONE_': return '_NONE_','Nothing found','No other connectors found for this (opposite) direction'
@@ -123,12 +151,12 @@ class WFC3DEmptyAnyNeighborListItem(bpy.types.PropertyGroup):
     selected: bpy.props.BoolProperty(default=False, update=auto_save)
 
 class WFC3DConnectorExclusionListItem(bpy.types.PropertyGroup):
-    conn_excl_name: bpy.props.StringProperty(name="",description="Connector name to exclude", default=PROP_DEFAULTS["conn_excl_name"] ,update=auto_save)
+    conn_excl_name: bpy.props.StringProperty(name="",description="Connector name to exclude", default=PROP_DEFAULTS["conn_excl_name"], search=search_multiple_connector_names, update=auto_save)
     conn_excl_direction: bpy.props.EnumProperty(name="",description="Direction",items=get_connector_exclusion_direction_list, default=PROP_DEFAULTS["conn_excl_direction"], update=auto_save)
     selected: bpy.props.BoolProperty(default=False, name="")
 
 class WFC3DMultipleConnectorListItem(bpy.types.PropertyGroup):
-    mult_conn_name: bpy.props.StringProperty(name="",description="Connector name", default=PROP_DEFAULTS["mult_conn_name"] ,update=auto_save)
+    mult_conn_name: bpy.props.StringProperty(name="",description="Connector name", default=PROP_DEFAULTS["mult_conn_name"], search=search_multiple_connector_names, update=auto_save)
     mult_conn_direction: bpy.props.EnumProperty(name="",description="Direction",items=get_multiple_connector_direction_list, default=PROP_DEFAULTS["mult_conn_direction"], update=auto_save)
     selected: bpy.props.BoolProperty(default=False, name="")
 
