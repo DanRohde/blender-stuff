@@ -7,6 +7,27 @@ def format_duration(duration):
     hours, remainder = divmod(remainder, 3600)
     minutes, remainder = divmod(remainder, 60)
     return f"{days:.0f}d {hours:02.0f}h {minutes:02.0f}m" if days > 0 else f"{hours:02.0f}h {minutes:02.0f}m"
+
+def draw_task_actions(layout, item, task_index):
+    c = layout.column(align=True)
+    c.operator("object.stodo_toggle_running_task", emboss=False, icon="PLAY" if item.start_time == -1 else "EVENT_MEDIASTOP").task_index = task_index
+    c.enabled = not item.done
+    layout.column(align=True).prop(item, "done", text="", icon="STRIP_COLOR_05" if item.done else "STRIP_COLOR_03")
+
+def draw_task_progress(layout, item):
+    if item.duration == 0 and item.start_time <= 0: return
+    c = layout.column(align=True)
+    c.alignment = "LEFT"
+    duration = item.duration if item.start_time == -1 else item.duration + time.time() - item.start_time
+    if duration < 0: duration = 0
+    c.label(text=format_duration(duration))
+    if item.time_required_days + item.time_required_hours + item.time_required_minutes > 0:
+        tr = item.time_required_days * 86400 + item.time_required_hours * 3600 + item.time_required_minutes * 60
+        p = duration / tr
+        if tr - duration > 0:
+            layout.progress(factor=p, text=f"{p * 100:03.1f}% used, {format_duration(tr - duration)} remaining", type="RING")
+        else:
+            layout.label(text=f"Time expired {format_duration(abs(tr - duration))} ago.", icon="WARNING_LARGE")
 class STODO_UL_TaskList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         col = layout.row().column(align=True)
@@ -14,28 +35,14 @@ class STODO_UL_TaskList(bpy.types.UIList):
         row.prop(item, "collapsed", text="", emboss=False, icon="RIGHTARROW" if item.collapsed else "DOWNARROW_HLT")
         row.prop(item, "selected", text="", icon=PRIORITY_ICONS[item.priority])
         row.prop(item, "task", text="")
-        c = row.column(align=True)
-        c.operator("object.stodo_toggle_running_task", emboss=False, icon="PLAY" if item.start_time == -1 else "EVENT_MEDIASTOP" ).task_index = index
-        c.enabled = not item.done
-        row.column(align=True).prop(item, "done", text="", icon="STRIP_COLOR_05" if item.done else "STRIP_COLOR_03")
+        draw_task_actions(row, item, index)
 
         if not item.collapsed or item.duration > 0 or item.start_time > 0 : col = col.box()
 
         if item.duration > 0 or item.start_time > 0:
             row = col.row(align=True)
             row.column()
-            c = row.column(align=True)
-            c.alignment = "LEFT"
-            duration = item.duration if item.start_time == -1 else item.duration + time.time()-item.start_time
-            if duration < 0: duration = 0
-            c.label(text=format_duration(duration))
-            if item.time_required_days + item.time_required_hours + item.time_required_minutes > 0:
-                tr = item.time_required_days * 86400 + item.time_required_hours * 3600 + item.time_required_minutes * 60
-                p = duration / tr
-                if tr-duration > 0:
-                    row.progress(factor=p, text=f"{p*100:03.1f}% used, {format_duration(tr-duration)} remaining", type="RING")
-                else:
-                    row.label(text=f"Time expired {format_duration(abs(tr-duration))} ago.", icon="WARNING_LARGE")
+            draw_task_progress(row, item)
         if item.collapsed: return
         row = col.row(align=True)
         row.prop(item, "description")
@@ -99,4 +106,20 @@ class STODO_PT_Panel(bpy.types.Panel):
         row.operator("object.stodo_export_csv")
         row.enabled = len(props.task_list) > 0
         box.row().operator("object.stodo_import_csv")
+
+def draw_top_bar(self, context):
+    if context.region.alignment == 'RIGHT': return
+    layout = self.layout
+    props = context.scene.stodo_props
+    prefs = bpy.context.preferences.addons[__package__].preferences
+    if prefs.show_quick_add:
+        layout.prop(props, "quick_add_task", icon="NODE_SOCKET_COLLECTION")
+        layout.operator("object.stodo_quick_add_task", icon="ADD")
+    if prefs.show_quick_tasks and len(props.task_list) > 0:
+        layout.prop(props, "quick_tasks")
+        task_index = int(props.quick_tasks)
+        item = props.task_list[task_index]
+        draw_task_actions(layout, item, task_index)
+        draw_task_progress(layout, item)
+
 panels = [ STODO_UL_TaskList, STODO_PT_Panel ]

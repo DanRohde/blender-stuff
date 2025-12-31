@@ -1,6 +1,6 @@
 import bpy
 import time
-from .constants import PRIORITIES
+from .constants import PRIORITIES, PRIORITY_ICONS
 
 def handle_dummy_update(self, context):
     return None
@@ -11,6 +11,18 @@ def handle_done_update(self, context):
         self.start_time = -1
     return None
 
+def handle_quick_add_update(self, context):
+    if self.quick_add_task == "": return
+    item = self.task_list.add()
+    item.created = time.time()
+    item.task = self.quick_add_task
+    self.quick_add_task = ""
+
+def get_quick_task_list(self, context):
+    items = []
+    for idx, item in enumerate(self.task_list):
+        items.append((f"{idx}", item.task, item.description, PRIORITY_ICONS[item.priority], idx ))
+    return items
 class SimpleToDoTaskItem(bpy.types.PropertyGroup):
     task: bpy.props.StringProperty(name="", description="Task", default="")
     description: bpy.props.StringProperty(name="", description="Description", default="")
@@ -29,5 +41,16 @@ class SimpleToDoProperties(bpy.types.PropertyGroup):
     task_list: bpy.props.CollectionProperty(type=SimpleToDoTaskItem)
     task_list_idx: bpy.props.IntProperty()
     refresh_dummy : bpy.props.FloatProperty(update=handle_dummy_update)
+    quick_add_task: bpy.props.StringProperty(name="", description="Task", default="", update=handle_quick_add_update)
+    quick_tasks: bpy.props.EnumProperty(name="", description="Tasks", items=get_quick_task_list)
 
-properties = [ SimpleToDoTaskItem, SimpleToDoProperties ]
+class SimpleToDoAddonPreferences(bpy.types.AddonPreferences):
+    bl_idname = __package__
+    show_quick_add: bpy.props.BoolProperty(name="Show quick task addition", description="Show quick task addition in the top bar", default=False)
+    show_quick_tasks: bpy.props.BoolProperty(name="Show quick task actions", description="Show quick task actions in the top bar", default=True)
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "show_quick_add")
+        layout.prop(self, "show_quick_tasks")
+
+properties = [ SimpleToDoAddonPreferences, SimpleToDoTaskItem, SimpleToDoProperties ]

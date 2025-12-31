@@ -11,11 +11,14 @@ def register():
     
     bpy.types.Scene.stodo_props = bpy.props.PointerProperty(type=properties.SimpleToDoProperties)
     bpy.app.handlers.load_post.append(handler.handle_load_post)
+    bpy.types.TOPBAR_HT_upper_bar.append(todo_panel.draw_top_bar)
+
 
 def unregister():
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
 
+    bpy.types.TOPBAR_HT_upper_bar.remove(todo_panel.draw_top_bar)
     bpy.app.handlers.load_post.remove(handler.handle_load_post)
     del bpy.types.Scene.stodo_props
 
