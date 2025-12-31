@@ -90,7 +90,7 @@ class STODO_PT_Panel(bpy.types.Panel):
         c.operator("object.stodo_remove_selected_tasks", icon="REMOVE", text="")
         c.enabled = len(selected_items) > 0
         box = layout.box()
-        row = box.row()
+        row = box.row(align=True)
         row.enabled = len(props.task_list) > 0
         c = row.column()
         c.operator("object.stodo_move_up_tasks", icon="TRIA_UP")
@@ -98,9 +98,13 @@ class STODO_PT_Panel(bpy.types.Panel):
         c = row.column()
         c.operator("object.stodo_move_down_tasks", icon="TRIA_DOWN")
         c.enabled = len(selected_items) > 0
+        row.separator()
         row.operator("object.stodo_toggle_select_tasks", icon="CHECKBOX_HLT").select = True
         row.operator("object.stodo_toggle_select_tasks", icon="CHECKBOX_DEHLT").select = False
         row.operator("object.stodo_invert_selected_tasks", icon="CHECKMARK")
+        row.separator()
+        row.operator("object.stodo_toggle_collapse_tasks", icon="RIGHTARROW"). collapse = True
+        row.operator("object.stodo_toggle_collapse_tasks", icon="DOWNARROW_HLT").collapse = False
         box.row().label(text=f"{len(selected_items)} of {len(props.task_list)} task(s) selected. {len(started_items)} task(s) started.")
         row = box.row()
         row.operator("object.stodo_export_csv")
@@ -114,7 +118,6 @@ def draw_top_bar(self, context):
     prefs = bpy.context.preferences.addons[__package__].preferences
     if prefs.show_quick_add:
         layout.prop(props, "quick_add_task", icon="NODE_SOCKET_COLLECTION")
-        layout.operator("object.stodo_quick_add_task", icon="ADD")
     if prefs.show_quick_tasks and len(props.task_list) > 0:
         layout.prop(props, "quick_tasks")
         task_index = int(props.quick_tasks)

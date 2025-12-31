@@ -36,6 +36,17 @@ class STODO_OT_ToggleSelectTasks(bpy.types.Operator):
             item.selected = self.select
         return {'FINISHED'}
 
+class STODO_OT_ToggleCollapseTasks(bpy.types.Operator):
+    bl_idname = "object.stodo_toggle_collapse_tasks"
+    bl_label = ""
+    bl_description = "(Un)Collapse all tasks"
+    collapse: bpy.props.BoolProperty(default=True)
+    def execute(self, context):
+        for item in context.scene.stodo_props.task_list:
+            item.collapsed = self.collapse
+        return {'FINISHED'}
+
+
 class STODO_OT_InvertSelectTasks(bpy.types.Operator):
     bl_idname = "object.stodo_invert_selected_tasks"
     bl_label = ""
@@ -134,5 +145,5 @@ class STODO_OT_ExportCSV(bpy.types.Operator, ExportHelper):
         self.report({'INFO'}, "Export to CSV complete.")
         return {"FINISHED"}
 
-operators = [ STODO_OT_ImportCSV, STODO_OT_ExportCSV, STODO_OT_RemoveSelectedTasks, STODO_OT_InvertSelectTasks, STODO_OT_MoveDownTasks,
+operators = [ STODO_OT_ToggleCollapseTasks, STODO_OT_ImportCSV, STODO_OT_ExportCSV, STODO_OT_RemoveSelectedTasks, STODO_OT_InvertSelectTasks, STODO_OT_MoveDownTasks,
               STODO_OT_MoveUpTasks, STODO_OT_ToggleSelectTasks, STODO_OT_ToggleRunningTask, STODO_OT_AddTask ]
