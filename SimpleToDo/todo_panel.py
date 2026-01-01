@@ -140,6 +140,6 @@ def draw_top_bar(self, context):
         layout.prop(item, "task", placeholder="Task", icon=PRIORITY_ICONS[item.priority])
         draw_task_actions(layout, item, task_index, prefs.enable_time_tracking)
         if prefs.enable_time_tracking: draw_task_progress(layout, item)
-        if prefs.show_tasks_progress: draw_tasks_progress(layout, props)
+    if prefs.show_tasks_progress: draw_tasks_progress(layout, props)
 
 panels = [ STODO_UL_TaskList, STODO_PT_Panel ]
