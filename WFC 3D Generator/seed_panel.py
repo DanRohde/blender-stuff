@@ -11,7 +11,7 @@ class WFC3D_UL_SeedsList(bpy.types.UIList):
         row.prop(item, "selected", text=f"{item.seed}", icon="BOOKMARKS",)
         c = row.column(align=True)
         c.alignment = "EXPAND"
-        c.prop(item, "note", text="")
+        c.prop(item, "note", text="", placeholder="Optional note")
         row.operator("object.wfc_set_seed_direct", icon="PLAY").item_idx = index
 
         if item.collapsed: return

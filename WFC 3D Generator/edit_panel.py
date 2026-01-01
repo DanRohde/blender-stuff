@@ -17,14 +17,14 @@ class WFC3D_UL_ConnectorExclusionList(bpy.types.UIList):
         row = layout.row(align=True)
         row.prop(item, "selected", text="")
         row.prop(item, "conn_excl_direction")
-        row.prop(item, "conn_excl_name")
+        row.prop(item, "conn_excl_name", placeholder="Connector name")
 
 class WFC3D_UL_MultipleConnectorList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item, "selected", text="")
         row.prop(item, "mult_conn_direction")
-        row.prop(item, "mult_conn_name")
+        row.prop(item, "mult_conn_name", placeholder="Connector name")
 
 
 class WFC3D_UL_RegFreqList(bpy.types.UIList):
@@ -33,7 +33,7 @@ class WFC3D_UL_RegFreqList(bpy.types.UIList):
         col = row.column(align=True)
         row = col.row(align=True)
         row.column(align=True).prop(item,"selected", text=f"{index}.")
-        row.column(align=True).prop(item,"regfreq_name", text="")
+        row.column(align=True).prop(item,"regfreq_name", text="", placeholder="Optional region name")
         col.row().prop(item,"regfreq_min")
         col.row().prop(item,"regfreq_max")
         row = col.row(align=True)
@@ -59,7 +59,7 @@ class WFC3D_UL_RegProbList(bpy.types.UIList):
         row = col.row(align=True)
         row.alignment = 'LEFT'
         row.column(align=True).prop(item, "selected", text=f"{index}.")
-        row.column(align=True).prop(item,"regprob_name", text="")
+        row.column(align=True).prop(item,"regprob_name", text="", placeholder="Optional region name")
         col.row(align=True).prop(item,"regprob_min")
         col.row(align=True).prop(item,"regprob_max")
         row = col.row(align=True)
@@ -467,7 +467,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         col.enabled = props.edit_type == 'objects'
         if props.conn_directions != '_NONE_':
             row = box.row()
-            row.prop(props, "conn_name", text="Name")
+            row.prop(props, "conn_name", text="", placeholder="Connector name")
             if len(get_known_conn_names(None, None)) > 1:
                 box.row().label(text="Known connector names:")
                 box.row().prop(props, "conn_known_names", text="")
