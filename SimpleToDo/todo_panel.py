@@ -44,7 +44,7 @@ class STODO_UL_TaskList(bpy.types.UIList):
         row = col.row(align=True)
         row.prop(item, "collapsed", text="", emboss=False, icon="RIGHTARROW" if item.collapsed else "DOWNARROW_HLT")
         row.prop(item, "selected", text="", icon=PRIORITY_ICONS[item.priority])
-        row.prop(item, "task", text="")
+        row.prop(item, "task", text="", placeholder="Task")
         draw_task_actions(row, item, index, prefs.enable_time_tracking)
 
         if not item.collapsed or item.duration > 0 or item.start_time > 0 : col = col.box()
@@ -137,7 +137,7 @@ def draw_top_bar(self, context):
                 layout.label(text="All tasks have been done.", icon="INFO_LARGE")
                 return
         item = props.task_list[task_index]
-        layout.prop(item, "task", icon=PRIORITY_ICONS[item.priority])
+        layout.prop(item, "task", placeholder="Task", icon=PRIORITY_ICONS[item.priority])
         draw_task_actions(layout, item, task_index, prefs.enable_time_tracking)
         if prefs.enable_time_tracking: draw_task_progress(layout, item)
         if prefs.show_tasks_progress: draw_tasks_progress(layout, props)
