@@ -8,10 +8,11 @@ def format_duration(duration):
     minutes, remainder = divmod(remainder, 60)
     return f"{days:.0f}d {hours:02.0f}h {minutes:02.0f}m" if days > 0 else f"{hours:02.0f}h {minutes:02.0f}m"
 
-def draw_task_actions(layout, item, task_index):
-    c = layout.column(align=True)
-    c.operator("object.stodo_toggle_running_task", emboss=False, icon="PLAY" if item.start_time == -1 else "EVENT_MEDIASTOP").task_index = task_index
-    c.enabled = not item.done
+def draw_task_actions(layout, item, task_index, time_tracking = True):
+    if time_tracking:
+        c = layout.column(align=True)
+        c.operator("object.stodo_toggle_running_task", emboss=False, icon="PLAY" if item.start_time == -1 else "EVENT_MEDIASTOP").task_index = task_index
+        c.enabled = not item.done
     layout.column(align=True).prop(item, "done", text="")#, icon="STRIP_COLOR_05" if item.done else "STRIP_COLOR_03")
 
 def draw_task_progress(layout, item):
@@ -37,12 +38,14 @@ def draw_tasks_progress(layout, props):
 
 class STODO_UL_TaskList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
+        prefs = bpy.context.preferences.addons[__package__].preferences
+
         col = layout.row().column(align=True)
         row = col.row(align=True)
         row.prop(item, "collapsed", text="", emboss=False, icon="RIGHTARROW" if item.collapsed else "DOWNARROW_HLT")
         row.prop(item, "selected", text="", icon=PRIORITY_ICONS[item.priority])
         row.prop(item, "task", text="")
-        draw_task_actions(row, item, index)
+        draw_task_actions(row, item, index, prefs.enable_time_tracking)
 
         if not item.collapsed or item.duration > 0 or item.start_time > 0 : col = col.box()
 
@@ -52,20 +55,21 @@ class STODO_UL_TaskList(bpy.types.UIList):
             draw_task_progress(row, item)
         if item.collapsed: return
         row = col.row(align=True)
-        row.prop(item, "description")
+        row.prop(item, "description", placeholder="Short description")
         col.row().prop(item, "priority")
 
-        row = col.row()
-        row.label(text="Planned:")
-        row.prop(item, "time_required_days")
-        row.prop(item, "time_required_hours")
-        row.prop(item, "time_required_minutes")
+        if prefs.enable_time_tracking:
+            row = col.row()
+            row.label(text="Planned:")
+            row.prop(item, "time_required_days")
+            row.prop(item, "time_required_hours")
+            row.prop(item, "time_required_minutes")
 
-        row = col.row(align=True)
-        c = row.column(align=True)
-        c.prop(item, "duration", text="Duration (s):")
-        c.enabled = item.start_time == -1
-        if item.start_time > 0: col.row().label(text=f"Started on {time.strftime('%x at %X', time.localtime(item.start_time))}")
+            row = col.row(align=True)
+            c = row.column(align=True)
+            c.prop(item, "duration", text="Duration (s):")
+            c.enabled = item.start_time == -1
+            if item.start_time > 0: col.row().label(text=f"Started on {time.strftime('%x at %X', time.localtime(item.start_time))}")
         if item.created > 0: col.row().label(text=f"Created on {time.strftime('%x at %X', time.localtime(item.created))}")
 
 class STODO_PT_Panel(bpy.types.Panel):
@@ -120,7 +124,7 @@ def draw_top_bar(self, context):
     props = context.scene.stodo_props
     prefs = bpy.context.preferences.addons[__package__].preferences
     if prefs.show_quick_add:
-        layout.prop(props, "quick_add_task", icon="NODE_SOCKET_COLLECTION")
+        layout.prop(props, "quick_add_task", icon=PRIORITY_ICONS["normal"], placeholder="Add a new task")
     if prefs.show_quick_tasks and len(props.task_list) > 0:
         running_tasks = [ idx for idx, item in enumerate(props.task_list) if item.start_time > -1 ]
         if len(running_tasks) > 0:
@@ -134,8 +138,8 @@ def draw_top_bar(self, context):
                 return
         item = props.task_list[task_index]
         layout.prop(item, "task", icon=PRIORITY_ICONS[item.priority])
-        draw_task_actions(layout, item, task_index)
-        draw_task_progress(layout, item)
+        draw_task_actions(layout, item, task_index, prefs.enable_time_tracking)
+        if prefs.enable_time_tracking: draw_task_progress(layout, item)
         if prefs.show_tasks_progress: draw_tasks_progress(layout, props)
 
 panels = [ STODO_UL_TaskList, STODO_PT_Panel ]
