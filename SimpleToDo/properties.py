@@ -1,17 +1,17 @@
 import bpy
 import time
-from .constants import PRIORITIES, PRIORITY_ICONS
+from .constants import PRIORITIES
 
-def handle_dummy_update(self, context):
+def handle_dummy_update(_self, _context):
     return None
 
-def handle_done_update(self, context):
+def handle_done_update(self, _context):
     if self.start_time > -1:
         self.duration += abs(time.time() - self.start_time)
         self.start_time = -1
     return None
 
-def handle_quick_add_update(self, context):
+def handle_quick_add_update(self, _context):
     if self.quick_add_task == "": return
     item = self.task_list.add()
     item.created = time.time()
@@ -44,7 +44,7 @@ class SimpleToDoAddonPreferences(bpy.types.AddonPreferences):
     show_quick_add: bpy.props.BoolProperty(name="Show quick task addition", description="Show quick task addition in the top bar", default=False)
     show_quick_tasks: bpy.props.BoolProperty(name="Show quick task actions", description="Show quick task actions in the top bar", default=True)
     show_tasks_progress: bpy.props.BoolProperty(name="Show tasks progress", description="Show tasks progress in the top bar", default=False)
-    def draw(self, context):
+    def draw(self, _context):
         layout = self.layout
         layout.prop(self, "enable_time_tracking")
         layout.prop(self, "show_quick_add")

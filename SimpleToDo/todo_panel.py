@@ -84,7 +84,7 @@ class STODO_PT_Panel(bpy.types.Panel):
         props = context.scene.stodo_props
         selected_items = [item for item in props.task_list if item.selected]
         started_items = [item for item in props.task_list if item.start_time > 0]
-
+        layout.row().prop(props, "quick_add_task", placeholder="Add a new task", icon=PRIORITY_ICONS["normal"])
         row = layout.row()
         row.operator("object.stodo_add_task", text="Add Task", icon="ADD")
         c = row.column()

@@ -7,5 +7,5 @@ def redraw_scene():
     return 60
 
 @persistent
-def handle_load_post(fn):
+def handle_load_post(_fn):
     bpy.app.timers.register(redraw_scene, first_interval=0)
