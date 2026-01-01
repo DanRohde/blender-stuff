@@ -47,13 +47,14 @@ class STODO_UL_TaskList(bpy.types.UIList):
         row.prop(item, "task", text="", placeholder="Task")
         draw_task_actions(row, item, index, prefs.enable_time_tracking)
 
-        if not item.collapsed or item.duration > 0 or item.start_time > 0 : col = col.box()
-
-        if item.duration > 0 or item.start_time > 0:
-            row = col.row(align=True)
-            row.column()
-            draw_task_progress(row, item)
+        if prefs.enable_time_tracking:
+            if not item.collapsed or item.duration > 0 or item.start_time > 0: col = col.box()
+            if item.duration > 0 or item.start_time > 0:
+                row = col.row(align=True)
+                row.column()
+                draw_task_progress(row, item)
         if item.collapsed: return
+        if not prefs.enable_time_tracking: col = col.box()
         row = col.row(align=True)
         row.prop(item, "description", placeholder="Short description")
         col.row().prop(item, "priority")
