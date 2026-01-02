@@ -36,7 +36,7 @@ def draw_tasks_progress(layout, props):
         progress = done / len(props.task_list) if len(props.task_list) > 0 else 0
         layout.progress(factor=progress, text=f"{progress * 100:03.1f} % ({done} of {len(props.task_list)}) done.")
 
-class STODO_UL_TaskList(bpy.types.UIList):
+class VIEW3D_UL_TaskList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         prefs = bpy.context.preferences.addons[__package__].preferences
 
@@ -73,7 +73,7 @@ class STODO_UL_TaskList(bpy.types.UIList):
             if item.start_time > 0: col.row().label(text=f"Started on {time.strftime('%x at %X', time.localtime(item.start_time))}")
         if item.created > 0: col.row().label(text=f"Created on {time.strftime('%x at %X', time.localtime(item.created))}")
 
-class STODO_PT_Panel(bpy.types.Panel):
+class VIEW3D_PT_Panel(bpy.types.Panel):
     bl_idname = "VIEW3D_PT_simple_todo_panel"
     bl_label = "SimpleToDo"
     bl_description = "SimpleToDo Panel"
@@ -91,7 +91,7 @@ class STODO_PT_Panel(bpy.types.Panel):
         c = row.column()
         c.operator("object.stodo_remove_selected_tasks", icon="REMOVE", text="")
         c.enabled = len(selected_items) > 0
-        layout.template_list("STODO_UL_TaskList","", props, "task_list", props, "task_list_idx")
+        layout.template_list("VIEW3D_UL_TaskList","", props, "task_list", props, "task_list_idx")
         draw_tasks_progress(layout, props)
         row = layout.row()
         row.operator("object.stodo_add_task", text="Add Task", icon="ADD")
@@ -143,4 +143,4 @@ def draw_top_bar(self, context):
         if prefs.enable_time_tracking: draw_task_progress(layout, item)
     if prefs.show_tasks_progress: draw_tasks_progress(layout, props)
 
-panels = [ STODO_UL_TaskList, STODO_PT_Panel ]
+panels = [ VIEW3D_UL_TaskList, VIEW3D_PT_Panel ]

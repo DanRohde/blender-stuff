@@ -1,22 +1,7 @@
 import bpy
-import time
 from .constants import PRIORITIES
+from .handler import handle_dummy_update, handle_done_update, handle_quick_add_update
 
-def handle_dummy_update(_self, _context):
-    return None
-
-def handle_done_update(self, _context):
-    if self.start_time > -1:
-        self.duration += abs(time.time() - self.start_time)
-        self.start_time = -1
-    return None
-
-def handle_quick_add_update(self, _context):
-    if self.quick_add_task == "": return
-    item = self.task_list.add()
-    item.created = time.time()
-    item.task = self.quick_add_task
-    self.quick_add_task = ""
 
 class SimpleToDoTaskItem(bpy.types.PropertyGroup):
     task: bpy.props.StringProperty(name="", description="Task", default="")

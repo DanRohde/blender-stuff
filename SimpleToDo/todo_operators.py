@@ -3,7 +3,7 @@ from bpy_extras.io_utils import ImportHelper, ExportHelper
 import time
 import csv
 
-class STODO_OT_AddTask(bpy.types.Operator):
+class OBJECT_OT_AddTask(bpy.types.Operator):
     bl_idname = "object.stodo_add_task"
     bl_label = "Add Task"
     bl_description = "Add a new task to the task list."
@@ -13,7 +13,7 @@ class STODO_OT_AddTask(bpy.types.Operator):
         item.created = time.time()
         return {'FINISHED'}
 
-class STODO_OT_ToggleRunningTask(bpy.types.Operator):
+class OBJECT_OT_ToggleRunningTask(bpy.types.Operator):
     bl_idname = "object.stodo_toggle_running_task"
     bl_label = ""
     bl_description = "Start/Stop Time Tracking"
@@ -27,7 +27,7 @@ class STODO_OT_ToggleRunningTask(bpy.types.Operator):
             item.start_time = -1
         return {'FINISHED'}
 
-class STODO_OT_ToggleSelectTasks(bpy.types.Operator):
+class OBJECT_OT_ToggleSelectTasks(bpy.types.Operator):
     bl_idname = "object.stodo_toggle_select_tasks"
     bl_label = ""
     bl_description = "(Un)Select all tasks"
@@ -37,7 +37,7 @@ class STODO_OT_ToggleSelectTasks(bpy.types.Operator):
             item.selected = self.select
         return {'FINISHED'}
 
-class STODO_OT_CollapseTasks(bpy.types.Operator):
+class OBJECT_OT_CollapseTasks(bpy.types.Operator):
     bl_idname = "object.stodo_collapse_tasks"
     bl_label = ""
     bl_description = "Collapse all tasks"
@@ -47,7 +47,7 @@ class STODO_OT_CollapseTasks(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class STODO_OT_InvertSelectTasks(bpy.types.Operator):
+class OBJECT_OT_InvertSelectTasks(bpy.types.Operator):
     bl_idname = "object.stodo_invert_selected_tasks"
     bl_label = ""
     bl_description = "Invert selection"
@@ -56,7 +56,7 @@ class STODO_OT_InvertSelectTasks(bpy.types.Operator):
             item.selected = not item.selected
         return {'FINISHED'}
 
-class STODO_OT_MoveUpTasks(bpy.types.Operator):
+class OBJECT_OT_MoveUpTasks(bpy.types.Operator):
     bl_idname = "object.stodo_move_up_tasks"
     bl_label = ""
     bl_description = "Move selected tasks up"
@@ -67,7 +67,7 @@ class STODO_OT_MoveUpTasks(bpy.types.Operator):
             if idx > 0: props.task_list.move(idx, idx - 1)
         return {'FINISHED'}
 
-class STODO_OT_MoveDownTasks(bpy.types.Operator):
+class OBJECT_OT_MoveDownTasks(bpy.types.Operator):
     bl_idname = "object.stodo_move_down_tasks"
     bl_label = ""
     bl_description = "Move selected tasks down"
@@ -78,7 +78,7 @@ class STODO_OT_MoveDownTasks(bpy.types.Operator):
             if idx < len(props.task_list) -1 : props.task_list.move(idx, idx + 1)
         return {'FINISHED'}
 
-class STODO_OT_RemoveSelectedTasks(bpy.types.Operator):
+class OBJECT_OT_RemoveSelectedTasks(bpy.types.Operator):
     bl_idname = "object.stodo_remove_selected_tasks"
     bl_label = ""
     bl_description = "Remove selected tasks"
@@ -89,7 +89,7 @@ class STODO_OT_RemoveSelectedTasks(bpy.types.Operator):
             props.task_list.remove(idx)
         return {'FINISHED'}
 
-class STODO_OT_ImportCSV(bpy.types.Operator, ImportHelper):
+class OBJECT_OT_ImportCSV(bpy.types.Operator, ImportHelper):
     bl_idname = "object.stodo_import_csv"
     bl_label = "Import Tasks"
     bl_description = "Import tasks from a CSV file"
@@ -98,7 +98,7 @@ class STODO_OT_ImportCSV(bpy.types.Operator, ImportHelper):
     def execute(self, context):
         props = context.scene.stodo_props
         try:
-            with open(self.filepath, "r") as csvfile:
+            with open(self.filepath, "r", encoding="utf-8") as csvfile:
                 csvreader = csv.DictReader(csvfile, delimiter=",")
                 for row in csvreader:
                     item = props.task_list.add()
@@ -118,7 +118,7 @@ class STODO_OT_ImportCSV(bpy.types.Operator, ImportHelper):
         self.report({'INFO'}, "Import from CSV complete.")
         return {"FINISHED"}
 
-class STODO_OT_ExportCSV(bpy.types.Operator, ExportHelper):
+class OBJECT_OT_ExportCSV(bpy.types.Operator, ExportHelper):
     bl_idname = "object.stodo_export_csv"
     bl_label = "Export Tasks"
     bl_description = "Export tasks to a CSV file"
@@ -145,5 +145,5 @@ class STODO_OT_ExportCSV(bpy.types.Operator, ExportHelper):
         self.report({'INFO'}, "Export to CSV complete.")
         return {"FINISHED"}
 
-operators = [ STODO_OT_CollapseTasks, STODO_OT_ImportCSV, STODO_OT_ExportCSV, STODO_OT_RemoveSelectedTasks, STODO_OT_InvertSelectTasks, STODO_OT_MoveDownTasks,
-              STODO_OT_MoveUpTasks, STODO_OT_ToggleSelectTasks, STODO_OT_ToggleRunningTask, STODO_OT_AddTask ]
+operators = [ OBJECT_OT_CollapseTasks, OBJECT_OT_ImportCSV, OBJECT_OT_ExportCSV, OBJECT_OT_RemoveSelectedTasks, OBJECT_OT_InvertSelectTasks, OBJECT_OT_MoveDownTasks,
+              OBJECT_OT_MoveUpTasks, OBJECT_OT_ToggleSelectTasks, OBJECT_OT_ToggleRunningTask, OBJECT_OT_AddTask ]
