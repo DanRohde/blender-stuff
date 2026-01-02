@@ -14,7 +14,7 @@ class WFC3D_PT_BackupPanel(bpy.types.Panel):
         if props.collection_obj is None: return
         box = layout.box()
         box.label(text="Export constraints")
-        box.operator("wfc3d.export_json")
+        box.operator("object.wfc_export_json")
         layout.separator()
         box = layout.box()
         box.label(text="Import constraints")
@@ -26,7 +26,7 @@ class WFC3D_PT_BackupPanel(bpy.types.Panel):
         if props.backup_import_replace: box.label(text="All existing constraints will be deleted!", icon="WARNING_LARGE")
         elif props.backup_import_overwrite: box.label(text="Existing constraints will be overwritten!", icon="WARNING_LARGE")
 
-        box.operator("wfc3d.import_json")
+        box.operator("object.wfc_import_json")
 
         layout.separator()
         box = layout.box()

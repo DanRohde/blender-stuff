@@ -23,7 +23,7 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
         nc = newrow.column().box()
         nc.operator("rotation.wfc_get_selected_object", icon="SELECT_SET")
         nc.prop(props, "rt_auto_active_object", icon="TRIA_RIGHT")
-        nc.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
+        nc.operator("object.wfc_update_collection_list", icon="FILE_REFRESH")
         nc = newrow.column()
         nc.template_list("WFC3D_UL_RotationPanelMultiSelList", "", props, "rt_list", props, "rt_list_idx")
         nc.enabled = not props.rt_auto_active_object

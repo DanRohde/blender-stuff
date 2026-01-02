@@ -136,7 +136,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             col = row.column(align=True)
             col.template_list("WFC3D_UL_ActiveConstraintsList","", props, "active_constraints_input_list", props, "active_constraints_input_list_idx",rows=18, maxrows=18)
             col = row.box().column(align=True)
-            col.operator('collection.wfc_auto_save_toggle', icon='IMPORT', depress=props.auto_save)
+            col.operator('object.wfc_auto_save_toggle', icon='IMPORT', depress=props.auto_save)
             col.separator()
             draw_list_selection_actions(props, col,"active_constraints_input_list")
             box.prop(props, "show_inactive_constraints_menu_items")
@@ -159,7 +159,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nc=newrow.column().box()
             nc.operator("object.wfc_get_selected_object", icon="SELECT_SET").list_name="obj_list"
             nc.prop(props,"auto_active_object", icon="TRIA_RIGHT")
-            nc.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
+            nc.operator("object.wfc_update_collection_list", icon="FILE_REFRESH")
             nc=newrow.column()
             nc.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
             nc.enabled = not props.auto_active_object
@@ -192,10 +192,10 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             obj_name = 'Collection Defaults'
 
         row = box.box().row(align=True)
-        row.operator('collection.wfc_info_toggle',icon='INFO_LARGE', depress = props.info_toggle)
+        row.operator('object.wfc_info_toggle',icon='INFO_LARGE', depress = props.info_toggle)
         row.prop(props,"edit_constraints",icon="SETTINGS")
         row.operator("object.wfc_open_web_link", icon="URL", text="").url = HELP["constraints"]["url"] + "#" + HELP["constraints"]["anchormap"][props.edit_constraints]
-        row.operator('collection.wfc_auto_save_toggle',icon='IMPORT',depress = props.auto_save)
+        row.operator('object.wfc_auto_save_toggle',icon='IMPORT',depress = props.auto_save)
 
         if hasattr(self, f"draw_{props.edit_constraints}_panel") and callable(getattr(self, f"draw_{props.edit_constraints}_panel")):
             if props.edit_constraints not in get_active_constraints():
@@ -215,7 +215,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row.prop(props, "copy_from")
         row.prop(props, "copy_overwrite")
         col = row.column()
-        col.operator("object.wfc_3d_copy_constraints_from_object", icon="COPYDOWN")
+        col.operator("object.wfc_copy_constraints_from_object", icon="COPYDOWN")
         col.enabled = props.copy_from is not None
         if props.edit_constraints != "":
             row = layout.row()
@@ -241,7 +241,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nc = newcol.column()
             nc.prop(props, "auto_neighbor_object", icon="TRIA_RIGHT")
             nc.enabled = not props.auto_active_object
-            newcol.operator("collection.wfc_update_collection_list", icon="FILE_REFRESH")
+            newcol.operator("object.wfc_update_collection_list", icon="FILE_REFRESH")
             newcol = row.column()
             newcol.template_list("WFC3D_UL_EditPanelNeighborMultiSelList", "", props, "neighbor_list", props, "neighbor_list_idx")
             newcol.enabled = not props.auto_neighbor_object

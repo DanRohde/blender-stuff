@@ -42,13 +42,13 @@ def import_data(props, data):
             if p in obj and not props.backup_import_overwrite: continue
             put_data_into_object(data["objects"][o][p], p, obj)
 
-class WFC3D_OT_ImportJson(bpy.types.Operator, ImportHelper):
-    bl_idname = "wfc3d.import_json"
+class OBJECT_OT_ImportJson(bpy.types.Operator, ImportHelper):
+    bl_idname = "object.wfc_import_json"
     bl_label = "Import Constraints"
     bl_description = "Import constraints from a JSON file"
     bl_options = {'UNDO'}
     filename_ext = ".json"
-    filter_glob : StringProperty(default="*.json", options={'HIDDEN'})
+    filter_glob: StringProperty(default="*.json", options={'HIDDEN'})
     def execute(self, context):
         filepath = self.filepath
         try:
@@ -95,13 +95,12 @@ def get_export_data(props):
             data["objects"][child.name] = get_property_data(obj)
 
     return data
-class WFC3D_OT_ExportJson(bpy.types.Operator, ExportHelper):
-    bl_idname = "wfc3d.export_json"
+class OBJECT_OT_ExportJson(bpy.types.Operator, ExportHelper):
+    bl_idname = "object.wfc_export_json"
     bl_label = "Export Constraints"
     bl_description = "Export constraints to a JSON file"
-    bl_options = {'UNDO'}
     filename_ext = ".json"
-    filter_glob : StringProperty(default="*.json", options={'HIDDEN'})
+    filter_glob: StringProperty(default="*.json", options={'HIDDEN'})
     def execute(self, context):
         filepath = self.filepath
         try:
@@ -113,4 +112,4 @@ class WFC3D_OT_ExportJson(bpy.types.Operator, ExportHelper):
             self.report({'ERROR'}, f"Export constraints to json file failed: {e}")
             return {'CANCELLED'}
 
-operators = [ WFC3D_OT_ImportJson, WFC3D_OT_ExportJson ]
+operators = [ OBJECT_OT_ImportJson, OBJECT_OT_ExportJson ]

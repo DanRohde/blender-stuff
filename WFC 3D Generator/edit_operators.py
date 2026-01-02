@@ -45,7 +45,7 @@ def _reset_constraints(props, constraints):
 
     props.auto_save = auto_save
 
-class WFC3D_OT_Update_Neighbor_Constraint(bpy.types.Operator):
+class OBJECT_OT_Update_Neighbor_Constraint(bpy.types.Operator):
     """Save neighbor constraints"""
     bl_idname = "object.wfc_update_neighbor_constraints"
     bl_label = "Save Neighbor(s)"
@@ -55,7 +55,7 @@ class WFC3D_OT_Update_Neighbor_Constraint(bpy.types.Operator):
         self.report({'INFO'}, f"Neighbor constraints have been updated.")
         return {'FINISHED'}
 
-class WFC3D_OT_Update_Connector_Constraint(bpy.types.Operator):
+class OBJECT_OT_Update_Connector_Constraint(bpy.types.Operator):
     """Save connector constraints"""
     bl_idname = "object.wfc_update_connector_constraints"
     bl_label = "Save Connector"
@@ -65,7 +65,7 @@ class WFC3D_OT_Update_Connector_Constraint(bpy.types.Operator):
         self.report({'INFO'}, f"Connector constraints has been updated.")
         return {'FINISHED'}
 
-class WFC3D_OT_Update_Grid_Constraints(bpy.types.Operator):
+class OBJECT_OT_Update_Grid_Constraints(bpy.types.Operator):
     """Save grid constraints"""
     bl_idname = "object.wfc_update_grid_constraints"
     bl_label = "Save Grid Constraints"
@@ -77,7 +77,7 @@ class WFC3D_OT_Update_Grid_Constraints(bpy.types.Operator):
         self.report({'INFO'}, f"Grid constraints of object(s) {obj_name} have been saved.")
         return {'FINISHED'}
 
-class WFC3D_OT_UpdateConstraints(bpy.types.Operator):
+class OBJECT_OT_UpdateConstraints(bpy.types.Operator):
     """Update constraints"""
     bl_idname = "object.wfc_update_constraints"
     bl_label = "Save Constraints"
@@ -89,7 +89,7 @@ class WFC3D_OT_UpdateConstraints(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class WFC3D_OT_ResetConstraints(bpy.types.Operator):
+class OBJECT_OT_ResetConstraints(bpy.types.Operator):
     """Reset selected constraints"""
     bl_idname = "object.wfc_reset_constraints"
     bl_label = "Reset"
@@ -103,7 +103,7 @@ class WFC3D_OT_ResetConstraints(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class WFC3D_OT_SelectDropdownObject(bpy.types.Operator):
+class OBJECT_OT_SelectDropdownObject(bpy.types.Operator):
     bl_idname = "object.wfc_select_dropdown_object"
     bl_label = ""
     bl_description = "Select objects in the 3D Viewport"
@@ -134,7 +134,7 @@ class WFC3D_OT_SelectDropdownObject(bpy.types.Operator):
             self.report({'WARNING'}, f"Error: {str(e)}")
         return {'FINISHED'}
 
-class WFC3D_OT_GetSelectedObject(bpy.types.Operator):
+class OBJECT_OT_GetSelectedObject(bpy.types.Operator):
     bl_idname = "object.wfc_get_selected_object"
     bl_label = ""
     bl_description = "Select objects selected in the 3D Viewport"
@@ -156,9 +156,9 @@ class WFC3D_OT_GetSelectedObject(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class WFC3D_OT_UpdateCollectionList(bpy.types.Operator):
+class OBJECT_OT_UpdateCollectionList(bpy.types.Operator):
     """Reload object list"""
-    bl_idname = "collection.wfc_update_collection_list"
+    bl_idname = "object.wfc_update_collection_list"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
@@ -166,7 +166,7 @@ class WFC3D_OT_UpdateCollectionList(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class WFC3D_OT_GenericListSelectAll(bpy.types.Operator):
+class OBJECT_OT_GenericListSelectAll(bpy.types.Operator):
     """Select all entries in the list"""
     bl_idname = "object.wfc_list_select_all"
     bl_label = ""
@@ -175,7 +175,7 @@ class WFC3D_OT_GenericListSelectAll(bpy.types.Operator):
         set_select_all_list_items(getattr(context.scene.wfc_props, self.list_name), True)
         return {'FINISHED'}
 
-class WFC3D_OT_GenericListSelectNone(bpy.types.Operator):
+class OBJECT_OT_GenericListSelectNone(bpy.types.Operator):
     """Deselect all entries in the list"""
     bl_idname = "object.wfc_list_select_none"
     bl_label = ""
@@ -184,7 +184,7 @@ class WFC3D_OT_GenericListSelectNone(bpy.types.Operator):
         set_select_all_list_items(getattr(context.scene.wfc_props, self.list_name), False)
         return {'FINISHED'}
 
-class WFC3D_OT_GenericListInvertSelection(bpy.types.Operator):
+class OBJECT_OT_GenericListInvertSelection(bpy.types.Operator):
     """Invert selection"""
     bl_idname = "object.wfc_list_invert_selection"
     bl_label = ""
@@ -193,9 +193,9 @@ class WFC3D_OT_GenericListInvertSelection(bpy.types.Operator):
         invert_selection(getattr(context.scene.wfc_props, self.list_name))
         return {'FINISHED'}
 
-class WFC3D_OT_AutoSaveToggle(bpy.types.Operator):
+class OBJECT_OT_AutoSaveToggle(bpy.types.Operator):
     """Auto save toggle"""
-    bl_idname = "collection.wfc_auto_save_toggle"
+    bl_idname = "object.wfc_auto_save_toggle"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -204,16 +204,16 @@ class WFC3D_OT_AutoSaveToggle(bpy.types.Operator):
         props.auto_save = not props.auto_save
         return {'FINISHED'}
 
-class WFC3D_OT_InfoToggle(bpy.types.Operator):
+class OBJECT_OT_InfoToggle(bpy.types.Operator):
     """Show/Hide Constraints Information"""
-    bl_idname = "collection.wfc_info_toggle"
+    bl_idname = "object.wfc_info_toggle"
     bl_label = ""
     def execute(self, context):
         props = context.scene.wfc_props
         props.info_toggle = not props.info_toggle
         return {'FINISHED'}
 
-class WFC3DVisDirections(bpy.types.Operator):
+class OBJECT_OT_VisDirections(bpy.types.Operator):
     bl_idname = "object.wfc_vis_directions"
     bl_label = ""
     bl_description = "Show directions in the 3D Viewport."
@@ -230,7 +230,7 @@ class WFC3DVisDirections(bpy.types.Operator):
 
         return {'FINISHED'}
 
-class WFC3D_OT_GenericRemoveListItems(bpy.types.Operator):
+class OBJECT_OT_GenericRemoveListItems(bpy.types.Operator):
     """Remove selected constraint items from list"""
     bl_idname = "object.wfc_generic_remove_list_items"
     bl_label = ""
@@ -245,7 +245,7 @@ class WFC3D_OT_GenericRemoveListItems(bpy.types.Operator):
         update_constraints(props, get_constraints(props))
         return {'FINISHED'}
 
-class WFC3D_OT_GenericAddListItem(bpy.types.Operator):
+class OBJECT_OT_GenericAddListItem(bpy.types.Operator):
     """Add new constraint item to list"""
     bl_idname = "object.wfc_generic_add_list_item"
     bl_label = ""
@@ -256,7 +256,7 @@ class WFC3D_OT_GenericAddListItem(bpy.types.Operator):
         getattr(props, self.list_name).add()
         update_constraints(props, get_constraints(props))
         return {'FINISHED'}
-class WFC3D_OT_GenericDuplicateListItems(bpy.types.Operator):
+class OBJECT_OT_GenericDuplicateListItems(bpy.types.Operator):
     bl_idname = "object.wfc_generic_duplicate_selected_items"
     bl_label = ""
     bl_description = "Duplicate selected constraints"
@@ -270,7 +270,7 @@ class WFC3D_OT_GenericDuplicateListItems(bpy.types.Operator):
             for k in si.keys():
                 if k != "selected": setattr(item, k, getattr(si,k))
         return {'FINISHED'}
-class WFC3D_OT_OpenWebLink(bpy.types.Operator):
+class OBJECT_OT_OpenWebLink(bpy.types.Operator):
     """Open Web Link"""
     bl_idname = "object.wfc_open_web_link"
     bl_label = ""
@@ -281,7 +281,7 @@ class WFC3D_OT_OpenWebLink(bpy.types.Operator):
         webbrowser.open(self.url)
         return {'FINISHED'}
 
-class WFC3D_OT_ResetAllConstraints(bpy.types.Operator):
+class OBJECT_OT_ResetAllConstraints(bpy.types.Operator):
     """Reset all constraints"""
     bl_idname = "object.wfc_reset_all_constraints"
     bl_label = "Reset All"
@@ -307,7 +307,7 @@ class WFC3D_OT_ResetAllConstraints(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class WFC3D_OT_GenericListOrderUp(bpy.types.Operator):
+class OBJECT_OT_GenericListOrderUp(bpy.types.Operator):
     bl_idname = "object.wfc_generic_order_up"
     bl_label = ""
     bl_description = "Move selected items up"
@@ -321,7 +321,7 @@ class WFC3D_OT_GenericListOrderUp(bpy.types.Operator):
             if idx > 0: lst.move(idx, idx-1)
         if self.call_auto_save: auto_save(self, context)
         return {'FINISHED'}
-class WFC3D_OT_GenericListOrderDown(bpy.types.Operator):
+class OBJECT_OT_GenericListOrderDown(bpy.types.Operator):
     bl_idname = "object.wfc_generic_order_down"
     bl_label = ""
     bl_description = "Move selected items down"
@@ -335,15 +335,15 @@ class WFC3D_OT_GenericListOrderDown(bpy.types.Operator):
             if idx < len(lst) - 1: lst.move(idx, idx+1)
         if self.call_auto_save: auto_save(self, context)
         return {'FINISHED'}
-class WFC3D_OT_SaveActiveConstraints(bpy.types.Operator):
+class OBJECT_OT_SaveActiveConstraints(bpy.types.Operator):
     bl_idname = "object.wfc_save_active_constraints"
     bl_label = "Save active constraints"
     bl_description = "Save active constraints."
     def execute(self, context):
         save_active_constraints_changes(context.scene.wfc_props)
         return {'FINISHED'}
-class WFC3D_OT_CopyConstraintsFromObject(bpy.types.Operator):
-    bl_idname = "object.wfc_3d_copy_constraints_from_object"
+class OBJECT_OT_CopyConstraintsFromObject(bpy.types.Operator):
+    bl_idname = "object.wfc_copy_constraints_from_object"
     bl_label = ""
     bl_description = "Copy constraints from object to selected object(s)."
     bl_options = {'REGISTER', 'UNDO'}
@@ -399,27 +399,27 @@ class WFC3D_OT_CopyConstraintsFromObject(bpy.types.Operator):
         return {'FINISHED'}
 
 operators = [
-    WFC3D_OT_CopyConstraintsFromObject,
-    WFC3D_OT_SaveActiveConstraints,
-    WFC3D_OT_GenericListOrderUp,
-    WFC3D_OT_GenericListOrderDown,
-    WFC3D_OT_ResetAllConstraints,
-    WFC3D_OT_GenericListSelectAll,
-    WFC3D_OT_GenericListSelectNone,
-    WFC3D_OT_GenericListInvertSelection,
-    WFC3D_OT_OpenWebLink,
-    WFC3D_OT_GenericDuplicateListItems,
-    WFC3D_OT_GenericAddListItem,
-    WFC3D_OT_GenericRemoveListItems,
-    WFC3D_OT_InfoToggle,
-    WFC3D_OT_AutoSaveToggle,
-    WFC3D_OT_Update_Neighbor_Constraint,
-    WFC3D_OT_Update_Connector_Constraint,
-    WFC3D_OT_Update_Grid_Constraints,
-    WFC3D_OT_UpdateConstraints,
-    WFC3D_OT_ResetConstraints,
-    WFC3D_OT_SelectDropdownObject,
-    WFC3D_OT_GetSelectedObject,
-    WFC3D_OT_UpdateCollectionList,
-    WFC3DVisDirections,
+    OBJECT_OT_CopyConstraintsFromObject,
+    OBJECT_OT_SaveActiveConstraints,
+    OBJECT_OT_GenericListOrderUp,
+    OBJECT_OT_GenericListOrderDown,
+    OBJECT_OT_ResetAllConstraints,
+    OBJECT_OT_GenericListSelectAll,
+    OBJECT_OT_GenericListSelectNone,
+    OBJECT_OT_GenericListInvertSelection,
+    OBJECT_OT_OpenWebLink,
+    OBJECT_OT_GenericDuplicateListItems,
+    OBJECT_OT_GenericAddListItem,
+    OBJECT_OT_GenericRemoveListItems,
+    OBJECT_OT_InfoToggle,
+    OBJECT_OT_AutoSaveToggle,
+    OBJECT_OT_Update_Neighbor_Constraint,
+    OBJECT_OT_Update_Connector_Constraint,
+    OBJECT_OT_Update_Grid_Constraints,
+    OBJECT_OT_UpdateConstraints,
+    OBJECT_OT_ResetConstraints,
+    OBJECT_OT_SelectDropdownObject,
+    OBJECT_OT_GetSelectedObject,
+    OBJECT_OT_UpdateCollectionList,
+    OBJECT_OT_VisDirections,
 ]
