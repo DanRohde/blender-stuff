@@ -134,7 +134,7 @@ def render_render_result(props, layout):
         row.operator("object.wfc_reset_render_result", icon="PANEL_CLOSE")
         if props.render_result.object_count != "" and not props.render_result.object_count_collapsed :
             rr = props.render_result
-            box.label(text=f"{rr.object_total} objects created, {rr.bb_count_used} of {rr.bb_count} building blocks used:")
+            box.label(text=f"{rr.object_total} objects created, {rr.bb_count_used} of {rr.bb_count} building blocks are used:")
             gf = box.grid_flow(columns=3)
             for o in sorted(json.loads(rr.object_count).items(), key=lambda x: x[0]):
                 gf.label(text=f"{o[0]}: {o[1]}")
