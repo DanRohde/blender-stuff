@@ -3,23 +3,23 @@ from .helper import get_default_empty_object, get_icon_name, cmpall, get_selecte
 from .properties import get_known_conn_names
 from .constants import *
 
-class WFC3D_UL_EditPanelMultiSelList(bpy.types.UIList):
+class VIEW3D_UL_EditPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
 
-class WFC3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
+class VIEW3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
-class WFC3D_UL_ConnectorExclusionList(bpy.types.UIList):
+class VIEW3D_UL_ConnectorExclusionList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item, "selected", text="")
         row.prop(item, "conn_excl_direction")
         row.prop(item, "conn_excl_name", placeholder="Connector name")
 
-class WFC3D_UL_MultipleConnectorList(bpy.types.UIList):
+class VIEW3D_UL_MultipleConnectorList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item, "selected", text="")
@@ -27,7 +27,7 @@ class WFC3D_UL_MultipleConnectorList(bpy.types.UIList):
         row.prop(item, "mult_conn_name", placeholder="Connector name")
 
 
-class WFC3D_UL_RegFreqList(bpy.types.UIList):
+class VIEW3D_UL_RegFreqList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
@@ -42,7 +42,7 @@ class WFC3D_UL_RegFreqList(bpy.types.UIList):
         row = col.row()
         row.separator()
 
-class WFC3D_UL_FixedPositionList(bpy.types.UIList):
+class VIEW3D_UL_FixedPositionList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item,"selected", text="")
@@ -52,7 +52,7 @@ class WFC3D_UL_FixedPositionList(bpy.types.UIList):
         else:
             row.prop(item,"fixed_position_pct")
 
-class WFC3D_UL_RegProbList(bpy.types.UIList):
+class VIEW3D_UL_RegProbList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
@@ -68,7 +68,7 @@ class WFC3D_UL_RegProbList(bpy.types.UIList):
         row = col.row()
         row.separator()
 
-class WFC3D_UL_DistanceList(bpy.types.UIList):
+class VIEW3D_UL_DistanceList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         ocol = row.column(align=True)
@@ -90,7 +90,7 @@ class WFC3D_UL_DistanceList(bpy.types.UIList):
         col.prop(item, "distance_type")
         row = ocol.row()
         row.separator()
-class WFC3D_UL_ActiveConstraintsList(bpy.types.UIList):
+class VIEW3D_UL_ActiveConstraintsList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.constraint, icon="SETTINGS")
 
@@ -99,17 +99,17 @@ def draw_empty_neighbor_list_item(layout, item):
     direction = item.direction.split('_')
     row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
 
-class WFC3D_UL_EmptyNeighborList(bpy.types.UIList):
+class VIEW3D_UL_EmptyNeighborList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         draw_empty_neighbor_list_item(layout, item)
-class WFC3D_UL_EmptyAnyNeighborList(bpy.types.UIList):
+class VIEW3D_UL_EmptyAnyNeighborList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         draw_empty_neighbor_list_item(layout, item)
 
-class WFC3D_PT_EditPanel(bpy.types.Panel):
+class VIEW3D_PT_EditPanel(bpy.types.Panel):
     """User interface for WFC 3D Constraints Editor"""
     bl_label = "WFC 3D Constraints Editor"
-    bl_idname = "VIEW3D_PT_wfc_3d_edit"
+    bl_idname = "VIEW3D_PT_wfc_edit"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'WFC 3D Edit'
@@ -134,7 +134,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             box = layout.box()
             row = box.row(align=True)
             col = row.column(align=True)
-            col.template_list("WFC3D_UL_ActiveConstraintsList","", props, "active_constraints_input_list", props, "active_constraints_input_list_idx",rows=18, maxrows=18)
+            col.template_list("VIEW3D_UL_ActiveConstraintsList","", props, "active_constraints_input_list", props, "active_constraints_input_list_idx",rows=18, maxrows=18)
             col = row.box().column(align=True)
             col.operator('object.wfc_auto_save_toggle', icon='IMPORT', depress=props.auto_save)
             col.separator()
@@ -161,7 +161,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nc.prop(props,"auto_active_object", icon="TRIA_RIGHT")
             nc.operator("object.wfc_update_collection_list", icon="FILE_REFRESH")
             nc=newrow.column()
-            nc.template_list("WFC3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
+            nc.template_list("VIEW3D_UL_EditPanelMultiSelList","", props, "obj_list", props, "obj_list_idx")
             nc.enabled = not props.auto_active_object
             nc=newrow.column().box()
             c = nc.column()
@@ -243,7 +243,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
             nc.enabled = not props.auto_active_object
             newcol.operator("object.wfc_update_collection_list", icon="FILE_REFRESH")
             newcol = row.column()
-            newcol.template_list("WFC3D_UL_EditPanelNeighborMultiSelList", "", props, "neighbor_list", props, "neighbor_list_idx")
+            newcol.template_list("VIEW3D_UL_EditPanelNeighborMultiSelList", "", props, "neighbor_list", props, "neighbor_list_idx")
             newcol.enabled = not props.auto_neighbor_object
             newcol = row.column().box()
             newcol.enabled = not props.auto_neighbor_object
@@ -493,10 +493,10 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
     def draw_fixed_position_panel(self, props, layout, obj, obj_name):
-        self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_FixedPositionList","fixed_position_input_list")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_FixedPositionList","fixed_position_input_list")
 
     def draw_regfreq_panel(self, props, layout, obj, obj_name):
-        self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_RegFreqList","regfreq_input_list")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_RegFreqList","regfreq_input_list")
 
     def draw_noise_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
@@ -538,16 +538,16 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
     def draw_regprob_panel(self, props, layout, obj, obj_name):
-        self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_RegProbList","regprob_input_list")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_RegProbList","regprob_input_list")
 
     def draw_distance_panel(self, props, layout, obj, obj_name):
-        self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_DistanceList","distance_input_list")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_DistanceList","distance_input_list")
 
     def draw_connector_exclusion_panel(self, props, layout, obj, obj_name):
-        self._draw_list_constraints_panel(props, layout, obj, obj_name,"WFC3D_UL_ConnectorExclusionList","conn_excl_input_list")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_ConnectorExclusionList","conn_excl_input_list")
 
     def draw_multiple_connector_panel(self, props, layout, obj, obj_name):
-        self._draw_list_constraints_panel(props, layout, obj, obj_name, "WFC3D_UL_MultipleConnectorList", "mult_conn_input_list")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name, "VIEW3D_UL_MultipleConnectorList", "mult_conn_input_list")
 
     def draw_empty_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
@@ -559,7 +559,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row.label(text="Prohibit empty neighbors in selected directions:")
         row = nbox.row()
         col = row.column()
-        col.template_list("WFC3D_UL_EmptyNeighborList", "", props, "empty_neighbor_list", props, "empty_neighbor_list_idx")
+        col.template_list("VIEW3D_UL_EmptyNeighborList", "", props, "empty_neighbor_list", props, "empty_neighbor_list_idx")
         col = row.column().box()
         nc = col.column()
         nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
@@ -573,7 +573,7 @@ class WFC3D_PT_EditPanel(bpy.types.Panel):
         row.label(text="Prohibit any empty neighbors in selected directions:")
         row = nbox.row()
         col = row.column()
-        col.template_list("WFC3D_UL_EmptyAnyNeighborList", "", props, "empty_any_neighbor_list", props, "empty_any_neighbor_list_idx")
+        col.template_list("VIEW3D_UL_EmptyAnyNeighborList", "", props, "empty_any_neighbor_list", props, "empty_any_neighbor_list_idx")
         col = row.column().box()
         nc = col.column()
         nc.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
@@ -748,7 +748,7 @@ def draw_list_order_actions(props, column, list_name, call_auto_save = True):
     op.list_name = list_name
     op.call_auto_save = call_auto_save
 
-panels = [ WFC3D_UL_ActiveConstraintsList, WFC3D_UL_MultipleConnectorList, WFC3D_UL_ConnectorExclusionList, WFC3D_UL_EmptyNeighborList, WFC3D_UL_EmptyAnyNeighborList, WFC3D_UL_DistanceList, WFC3D_UL_RegProbList, WFC3D_UL_FixedPositionList,\
-           WFC3D_UL_RegFreqList, WFC3D_UL_EditPanelMultiSelList, WFC3D_UL_EditPanelNeighborMultiSelList, WFC3D_PT_EditPanel,]
+panels = [ VIEW3D_UL_ActiveConstraintsList, VIEW3D_UL_MultipleConnectorList, VIEW3D_UL_ConnectorExclusionList, VIEW3D_UL_EmptyNeighborList, VIEW3D_UL_EmptyAnyNeighborList, VIEW3D_UL_DistanceList, VIEW3D_UL_RegProbList, VIEW3D_UL_FixedPositionList,\
+           VIEW3D_UL_RegFreqList, VIEW3D_UL_EditPanelMultiSelList, VIEW3D_UL_EditPanelNeighborMultiSelList, VIEW3D_PT_EditPanel,]
 
         

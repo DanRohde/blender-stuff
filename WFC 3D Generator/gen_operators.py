@@ -112,9 +112,9 @@ def handle_seed_change(_self, context):
     if len(props.collection_obj.objects) == 0 and len(props.collection_obj.children) == 0: return
     generate_model(props, context)
 
-class WFC3D_OT_Generate(bpy.types.Operator):
+class OBJECT_OT_Generate(bpy.types.Operator):
     """Generates a 3D model with Wave Function Collapse"""
-    bl_idname = "object.wfc_3d_generate"
+    bl_idname = "object.wfc_generate"
     bl_label = "Generate WFC 3D Model"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
@@ -123,9 +123,9 @@ class WFC3D_OT_Generate(bpy.types.Operator):
         if not props.background_generation: self.report({'INFO'}, "The WFC 3D model was successfully generated.")
         return {'FINISHED'}
 
-class WFC3D_OT_ResetRenderResult(bpy.types.Operator):
+class OBJECT_OT_ResetRenderResult(bpy.types.Operator):
     """Reset render result"""
-    bl_idname = "object.wfc_3d_reset_render_result"
+    bl_idname = "object.wfc_reset_render_result"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
@@ -177,8 +177,8 @@ class WFC3DProgress:
         return (self.max_count - self.last_count) * ( time.perf_counter() - self.start_time ) /  self.last_count
 
 
-class WFC3D_OT_StopButton(bpy.types.Operator):
-    bl_idname = "object.wfc_3d_stop_button"
+class OBJECT_OT_StopButton(bpy.types.Operator):
+    bl_idname = "object.wfc_stop_button"
     bl_label = ""
     bl_description = "Stop background process."
     prop_name : bpy.props.StringProperty(default="")
@@ -186,8 +186,8 @@ class WFC3D_OT_StopButton(bpy.types.Operator):
         setattr(context.scene.wfc_props, self.prop_name, False)
         return {'FINISHED'}
 
-class WFC3D_OT_ToggleButton(bpy.types.Operator):
-    bl_idname = "object.wfc_3d_toggle_button"
+class OBJECT_OT_ToggleButton(bpy.types.Operator):
+    bl_idname = "object.wfc_toggle_button"
     bl_label = ""
     bl_description = "Pause Toggle"
     prop_name : bpy.props.StringProperty(default="")
@@ -195,17 +195,17 @@ class WFC3D_OT_ToggleButton(bpy.types.Operator):
         setattr(context.scene.wfc_props, self.prop_name, not getattr(context.scene.wfc_props, self.prop_name))
         return {'FINISHED'}
 
-class WFC3D_OT_AutoGenerateToggle(bpy.types.Operator):
+class OBJECT_OT_AutoGenerateToggle(bpy.types.Operator):
     """Automatic Model Generation when Random Seed changes."""
-    bl_idname = "object.wfc_3d_auto_generate_toggle"
+    bl_idname = "object.wfc_auto_generate_toggle"
     bl_label = ""
     def execute(self, context):
         context.scene.wfc_props.auto_generate = not context.scene.wfc_props.auto_generate
         return {'FINISHED'}
 
-class WFC3D_OT_CherryPicking(bpy.types.Operator):
+class OBJECT_OT_CherryPicking(bpy.types.Operator):
     """Start/Pause cherry picking """
-    bl_idname = "object.wfc_3d_cherry_picking"
+    bl_idname = "object.wfc_cherry_picking"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
     def _cherry_picking(self):
@@ -230,7 +230,7 @@ class WFC3D_OT_CherryPicking(bpy.types.Operator):
             props.cherry_picking_running = False
         return {'FINISHED'}
 
-class WFC3D_OT_TargetCollectionIncNumber(bpy.types.Operator):
+class OBJECT_OT_TargetCollectionIncNumber(bpy.types.Operator):
     bl_idname = "object.wfc3d_target_collection_inc_number"
     bl_label = ""
     bl_description = "Increment/Decrement Number in Name"
@@ -249,7 +249,7 @@ class WFC3D_OT_TargetCollectionIncNumber(bpy.types.Operator):
         else:
             props.target_collection = props.target_collection + "000"
         return {'FINISHED'}
-class WFC3D_OT_RandomSeed(bpy.types.Operator):
+class OBJECT_OT_RandomSeed(bpy.types.Operator):
     bl_idname = "object.wfc_random_seed"
     bl_label = ""
     bl_description = "Set a random random seed"
@@ -258,7 +258,7 @@ class WFC3D_OT_RandomSeed(bpy.types.Operator):
         random.seed()
         props.seed = random.randint(-0x7fffffff-1, 0x7fffffff)
         return {'FINISHED'}
-class WFC3D_OT_ToggleHideCollection(bpy.types.Operator):
+class OBJECT_OT_ToggleHideCollection(bpy.types.Operator):
     bl_idname = "object.wfc_toggle_hide_collection"
     bl_label = ""
     bl_description = "Show/Hide Collection"
@@ -274,4 +274,4 @@ class WFC3D_OT_ToggleHideCollection(bpy.types.Operator):
 
 
         return {'FINISHED'}
-operators = [ WFC3D_OT_ToggleHideCollection, WFC3D_OT_RandomSeed, WFC3D_OT_TargetCollectionIncNumber, WFC3D_OT_ResetRenderResult, WFC3D_OT_AutoGenerateToggle, WFC3D_OT_CherryPicking, WFC3D_OT_ToggleButton, WFC3D_OT_StopButton, WFC3D_OT_Generate ]
+operators = [ OBJECT_OT_ToggleHideCollection, OBJECT_OT_RandomSeed, OBJECT_OT_TargetCollectionIncNumber, OBJECT_OT_ResetRenderResult, OBJECT_OT_AutoGenerateToggle, OBJECT_OT_CherryPicking, OBJECT_OT_ToggleButton, OBJECT_OT_StopButton, OBJECT_OT_Generate ]

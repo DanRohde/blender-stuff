@@ -94,7 +94,7 @@ class WFC3DBackgroundSearch:
         bpy.app.timers.register(self._search, first_interval=0)
 
 class WFC3D_OT_Search(bpy.types.Operator):
-    bl_idname = "object.wfc_3d_search"
+    bl_idname = "object.wfc_search"
     bl_label = "Search"
     bl_description = "Search for a random seed"
     search_operator : bpy.props.StringProperty(default="min")
@@ -108,7 +108,7 @@ class WFC3D_OT_Search(bpy.types.Operator):
 
 class WFC3D_OT_ResetSearchResult(bpy.types.Operator):
     """Reset search result"""
-    bl_idname = "object.wfc_3d_reset_search_result"
+    bl_idname = "object.wfc_reset_search_result"
     bl_label = ""
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
