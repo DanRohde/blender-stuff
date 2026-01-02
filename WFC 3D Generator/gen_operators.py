@@ -231,7 +231,7 @@ class OBJECT_OT_CherryPicking(bpy.types.Operator):
         return {'FINISHED'}
 
 class OBJECT_OT_TargetCollectionIncNumber(bpy.types.Operator):
-    bl_idname = "object.wfc3d_target_collection_inc_number"
+    bl_idname = "object.wfc_target_collection_inc_number"
     bl_label = ""
     bl_description = "Increment/Decrement Number in Name"
     operator:  bpy.props.StringProperty(default="+")

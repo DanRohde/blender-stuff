@@ -1,7 +1,7 @@
 import bpy
 from .helper import render_source_collection
 class WFC3D_PT_BackupPanel(bpy.types.Panel):
-    bl_idname = "VIEW3D_PT_wfc_3d_backup"
+    bl_idname = "VIEW3D_PT_wfc_backup"
     bl_label = "WFC 3D Backup"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'

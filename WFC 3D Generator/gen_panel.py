@@ -62,8 +62,8 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
 
         row = box.row(align=True)
         row.prop(props, "target_collection", placeholder="Target collection")
-        row.operator("object.wfc3d_target_collection_inc_number", emboss=False, icon="REMOVE").operator = "-"
-        row.operator("object.wfc3d_target_collection_inc_number", emboss=False, icon="ADD").operator = "+"
+        row.operator("object.wfc_target_collection_inc_number", emboss=False, icon="REMOVE").operator = "-"
+        row.operator("object.wfc_target_collection_inc_number", emboss=False, icon="ADD").operator = "+"
         render_collection_actions(context, row, props.target_collection if props.target_collection != "" else None)
 
         box = layout.box()

@@ -49,7 +49,7 @@ class VIEW3D_UL_SeedsList(bpy.types.UIList):
 class OBJECT_PT_SeedsPanel(bpy.types.Panel):
     """User interface for WFC 3D Seeds"""
     bl_label = ""
-    bl_idname = "VIEW3D_PT_wfc_3d_seeds"
+    bl_idname = "VIEW3D_PT_wfc_seeds"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'WFC 3D Gen'

@@ -8,7 +8,7 @@ class VIEW3D_UL_RotationPanelMultiSelList(bpy.types.UIList):
 class VIEW3D_PT_RotationToolPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Rotation Tool"
-    bl_idname = "VIEW3D_PT_wfc_3d_rotation_tool"
+    bl_idname = "VIEW3D_PT_wfc_rotation_tool"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'WFC 3D Edit'
