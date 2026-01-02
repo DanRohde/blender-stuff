@@ -155,9 +155,9 @@ def rotate_object(props, obj, offset):
         bpy.context.view_layer.objects.active = None
 
     return offset
-class WFC3D_OT_Rotation(bpy.types.Operator):
+class OBJECT_OT_Rotation(bpy.types.Operator):
     """Create rotated copies."""
-    bl_idname = "rotation.wfc_rotation"
+    bl_idname = "object.wfc_rotation"
     bl_label = "Create Rotated Copies"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
@@ -171,8 +171,8 @@ class WFC3D_OT_Rotation(bpy.types.Operator):
             offset = rotate_object(props, obj, offset)
 
         return {'FINISHED'}
-class WFC3D_OT_RotationGetSelectedObject(bpy.types.Operator):
-    bl_idname = "rotation.wfc_get_selected_object"
+class OBJECT_OT_RotationGetSelectedObject(bpy.types.Operator):
+    bl_idname = "object.wfc_rotation_get_selected_object"
     bl_label = ""
     bl_description = "Select objects selected in the 3D Viewport"
     bl_options = {'REGISTER', 'UNDO'}
@@ -194,8 +194,8 @@ class WFC3D_OT_RotationGetSelectedObject(bpy.types.Operator):
             return {'CANCELLED'}
         return {'FINISHED'}
 
-class WFC3D_OT_RotationSelectDropdownObject(bpy.types.Operator):
-    bl_idname = "rotation.wfc_select_dropdown_object"
+class OBJECT_OT_RotationSelectDropdownObject(bpy.types.Operator):
+    bl_idname = "object.wfc_rotation_select_dropdown_object"
     bl_label = ""
     bl_description = "Select objects in the 3D Viewport"
     bl_options = {'REGISTER', 'UNDO'}
@@ -226,4 +226,4 @@ class WFC3D_OT_RotationSelectDropdownObject(bpy.types.Operator):
             self.report({'WARNING'}, f"Error: {str(e)}")
         return {'FINISHED'}
 
-operators = [ WFC3D_OT_Rotation, WFC3D_OT_RotationGetSelectedObject, WFC3D_OT_RotationSelectDropdownObject ]
+operators = [ OBJECT_OT_Rotation, OBJECT_OT_RotationGetSelectedObject, OBJECT_OT_RotationSelectDropdownObject ]

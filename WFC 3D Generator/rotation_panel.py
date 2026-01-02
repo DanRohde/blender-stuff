@@ -1,11 +1,11 @@
 import bpy
 from .helper import get_icon_name, get_selected_items, render_source_collection
 
-class WFC3D_UL_RotationPanelMultiSelList(bpy.types.UIList):
+class VIEW3D_UL_RotationPanelMultiSelList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
-class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
+class VIEW3D_PT_RotationToolPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Rotation Tool"
     bl_idname = "VIEW3D_PT_wfc_3d_rotation_tool"
@@ -21,14 +21,14 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
         if not props.collection_obj: return
         newrow = layout.box().row()
         nc = newrow.column().box()
-        nc.operator("rotation.wfc_get_selected_object", icon="SELECT_SET")
+        nc.operator("object.wfc_rotation_get_selected_object", icon="SELECT_SET")
         nc.prop(props, "rt_auto_active_object", icon="TRIA_RIGHT")
         nc.operator("object.wfc_update_collection_list", icon="FILE_REFRESH")
         nc = newrow.column()
-        nc.template_list("WFC3D_UL_RotationPanelMultiSelList", "", props, "rt_list", props, "rt_list_idx")
+        nc.template_list("VIEW3D_UL_RotationPanelMultiSelList", "", props, "rt_list", props, "rt_list_idx")
         nc.enabled = not props.rt_auto_active_object
         nc = newrow.column().box()
-        nc.operator("rotation.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
+        nc.operator("object.wfc_rotation_select_dropdown_object", icon='RESTRICT_SELECT_OFF')
         nc.operator("object.wfc_list_select_all", icon="CHECKBOX_HLT").list_name = "rt_list"
         nc.operator("object.wfc_list_select_none", icon="CHECKBOX_DEHLT").list_name = "rt_list"
         nc.operator("object.wfc_list_invert_selection", icon="CHECKMARK", text="").list_name = "rt_list"
@@ -79,7 +79,7 @@ class WFC3D_PT_RotationToolPanel(bpy.types.Panel):
         layout.separator()
         copies = len(selected)*(sum(props.rt_rotation_x)+sum(props.rt_rotation_y)+sum(props.rt_rotation_z))
         layout.label(text=f"{copies} copies will be created." if copies > 1 else f"One copy will be created.", icon="INFO_LARGE")
-        layout.row(align=True).operator("rotation.wfc_rotation")
+        layout.row(align=True).operator("object.wfc_rotation")
 
 
-panels = [ WFC3D_UL_RotationPanelMultiSelList, WFC3D_PT_RotationToolPanel ]
+panels = [ VIEW3D_UL_RotationPanelMultiSelList, VIEW3D_PT_RotationToolPanel ]
