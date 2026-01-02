@@ -227,18 +227,18 @@ def validate_source_collection():
     if error_count > 0: sev = 2
     add_log_entry(sev, f"Found {warn_count} warning(s), {error_count} error(s).", datetime.now().strftime("%c"))
 
-class WFC3D_OT_Validator(bpy.types.Operator):
+class OBJECT_OT_Validator(bpy.types.Operator):
     """Validate all objects in the source collection."""
-    bl_idname = "object.wfc3d_validator"
+    bl_idname = "object.wfc_validator"
     bl_label = "Validate Source Collection"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, _context):
         validate_source_collection()
         return {'FINISHED'}
 
-class WFC3D_OT_ValidatorClearLog(bpy.types.Operator):
+class OBJECT_OT_ValidatorClearLog(bpy.types.Operator):
     """Clear WFC3D validator log."""
-    bl_idname = "object.wfc3d_validator_clear_log"
+    bl_idname = "object.wfc_validator_clear_log"
     bl_label = "Clear Log"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
@@ -247,4 +247,4 @@ class WFC3D_OT_ValidatorClearLog(bpy.types.Operator):
         return {'FINISHED'}
 
 
-operators = [ WFC3D_OT_ValidatorClearLog, WFC3D_OT_Validator ]
+operators = [ OBJECT_OT_ValidatorClearLog, OBJECT_OT_Validator ]

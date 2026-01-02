@@ -274,4 +274,5 @@ class OBJECT_OT_ToggleHideCollection(bpy.types.Operator):
 
 
         return {'FINISHED'}
-operators = [ OBJECT_OT_ToggleHideCollection, OBJECT_OT_RandomSeed, OBJECT_OT_TargetCollectionIncNumber, OBJECT_OT_ResetRenderResult, OBJECT_OT_AutoGenerateToggle, OBJECT_OT_CherryPicking, OBJECT_OT_ToggleButton, OBJECT_OT_StopButton, OBJECT_OT_Generate ]
+operators = [ OBJECT_OT_ToggleHideCollection, OBJECT_OT_RandomSeed, OBJECT_OT_TargetCollectionIncNumber, OBJECT_OT_ResetRenderResult,
+              OBJECT_OT_AutoGenerateToggle, OBJECT_OT_CherryPicking, OBJECT_OT_ToggleButton, OBJECT_OT_StopButton, OBJECT_OT_Generate ]

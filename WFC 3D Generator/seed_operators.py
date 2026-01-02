@@ -3,7 +3,7 @@ import time
 
 from .helper import seed_in_seeds_list, set_generator_properties_from_bookmark
 
-class WFC3D_OT_SetSeedDirect(bpy.types.Operator):
+class OBJECT_OT_SetSeedDirect(bpy.types.Operator):
     bl_idname = "object.wfc_set_seed_direct"
     bl_label = ""
     bl_description = "Apply random seed"
@@ -13,7 +13,7 @@ class WFC3D_OT_SetSeedDirect(bpy.types.Operator):
         set_generator_properties_from_bookmark(props, props.seeds_input_list[self.item_idx])
         return {'FINISHED'}
 
-class WFC3D_OT_RemoveSeedListItems(bpy.types.Operator):
+class OBJECT_OT_RemoveSeedListItems(bpy.types.Operator):
     bl_idname = "object.wfc_remove_seed_list_items"
     bl_label = ""
     bl_description = "Remove selected random seeds from random seeds list."
@@ -25,7 +25,7 @@ class WFC3D_OT_RemoveSeedListItems(bpy.types.Operator):
             props.seeds_input_list.remove(idx)
         return {'FINISHED'}
 
-class WFC3D_OT_AddSeedListItem(bpy.types.Operator):
+class OBJECT_OT_AddSeedListItem(bpy.types.Operator):
     bl_idname = "object.wfc_add_seed_list_item"
     bl_label = ""
     bl_description = "Add/Remove current random seed to/from random seeds list."
@@ -56,4 +56,4 @@ class WFC3D_OT_AddSeedListItem(bpy.types.Operator):
         props.auto_generate = auto_generate
         return {'FINISHED'}
 
-operators = [ WFC3D_OT_SetSeedDirect, WFC3D_OT_AddSeedListItem, WFC3D_OT_RemoveSeedListItems, ]
+operators = [ OBJECT_OT_SetSeedDirect, OBJECT_OT_AddSeedListItem, OBJECT_OT_RemoveSeedListItems, ]

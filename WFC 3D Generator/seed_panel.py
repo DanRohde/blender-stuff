@@ -2,7 +2,7 @@ import bpy
 from .edit_panel import draw_list_selection_actions, draw_list_order_actions
 from .helper import count_selected_items, seed_in_seeds_list
 
-class WFC3D_UL_SeedsList(bpy.types.UIList):
+class VIEW3D_UL_SeedsList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
@@ -46,7 +46,7 @@ class WFC3D_UL_SeedsList(bpy.types.UIList):
         row.label(text="Random Start Cell", icon="CHECKBOX_HLT" if item.random_start_cell else "CHECKBOX_DEHLT")
         col.row().label(text=f"Timestamp: {item.timestamp}")
 
-class WFC3DSeedsPanel(bpy.types.Panel):
+class OBJECT_PT_SeedsPanel(bpy.types.Panel):
     """User interface for WFC 3D Seeds"""
     bl_label = ""
     bl_idname = "VIEW3D_PT_wfc_3d_seeds"
@@ -61,7 +61,7 @@ class WFC3DSeedsPanel(bpy.types.Panel):
         sel_count = count_selected_items(props.seeds_input_list)
         row = layout.row()
         col = row.column()
-        col.template_list("WFC3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx", rows=1, maxrows=2)
+        col.template_list("VIEW3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx", rows=1, maxrows=2)
         r = col.row()
         draw_list_order_actions(props, r, "seeds_input_list", call_auto_save=False)
         r.label(text=f"Random Seeds: {len(props.seeds_input_list)}")
@@ -76,4 +76,4 @@ class WFC3DSeedsPanel(bpy.types.Panel):
     def draw_header(self, context):
         self.layout.row().label(text="WFC 3D Random Seeds", icon="BOOKMARKS")
 
-panels = [ WFC3D_UL_SeedsList, WFC3DSeedsPanel ]
+panels = [ VIEW3D_UL_SeedsList, OBJECT_PT_SeedsPanel ]
