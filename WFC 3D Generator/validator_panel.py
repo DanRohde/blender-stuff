@@ -3,7 +3,7 @@ from .helper import render_source_collection
 class VIEW3D_PT_ValidatorPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Validator"
-    bl_idname = "VIEW3D_PT_wfc_3d_validator"
+    bl_idname = "VIEW3D_PT_wfc_validator"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'WFC 3D Edit'
