@@ -46,7 +46,7 @@ def start_render_result(props, generator):
             counts[o.name] = int(counts[o.name] / np.prod(generator.constraints.constraints[o.name]["dim_xyz"]))
 
     props.render_result.bb_count = len(generator.objects)
-    for k,v in counts.items():
+    for v in counts.values():
         props.render_result.bb_count_used += 1 if v > 0 else 0
         props.render_result.object_total += v
     props.render_result.object_count = json.dumps(counts)
