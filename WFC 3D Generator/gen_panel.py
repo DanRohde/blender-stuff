@@ -1,7 +1,7 @@
 import bpy
 import numpy as np
 import json
-from .helper import seed_in_seeds_list, render_source_collection, render_collection_actions
+from .helper import seed_in_seeds_list, render_source_collection, render_collection_actions, get_default_empty_name
 class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Generator"
@@ -133,9 +133,10 @@ def render_render_result(props, layout):
 
         row.operator("object.wfc_reset_render_result", icon="PANEL_CLOSE")
         if props.render_result.object_count != "" and not props.render_result.object_count_collapsed :
+            rr = props.render_result
+            box.label(text=f"{rr.object_total} objects created, {rr.bb_count_used} of {rr.bb_count} building blocks used:")
             gf = box.grid_flow(columns=3)
-            oc = json.loads(props.render_result.object_count)
-            for o in sorted(oc.items(), key=lambda x: x[0]):
+            for o in sorted(json.loads(rr.object_count).items(), key=lambda x: x[0]):
                 gf.label(text=f"{o[0]}: {o[1]}")
 def render_seed_selection(props, prefs, row, render_allowed):
     if len(props.seeds_input_list) > 0: row.prop(props, "seeds", icon="BOOKMARKS", text="")

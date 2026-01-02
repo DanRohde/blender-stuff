@@ -26,6 +26,9 @@ def init_render_result(props):
     props.render_result.render_start_time = -1
     props.render_result.render_duration = -1
     props.render_result.object_count = ""
+    props.render_result.bb_count = -1
+    props.render_result.bb_count_used = -1
+    props.render_result.object_total = -1
 
 def start_render_result(props, generator):
     props.render_result.gen_duration = time.perf_counter() - props.render_result.gen_start_time
@@ -42,6 +45,9 @@ def start_render_result(props, generator):
         for o in generator.objects:
             counts[o.name] = int(counts[o.name] / np.prod(generator.constraints.constraints[o.name]["dim_xyz"]))
 
+    props.render_result.bb_count = len(generator.objects)
+    props.render_result.bb_count_used = len(counts)
+    props.render_result.object_total = sum([c for c in counts.values()])
     props.render_result.object_count = json.dumps(counts)
 
 def end_render_result(props):

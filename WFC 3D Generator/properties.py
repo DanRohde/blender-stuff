@@ -210,7 +210,10 @@ class WFC3DRenderResult(bpy.types.PropertyGroup):
     gen_duration: bpy.props.FloatProperty()
     render_start_time: bpy.props.FloatProperty()
     render_duration: bpy.props.FloatProperty()
+    bb_count: bpy.props.IntProperty()
+    bb_count_used: bpy.props.IntProperty()
     object_count: bpy.props.StringProperty()
+    object_total: bpy.props.IntProperty()
     object_count_collapsed: bpy.props.BoolProperty(default=True, description="C: Cell count, E: Empty cells, T: Time required for generation/rendering/total; Click to show/hide object statistics.")
 
 class WFC3DSearchResult(bpy.types.PropertyGroup):
