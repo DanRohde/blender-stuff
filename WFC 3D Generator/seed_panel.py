@@ -74,6 +74,6 @@ class OBJECT_PT_SeedsPanel(bpy.types.Panel):
         draw_list_selection_actions(props, col, "seeds_input_list")
 
     def draw_header(self, context):
-        self.layout.row().label(text="WFC 3D Random Seeds", icon="BOOKMARKS")
+        self.layout.row().label(text=f"WFC 3D Random Seeds ({len(context.scene.wfc_props.seeds_input_list)})", icon="BOOKMARKS")
 
 panels = [ VIEW3D_UL_SeedsList, OBJECT_PT_SeedsPanel ]
