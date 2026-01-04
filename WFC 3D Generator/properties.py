@@ -111,15 +111,15 @@ def take_known_conn_name(_self, _context):
 
 class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
     obj: bpy.props.PointerProperty(type=bpy.types.ID)
-    selected: bpy.props.BoolProperty(default=False, update=update_edit_form)
+    selected: bpy.props.BoolProperty(default=False, update=update_edit_form, name="", description="(De)Select building block.")
 
 class WFC3DEditPanelNeighborMultiSelItem(bpy.types.PropertyGroup):
     obj: bpy.props.PointerProperty(type=bpy.types.ID)
-    selected: bpy.props.BoolProperty(default=False, update=auto_save)
+    selected: bpy.props.BoolProperty(default=False, update=auto_save, name="", description="(De)Select building block.")
 
 class WFC3DRotationPanelMultiSelItem(bpy.types.PropertyGroup):
     obj: bpy.props.PointerProperty(type=bpy.types.ID)
-    selected: bpy.props.BoolProperty(default=False)
+    selected: bpy.props.BoolProperty(default=False, name="", description="(De)Select building block.")
 
 class WFC3DValidatorOutputItem(bpy.types.PropertyGroup):
     severity: bpy.props.IntProperty()
@@ -132,7 +132,7 @@ class WFC3DRegionFrequencyListItem(bpy.types.PropertyGroup):
     regfreq_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", default=PROP_DEFAULTS["regfreq_max"])
     regfreq_freq: bpy.props.IntProperty(update=auto_save, name="Frequency", description="Region frequency", min=-1, default=PROP_DEFAULTS["regfreq_freq"])
     regfreq_freq_pct: bpy.props.FloatProperty(update=auto_save, name="Frequency %", description="Region frequency in %", min=-1, max=100, subtype="PERCENTAGE", default=PROP_DEFAULTS["regfreq_freq_pct"])
-    selected: bpy.props.BoolProperty(default=False, name="")
+    selected: bpy.props.BoolProperty(default=False, name="", description="(De)Select constraint.")
 
 class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
     fixed_position_xyz: bpy.props.IntVectorProperty(name="",
@@ -140,25 +140,25 @@ class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
                                                     default=PROP_DEFAULTS['fixed_position_xyz'], update=auto_save)
     fixed_position_pct: bpy.props.FloatVectorProperty(name="", description="Fixed Position for a building block", min=0, max=100, precision=1, default=PROP_DEFAULTS['fixed_position_pct'], update=auto_save)
     fixed_position_type: bpy.props.EnumProperty(name="", description="Fixed position type", items=[('absolute','Abs:','Absolute position'),('pct','Pct:','Percentage-based relative position within the grid'),], update=auto_save)
-    selected: bpy.props.BoolProperty(default=False, name="")
+    selected: bpy.props.BoolProperty(default=False, name="", description="(De)Select constraint.")
 
 class WFC3DEmptyNeighborListItem(bpy.types.PropertyGroup):
     direction: bpy.props.StringProperty(name="Direction")
-    selected: bpy.props.BoolProperty(default=False, update=auto_save)
+    selected: bpy.props.BoolProperty(default=False, update=auto_save, name="", description="(De)Select direction.")
 
 class WFC3DEmptyAnyNeighborListItem(bpy.types.PropertyGroup):
     direction: bpy.props.StringProperty(name="Direction")
-    selected: bpy.props.BoolProperty(default=False, update=auto_save)
+    selected: bpy.props.BoolProperty(default=False, update=auto_save, name="", description="(De)Select direction.")
 
 class WFC3DConnectorExclusionListItem(bpy.types.PropertyGroup):
     conn_excl_name: bpy.props.StringProperty(name="",description="Connector name to exclude", default=PROP_DEFAULTS["conn_excl_name"], search=search_multiple_connector_names, update=auto_save)
     conn_excl_direction: bpy.props.EnumProperty(name="",description="Direction",items=get_connector_exclusion_direction_list, default=PROP_DEFAULTS["conn_excl_direction"], update=auto_save)
-    selected: bpy.props.BoolProperty(default=False, name="")
+    selected: bpy.props.BoolProperty(default=False, name="", description="(De)Select constraint.")
 
 class WFC3DMultipleConnectorListItem(bpy.types.PropertyGroup):
     mult_conn_name: bpy.props.StringProperty(name="",description="Connector name", default=PROP_DEFAULTS["mult_conn_name"], search=search_multiple_connector_names, update=auto_save)
     mult_conn_direction: bpy.props.EnumProperty(name="",description="Direction",items=get_multiple_connector_direction_list, default=PROP_DEFAULTS["mult_conn_direction"], update=auto_save)
-    selected: bpy.props.BoolProperty(default=False, name="")
+    selected: bpy.props.BoolProperty(default=False, name="", description="(De)Select constraint.")
 
 class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
     regprob_name: bpy.props.StringProperty(name='Name', description='Optional name of the region', default=PROP_DEFAULTS['regprob_name'], update=auto_save)
@@ -166,7 +166,7 @@ class WFC3DRegionProbabilityListItem(bpy.types.PropertyGroup):
     regprob_max: bpy.props.IntVectorProperty(size=3, update=auto_save, name="max", description="Region max", default=PROP_DEFAULTS['regprob_max'])
     regprob_weight: bpy.props.IntProperty(update=auto_save, name="Weight", description="Region weight", min=0, default=PROP_DEFAULTS['regprob_weight'])
     regprob_probability: bpy.props.FloatProperty(update=auto_save, name="Probability", description="Region probability", min=0, max=1, default=PROP_DEFAULTS['regprob_probability'])
-    selected: bpy.props.BoolProperty(default=False, name="")
+    selected: bpy.props.BoolProperty(default=False, name="", description="(De)Select constraint.")
 
 class WFC3DSeedsListItem(bpy.types.PropertyGroup):
     seed: bpy.props.IntProperty(name="", description="Random seed")
@@ -181,7 +181,7 @@ class WFC3DSeedsListItem(bpy.types.PropertyGroup):
     note: bpy.props.StringProperty(name="Note", description="Optional note shown as a tooltip")
     timestamp: bpy.props.StringProperty(name="", description="Timestamp")
     use_constraints: bpy.props.BoolProperty(name="Use Constraints", description="Use constraints", default=True,)
-    selected: bpy.props.BoolProperty(default=False, name="")
+    selected: bpy.props.BoolProperty(default=False, name="", description="(De)Select random seed bookmark.")
     collapsed : bpy.props.BoolProperty(default=True, name="", description="Show/Hide random seed bookmark properties.")
 class WFC3DDistanceListItem(bpy.types.PropertyGroup):
     distance: bpy.props.IntVectorProperty(name="Distance", description="Minimum cell distance", default=PROP_DEFAULTS['distance'], min=0, update=auto_save)
@@ -195,10 +195,10 @@ class WFC3DDistanceListItem(bpy.types.PropertyGroup):
     distance_position_type: bpy.props.EnumProperty(name="", description="Fixed position type", items=[('absolute', 'Abs:', 'Absolute position'), ('pct', 'Pct:', 'Percentage-based relative position within the grid'), ], update=auto_save)
     distance_subcollection: bpy.props.PointerProperty(type=bpy.types.Collection, name="Sub-Collection", description="Sub-collection from the source collection", poll=is_sub_element, update=auto_save)
     distance_type: bpy.props.EnumProperty(update=auto_save, name="Type", description="Distancy type", items=[('minimum', 'Minimum distance', 'Minimum distance'),('maximum', 'Maximum distance', 'Maximum distance'),('equal', 'Equal distance', 'Equal distance')])
-    selected: bpy.props.BoolProperty(default=False, name="")
+    selected: bpy.props.BoolProperty(default=False, name="", description="(De)Select constraint.")
 
 class WFC3DActiveConstraintsListItem(bpy.types.PropertyGroup):
-    selected: bpy.props.BoolProperty(default=False, name="", update=handle_active_constraints_changes)
+    selected: bpy.props.BoolProperty(default=False, name="", update=handle_active_constraints_changes, description="Click to (de)activate constraint.")
     constraint: bpy.props.StringProperty(name="Constraint", description="Constraint")
     constraint_id: bpy.props.StringProperty(name="Constraint ID", description="Constraint ID")
     constraint_description: bpy.props.StringProperty(name="Constraint Description", description="Constraint description")
