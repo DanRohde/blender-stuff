@@ -1,7 +1,7 @@
 import bpy
 from .helper import get_icon_name, get_selected_items, render_source_collection
-
-class VIEW3D_UL_RotationPanelMultiSelList(bpy.types.UIList):
+from .edit_panel import WFC3DULObjectFilter
+class VIEW3D_UL_RotationPanelMultiSelList(bpy.types.UIList, WFC3DULObjectFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 

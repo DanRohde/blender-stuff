@@ -2,24 +2,43 @@ import bpy
 from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name, count_selected_items, get_active_constraints, render_source_collection
 from .properties import get_known_conn_names
 from .constants import *
+import fnmatch
+class WFC3DULObjectFilter:
+    def filter_items(self, context, data, propname):
+        items = getattr(data, propname)
+        flt_flags = [self.bitflag_filter_item] * len(items)
+        flt_neworder = []
+        if self.filter_name:
+            for idx, item in enumerate(items):
+                filter_match = item.obj.name.startswith(self.filter_name) or fnmatch.fnmatch(item.obj.name, self.filter_name)
+                flt_flags[idx] = self.bitflag_filter_item if (filter_match and not self.use_filter_invert) or (not filter_match and self.use_filter_invert) else 0
+        return flt_flags, flt_neworder
+    def draw_filter(self, context, layout):
+        row = layout.row(align=True)
+        row.prop(self, "filter_name", text="", icon='VIEWZOOM')
+        row.prop(self, "use_filter_invert", text="", icon='ARROW_LEFTRIGHT')
 
-class VIEW3D_UL_EditPanelMultiSelList(bpy.types.UIList):
+
+class VIEW3D_UL_EditPanelMultiSelList(bpy.types.UIList, WFC3DULObjectFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
-
-class VIEW3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList):
+class VIEW3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList, WFC3DULObjectFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
-class VIEW3D_UL_ConnectorExclusionList(bpy.types.UIList):
+class WFC3DULDisableFilter:
+    def draw_filter(self, context, layout):
+        self.use_filter_show = False
+        pass
+class VIEW3D_UL_ConnectorExclusionList(bpy.types.UIList, WFC3DULDisableFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item, "selected", text="")
         row.prop(item, "conn_excl_direction")
         row.prop(item, "conn_excl_name", placeholder="Connector name")
 
-class VIEW3D_UL_MultipleConnectorList(bpy.types.UIList):
+class VIEW3D_UL_MultipleConnectorList(bpy.types.UIList, WFC3DULDisableFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item, "selected", text="")
@@ -27,7 +46,7 @@ class VIEW3D_UL_MultipleConnectorList(bpy.types.UIList):
         row.prop(item, "mult_conn_name", placeholder="Connector name")
 
 
-class VIEW3D_UL_RegFreqList(bpy.types.UIList):
+class VIEW3D_UL_RegFreqList(bpy.types.UIList, WFC3DULDisableFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
@@ -42,7 +61,7 @@ class VIEW3D_UL_RegFreqList(bpy.types.UIList):
         row = col.row()
         row.separator()
 
-class VIEW3D_UL_FixedPositionList(bpy.types.UIList):
+class VIEW3D_UL_FixedPositionList(bpy.types.UIList, WFC3DULDisableFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item,"selected", text="")
@@ -52,7 +71,7 @@ class VIEW3D_UL_FixedPositionList(bpy.types.UIList):
         else:
             row.prop(item,"fixed_position_pct")
 
-class VIEW3D_UL_RegProbList(bpy.types.UIList):
+class VIEW3D_UL_RegProbList(bpy.types.UIList, WFC3DULDisableFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
@@ -68,7 +87,7 @@ class VIEW3D_UL_RegProbList(bpy.types.UIList):
         row = col.row()
         row.separator()
 
-class VIEW3D_UL_DistanceList(bpy.types.UIList):
+class VIEW3D_UL_DistanceList(bpy.types.UIList, WFC3DULDisableFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         ocol = row.column(align=True)
@@ -90,7 +109,7 @@ class VIEW3D_UL_DistanceList(bpy.types.UIList):
         col.prop(item, "distance_type")
         row = ocol.row()
         row.separator()
-class VIEW3D_UL_ActiveConstraintsList(bpy.types.UIList):
+class VIEW3D_UL_ActiveConstraintsList(bpy.types.UIList, WFC3DULDisableFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.constraint, icon="SETTINGS")
 
@@ -99,10 +118,10 @@ def draw_empty_neighbor_list_item(layout, item):
     direction = item.direction.split('_')
     row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
 
-class VIEW3D_UL_EmptyNeighborList(bpy.types.UIList):
+class VIEW3D_UL_EmptyNeighborList(bpy.types.UIList, WFC3DULDisableFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         draw_empty_neighbor_list_item(layout, item)
-class VIEW3D_UL_EmptyAnyNeighborList(bpy.types.UIList):
+class VIEW3D_UL_EmptyAnyNeighborList(bpy.types.UIList, WFC3DULDisableFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         draw_empty_neighbor_list_item(layout, item)
 
@@ -591,7 +610,7 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row.operator("object.wfc_reset_constraints")
         row = box.row()
         col = row.column()
-        col.template_list(ui_list, "", props, list_name, props, f"{list_name}_idx")
+        col.template_list(ui_list, "", props, list_name, props, f"{list_name}_idx", sort_lock = True)
         draw_list_order_actions(props, col, list_name)
         self._draw_list_modify_actions(props, row.box().column(), list_name)
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')

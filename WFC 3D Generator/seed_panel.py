@@ -1,8 +1,8 @@
 import bpy
-from .edit_panel import draw_list_selection_actions, draw_list_order_actions
+from .edit_panel import draw_list_selection_actions, draw_list_order_actions, WFC3DULDisableFilter
 from .helper import count_selected_items, seed_in_seeds_list
 
-class VIEW3D_UL_SeedsList(bpy.types.UIList):
+class VIEW3D_UL_SeedsList(bpy.types.UIList, WFC3DULDisableFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
