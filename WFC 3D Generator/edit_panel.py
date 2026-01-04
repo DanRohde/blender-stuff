@@ -11,7 +11,7 @@ class WFC3DULObjectFilter:
         if self.filter_name:
             for idx, item in enumerate(items):
                 filter_match = item.obj.name.startswith(self.filter_name) or fnmatch.fnmatch(item.obj.name, self.filter_name)
-                flt_flags[idx] = self.bitflag_filter_item if (filter_match and not self.use_filter_invert) or (not filter_match and self.use_filter_invert) else 0
+                flt_flags[idx] = self.bitflag_filter_item if filter_match != self.use_filter_invert else 0
         return flt_flags, flt_neworder
     def draw_filter(self, context, layout):
         row = layout.row(align=True)
