@@ -376,7 +376,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     region_level_penultimate: bpy.props.BoolProperty(name="Penultimate", description="Penultimate level (z=max-1)", default=PROP_DEFAULTS["region_level_penultimate"], update=auto_save)
     region_level_top: bpy.props.BoolProperty(name="Top", description="Top level (z=max)", default=PROP_DEFAULTS["region_level_top"], update=auto_save)
     conn_directions: bpy.props.EnumProperty(name="", description="Select a direction", items=get_conn_directions, update=handle_conn_directions_update)
-    conn_name: bpy.props.StringProperty(name="Connector name",description="Connector name", default="", update=auto_save)
+    conn_name: bpy.props.StringProperty(name="Connector name", description="Connector name", default="", update=auto_save, search=search_multiple_connector_names)
     conn_known_names : bpy.props.EnumProperty(items=get_known_conn_names, name='Select to apply', update=take_known_conn_name)
 
     conn_excl_input_list: bpy.props.CollectionProperty(type=WFC3DConnectorExclusionListItem)
