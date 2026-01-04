@@ -1,8 +1,8 @@
 import bpy
-from .edit_panel import draw_list_selection_actions, draw_list_order_actions, WFC3DULDisableFilter
+from .edit_panel import draw_list_selection_actions, draw_list_order_actions, WFC3DULGenericFilter
 from .helper import count_selected_items, seed_in_seeds_list
 
-class VIEW3D_UL_SeedsList(bpy.types.UIList, WFC3DULDisableFilter):
+class VIEW3D_UL_SeedsList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
@@ -61,7 +61,7 @@ class OBJECT_PT_SeedsPanel(bpy.types.Panel):
         sel_count = count_selected_items(props.seeds_input_list)
         row = layout.row()
         col = row.column()
-        col.template_list("VIEW3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx", rows=1, maxrows=2)
+        col.template_list("VIEW3D_UL_SeedsList", "", props, "seeds_input_list", props, "seeds_input_list_idx", rows=1, maxrows=2, sort_lock=True)
         r = col.row()
         draw_list_order_actions(props, r, "seeds_input_list", call_auto_save=False)
         r.label(text=f"Random Seeds: {len(props.seeds_input_list)}")

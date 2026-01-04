@@ -3,21 +3,39 @@ from .helper import get_default_empty_object, get_icon_name, cmpall, get_selecte
 from .properties import get_known_conn_names
 from .constants import *
 import fnmatch
-class WFC3DULObjectFilter:
+class WFC3DULGenericFilter:
+    case_sensitive : bpy.props.BoolProperty(default=False, name="", description="Case sensitive", )
+    def draw_filter(self, context, layout):
+        row = layout.row(align=True)
+        row.prop(self, "filter_name", text="", icon='VIEWZOOM')
+        row.prop(self, "use_filter_invert", text="", icon='ARROW_LEFTRIGHT')
+        row.prop(self, "case_sensitive", text="", icon="OUTLINER_OB_FONT")
+    def filter_items(self, context, data, propname):
+        items = getattr(data, propname)
+        flt_flags = [self.bitflag_filter_item] * len(items)
+        flt_neworder = []
+        if self.filter_name and len(items) > 0:
+            filterable_properties = [ p for p in items[0].keys() if isinstance(items[0][p], str) or isinstance(items[0][p], bpy.types.ID) ]
+            for idx, item in enumerate(items):
+                match = False
+                for p in filterable_properties:
+                    if p not in item: continue
+                    name = item[p] if isinstance(item[p], str) else item[p].name
+                    if not self.case_sensitive: name = name.lower()
+                    match = match or self.filter_name in name or fnmatch.fnmatch(name, self.filter_name)
+                flt_flags[idx] = self.bitflag_filter_item if match != self.use_filter_invert else 0
+        return flt_flags, flt_neworder
+class WFC3DULObjectFilter(WFC3DULGenericFilter):
     def filter_items(self, context, data, propname):
         items = getattr(data, propname)
         flt_flags = [self.bitflag_filter_item] * len(items)
         flt_neworder = []
         if self.filter_name:
             for idx, item in enumerate(items):
-                filter_match = item.obj.name.startswith(self.filter_name) or fnmatch.fnmatch(item.obj.name, self.filter_name)
+                name = item.obj.name if self.case_sensitive else item.obj.name.lower()
+                filter_match = self.filter_name in name or fnmatch.fnmatch(name, self.filter_name)
                 flt_flags[idx] = self.bitflag_filter_item if filter_match != self.use_filter_invert else 0
         return flt_flags, flt_neworder
-    def draw_filter(self, context, layout):
-        row = layout.row(align=True)
-        row.prop(self, "filter_name", text="", icon='VIEWZOOM')
-        row.prop(self, "use_filter_invert", text="", icon='ARROW_LEFTRIGHT')
-
 
 class VIEW3D_UL_EditPanelMultiSelList(bpy.types.UIList, WFC3DULObjectFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
@@ -27,18 +45,15 @@ class VIEW3D_UL_EditPanelNeighborMultiSelList(bpy.types.UIList, WFC3DULObjectFil
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.obj.name, icon=get_icon_name(item))
 
-class WFC3DULDisableFilter:
-    def draw_filter(self, context, layout):
-        self.use_filter_show = False
-        pass
-class VIEW3D_UL_ConnectorExclusionList(bpy.types.UIList, WFC3DULDisableFilter):
+
+class VIEW3D_UL_ConnectorExclusionList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item, "selected", text="")
         row.prop(item, "conn_excl_direction")
         row.prop(item, "conn_excl_name", placeholder="Connector name")
 
-class VIEW3D_UL_MultipleConnectorList(bpy.types.UIList, WFC3DULDisableFilter):
+class VIEW3D_UL_MultipleConnectorList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item, "selected", text="")
@@ -46,7 +61,7 @@ class VIEW3D_UL_MultipleConnectorList(bpy.types.UIList, WFC3DULDisableFilter):
         row.prop(item, "mult_conn_name", placeholder="Connector name")
 
 
-class VIEW3D_UL_RegFreqList(bpy.types.UIList, WFC3DULDisableFilter):
+class VIEW3D_UL_RegFreqList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
@@ -61,7 +76,7 @@ class VIEW3D_UL_RegFreqList(bpy.types.UIList, WFC3DULDisableFilter):
         row = col.row()
         row.separator()
 
-class VIEW3D_UL_FixedPositionList(bpy.types.UIList, WFC3DULDisableFilter):
+class VIEW3D_UL_FixedPositionList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
         row.prop(item,"selected", text="")
@@ -71,7 +86,7 @@ class VIEW3D_UL_FixedPositionList(bpy.types.UIList, WFC3DULDisableFilter):
         else:
             row.prop(item,"fixed_position_pct")
 
-class VIEW3D_UL_RegProbList(bpy.types.UIList, WFC3DULDisableFilter):
+class VIEW3D_UL_RegProbList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         col = row.column(align=True)
@@ -87,7 +102,7 @@ class VIEW3D_UL_RegProbList(bpy.types.UIList, WFC3DULDisableFilter):
         row = col.row()
         row.separator()
 
-class VIEW3D_UL_DistanceList(bpy.types.UIList, WFC3DULDisableFilter):
+class VIEW3D_UL_DistanceList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
         row = layout.row(align=True)
         ocol = row.column(align=True)
@@ -109,7 +124,7 @@ class VIEW3D_UL_DistanceList(bpy.types.UIList, WFC3DULDisableFilter):
         col.prop(item, "distance_type")
         row = ocol.row()
         row.separator()
-class VIEW3D_UL_ActiveConstraintsList(bpy.types.UIList, WFC3DULDisableFilter):
+class VIEW3D_UL_ActiveConstraintsList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         layout.row(align=True).prop(item, "selected", text=item.constraint, icon="SETTINGS")
 
@@ -118,10 +133,10 @@ def draw_empty_neighbor_list_item(layout, item):
     direction = item.direction.split('_')
     row.prop(item, "selected", text=f"{DIR_TRANSLATION[direction[0] if len(direction) == 1 else direction[1]]}", icon="VIEW_LOCKED" if item.selected else "VIEW_UNLOCKED")
 
-class VIEW3D_UL_EmptyNeighborList(bpy.types.UIList, WFC3DULDisableFilter):
+class VIEW3D_UL_EmptyNeighborList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         draw_empty_neighbor_list_item(layout, item)
-class VIEW3D_UL_EmptyAnyNeighborList(bpy.types.UIList, WFC3DULDisableFilter):
+class VIEW3D_UL_EmptyAnyNeighborList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         draw_empty_neighbor_list_item(layout, item)
 
