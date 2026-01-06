@@ -11,7 +11,7 @@ maintainer = "Dan Rohde <d.rohde@web.de>"
 type = "add-on"
 
 # # Optional: link to documentation, support, source files, etc
-website = "https://extensions.blender.org/add-ons/simple-todo/"
+website = "https://github.com/DanRohde/blender-stuff/tree/main"
 
 # # Optional: tag list defined by Blender and server, see:
 # # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
