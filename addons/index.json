@@ -1,0 +1,72 @@
+{
+  "version": "v1",
+  "blocklist": [],
+  "data": [
+    {
+      "schema_version": "1.0.0",
+      "id": "sierpinski_triangle",
+      "name": "Sierpinski Triangle",
+      "tagline": "This add-on creates Sierpinski triangles",
+      "version": "1.0.4",
+      "type": "add-on",
+      "maintainer": "Dan Rohde <d.rohde@web.de>",
+      "license": [
+        "SPDX:GPL-3.0-or-later"
+      ],
+      "blender_version_min": "4.2.0",
+      "website": "https://extensions.blender.org/add-ons/sierpinski-triangle/",
+      "archive_url": "./sierpinski_triangle-1.0.4.zip",
+      "archive_size": 4106,
+      "archive_hash": "sha256:4f6badeb029f38d3680bec40b1a7a61aafd7b35487849a09875c844bd7e01b05"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "wfc_3d_generator",
+      "name": "WFC 3D Generator",
+      "tagline": "Simple WFC 3D generator for procedural creation of objects",
+      "version": "1.3.7",
+      "type": "add-on",
+      "maintainer": "Dan Rohde <d.rohde@web.de>",
+      "license": [
+        "SPDX:GPL-3.0-or-later"
+      ],
+      "blender_version_min": "4.2.0",
+      "website": "https://extensions.blender.org/add-ons/wfc-3d-generator/",
+      "permissions": {
+        "files": "Import/export constraints (JSON) from/to disk"
+      },
+      "tags": [
+        "Object",
+        "Modeling",
+        "Render",
+        "Game Engine"
+      ],
+      "archive_url": "./wfc_3d_generator-1.3.7.zip",
+      "archive_size": 76569,
+      "archive_hash": "sha256:bf1666615c874701a492227230c8137140b4de8a76fa610d31ed7a6b302f4bef"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "simple_todo",
+      "name": "SimpleToDo",
+      "tagline": "A simple task manager with time tracking",
+      "version": "1.0.8",
+      "type": "add-on",
+      "maintainer": "Dan Rohde <d.rohde@web.de>",
+      "license": [
+        "SPDX:GPL-3.0-or-later"
+      ],
+      "blender_version_min": "4.2.0",
+      "website": "https://extensions.blender.org/add-ons/simple-todo/",
+      "permissions": {
+        "files": "Import/export tasks from/to a CSV file"
+      },
+      "tags": [
+        "Pipeline"
+      ],
+      "archive_url": "./simple_todo-1.0.8.zip",
+      "archive_size": 7475,
+      "archive_hash": "sha256:623e4cd84f9c292ebaad242a6e2636975446a651c597f2369803d323c33d3867"
+    }
+  ]
+}
