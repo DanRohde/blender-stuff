@@ -3,7 +3,7 @@
 Available Blender add-ons:
 * <img src="html/icons/sierpinski-icon.png" width="20px"> Sierpinski Triangle 
 * <img src="html/icons/wfc3dgenerator-icon.png" width="20px"> WFC 3D Generator 
-* <img src="html/icons/simpletodo-icon.png" width="20px"> SimpleToDo (see [Youtube](https://www.youtube.com/watch?v=Oy6hiUMn92U))
+* <img src="html/icons/simpletodo-icon.png" width="20px"> SimpleToDo (watch on [Youtube](https://www.youtube.com/watch?v=Oy6hiUMn92U) how it works)
 
 ### Install Blender Extensions
 - simply add this URL as a remote repository to your Blender repository list (Blender > Edit > Preferences > Get Extensions > Repositories > +):
