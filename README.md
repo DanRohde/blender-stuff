@@ -11,6 +11,6 @@ Available Blender add-ons:
 - OR visit  https://danrohde.github.io/blender-stuff/addons/ and drag and drop the filename into your running Blender window
 
 ## Geometry Nodes
-* Some [blend files](./Geometry Nodes/)
+* Some [blend files](./Geometry%20Nodes/)
 * Look at my [Youtube channel](https://www.youtube.com/@jonnybegood8230)
 
