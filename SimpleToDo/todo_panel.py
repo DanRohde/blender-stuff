@@ -117,7 +117,7 @@ class VIEW3D_PT_Panel(bpy.types.Panel):
         if bpy.data.is_dirty:
             row = layout.row()
             row.label(text="Don't forget to save the .blend file", icon="WARNING_LARGE")
-            row.operator("wm.save_main_file_button", icon="FILE_TICK")
+            if bpy.data.filepath and bpy.data.filepath !="": row.operator("wm.save_main_file_button", icon="FILE_TICK")
 
         row = box.row()
         row.operator("object.stodo_export_csv")

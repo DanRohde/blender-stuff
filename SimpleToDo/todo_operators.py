@@ -150,8 +150,9 @@ class WM_OT_SaveMainFile(bpy.types.Operator):
     bl_label = ""
     bl_description = "Save the current Blender file."
     def execute(self, context):
-        bpy.ops.wm.save_mainfile()
-        self.report({'INFO'}, f"Saved \"{bpy.data.filepath}\"")
+        if bpy.data.filepath and bpy.data.filepath != "":
+            bpy.ops.wm.save_mainfile()
+            self.report({'INFO'}, f"Saved \"{bpy.data.filepath}\"")
         return {'FINISHED'}
 
 operators = [ WM_OT_SaveMainFile, OBJECT_OT_CollapseTasks, OBJECT_OT_ImportCSV, OBJECT_OT_ExportCSV, OBJECT_OT_RemoveSelectedTasks, OBJECT_OT_InvertSelectTasks, OBJECT_OT_MoveDownTasks,
