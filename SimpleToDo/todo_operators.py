@@ -148,7 +148,7 @@ class OBJECT_OT_ExportCSV(bpy.types.Operator, ExportHelper):
 class WM_OT_SaveMainFile(bpy.types.Operator):
     bl_idname = "wm.save_main_file_button"
     bl_label = ""
-    bl_description = "Save main file"
+    bl_description = "Save the current Blender file."
     def execute(self, context):
         bpy.ops.wm.save_mainfile()
         self.report({'INFO'}, f"Saved \"{bpy.data.filepath}\"")
