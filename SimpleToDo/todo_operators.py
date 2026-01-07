@@ -145,5 +145,14 @@ class OBJECT_OT_ExportCSV(bpy.types.Operator, ExportHelper):
         self.report({'INFO'}, "Export to CSV complete.")
         return {"FINISHED"}
 
-operators = [ OBJECT_OT_CollapseTasks, OBJECT_OT_ImportCSV, OBJECT_OT_ExportCSV, OBJECT_OT_RemoveSelectedTasks, OBJECT_OT_InvertSelectTasks, OBJECT_OT_MoveDownTasks,
+class WM_OT_SaveMainFile(bpy.types.Operator):
+    bl_idname = "wm.save_main_file_button"
+    bl_label = ""
+    bl_description = "Save main file"
+    def execute(self, context):
+        bpy.ops.wm.save_mainfile()
+        self.report({'INFO'}, f"Saved \"{bpy.data.filepath}\"")
+        return {'FINISHED'}
+
+operators = [ WM_OT_SaveMainFile, OBJECT_OT_CollapseTasks, OBJECT_OT_ImportCSV, OBJECT_OT_ExportCSV, OBJECT_OT_RemoveSelectedTasks, OBJECT_OT_InvertSelectTasks, OBJECT_OT_MoveDownTasks,
               OBJECT_OT_MoveUpTasks, OBJECT_OT_ToggleSelectTasks, OBJECT_OT_ToggleRunningTask, OBJECT_OT_AddTask ]

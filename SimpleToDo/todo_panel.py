@@ -114,6 +114,11 @@ class VIEW3D_PT_Panel(bpy.types.Panel):
         row.separator()
         row.operator("object.stodo_collapse_tasks", icon="RIGHTARROW")
         box.row().label(text=f"{len(selected_items)} of {len(props.task_list)} task(s) selected. {len(started_items)} task(s) started.")
+        if bpy.data.is_dirty:
+            row = layout.row()
+            row.label(text="Don't forget to save the .blend file", icon="WARNING_LARGE")
+            row.operator("wm.save_main_file_button", icon="FILE_TICK")
+
         row = box.row()
         row.operator("object.stodo_export_csv")
         row.enabled = len(props.task_list) > 0
