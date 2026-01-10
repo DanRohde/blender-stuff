@@ -171,7 +171,7 @@ def render_column_chart(target_collection, props, csv):
             for y in range(len(data)):
                 if x == 0:
                     if (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header','header-left'}):
-                        if props.labels: render_text_object(target_collection, data[y][x], (lx + len(data) * xspace, ly + y * yspace, lz + maxz), label_mat, rot=(0,0,0), x_align='LEFT', y_align='CENTER')
+                        if props.labels: render_text_object(target_collection, data[y][x], (lx + len(data[0]) * xspace, ly + y * yspace, lz + maxz), label_mat, rot=(0,0,0), x_align='LEFT', y_align='CENTER')
                         continue  # skip label
                 if y == 0:
                     if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'}):
