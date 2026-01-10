@@ -29,7 +29,8 @@ class Properties(PropertyGroup):
     spacing: FloatVectorProperty(name="Spacing", size=3, subtype="XYZ_LENGTH", default=(0.1, 0.1, 0.1))
 
     legend: BoolProperty(default=True, name="Legend", description="Enable/Disable legend")
-
+    labels: BoolProperty(default=True, name="Labels", description="Enable/Disable labels")
+    values: BoolProperty(default=True, name="Values", description="Enable/Disable values")
 
 properties = [ CSVColumnTypeItems, Properties ]
 

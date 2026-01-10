@@ -57,6 +57,8 @@ class OBJECT_OT_CreateChart(Operator):
     max_xyz: FloatVectorProperty(name="", description="", default=(0, 0, 0), options={'HIDDEN'}, )
 
     legend: BoolProperty(name="Legend", default=True)
+    labels: BoolProperty(default=True, name="Labels", description="Enable/Disable labels")
+    values: BoolProperty(default=True, name="Values", description="Enable/Disable values")
     column_types_collapsed: BoolProperty(default=True, name="Column Types")
     def execute(self, context):
         if self.csv_filename == "": self.csv_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample.csv')

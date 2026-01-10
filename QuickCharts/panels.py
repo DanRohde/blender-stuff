@@ -14,7 +14,10 @@ def draw_panel(props, layout):
     if props.chart_type in {"column", "bar"}: layout.prop(props, "bc_sub_type")
 
     layout.prop(props, "data_series")
-    layout.prop(props, "legend")
+    row = layout.row()
+    row.prop(props, "labels")
+    row.prop(props, "values")
+    row.prop(props, "legend")
 
     layout.prop(props, "size")
     layout.prop(props, "spacing")
