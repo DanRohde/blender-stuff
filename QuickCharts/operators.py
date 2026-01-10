@@ -2,6 +2,8 @@ from bpy.types import Operator
 
 import csv
 
+from . import render
+
 def read_complete_csv(props):
     chart_properties = props.chart_properties
     csv_properties = props.csv_properties
@@ -39,6 +41,7 @@ class OBJECT_OT_CreateChart(Operator):
     bl_description = "Create Chart"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
-        read_complete_csv(context.scene.quick_charts_props)
+
+        render.render_chart(context.scene.quick_charts_props, read_complete_csv(context.scene.quick_charts_props))
         return {'FINISHED'}
 operators= [ OBJECT_OT_CreateChart ]
