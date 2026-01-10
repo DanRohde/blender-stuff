@@ -102,8 +102,8 @@ def render_text_object(target_collection, text, loc, mat, rot = (0, 0, np.pi / 2
     text_data = bpy.data.curves.new(name=name,type='FONT')
     text_data.body = text
     text_data.size = size
-    text_data.extrude = .02
-    text_data.bevel_depth = 0.03
+    text_data.extrude = .02 * size
+    text_data.bevel_depth = 0.03 * size
     text_data.bevel_resolution = 4
     text_data.align_x = x_align
     text_data.align_y = y_align
@@ -164,8 +164,11 @@ def render_column_chart(target_collection, props, csv):
                         render_text_object(target_collection, data[0][x], (lx + x * xspace + xspace/2, ly - xspace/2, lz + maxz), label_mat, size= xspace/2)
                         continue  # skip label
                 loc = (lx + x * xspace + (xs-1) * xs_space, ly, lz + maxz)
-                zscale = remap(float(data[xs][x]), -z_max_v, z_max_v, -maxz, maxz)
+                val = float(data[xs][x])
+                valstr = f"{val:.1f}" # TODO: column type!
+                zscale = remap(val, -z_max_v, z_max_v, -maxz, maxz)
                 clone_and_scale_object(target_collection, objects[xs], (xs_space, xs_space, zscale), loc)
+                render_text_object(target_collection, valstr, (loc[0], loc[1], lz + maxz + (zscale if val > 0 else 0)), label_mat, size = xs_space/2 * 3/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
     elif chart_props.bc_sub_type == 'deep':
         yspace = chart_props.size[1] / len(csv[0])
         for x in range(len(csv[0])):
@@ -181,6 +184,7 @@ def render_column_chart(target_collection, props, csv):
                 loc = (lx + x * xspace, ly + y * yspace, lz + maxz)
                 zscale = remap(float(data[y][x]), -z_max_v, z_max_v, -maxz, maxz)
                 clone_and_scale_object(target_collection, objects[y], (xspace - chart_props.spacing[0]*2, yspace - chart_props.spacing[1]*2, zscale), loc)
+
 
 def render_chart(props, csv):
     np.random.seed(0)
