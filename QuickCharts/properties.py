@@ -25,8 +25,8 @@ class Properties(PropertyGroup):
 
     data_series: EnumProperty(items=DATA_SERIES, name="Data series", description="Data series")
 
-    size: FloatVectorProperty(name="Chart Size", size=3, description="Chart size", default=(10, 10, 10), subtype="XYZ_LENGTH")
-    spacing: FloatVectorProperty(name="Chart Spacing", size=3, subtype="XYZ_LENGTH", default=(0.1, 0.1, 0.1))
+    size: FloatVectorProperty(name="Size", size=3, description="Chart size", default=(10, 10, 10), subtype="XYZ_LENGTH")
+    spacing: FloatVectorProperty(name="Spacing", size=3, subtype="XYZ_LENGTH", default=(0.1, 0.1, 0.1))
 
     legend: BoolProperty(default=True, name="Legend", description="Enable/Disable legend")
 

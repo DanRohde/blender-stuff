@@ -43,7 +43,7 @@ def create_cylinder(mat):
     name = "QuickChartCylinder"
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
-    bmesh.ops.create_cone(bm, segments=64, radius1=.5, radius2=.5, depth=1, cap_ends=True)
+    bmesh.ops.create_cone(bm, segments=128, radius1=.5, radius2=.5, depth=1, cap_ends=True)
     origin_to_bottom(bm)
     bm.to_mesh(mesh)
     bm.free()
@@ -54,7 +54,7 @@ def create_cone(mat):
     name = "QuickChartCone"
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
-    bmesh.ops.create_cone(bm, segments=64, radius1=.5, radius2=0, depth=1, cap_ends=True)
+    bmesh.ops.create_cone(bm, segments=128, radius1=.5, radius2=0, depth=1, cap_ends=True)
     origin_to_bottom(bm)
     bm.to_mesh(mesh)
     bm.free()

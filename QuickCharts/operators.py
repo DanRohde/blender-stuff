@@ -51,8 +51,8 @@ class OBJECT_OT_CreateChart(Operator):
     bc_shape: EnumProperty(items=BC_SHAPES, name="Shape")
     bc_sub_type: EnumProperty(items=BC_SUB_TYPES, name="Subtype")
 
-    size: FloatVectorProperty(name="Chart Size", description="Chart size", default=(10,10,10))
-    spacing: FloatVectorProperty(name="Spacing", description="Spacing", default=(0.1,0.1,0.1))
+    size: FloatVectorProperty(name="Size", description="Chart size", default=(10,10,10), subtype="XYZ_LENGTH")
+    spacing: FloatVectorProperty(name="Spacing", description="Chart spacing", default=(0.1,0.1,0.1), subtype="XYZ_LENGTH")
     min_xyz: FloatVectorProperty(name="", description="", default=(0, 0, 0), options={'HIDDEN'}, )
     max_xyz: FloatVectorProperty(name="", description="", default=(0, 0, 0), options={'HIDDEN'}, )
 

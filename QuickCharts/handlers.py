@@ -18,6 +18,8 @@ def handle_csv_filename_update(self, _context):
     self.chart_type = 'column'
     self.bc_sub_type = 'normal'
 
+    if not self.csv_filename or self.csv_filename == "": return None
+
     try:
         with open(self.csv_filename, "r", encoding="utf-8") as csv_file:
             csv_reader = csv.reader(csv_file)
