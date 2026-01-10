@@ -231,7 +231,7 @@ def render_bar_chart(target_collection, props, csv):
             for y in range(len(data)):
                 if z == 0:
                     if (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'}):
-                        if props.labels: render_text_object(target_collection, data[y][z], (lx + maxx , ly + y * yspace, lz + len(data) * zspace), label_mat, rot=(ph, 0, ph), x_align='RIGHT', y_align='CENTER')
+                        if props.labels: render_text_object(target_collection, data[y][z], (lx + maxx , ly + y * yspace, lz + len(data[0]) * zspace), label_mat, rot=(ph, 0, ph), x_align='RIGHT', y_align='CENTER')
                         continue  # skip label
                 if y == 0:
                     if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'}):

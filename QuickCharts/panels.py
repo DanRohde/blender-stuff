@@ -3,6 +3,8 @@ from bpy.types import Panel, UIList
 def draw_panel(props, layout):
     layout.prop(props, "csv_filename")
     layout.prop(props, "csv_format")
+    layout.prop(props, "data_series")
+
     row = layout.row(align=True)
     row.alignment = "LEFT"
     row.prop(props, "column_types_collapsed", emboss=False, icon="RIGHTARROW" if props.column_types_collapsed else "DOWNARROW_HLT")
@@ -13,7 +15,6 @@ def draw_panel(props, layout):
     if props.chart_type in {"column", "bar"}: row.prop(props, "bc_shape")
     if props.chart_type in {"column", "bar"}: layout.prop(props, "bc_sub_type")
 
-    layout.prop(props, "data_series")
     row = layout.row()
     row.prop(props, "labels")
     row.prop(props, "values")
