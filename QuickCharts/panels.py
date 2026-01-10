@@ -25,17 +25,13 @@ class VIEW3D_PT_Panel(Panel):
             layout.template_list("VIEW3D_UL_ColumnTypesList","", props.csv_properties, "column_types", props.csv_properties, "column_types_idx")
         layout.prop(props.chart_properties, "chart_type")
         row = layout.row(align=True)
-        row.prop(props.chart_properties, "three_d_look")
-        if props.chart_properties.chart_type in {"column","bar"}:
-            col = row.column(align=True)
-            col.enabled = props.chart_properties.three_d_look
-            col.prop(props.chart_properties, "three_d_shape")
+        if props.chart_properties.chart_type in {"column","bar"}: row.prop(props.chart_properties, "three_d_shape")
         if props.chart_properties.chart_type in {"column","bar"}: layout.prop(props.chart_properties, "bc_sub_type")
 
         layout.prop(props.chart_properties, "data_series")
         layout.prop(props.chart_properties.legend_properties, "enabled")
 
-
+        layout.prop(props.chart_properties, "size")
         layout.operator("object.quick_charts_create_chart")
 
         layout.prop(props.chart_properties, "min_xyz")

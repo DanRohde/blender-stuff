@@ -38,7 +38,7 @@ def handle_csv_filename_update(self, context):
     #     label | value | value | ...
     # value types:
     #   label, float, int, date
-    if re.match("^[0-9.,]+", rows[0][1]):
+    if re.match("^[0-9.,+-]+", rows[0][1]):
         props.csv_properties.csv_format = 'left'
 
         for i in range(len(rows[0])):
@@ -46,8 +46,9 @@ def handle_csv_filename_update(self, context):
             item.name = rows[0][0]
             item.column_type = "label" if i == 0 else get_cell_type(rows[0][i])
 
-    elif re.match("^[0-9.]+", rows[1][0]):
+    elif re.match("^[0-9.+-]+", rows[1][0]):
         props.csv_properties.csv_format = 'header'
+        props.chart_properties.data_series = 'rows'
         for i in range(len(rows[0])):
             item = props.csv_properties.column_types.add()
             item.name = rows[0][i]
@@ -55,7 +56,6 @@ def handle_csv_filename_update(self, context):
     else:
         props.csv_properties.csv_format = 'header-left'
         props.chart_properties.chart_type = 'column'
-        props.chart_properties.three_d_look = True
         props.chart_properties.bc_sub_type = 'deep'
         for i in range(len(rows[0])):
             item = props.csv_properties.column_types.add()

@@ -26,12 +26,12 @@ def read_complete_csv(props):
                     min_z = min(min_z, v) if min_z is not None else v
                     max_z = max(max_z, v) if max_z is not None else v
 
-        if chart_properties.three_d_look:
-            min_x, max_x = 0, len(rows) - 1 if chart_properties.data_series == 'columns' else len(rows[0]) - 1
-            if chart_properties.bc_sub_type == 'depth':
-                min_y, max_y = 0, len(rows[0])-1 if chart_properties.data_series == 'columns' else len(rows)-1
+        min_x, max_x = 0, len(rows) - 1 if chart_properties.data_series == 'columns' else len(rows[0]) - 1
+        if chart_properties.bc_sub_type == 'depth':
+            min_y, max_y = 0, len(rows[0])-1 if chart_properties.data_series == 'columns' else len(rows)-1
         chart_properties.min_xyz = (min_x if min_x is not None else 0, min_y if min_y is not None else 0, min_z if min_z is not None else 0)
         chart_properties.max_xyz = (max_x if max_x is not None else 0, max_y if max_y is not None else 0, max_z if max_z is not None else 0)
+
     except Exception as e:
         print(f"Could not read {props.csv_filename}: {e}")
     return rows

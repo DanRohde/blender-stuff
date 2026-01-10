@@ -1,13 +1,31 @@
 import bpy
 import bmesh
-from mathutils import Matrix
-import math
+import numpy as np
 
-def create_object(target_collection, name, loc, mesh, mat):
+COLORS = [
+    (0,1,1,1),
+    (0,1,0,1),
+    (0,0,1,1),
+    (1,0,1,1),
+    (1,1,0,1),
+    (1,1,1,1),
+]
+
+def create_object(name, mesh, mat):
     obj = bpy.data.objects.new(name, mesh)
-    obj.location = loc
     obj.data.materials.append(mat)
-    target_collection.objects.link(obj)
+    return obj
+
+def clone_and_scale_object(target_collection, obj, scale, loc):
+    new_obj = bpy.data.objects.new(name=obj.name, object_data=obj.data)
+    new_obj.scale = scale
+    new_obj.location = loc
+    new_obj.hide_viewport = False
+    target_collection.objects.link(new_obj)
+    return new_obj
+
+def hide_object(obj):
+    obj.hide_viewport = True
 
 def origin_to_bottom(bm):
     min_z = min(v.co.z for v in bm.verts)
@@ -15,65 +33,49 @@ def origin_to_bottom(bm):
     for v in bm.verts:
         v.co.z -= min_z
 
-def render_bar(target_collection, loc, width, height, mat):
+def create_bar(mat):
     name = "QuickChartBar"
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
-    bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=.5)
-    bmesh.ops.scale(bm, vec=(width, height, 1), verts = bm.verts)
-    bmesh.ops.rotate(bm, cent=(0, 0, 0), matrix=Matrix.Rotation(math.radians(90), 3, 'X'), verts=bm.verts )
-    origin_to_bottom(bm)
-    bm.to_mesh(mesh)
-    bm.free()
-    mesh.update()
-    create_object(target_collection, name, loc, mesh, mat)
-
-def render_3d_bar(target_collection, loc, width, depth, height, mat):
-    name = "QuickChart3DBar"
-    mesh = bpy.data.meshes.new(name)
-    bm = bmesh.new()
     bmesh.ops.create_cube(bm, size = 1 )
-    bmesh.ops.scale(bm, vec=(width, depth, height), verts=bm.verts)
     origin_to_bottom(bm)
     bm.to_mesh(mesh)
     bm.free()
     mesh.update()
-    create_object(target_collection, name, loc, mesh, mat)
+    return create_object(name, mesh, mat)
 
-def render_cylinder(target_collection, loc, radius, height, mat):
+def create_cylinder(mat):
     name = "QuickChartCylinder"
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
-    bmesh.ops.create_cone(bm, segments=32, radius1=1, radius2=1, depth=1, cap_ends=True)
-    bmesh.ops.scale(bm, vec=(radius, radius, height), verts=bm.verts)
+    bmesh.ops.create_cone(bm, segments=64, radius1=.5, radius2=.5, depth=1, cap_ends=True)
     origin_to_bottom(bm)
     bm.to_mesh(mesh)
     bm.free()
     mesh.update()
-    create_object(target_collection, name, loc, mesh, mat)
+    return create_object(name, mesh, mat)
 
-def render_cone(target_collection, loc, radius, height, mat):
+def create_cone(mat):
     name = "QuickChartCone"
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
-    bmesh.ops.create_cone(bm, segments=32, radius1=1, radius2=0, depth=1, cap_ends=True)
-    bmesh.ops.scale(bm, vec=(radius, radius, height), verts=bm.verts)
+    bmesh.ops.create_cone(bm, segments=64, radius1=.5, radius2=0, depth=1, cap_ends=True)
     origin_to_bottom(bm)
     bm.to_mesh(mesh)
     bm.free()
     mesh.update()
-    create_object(target_collection, name, loc, mesh, mat)
+    return create_object(name, mesh, mat)
 
-def render_pyramid(target_collection, loc, size, height, mat):
+def create_pyramid(mat):
     name = "QuickChartPyramid"
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
-    half = size / 2
+    half = .5
     v0 = bm.verts.new((-half, -half, 0))
     v1 = bm.verts.new(( half, -half, 0))
     v2 = bm.verts.new(( half,  half, 0))
     v3 = bm.verts.new((-half,  half, 0))
-    top = bm.verts.new((0, 0, height))
+    top = bm.verts.new((0, 0, 1))
 
     bm.faces.new((v0, v1, v2, v3))
     bm.faces.new((v0, v1, top))
@@ -84,21 +86,72 @@ def render_pyramid(target_collection, loc, size, height, mat):
     bm.normal_update()
     bm.to_mesh(mesh)
     bm.free()
-    create_object(target_collection, name, loc, mesh, mat)
+    return create_object(name, mesh, mat)
 
 def create_material(color):
     mat = bpy.data.materials.new("QuickChartMat1")
     mat.use_nodes = True
     bsdf = mat.node_tree.nodes.get("Principled BSDF")
     bsdf.inputs["Base Color"].default_value = color
+    print(f"color: {color}")
+
     return mat
 
-def render_chart(props, csv):
-    mat = create_material((1, 0, 0, 1))
+def init_target_collection():
     target_collection = bpy.data.collections.new("QuickChartCollection")
     bpy.context.scene.collection.children.link(target_collection)
-    render_bar(target_collection,(0,0,0), 1, 1, mat )
-    render_3d_bar(target_collection,(2,0,0), 1, 1, 2, mat )
-    render_cone(target_collection, (4,0,0), .5, 3, mat)
-    render_cylinder(target_collection, (6, 0, 0), .5, 4, mat)
-    render_pyramid(target_collection, (8,0,0), 1, 5, mat)
+    return target_collection
+
+def get_object_from_shape(shape, color_idx):
+    if color_idx > len(COLORS)-1:
+        color = np.random.rand(4)
+        color[3] = 1
+    else:
+        color = COLORS[color_idx]
+    mat = create_material(color)
+    if shape == 'cone': obj = create_cone(mat)
+    elif shape == 'cylinder': obj = create_cylinder(mat)
+    elif shape == 'pyramid': obj = create_pyramid(mat)
+    else: obj = create_bar(mat)
+    return obj
+
+def remap(x, in_min, in_max, out_min, out_max):
+    return out_min + ((x - in_min) / (in_max - in_min)) * (out_max - out_min)
+
+def render_column_chart(target_collection, props, csv):
+    chart_props = props.chart_properties
+    csv_props = props.csv_properties
+    lx, ly, lz = bpy.context.scene.cursor.location
+    maxz = chart_props.size[2]/2
+    z_max_v = max(abs(chart_props.min_xyz[2]), abs(chart_props.max_xyz[2]))
+    if csv_props.csv_format == 'header':
+        xspace = chart_props.size[0] / len(csv[0])
+        objects = [get_object_from_shape(chart_props.three_d_shape, i) for i in range(len(csv))]
+        if chart_props.data_series == 'rows' and chart_props.bc_sub_type == 'normal':
+            for x in range(len(csv[0])):
+                xs_space = xspace / (len(csv)-1) - chart_props.spacing[0]
+                for xs in range(len(csv)):
+                    if xs == 0: continue  # skip header
+                    loc = (lx + x * xspace + (xs-1) * xs_space, ly, lz + maxz)
+                    zscale = remap(float(csv[xs][x]), -z_max_v, z_max_v, -maxz, maxz)
+                    clone_and_scale_object(target_collection, objects[xs], (xs_space, xs_space, zscale), loc)
+        elif chart_props.data_series == 'rows' and chart_props.bc_sub_type == 'stacked':
+            for x in range(len(csv[0])):
+                for xs in range(len(csv)):
+                    if xs == 0: continue # skip header
+                    loc = (lx + x * xspace, ly, lz + maxz)
+        elif chart_props.data_series == 'rows' and chart_props.bc_sub_type == 'deep':
+            yspace = chart_props.size[1] / len(csv[0])
+            for x in range(len(csv[0])):
+                for y in range(len(csv)):
+                    if y == 0: continue # skip header
+                    loc = (lx + x * xspace, ly + y * yspace, lz + maxz)
+                    zscale = remap(float(csv[y][x]), -z_max_v, z_max_v, -maxz, maxz)
+                    clone_and_scale_object(target_collection, objects[y], (xspace - chart_props.spacing[0]*2, yspace - chart_props.spacing[1]*2, zscale), loc)
+
+
+def render_chart(props, csv):
+    np.random.seed(0)
+    target_collection = init_target_collection()
+    if props.chart_properties.chart_type == "column":
+        render_column_chart(target_collection, props, csv)

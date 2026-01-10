@@ -16,8 +16,7 @@ class LegendProperties(PropertyGroup):
     enabled: BoolProperty(default=True, name="Legend", description="Enable/Disable legend")
 
 def get_bc_sub_type(self, context):
-    items = [("normal", "Normal", "Normal"), ("stacked", "Stacked", "Stacked")]
-    if self.three_d_look: items.append(("deep", "Deep", "Deep"))
+    items = [("normal", "Normal", "Normal"), ("stacked", "Stacked", "Stacked"),("deep", "Deep", "Deep")]
     return items
 
 class ChartProperties(PropertyGroup):
@@ -33,12 +32,13 @@ class ChartProperties(PropertyGroup):
         name="Type", description="Chart type")
     legend_properties: PointerProperty(type=LegendProperties)
     # bar, column charts:
-    three_d_look: BoolProperty(default=True, name="3D Look", description="3D Look")
     three_d_shape: EnumProperty(items=[("bar","Bar","Bar"),("cylinder","Cylinder","Cylinder"),("cone","Cone","Cone"),("pyramid","Pyramid","Pyramid")], name="Shape", description="Shape")
     bc_sub_type: EnumProperty(items=get_bc_sub_type, name="Subtype", description="Subtype")
 
     data_series: EnumProperty(items=[("columns","Columns", "Columns"), ("rows","Rows", "Rows"), ], name="Data series", description="Data series")
 
+    size: FloatVectorProperty(name="Chart Size", size=3, description="Chart size", default=(10,10,10), subtype="XYZ_LENGTH")
+    spacing: FloatVectorProperty(name="Chart Spacing", size=3, subtype="XYZ_LENGTH", default=(0.1,0.1,0.1))
     min_xyz: FloatVectorProperty(size=3)
     max_xyz: FloatVectorProperty(size=3)
 
