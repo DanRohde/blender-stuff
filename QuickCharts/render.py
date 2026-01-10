@@ -143,7 +143,7 @@ def render_column_chart(target_collection, props, csv):
     xspace = props.size[0] / len(data[0])
     objects = [get_object_from_shape(props.bc_shape, i, roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(csv))]
 
-    label_mat = create_material(props.label_color, roughness=props.roughness, metallic=props.metallic)
+    label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
 
     if props.bc_sub_type == 'normal': # checked with left, header, and header-left
         xs_space = xspace / len(data) - props.spacing[0]
@@ -203,7 +203,7 @@ def render_bar_chart(target_collection, props, csv):
     zspace = props.size[2] / len(data[0])
     objects = [get_object_from_shape(props.bc_shape, i, roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(csv))]
 
-    label_mat = create_material(props.label_color, roughness=props.roughness, metallic=props.metallic)
+    label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
 
     if props.bc_sub_type == 'normal':
         zs_space = zspace / len(data) - props.spacing[0]

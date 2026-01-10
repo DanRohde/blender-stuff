@@ -60,11 +60,13 @@ class OBJECT_OT_CreateChart(Operator):
     labels: BoolProperty(default=True, name="Labels", description="Enable/Disable labels")
     values: BoolProperty(default=True, name="Values", description="Enable/Disable values")
 
-    roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Roughness", min=0, max=1)
-    metallic: FloatProperty(default=METALLIC, name="Metallic", description="Metallic", min=0, max=1)
-    alpha: FloatProperty(default=ALPHA, name="Alpha", description="Alpha", min=0, max=1)
+    roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Chart Roughness", min=0, max=1)
+    metallic: FloatProperty(default=METALLIC, name="Metallic", description="Chart Metallic", min=0, max=1)
+    alpha: FloatProperty(default=ALPHA, name="Alpha", description="Chart Alpha", min=0, max=1)
 
     label_color: FloatVectorProperty(name="Label/Value Color", description="Label/Value color", size=4, subtype="COLOR", default=(1, 1, 1, 1), min=0, max=1)
+    label_roughness: FloatProperty(default=ROUGHNESS, name="Label/Value Roughness", description="Label/Value Roughness", min=0, max=1)
+    label_metallic: FloatProperty(default=METALLIC, name="Label/Value Metallic", description="Label/Value Metallic", min=0, max=1)
 
     column_types_collapsed: BoolProperty(default=True, name="Column Types")
     def execute(self, context):
