@@ -25,8 +25,9 @@ def draw_panel(props, layout):
     row.prop(props, "metallic")
     row.prop(props, "alpha")
 
-    layout.prop(props, "size")
-    layout.prop(props, "spacing")
+    row = layout.row(align=True)
+    row.column().prop(props, "size")
+    row.column().prop(props, "spacing")
 
 
 class VIEW3D_UL_ColumnTypesList(UIList):

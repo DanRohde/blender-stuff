@@ -174,11 +174,11 @@ def render_column_chart(target_collection, props, csv):
             for y in range(len(data)):
                 if x == 0:
                     if (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header','header-left'}):
-                        if props.labels: render_text_object(target_collection, data[y][x], (lx + len(data[0]) * xspace, ly + y * yspace, lz + maxz), label_mat, rot=(0,0,0), x_align='LEFT', y_align='CENTER')
+                        if props.labels: render_text_object(target_collection, data[y][x], (lx + len(data[0]) * xspace, ly + y * yspace, lz + maxz), label_mat, size = xspace/2, rot=(0,0,0), x_align='LEFT', y_align='CENTER')
                         continue  # skip label
                 if y == 0:
                     if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'}):
-                        if props.labels: render_text_object(target_collection, data[0][x], (lx + x * xspace, ly, lz + maxz ), label_mat, y_align='CENTER')
+                        if props.labels: render_text_object(target_collection, data[0][x], (lx + x * xspace, ly, lz + maxz ), label_mat, y_align='CENTER', size = xspace/2)
                         continue # skip label
                 loc = (lx + x * xspace, ly + y * yspace, lz + maxz)
                 try:
@@ -234,11 +234,11 @@ def render_bar_chart(target_collection, props, csv):
             for y in range(len(data)):
                 if z == 0:
                     if (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'}):
-                        if props.labels: render_text_object(target_collection, data[y][z], (lx + maxx , ly + y * yspace, lz + len(data[0]) * zspace), label_mat, rot=(ph, 0, ph), x_align='RIGHT' if y==0 else 'CENTER', y_align='CENTER')
+                        if props.labels: render_text_object(target_collection, data[y][z], (lx + maxx , ly + y * yspace, lz + len(data[0]) * zspace), label_mat, size=zspace/2, rot=(ph, 0, ph), x_align='RIGHT' if y==0 else 'CENTER', y_align='CENTER')
                         continue  # skip label
                 if y == 0:
                     if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'}):
-                        if props.labels: render_text_object(target_collection, data[0][z], (lx + maxx , ly, lz + z * zspace ), label_mat, x_align='RIGHT', y_align='CENTER', rot=(ph, 0, ph))
+                        if props.labels: render_text_object(target_collection, data[0][z], (lx + maxx , ly, lz + z * zspace ), label_mat, size=zspace/2, x_align='RIGHT', y_align='CENTER', rot=(ph, 0, ph))
                         continue  # skip label
                 loc = (lx + maxx , ly + y * yspace, lz + z * zspace )
                 try:
