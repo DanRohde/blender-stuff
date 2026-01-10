@@ -24,7 +24,7 @@ CSV_FORMATS = [("header","Header","Header"), ("left", "Left", "Left"), ("header-
 BC_SHAPES = [("bar","Bar","Bar"),("cylinder","Cylinder","Cylinder"),("cone","Cone","Cone"),("pyramid","Pyramid","Pyramid")]
 
 BC_SUB_TYPES = [("normal", "Normal", "Normal"),
-                #("stacked", "Stacked", "Stacked"),
+                ("stacked", "Stacked", "Stacked"),
                 ("deep", "Deep", "Deep")]
 
 DATA_SERIES = [("columns","Columns", "Columns"), ("rows","Rows", "Rows"), ]

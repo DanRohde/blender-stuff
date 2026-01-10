@@ -13,17 +13,23 @@ def read_complete_csv(props):
     min_x, min_y, min_z = None, None, None
     max_x, max_y, max_z = None, None, None
     rows = []
+    row_sums = []
+    col_sums = []
     try:
         with open(props.csv_filename, "r", encoding="utf-8") as csv_file:
             csv_reader = csv.reader(csv_file)
             for row_idx, row in enumerate(csv_reader):
                 rows.append(row)
+                row_sums.append(0)
                 if props.csv_format == 'header' and row_idx == 0: continue
                 if props.csv_format == 'header-left' and row_idx == 0: continue
                 for col_idx in range(len(row)): # min/max
+                    if col_idx >= len(col_sums): col_sums.append(0)
                     if props.csv_format == 'left' and col_idx == 0: continue
                     elif props.csv_format == 'header-left' and col_idx == 0: continue
                     v = float(row[col_idx])
+                    row_sums[row_idx] += v
+                    col_sums[col_idx] += v
                     min_z = min(min_z, v) if min_z is not None else v
                     max_z = max(max_z, v) if max_z is not None else v
 
@@ -35,7 +41,7 @@ def read_complete_csv(props):
 
     except Exception as e:
         print(f"Could not read {props.csv_filename}: {e}")
-    return rows
+    return rows, row_sums, col_sums
 class OBJECT_OT_CreateChart(Operator):
     bl_idname = "object.quick_charts_create_chart"
     bl_label = "Create Chart"
@@ -71,7 +77,8 @@ class OBJECT_OT_CreateChart(Operator):
     column_types_collapsed: BoolProperty(default=True, name="Column Types")
     def execute(self, context):
         if self.csv_filename == "": self.csv_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample.csv')
-        render.render_chart(self, read_complete_csv(self))
+        cvs, row_sums, col_sums = read_complete_csv(self)
+        render.render_chart(self, cvs, row_sums, col_sums)
         return {'FINISHED'}
     def draw(self, context):
         draw_panel(self, self.layout)

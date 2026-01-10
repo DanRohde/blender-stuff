@@ -131,7 +131,7 @@ def get_object_from_shape(shape, color_idx, roughness = 0.5, metallic = 0, alpha
 def remap(x, in_min, in_max, out_min, out_max):
     return out_min + ((x - in_min) / (in_max - in_min)) * (out_max - out_min)
 
-def render_column_chart(target_collection, props, csv):
+def render_column_chart(target_collection, props, csv, row_sums, col_sums):
     lx, ly, lz = bpy.context.scene.cursor.location
     maxz = props.size[2]/2
     z_max_v = max(abs(props.min_xyz[2]), abs(props.max_xyz[2]))
@@ -190,8 +190,9 @@ def render_column_chart(target_collection, props, csv):
                 clone_and_scale_object(target_collection, objects[color_idx], (xspace - props.spacing[0]*2, yspace - props.spacing[1]*2, zscale), loc)
                 color_idx += 1
                 if props.values: render_text_object(target_collection, valstr, (loc[0], loc[1], lz + maxz + (zscale if val > 0 else 0)), label_mat, size = xspace/2 * 2/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
-
-def render_bar_chart(target_collection, props, csv):
+    elif props.bs_sub_type == 'stacked':
+        pass
+def render_bar_chart(target_collection, props, csv, row_sums, col_sums):
     lx, ly, lz = bpy.context.scene.cursor.location
     maxx = props.size[0] / 2
     x_max_v = max(abs(props.min_xyz[2]), abs(props.max_xyz[2]))
@@ -250,12 +251,13 @@ def render_bar_chart(target_collection, props, csv):
                 clone_and_scale_object(target_collection, objects[color_idx], (zspace - props.spacing[2] * 2, yspace - props.spacing[1] * 2, xscale ), loc, rot=(0, np.pi/2, 0))
                 color_idx += 1
                 if props.values: render_text_object(target_collection, valstr, (lx + maxx + (xscale if val > 0 else 0), loc[1], loc[2]) , label_mat, size=zspace / 2 * 2 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(np.pi / 2, 0, 0))
+    elif props.bc_sub_type == 'stacked':
+        pass
 
-
-def render_chart(props, csv):
+def render_chart(props, csv, row_sums, col_sums):
     np.random.seed(0)
     target_collection = init_target_collection()
     if props.chart_type == "column":
-        render_column_chart(target_collection, props, csv)
+        render_column_chart(target_collection, props, csv, row_sums, col_sums)
     elif props.chart_type == "bar":
-        render_bar_chart(target_collection, props, csv)
+        render_bar_chart(target_collection, props, csv, row_sums, col_sums)
