@@ -182,8 +182,11 @@ def render_column_chart(target_collection, props, csv):
                         render_text_object(target_collection, data[0][x], (lx + x * xspace, ly, lz + maxz ), label_mat, y_align='CENTER')
                         continue # skip label
                 loc = (lx + x * xspace, ly + y * yspace, lz + maxz)
-                zscale = remap(float(data[y][x]), -z_max_v, z_max_v, -maxz, maxz)
+                val = float(data[y][x])
+                valstr = f"{val:.1f}"  # TODO: column type!
+                zscale = remap(val, -z_max_v, z_max_v, -maxz, maxz)
                 clone_and_scale_object(target_collection, objects[y], (xspace - chart_props.spacing[0]*2, yspace - chart_props.spacing[1]*2, zscale), loc)
+                render_text_object(target_collection, valstr, (loc[0], loc[1], lz + maxz + (zscale if val > 0 else 0)), label_mat, size = xspace/2 * 3/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
 
 
 def render_chart(props, csv):
