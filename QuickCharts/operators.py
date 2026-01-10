@@ -1,11 +1,12 @@
 from bpy.types import Operator
-from bpy.props import EnumProperty, FloatVectorProperty, StringProperty
+from bpy.props import EnumProperty, FloatVectorProperty, StringProperty, CollectionProperty, IntProperty, BoolProperty
 import csv
-
+import os
 from . import render
 from .constants import CHART_TYPES, CSV_FORMATS, DATA_SERIES, BC_SUB_TYPES, BC_SHAPES
-
-
+from .handlers import handle_csv_filename_update
+from .properties import CSVColumnTypeItems
+from .panels import draw_panel
 def read_complete_csv(props):
     props.min_xyz = (0, 0, 0)
     props.max_xyz = (10, 10, 10)
@@ -40,17 +41,27 @@ class OBJECT_OT_CreateChart(Operator):
     bl_label = "Create Chart"
     bl_description = "Create Chart"
     bl_options = {'REGISTER', 'UNDO'}
-    csv_filename: StringProperty(options={'HIDDEN'})
+    csv_filename: StringProperty(name="CSV File", subtype='FILE_PATH', description="CSV File", default="", update=handle_csv_filename_update)
     csv_format: EnumProperty(items=CSV_FORMATS, name="Labels")
+    column_types: CollectionProperty(type=CSVColumnTypeItems)
+    column_types_idx: IntProperty()
+
     chart_type: EnumProperty(items=CHART_TYPES, name="Chart Type", description="Chart type", default='column', )
     data_series: EnumProperty(items=DATA_SERIES, name="Data Series", default='columns', )
     bc_shape: EnumProperty(items=BC_SHAPES, name="Shape")
     bc_sub_type: EnumProperty(items=BC_SUB_TYPES, name="Subtype")
+
     size: FloatVectorProperty(name="Chart Size", description="Chart size", default=(10,10,10))
     spacing: FloatVectorProperty(name="Spacing", description="Spacing", default=(0.1,0.1,0.1))
     min_xyz: FloatVectorProperty(name="", description="", default=(0, 0, 0), options={'HIDDEN'}, )
     max_xyz: FloatVectorProperty(name="", description="", default=(0, 0, 0), options={'HIDDEN'}, )
+
+    legend: BoolProperty(name="Legend", default=True)
+    column_types_collapsed: BoolProperty(default=True, name="Column Types")
     def execute(self, context):
+        if self.csv_filename == "": self.csv_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample.csv')
         render.render_chart(self, read_complete_csv(self))
         return {'FINISHED'}
+    def draw(self, context):
+        draw_panel(self, self.layout)
 operators= [ OBJECT_OT_CreateChart ]

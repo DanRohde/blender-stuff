@@ -12,12 +12,11 @@ def get_cell_type(cell):
         column_type = "label"
     return column_type
 
-def handle_csv_filename_update(self, context):
-    props = context.scene.quick_charts_props
-    props.csv_properties.column_types.clear()
+def handle_csv_filename_update(self, _context):
+    self.column_types.clear()
 
-    props.chart_properties.chart_type = 'column'
-    props.chart_properties.bc_sub_type = 'normal'
+    self.chart_type = 'column'
+    self.bc_sub_type = 'normal'
 
     try:
         with open(self.csv_filename, "r", encoding="utf-8") as csv_file:
@@ -39,26 +38,26 @@ def handle_csv_filename_update(self, context):
     # value types:
     #   label, float, int, date
     if re.match("^[0-9.,+-]+", rows[0][1]):
-        props.csv_properties.csv_format = 'left'
+        self.csv_format = 'left'
 
         for i in range(len(rows[0])):
-            item = props.csv_properties.column_types.add()
+            item = self.column_types.add()
             item.name = rows[0][0]
             item.column_type = "label" if i == 0 else get_cell_type(rows[0][i])
 
     elif re.match("^[0-9.+-]+", rows[1][0]):
-        props.csv_properties.csv_format = 'header'
-        props.chart_properties.data_series = 'rows'
+        self.csv_format = 'header'
+        self.data_series = 'rows'
         for i in range(len(rows[0])):
-            item = props.csv_properties.column_types.add()
+            item = self.column_types.add()
             item.name = rows[0][i]
             item.column_type = get_cell_type(rows[1][i])
     else:
-        props.csv_properties.csv_format = 'header-left'
-        props.chart_properties.chart_type = 'column'
-        props.chart_properties.bc_sub_type = 'deep'
+        self.csv_format = 'header-left'
+        self.chart_type = 'column'
+        self.bc_sub_type = 'deep'
         for i in range(len(rows[0])):
-            item = props.csv_properties.column_types.add()
+            item = self.column_types.add()
             item.name = rows[0][i]
             item.column_type = "label" if i == 0 else get_cell_type(rows[1][i])
     return None
