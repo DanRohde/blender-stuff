@@ -11,9 +11,10 @@ def draw_panel(props, layout):
     if not props.column_types_collapsed:
         layout.template_list("VIEW3D_UL_ColumnTypesList", "", props, "column_types", props, "column_types_idx")
     layout.prop(props, "chart_type")
-    row = layout.row(align=True)
-    if props.chart_type in {"column", "bar"}: row.prop(props, "bc_shape")
-    if props.chart_type in {"column", "bar"}: layout.prop(props, "bc_sub_type")
+    if props.chart_type in {"column", "bar"}:
+        row = layout.row()
+        row.prop(props, "bc_shape", text="")
+        row.prop(props, "bc_sub_type", text="")
 
     row = layout.row()
     row.prop(props, "labels")
