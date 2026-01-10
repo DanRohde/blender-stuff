@@ -51,18 +51,9 @@ class VIEW3D_PT_Panel(Panel):
         draw_panel(props, layout)
 
         op = layout.operator("object.quick_charts_create_chart")
-        op.csv_filename = props.csv_filename
-        op.csv_format = props.csv_format
-        op.chart_type = props.chart_type
-        op.data_series = props.data_series
-        op.bc_shape = props.bc_shape
-        op.bc_sub_type = props.bc_sub_type
-        op.size = props.size
-        op.spacing = props.spacing
-
-        op.roughness = props.roughness
-        op.metallic = props.metallic
-
+        for k in props.keys():
+            if hasattr(op, k): setattr(op, k, props[k])
+        
         return None
 
 
