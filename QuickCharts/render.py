@@ -4,14 +4,7 @@ import bpy
 import bmesh
 import numpy as np
 
-COLORS = [
-    (0,1,1,1),
-    (0,1,0,1),
-    (0,0,1,1),
-    (1,0,1,1),
-    (1,1,0,1),
-    (1,1,1,1),
-]
+from .constants import COLORS
 
 def create_object(name, mesh, mat):
     obj = bpy.data.objects.new(name, mesh)
@@ -137,60 +130,65 @@ def remap(x, in_min, in_max, out_min, out_max):
     return out_min + ((x - in_min) / (in_max - in_min)) * (out_max - out_min)
 
 def render_column_chart(target_collection, props, csv):
-    chart_props = props.chart_properties
-    csv_props = props.csv_properties
-    lx, ly, lz = bpy.context.scene.cursor.location
-    maxz = chart_props.size[2]/2
-    z_max_v = max(abs(chart_props.min_xyz[2]), abs(chart_props.max_xyz[2]))
 
-    transposed = chart_props.data_series == 'columns'
+    lx, ly, lz = bpy.context.scene.cursor.location
+    maxz = props.size[2]/2
+    z_max_v = max(abs(props.min_xyz[2]), abs(props.max_xyz[2]))
+
+    transposed = props.data_series == 'columns'
 
     data = csv if not transposed else list(map(list, zip(*csv))) # transpose csv if necessary
 
-    xspace = chart_props.size[0] / len(csv[0])
-    objects = [get_object_from_shape(chart_props.three_d_shape, i) for i in range(len(csv))]
+    xspace = props.size[0] / len(csv[0])
+    objects = [get_object_from_shape(props.bc_shape, i) for i in range(len(csv))]
 
     label_mat = create_material((1,1,1,1))
 
-    if chart_props.bc_sub_type == 'normal': # checked with left, header, and header-left
-        xs_space = xspace / len(data) - chart_props.spacing[0]
+    if props.bc_sub_type == 'normal': # checked with left, header, and header-left
+        xs_space = xspace / len(data) - props.spacing[0]
         for x in range(len(data[0])):
             if x == 0:
-                if (not transposed and csv_props.csv_format in {'left', 'header-left'}) or (csv_props.csv_format in {'header','header-left'} and transposed):
+                if (not transposed and props.csv_format in {'left', 'header-left'}) or (props.csv_format in {'header','header-left'} and transposed):
                     continue  # skip label
             for xs in range(len(data)):
                 if xs == 0:
-                    if (not transposed and csv_props.csv_format in {'header','header-left'}) or (transposed and csv_props.csv_format in {'left','header-left'}):
+                    if (not transposed and props.csv_format in {'header','header-left'}) or (transposed and props.csv_format in {'left','header-left'}):
                         render_text_object(target_collection, data[0][x], (lx + x * xspace + xspace/2, ly - xspace/2, lz + maxz), label_mat, size= xspace/2)
                         continue  # skip label
                 loc = (lx + x * xspace + (xs-1) * xs_space, ly, lz + maxz)
-                val = float(data[xs][x])
+                try:
+                    val = float(data[xs][x])
+                except ValueError:
+                    val = 0.0
                 valstr = f"{val:.1f}" # TODO: column type!
                 zscale = remap(val, -z_max_v, z_max_v, -maxz, maxz)
                 clone_and_scale_object(target_collection, objects[xs], (xs_space, xs_space, zscale), loc)
                 render_text_object(target_collection, valstr, (loc[0], loc[1], lz + maxz + (zscale if val > 0 else 0)), label_mat, size = xs_space/2 * 3/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
-    elif chart_props.bc_sub_type == 'deep':
-        yspace = chart_props.size[1] / len(csv[0])
+    elif props.bc_sub_type == 'deep':
+        yspace = props.size[1] / len(csv[0])
         for x in range(len(csv[0])):
             for y in range(len(csv)):
                 if x == 0:
-                    if (not transposed and csv_props.csv_format in {'left', 'header-left'}) or (transposed and csv_props.csv_format in {'header','header-left'}):
+                    if (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header','header-left'}):
                         render_text_object(target_collection, data[y][x], (lx + len(csv) * xspace, ly + y * yspace, lz + maxz), label_mat, rot=(0,0,0), x_align='LEFT', y_align='CENTER')
                         continue  # skip label
                 if y == 0:
-                    if (not transposed and csv_props.csv_format in {'header', 'header-left'}) or (transposed and csv_props.csv_format in {'header-left', 'left'}):
+                    if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'}):
                         render_text_object(target_collection, data[0][x], (lx + x * xspace, ly, lz + maxz ), label_mat, y_align='CENTER')
                         continue # skip label
                 loc = (lx + x * xspace, ly + y * yspace, lz + maxz)
-                val = float(data[y][x])
+                try:
+                    val = float(data[y][x])
+                except ValueError:
+                    val = 0.0
                 valstr = f"{val:.1f}"  # TODO: column type!
                 zscale = remap(val, -z_max_v, z_max_v, -maxz, maxz)
-                clone_and_scale_object(target_collection, objects[y], (xspace - chart_props.spacing[0]*2, yspace - chart_props.spacing[1]*2, zscale), loc)
-                render_text_object(target_collection, valstr, (loc[0], loc[1], lz + maxz + (zscale if val > 0 else 0)), label_mat, size = xspace/2 * 3/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
+                clone_and_scale_object(target_collection, objects[y], (xspace - props.spacing[0]*2, yspace - props.spacing[1]*2, zscale), loc)
+                render_text_object(target_collection, valstr, (loc[0], loc[1], lz + maxz + (zscale if val > 0 else 0)), label_mat, size = xspace/2 * 2/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
 
 
 def render_chart(props, csv):
     np.random.seed(0)
     target_collection = init_target_collection()
-    if props.chart_properties.chart_type == "column":
+    if props.chart_type == "column":
         render_column_chart(target_collection, props, csv)
