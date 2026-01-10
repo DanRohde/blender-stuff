@@ -1,3 +1,5 @@
+from MaterialX import createValueFromStrings
+
 import bpy
 import bmesh
 import numpy as np
@@ -93,9 +95,25 @@ def create_material(color):
     mat.use_nodes = True
     bsdf = mat.node_tree.nodes.get("Principled BSDF")
     bsdf.inputs["Base Color"].default_value = color
-    print(f"color: {color}")
-
     return mat
+
+def render_text_object(target_collection, text, loc, mat, rot = (0, 0, np.pi / 2), x_align = 'RIGHT', y_align = 'BOTTOM', size = 1):
+    name = f"Label {text}"
+    text_data = bpy.data.curves.new(name=name,type='FONT')
+    text_data.body = text
+    text_data.size = size
+    text_data.extrude = .02
+    text_data.bevel_depth = 0.03
+    text_data.bevel_resolution = 4
+    text_data.align_x = x_align
+    text_data.align_y = y_align
+    #text_data.font = bpy.data.fonts.load(font_path)
+
+    text_obj = bpy.data.objects.new(name=name, object_data = text_data)
+    text_obj.location = loc
+    text_obj.rotation_euler = rot
+    target_collection.objects.link(text_obj)
+    text_obj.data.materials.append(mat)
 
 def init_target_collection():
     target_collection = bpy.data.collections.new("QuickChartCollection")
@@ -124,31 +142,45 @@ def render_column_chart(target_collection, props, csv):
     lx, ly, lz = bpy.context.scene.cursor.location
     maxz = chart_props.size[2]/2
     z_max_v = max(abs(chart_props.min_xyz[2]), abs(chart_props.max_xyz[2]))
-    if csv_props.csv_format == 'header':
-        xspace = chart_props.size[0] / len(csv[0])
-        objects = [get_object_from_shape(chart_props.three_d_shape, i) for i in range(len(csv))]
-        if chart_props.data_series == 'rows' and chart_props.bc_sub_type == 'normal':
-            for x in range(len(csv[0])):
-                xs_space = xspace / (len(csv)-1) - chart_props.spacing[0]
-                for xs in range(len(csv)):
-                    if xs == 0: continue  # skip header
-                    loc = (lx + x * xspace + (xs-1) * xs_space, ly, lz + maxz)
-                    zscale = remap(float(csv[xs][x]), -z_max_v, z_max_v, -maxz, maxz)
-                    clone_and_scale_object(target_collection, objects[xs], (xs_space, xs_space, zscale), loc)
-        elif chart_props.data_series == 'rows' and chart_props.bc_sub_type == 'stacked':
-            for x in range(len(csv[0])):
-                for xs in range(len(csv)):
-                    if xs == 0: continue # skip header
-                    loc = (lx + x * xspace, ly, lz + maxz)
-        elif chart_props.data_series == 'rows' and chart_props.bc_sub_type == 'deep':
-            yspace = chart_props.size[1] / len(csv[0])
-            for x in range(len(csv[0])):
-                for y in range(len(csv)):
-                    if y == 0: continue # skip header
-                    loc = (lx + x * xspace, ly + y * yspace, lz + maxz)
-                    zscale = remap(float(csv[y][x]), -z_max_v, z_max_v, -maxz, maxz)
-                    clone_and_scale_object(target_collection, objects[y], (xspace - chart_props.spacing[0]*2, yspace - chart_props.spacing[1]*2, zscale), loc)
 
+    transposed = chart_props.data_series == 'columns'
+
+    data = csv if not transposed else list(map(list, zip(*csv))) # transpose csv if necessary
+
+    xspace = chart_props.size[0] / len(csv[0])
+    objects = [get_object_from_shape(chart_props.three_d_shape, i) for i in range(len(csv))]
+
+    label_mat = create_material((1,1,1,1))
+
+    if chart_props.bc_sub_type == 'normal': # checked with left, header, and header-left
+        xs_space = xspace / len(data) - chart_props.spacing[0]
+        for x in range(len(data[0])):
+            if x == 0:
+                if (not transposed and csv_props.csv_format in {'left', 'header-left'}) or (csv_props.csv_format in {'header','header-left'} and transposed):
+                    continue  # skip label
+            for xs in range(len(data)):
+                if xs == 0:
+                    if (not transposed and csv_props.csv_format in {'header','header-left'}) or (transposed and csv_props.csv_format in {'left','header-left'}):
+                        render_text_object(target_collection, data[0][x], (lx + x * xspace + xspace/2, ly - xspace/2, lz + maxz), label_mat, size= xspace/2)
+                        continue  # skip label
+                loc = (lx + x * xspace + (xs-1) * xs_space, ly, lz + maxz)
+                zscale = remap(float(data[xs][x]), -z_max_v, z_max_v, -maxz, maxz)
+                clone_and_scale_object(target_collection, objects[xs], (xs_space, xs_space, zscale), loc)
+    elif chart_props.bc_sub_type == 'deep':
+        yspace = chart_props.size[1] / len(csv[0])
+        for x in range(len(csv[0])):
+            for y in range(len(csv)):
+                if x == 0:
+                    if (not transposed and csv_props.csv_format in {'left', 'header-left'}) or (transposed and csv_props.csv_format in {'header','header-left'}):
+                        render_text_object(target_collection, data[y][x], (lx + len(csv) * xspace, ly + y * yspace, lz + maxz), label_mat, rot=(0,0,0), x_align='LEFT', y_align='CENTER')
+                        continue  # skip label
+                if y == 0:
+                    if (not transposed and csv_props.csv_format in {'header', 'header-left'}) or (transposed and csv_props.csv_format in {'header-left', 'left'}):
+                        render_text_object(target_collection, data[0][x], (lx + x * xspace, ly, lz + maxz ), label_mat, y_align='CENTER')
+                        continue # skip label
+                loc = (lx + x * xspace, ly + y * yspace, lz + maxz)
+                zscale = remap(float(data[y][x]), -z_max_v, z_max_v, -maxz, maxz)
+                clone_and_scale_object(target_collection, objects[y], (xspace - chart_props.spacing[0]*2, yspace - chart_props.spacing[1]*2, zscale), loc)
 
 def render_chart(props, csv):
     np.random.seed(0)

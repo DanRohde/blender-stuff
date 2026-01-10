@@ -2,12 +2,12 @@ import csv
 import re
 
 def get_cell_type(cell):
-    if re.match("^\d+$", cell):
+    if re.match("^[+-]?\d+$", cell):
         column_type = "int"
-    elif re.match("^\w+$"):
-        column_type = "label"
-    elif re.match("^[0-9.,]+$", cell):
+    elif re.match("^[0-9.,+-]+$", cell):
         column_type = "float"
+    elif re.match("^\w+$", cell):
+        column_type = "label"
     else:
         column_type = "label"
     return column_type
