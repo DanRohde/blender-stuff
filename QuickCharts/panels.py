@@ -20,6 +20,10 @@ def draw_panel(props, layout):
     row.prop(props, "values")
     row.prop(props, "legend")
 
+    row= layout.row(align=True)
+    row.prop(props, "roughness")
+    row.prop(props, "metallic")
+
     layout.prop(props, "size")
     layout.prop(props, "spacing")
 
@@ -52,6 +56,9 @@ class VIEW3D_PT_Panel(Panel):
         op.bc_sub_type = props.bc_sub_type
         op.size = props.size
         op.spacing = props.spacing
+
+        op.roughness = props.roughness
+        op.metallic = props.metallic
 
         return None
 

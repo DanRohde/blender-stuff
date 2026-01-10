@@ -28,3 +28,6 @@ BC_SUB_TYPES = [("normal", "Normal", "Normal"),
                 ("deep", "Deep", "Deep")]
 
 DATA_SERIES = [("columns","Columns", "Columns"), ("rows","Rows", "Rows"), ]
+
+ROUGHNESS = 0.22
+METALLIC = 1

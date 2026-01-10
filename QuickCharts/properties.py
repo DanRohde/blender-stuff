@@ -1,9 +1,9 @@
 from bpy.types import PropertyGroup
-from bpy.props import StringProperty, CollectionProperty, EnumProperty, BoolProperty, IntProperty, FloatVectorProperty
+from bpy.props import StringProperty, CollectionProperty, EnumProperty, BoolProperty, IntProperty, FloatVectorProperty, FloatProperty
 
 from .handlers import handle_csv_filename_update
 
-from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES
+from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC
 
 class CSVColumnTypeItems(PropertyGroup):
     name: StringProperty(name="", default="", description="Column label")
@@ -31,6 +31,9 @@ class Properties(PropertyGroup):
     legend: BoolProperty(default=True, name="Legend", description="Enable/Disable legend")
     labels: BoolProperty(default=True, name="Labels", description="Enable/Disable labels")
     values: BoolProperty(default=True, name="Values", description="Enable/Disable values")
+
+    roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Roughness", min=0, max=1)
+    metallic: FloatProperty(default=METALLIC, name="Metallic", description="Metallic", min=0, max=1)
 
 properties = [ CSVColumnTypeItems, Properties ]
 

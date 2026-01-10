@@ -82,11 +82,13 @@ def create_pyramid(mat):
     bm.free()
     return create_object(name, mesh, mat)
 
-def create_material(color):
+def create_material(color, roughness = 0.5, metallic = 0):
     mat = bpy.data.materials.new("QuickChartMat1")
     mat.use_nodes = True
     bsdf = mat.node_tree.nodes.get("Principled BSDF")
     bsdf.inputs["Base Color"].default_value = color
+    bsdf.inputs["Roughness"].default_value = roughness
+    bsdf.inputs["Metallic"].default_value = metallic
     return mat
 
 def render_text_object(target_collection, text, loc, mat, rot = (0, 0, np.pi / 2), x_align = 'RIGHT', y_align = 'BOTTOM', size = 1):
@@ -112,13 +114,13 @@ def init_target_collection():
     bpy.context.scene.collection.children.link(target_collection)
     return target_collection
 
-def get_object_from_shape(shape, color_idx):
+def get_object_from_shape(shape, color_idx, roughness = 0.5, metallic = 0):
     if color_idx > len(COLORS)-1:
         color = np.random.rand(4)
         color[3] = 1
     else:
         color = COLORS[color_idx]
-    mat = create_material(color)
+    mat = create_material(color, roughness=roughness, metallic=metallic)
     if shape == 'cone': obj = create_cone(mat)
     elif shape == 'cylinder': obj = create_cylinder(mat)
     elif shape == 'pyramid': obj = create_pyramid(mat)
@@ -138,9 +140,9 @@ def render_column_chart(target_collection, props, csv):
     data = csv if not transposed else list(map(list, zip(*csv))) # transpose csv if necessary
 
     xspace = props.size[0] / len(data[0])
-    objects = [get_object_from_shape(props.bc_shape, i) for i in range(len(csv))]
+    objects = [get_object_from_shape(props.bc_shape, i, roughness=props.roughness, metallic=props.metallic) for i in range(len(csv))]
 
-    label_mat = create_material((1,1,1,1))
+    label_mat = create_material((1,1,1,1), roughness=props.roughness, metallic=props.metallic)
 
     if props.bc_sub_type == 'normal': # checked with left, header, and header-left
         xs_space = xspace / len(data) - props.spacing[0]
@@ -198,9 +200,9 @@ def render_bar_chart(target_collection, props, csv):
     data = csv if not transposed else list(map(list, zip(*csv)))  # transpose csv if necessary
 
     zspace = props.size[2] / len(data[0])
-    objects = [get_object_from_shape(props.bc_shape, i) for i in range(len(csv))]
+    objects = [get_object_from_shape(props.bc_shape, i, roughness=props.roughness, metallic=props.metallic) for i in range(len(csv))]
 
-    label_mat = create_material((1, 1, 1, 1))
+    label_mat = create_material((1, 1, 1, 1), roughness=props.roughness, metallic=props.metallic)
 
     if props.bc_sub_type == 'normal':
         zs_space = zspace / len(data) - props.spacing[0]
