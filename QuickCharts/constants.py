@@ -10,7 +10,7 @@ COLORS = [
 
 CHART_TYPES = [
             ("column","Column Chart","Column chart"),
-            #("bar","Bar Chart","Bar chart"),
+            ("bar","Bar Chart","Bar chart"),
             #("line","Line Chart","Line"),
             #("pie","Pie Chart","Pie"),
             #("donut", "Donut Chart", "Donut Chart"),

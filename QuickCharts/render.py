@@ -1,5 +1,3 @@
-from MaterialX import createValueFromStrings
-
 import bpy
 import bmesh
 import numpy as np
@@ -11,10 +9,11 @@ def create_object(name, mesh, mat):
     obj.data.materials.append(mat)
     return obj
 
-def clone_and_scale_object(target_collection, obj, scale, loc):
+def clone_and_scale_object(target_collection, obj, scale, loc, rot = (0,0,0)):
     new_obj = bpy.data.objects.new(name=obj.name, object_data=obj.data)
     new_obj.scale = scale
     new_obj.location = loc
+    new_obj.rotation_euler = rot
     new_obj.hide_viewport = False
     target_collection.objects.link(new_obj)
     return new_obj
@@ -130,7 +129,6 @@ def remap(x, in_min, in_max, out_min, out_max):
     return out_min + ((x - in_min) / (in_max - in_min)) * (out_max - out_min)
 
 def render_column_chart(target_collection, props, csv):
-
     lx, ly, lz = bpy.context.scene.cursor.location
     maxz = props.size[2]/2
     z_max_v = max(abs(props.min_xyz[2]), abs(props.max_xyz[2]))
@@ -139,7 +137,7 @@ def render_column_chart(target_collection, props, csv):
 
     data = csv if not transposed else list(map(list, zip(*csv))) # transpose csv if necessary
 
-    xspace = props.size[0] / len(csv[0])
+    xspace = props.size[0] / len(data[0])
     objects = [get_object_from_shape(props.bc_shape, i) for i in range(len(csv))]
 
     label_mat = create_material((1,1,1,1))
@@ -165,12 +163,12 @@ def render_column_chart(target_collection, props, csv):
                 clone_and_scale_object(target_collection, objects[xs], (xs_space, xs_space, zscale), loc)
                 render_text_object(target_collection, valstr, (loc[0], loc[1], lz + maxz + (zscale if val > 0 else 0)), label_mat, size = xs_space/2 * 3/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
     elif props.bc_sub_type == 'deep':
-        yspace = props.size[1] / len(csv[0])
-        for x in range(len(csv[0])):
-            for y in range(len(csv)):
+        yspace = props.size[1] / len(data[0])
+        for x in range(len(data[0])):
+            for y in range(len(data)):
                 if x == 0:
                     if (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header','header-left'}):
-                        render_text_object(target_collection, data[y][x], (lx + len(csv) * xspace, ly + y * yspace, lz + maxz), label_mat, rot=(0,0,0), x_align='LEFT', y_align='CENTER')
+                        render_text_object(target_collection, data[y][x], (lx + len(data) * xspace, ly + y * yspace, lz + maxz), label_mat, rot=(0,0,0), x_align='LEFT', y_align='CENTER')
                         continue  # skip label
                 if y == 0:
                     if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'}):
@@ -186,9 +184,67 @@ def render_column_chart(target_collection, props, csv):
                 clone_and_scale_object(target_collection, objects[y], (xspace - props.spacing[0]*2, yspace - props.spacing[1]*2, zscale), loc)
                 render_text_object(target_collection, valstr, (loc[0], loc[1], lz + maxz + (zscale if val > 0 else 0)), label_mat, size = xspace/2 * 2/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
 
+def render_bar_chart(target_collection, props, csv):
+    lx, ly, lz = bpy.context.scene.cursor.location
+    maxx = props.size[0] / 2
+    x_max_v = max(abs(props.min_xyz[2]), abs(props.max_xyz[2]))
+    ph = np.pi / 2
+
+    transposed = props.data_series == 'columns'
+    data = csv if not transposed else list(map(list, zip(*csv)))  # transpose csv if necessary
+
+    zspace = props.size[2] / len(data[0])
+    objects = [get_object_from_shape(props.bc_shape, i) for i in range(len(csv))]
+
+    label_mat = create_material((1, 1, 1, 1))
+
+    if props.bc_sub_type == 'normal':
+        zs_space = zspace / len(data) - props.spacing[0]
+        for z in range(len(data[0])):
+            if z == 0:
+                if (not transposed and props.csv_format in {'left', 'header-left'}) or (props.csv_format in {'header', 'header-left'} and transposed):
+                    continue  # skip label
+            for zs in range(len(data)):
+                if zs == 0:
+                    if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'left', 'header-left'}):
+                        render_text_object(target_collection, data[0][z], (lx + maxx , ly - zspace / 2, lz + z * zspace + zspace / 2), label_mat, size=zspace / 2, rot=(ph,0,ph), x_align='LEFT', y_align='TOP')
+                        continue  # skip label
+                loc = (lx + maxx, ly, lz + z * zspace + (zs - 1) * zs_space)
+                try:
+                    val = float(data[zs][z])
+                except ValueError:
+                    val = 0.0
+                valstr = f"{val:.1f}"  # TODO: column type!
+                xscale = remap(val, -x_max_v, x_max_v, -maxx, maxx)
+                clone_and_scale_object(target_collection, objects[zs], (zs_space, zs_space, xscale), loc, rot=(0, ph, 0))
+                render_text_object(target_collection, valstr, (lx + maxx + (xscale if val > 0 else 0), loc[1], loc[2]), label_mat, size=zs_space / 2 * 3 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(np.pi / 2, 0, 0))
+    elif props.bc_sub_type == 'deep':
+        yspace = props.size[1] / len(data[0])
+        for z in range(len(data[0])):
+            for y in range(len(data)):
+                if z == 0:
+                    if (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'}):
+                        render_text_object(target_collection, data[y][z], (lx + maxx , ly + y * yspace, lz + len(data) * zspace), label_mat, rot=(ph, 0, ph), x_align='LEFT', y_align='CENTER')
+                        continue  # skip label
+                if y == 0:
+                    if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'}):
+                        render_text_object(target_collection, data[0][z], (lx + maxx , ly, lz + z * zspace ), label_mat, y_align='CENTER', rot=(ph, 0, ph))
+                        continue  # skip label
+                loc = (lx + maxx , ly + y * yspace, lz + z * zspace )
+                try:
+                    val = float(data[y][z])
+                except ValueError:
+                    val = 0.0
+                valstr = f"{val:.1f}"  # TODO: column type!
+                xscale = remap(val, -x_max_v, x_max_v, -maxx, maxx)
+                clone_and_scale_object(target_collection, objects[y], (zspace - props.spacing[2] * 2, yspace - props.spacing[1] * 2, xscale ), loc, rot=(0, np.pi/2, 0))
+                render_text_object(target_collection, valstr, (lx + maxx + (xscale if val > 0 else 0), loc[1], loc[2]) , label_mat, size=zspace / 2 * 2 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(np.pi / 2, 0, 0))
+
 
 def render_chart(props, csv):
     np.random.seed(0)
     target_collection = init_target_collection()
     if props.chart_type == "column":
         render_column_chart(target_collection, props, csv)
+    elif props.chart_type == "bar":
+        render_bar_chart(target_collection, props, csv)
