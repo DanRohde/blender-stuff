@@ -31,3 +31,4 @@ DATA_SERIES = [("columns","Columns", "Columns"), ("rows","Rows", "Rows"), ]
 
 ROUGHNESS = 0.22
 METALLIC = 1
+ALPHA = 1

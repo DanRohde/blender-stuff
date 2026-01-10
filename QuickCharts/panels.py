@@ -20,9 +20,10 @@ def draw_panel(props, layout):
     row.prop(props, "values")
     row.prop(props, "legend")
 
-    row= layout.row(align=True)
+    row = layout.row(align=True)
     row.prop(props, "roughness")
     row.prop(props, "metallic")
+    row.prop(props, "alpha")
 
     layout.prop(props, "size")
     layout.prop(props, "spacing")

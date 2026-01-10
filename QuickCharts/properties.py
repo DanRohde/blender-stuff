@@ -3,7 +3,7 @@ from bpy.props import StringProperty, CollectionProperty, EnumProperty, BoolProp
 
 from .handlers import handle_csv_filename_update
 
-from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC
+from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC, ALPHA
 
 class CSVColumnTypeItems(PropertyGroup):
     name: StringProperty(name="", default="", description="Column label")
@@ -34,7 +34,7 @@ class Properties(PropertyGroup):
 
     roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Roughness", min=0, max=1)
     metallic: FloatProperty(default=METALLIC, name="Metallic", description="Metallic", min=0, max=1)
-
+    alpha: FloatProperty(default=ALPHA, name="Alpha", description="Alpha", min=0, max=1)
 properties = [ CSVColumnTypeItems, Properties ]
 
 

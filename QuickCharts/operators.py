@@ -3,7 +3,7 @@ from bpy.props import EnumProperty, FloatVectorProperty, StringProperty, Collect
 import csv
 import os
 from . import render
-from .constants import CHART_TYPES, CSV_FORMATS, DATA_SERIES, BC_SUB_TYPES, BC_SHAPES, ROUGHNESS, METALLIC
+from .constants import CHART_TYPES, CSV_FORMATS, DATA_SERIES, BC_SUB_TYPES, BC_SHAPES, ROUGHNESS, METALLIC, ALPHA
 from .handlers import handle_csv_filename_update
 from .properties import CSVColumnTypeItems
 from .panels import draw_panel
@@ -62,7 +62,7 @@ class OBJECT_OT_CreateChart(Operator):
 
     roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Roughness", min=0, max=1)
     metallic: FloatProperty(default=METALLIC, name="Metallic", description="Metallic", min=0, max=1)
-
+    alpha: FloatProperty(default=ALPHA, name="Alpha", description="Alpha", min=0, max=1)
     column_types_collapsed: BoolProperty(default=True, name="Column Types")
     def execute(self, context):
         if self.csv_filename == "": self.csv_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample.csv')
