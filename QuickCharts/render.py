@@ -82,14 +82,14 @@ def create_pyramid(mat):
     bm.free()
     return create_object(name, mesh, mat)
 
-def create_material(color, roughness = 0.5, metallic = 0, alpha = 1):
+def create_material(color, roughness = 0.5, metallic = 0, alpha = None):
     mat = bpy.data.materials.new("QuickChartMat1")
     mat.use_nodes = True
     bsdf = mat.node_tree.nodes.get("Principled BSDF")
     bsdf.inputs["Base Color"].default_value = color
     bsdf.inputs["Roughness"].default_value = roughness
     bsdf.inputs["Metallic"].default_value = metallic
-    bsdf.inputs["Alpha"].default_value = alpha
+    bsdf.inputs["Alpha"].default_value = alpha if alpha is not None else color[3]
     return mat
 
 def render_text_object(target_collection, text, loc, mat, rot = (0, 0, np.pi / 2), x_align = 'RIGHT', y_align = 'BOTTOM', size = 1):
@@ -143,7 +143,7 @@ def render_column_chart(target_collection, props, csv):
     xspace = props.size[0] / len(data[0])
     objects = [get_object_from_shape(props.bc_shape, i, roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(csv))]
 
-    label_mat = create_material((1,1,1,1), roughness=props.roughness, metallic=props.metallic)
+    label_mat = create_material(props.label_color, roughness=props.roughness, metallic=props.metallic)
 
     if props.bc_sub_type == 'normal': # checked with left, header, and header-left
         xs_space = xspace / len(data) - props.spacing[0]
@@ -203,7 +203,7 @@ def render_bar_chart(target_collection, props, csv):
     zspace = props.size[2] / len(data[0])
     objects = [get_object_from_shape(props.bc_shape, i, roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(csv))]
 
-    label_mat = create_material((1, 1, 1, 1), roughness=props.roughness, metallic=props.metallic)
+    label_mat = create_material(props.label_color, roughness=props.roughness, metallic=props.metallic)
 
     if props.bc_sub_type == 'normal':
         zs_space = zspace / len(data) - props.spacing[0]

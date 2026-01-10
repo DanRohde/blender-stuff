@@ -32,6 +32,8 @@ class Properties(PropertyGroup):
     labels: BoolProperty(default=True, name="Labels", description="Enable/Disable labels")
     values: BoolProperty(default=True, name="Values", description="Enable/Disable values")
 
+    label_color: FloatVectorProperty(name="Label/Value Color", description="Label/Value color", size=4, subtype="COLOR", default=(1, 1, 1, 1), min=0, max=1)
+
     roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Roughness", min=0, max=1)
     metallic: FloatProperty(default=METALLIC, name="Metallic", description="Metallic", min=0, max=1)
     alpha: FloatProperty(default=ALPHA, name="Alpha", description="Alpha", min=0, max=1)

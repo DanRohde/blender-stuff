@@ -26,6 +26,7 @@ def draw_panel(props, layout):
     row.prop(props, "metallic")
     row.prop(props, "alpha")
 
+    layout.row().prop(props, "label_color")
     row = layout.row(align=True)
     row.column().prop(props, "size")
     row.column().prop(props, "spacing")
@@ -52,7 +53,7 @@ class VIEW3D_PT_Panel(Panel):
 
         op = layout.operator("object.quick_charts_create_chart")
         for k in props.keys():
-            if hasattr(op, k): setattr(op, k, props[k])
+            if hasattr(op, k): setattr(op, k, getattr(props,k))
         
         return None
 

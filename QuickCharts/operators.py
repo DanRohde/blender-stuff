@@ -63,6 +63,9 @@ class OBJECT_OT_CreateChart(Operator):
     roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Roughness", min=0, max=1)
     metallic: FloatProperty(default=METALLIC, name="Metallic", description="Metallic", min=0, max=1)
     alpha: FloatProperty(default=ALPHA, name="Alpha", description="Alpha", min=0, max=1)
+
+    label_color: FloatVectorProperty(name="Label/Value Color", description="Label/Value color", size=4, subtype="COLOR", default=(1, 1, 1, 1), min=0, max=1)
+
     column_types_collapsed: BoolProperty(default=True, name="Column Types")
     def execute(self, context):
         if self.csv_filename == "": self.csv_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample.csv')
