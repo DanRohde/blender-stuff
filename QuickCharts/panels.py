@@ -22,6 +22,11 @@ def draw_panel(props, layout):
     row.prop(props, "values")
     row.prop(props, "legend")
 
+    row = layout.row()
+    row.label(text="Roughness")
+    row.label(text="Metallic")
+    row.label(text="Alpha/Color")
+
     row = layout.row(align=True)
     row.prop(props, "roughness", text="")
     row.prop(props, "metallic", text="")
