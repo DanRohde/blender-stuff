@@ -134,8 +134,8 @@ def remap(x, in_min, in_max, out_min, out_max):
 def format_value_label(props, val, x, y, transposed):
     c = y if transposed else x
     item = props.column_types[c]
-    if item.column_type == 'int': return f"{int(val)}"
-    return f"{val:.1f}"
+    if item.column_type == 'int': return f"{int(val)}" if -1000000 < val <  1000000 else f"{int(val):.2E}"
+    return f"{val:.1f}" if -1000000 < val < 1000000 and not (-0.01 < val < 0.01) else f"{val:.2E}"
 
 def render_column_chart(target_collection, props, csv, minv, maxv, row_sums, col_sums):
     cx, cy, cz = bpy.context.scene.cursor.location
@@ -173,7 +173,7 @@ def render_column_chart(target_collection, props, csv, minv, maxv, row_sums, col
                 zscale = remap(val, minv, maxv, 0, props.size[2]) - zero_z_position
                 clone_and_scale_object(target_collection, objects[color_idx], (xs_space, xs_space, zscale), loc)
                 color_idx += 1
-                if props.values: render_text_object(target_collection, valstr, (loc[0], loc[1], cz + zero_z_position + (zscale if val > 0 else 0)), label_mat, size = xs_space/2 * 3/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
+                if props.values: render_text_object(target_collection, valstr, (loc[0], loc[1], cz + zero_z_position + (zscale if val > 0 else 0)), label_mat, size = xs_space/2.5 * 3/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
             columnidx += 1
     elif props.bc_sub_type == 'deep':
         maxrows = max(len(data[0]),len(data))
@@ -199,7 +199,7 @@ def render_column_chart(target_collection, props, csv, minv, maxv, row_sums, col
                 zscale = remap(val, minv, maxv, 0, props.size[2]) - zero_z_position
                 clone_and_scale_object(target_collection, objects[color_idx], (xspace - props.spacing[0]*2, yspace - props.spacing[1]*2, zscale), loc)
                 color_idx += 1
-                if props.values: render_text_object(target_collection, valstr, (loc[0], loc[1], cz + zero_z_position + (zscale if val > 0 else 0)), label_mat, size = xspace/2 * 2/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
+                if props.values: render_text_object(target_collection, valstr, (loc[0], loc[1], cz + zero_z_position + (zscale if val > 0 else 0)), label_mat, size = xspace/2.5 * 2/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
 
 def render_bar_chart(target_collection, props, csv, minv, maxv, row_sums, col_sums):
     cx, cy, cz = bpy.context.scene.cursor.location
@@ -239,7 +239,7 @@ def render_bar_chart(target_collection, props, csv, minv, maxv, row_sums, col_su
                 xscale = remap(val, minv, maxv, 0, props.size[0]) - zero_x_position
                 clone_and_scale_object(target_collection, objects[color_idx], (zs_space, zs_space, xscale), loc, rot=(0, ph, 0))
                 color_idx += 1
-                if props.values: render_text_object(target_collection, valstr, (cx + zero_x_position + (xscale if val > 0 else 0), loc[1], loc[2]), label_mat, size=zs_space / 2 * 3 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(np.pi / 2, 0, 0))
+                if props.values: render_text_object(target_collection, valstr, (cx + zero_x_position + (xscale if val > 0 else 0), loc[1], loc[2]), label_mat, size=zs_space / 2.5 * 3 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(np.pi / 2, 0, 0))
     elif props.bc_sub_type == 'deep':
         maxcolumns = max(len(data), len(data[0]))
         yspace = props.size[1] / maxcolumns
@@ -263,7 +263,7 @@ def render_bar_chart(target_collection, props, csv, minv, maxv, row_sums, col_su
                 xscale = remap(val, minv, maxv, 0, props.size[0]) - zero_x_position
                 clone_and_scale_object(target_collection, objects[color_idx], (zspace - props.spacing[2] * 2, yspace - props.spacing[1] * 2, xscale ), loc, rot=(0, np.pi/2, 0))
                 color_idx += 1
-                if props.values: render_text_object(target_collection, valstr, (cx + zero_x_position + (xscale if val > 0 else 0), loc[1], loc[2]) , label_mat, size=zspace / 2 * 2 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(np.pi / 2, 0, 0))
+                if props.values: render_text_object(target_collection, valstr, (cx + zero_x_position + (xscale if val > 0 else 0), loc[1], loc[2]) , label_mat, size=zspace / 2.5 * 2 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(np.pi / 2, 0, 0))
     elif props.bc_sub_type == 'stacked':
         pass
 def render_chart(props, csv, minv, maxv, row_sums, col_sums):
