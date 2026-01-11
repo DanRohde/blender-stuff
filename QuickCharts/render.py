@@ -134,8 +134,8 @@ def remap(x, in_min, in_max, out_min, out_max):
 def format_value_label(props, val, x, y, transposed):
     c = y if transposed else x
     item = props.column_types[c]
-    if item.column_type == 'int': return f"{int(val)}" if -1000000 < val <  1000000 else f"{int(val):.2E}"
-    return f"{val:.1f}" if -1000000 < val < 1000000 and not (-0.01 < val < 0.01) else f"{val:.2E}"
+    if item.column_type == 'int': return f"{int(val)}" if -1000000 < val <  1000000 else f"{int(val):.{item.precision}E}"
+    return f"{val:.{item.precision}f}" if -1000000 < val < 1000000 and not (-0.01 < val < 0.01) else f"{val:.{item.precision}E}"
 
 def render_column_chart(target_collection, props, csv, minv, maxv, row_sums, col_sums):
     cx, cy, cz = bpy.context.scene.cursor.location

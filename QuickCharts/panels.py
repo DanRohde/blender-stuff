@@ -1,4 +1,4 @@
-from bpy.types import Panel, UIList
+from bpy.types import Panel, UIList, Operator
 
 def draw_panel(props, layout):
     layout.prop(props, "csv_filename")
@@ -7,9 +7,10 @@ def draw_panel(props, layout):
 
     row = layout.row(align=True)
     row.alignment = "LEFT"
-    row.prop(props, "column_types_collapsed", emboss=False, icon="RIGHTARROW" if props.column_types_collapsed else "DOWNARROW_HLT")
-    if not props.column_types_collapsed:
-        layout.template_list("VIEW3D_UL_ColumnTypesList", "", props, "column_types", props, "column_types_idx")
+    if isinstance(props, Operator):
+        row.prop(props, "column_types_collapsed", emboss=False, icon="RIGHTARROW" if props.column_types_collapsed else "DOWNARROW_HLT")
+        if not props.column_types_collapsed:
+            layout.template_list("VIEW3D_UL_ColumnTypesList", "", props, "column_types", props, "column_types_idx")
     layout.prop(props, "chart_type")
     if props.chart_type in {"column", "bar"}:
         row = layout.row()
@@ -43,6 +44,10 @@ class VIEW3D_UL_ColumnTypesList(UIList):
         row.label(text=f"{index+1}. ")
         row.prop(item, "name")
         row.prop(item, "column_type")
+        col = row.column()
+        col.alignment = "LEFT"
+        col.prop(item, "precision")
+        col.enabled = item.column_type not in {"label"}
 
 class VIEW3D_PT_Panel(Panel):
     bl_idname = "VIEW3D_PT_quick_charts_panel"

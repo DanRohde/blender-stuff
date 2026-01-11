@@ -41,7 +41,7 @@ def handle_csv_filename_update(self, _context):
     #   label, float, int, date
     if re.match("^[0-9.,+-]+", rows[0][1]):
         self.csv_format = 'left'
-
+        self.data_series = 'columns'
         for i in range(len(rows[0])):
             item = self.column_types.add()
             item.name = rows[0][0]

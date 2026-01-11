@@ -8,6 +8,7 @@ from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_S
 class CSVColumnTypeItems(PropertyGroup):
     name: StringProperty(name="", default="", description="Column label")
     column_type: EnumProperty(name="", items=[("float","Float","Float"),("label","Label","Label"), ("int","Integer","Integer")], description="Column type")
+    precision: IntProperty(default=1, min=0, name="", description="Precision")
 
 class Properties(PropertyGroup):
     # CSV:
