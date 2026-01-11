@@ -57,6 +57,7 @@ class VIEW3D_PT_Panel(Panel):
 
         op = layout.operator("object.quick_charts_create_chart")
         for k in props.keys():
+            if k in {'column_types'}: continue
             if hasattr(op, k): setattr(op, k, getattr(props,k))
         
         return None
