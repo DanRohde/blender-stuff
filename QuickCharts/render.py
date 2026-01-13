@@ -150,6 +150,8 @@ def init_target_collection():
     bpy.context.scene.collection.children.link(target_collection)
     empty = bpy.data.objects.new("QuickChartEmpty", None)
     empty.empty_display_type = 'ARROWS'
+    empty.location = bpy.context.scene.cursor.location
+    empty.rotation_euler = bpy.context.scene.cursor.rotation_euler
     target_collection.objects.link(empty)
     return { "collection": target_collection, "parent": empty }
 
@@ -285,7 +287,11 @@ def render_column_chart(target, props, csv):
             color_idx = 0
             lastz = 0
             zscale = remap(sums[x], min(sums), max(sums), 0, props.size[2]) - zero_z_position
-            if props.values: render_text_object(target, format_value_label(props, sums[x], x, x, transposed),(cx + column_idx * xspace, cy, cz + zero_z_position + (zscale if sums[x] > 0 else 0) ),label_mat, x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
+            if props.values:
+                valstr = format_value_label(props, sums[x], x, x, transposed)
+                render_text_object(target, valstr,
+                                   (cx + column_idx * xspace, cy, cz + zero_z_position + (zscale if sums[x] > 0 else 0) ), label_mat,
+                                   size = xspace/2.5 * 2/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
             for y in range(len(data)):
                 if y == 0:
                     if (not transposed and props.csv_format in {'header','header-left'}) or (transposed and props.csv_format in {'left','header-left'}):
@@ -295,7 +301,7 @@ def render_column_chart(target, props, csv):
                 perc = val / sums[x]
                 height = zscale * perc
                 loc = (cx + column_idx * xspace, cy, cz + zero_z_position + lastz)
-                create_stacked_object(target, props.bc_shape, mats[color_idx], loc, (1,1,height), height, lastz, zscale)
+                create_stacked_object(target, props.bc_shape, mats[color_idx], loc, (xspace - props.spacing[0]*2, xspace - props.spacing[1]*2,height), height, lastz, zscale)
                 lastz += height
                 color_idx += 1
             column_idx += 1
