@@ -3,7 +3,22 @@ from bpy.props import StringProperty, CollectionProperty, EnumProperty, BoolProp
 
 from .handlers import handle_csv_filename_update
 
-from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC, ALPHA
+from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC, ALPHA, ICONS
+from .icons import preview_collections
+
+
+def get_enum_items(consts, prefix):
+    items = []
+    pcoll = preview_collections["main"]
+    for idx, ct in enumerate(consts):
+        items.append((ct[0], ct[1], ct[2], pcoll[f"{ct[0]}_{prefix}"].icon_id, idx))
+    return items
+
+def get_chart_types_enum_items(_self, _context):
+    return get_enum_items(CHART_TYPES, "chart")
+
+def get_csv_format_enum_items(_self, _context):
+    return get_enum_items(CSV_FORMATS, "label")
 
 class CSVColumnTypeItems(PropertyGroup):
     name: StringProperty(name="", default="", description="Column label")
@@ -13,13 +28,13 @@ class CSVColumnTypeItems(PropertyGroup):
 class Properties(PropertyGroup):
     # CSV:
     csv_filename: StringProperty(default="", subtype="FILE_PATH", name="CSV File", description="CSV File", update=handle_csv_filename_update)
-    csv_format: EnumProperty(name="Labels", items=CSV_FORMATS)
+    csv_format: EnumProperty(name="Labels", items=get_csv_format_enum_items)
     column_types: CollectionProperty(type=CSVColumnTypeItems)
     column_types_idx: IntProperty()
     column_types_collapsed: BoolProperty(name="Column Types", default=True)
 
     # Chart:
-    chart_type: EnumProperty(items=CHART_TYPES, name="Type", description="Chart type")
+    chart_type: EnumProperty(items=get_chart_types_enum_items, name="Chart", description="Chart type")
     # bar, column charts:
     bc_shape: EnumProperty(items=BC_SHAPES, name="Shape", description="Shape")
     bc_sub_type: EnumProperty(items=BC_SUB_TYPES, name="Subtype", description="Subtype")

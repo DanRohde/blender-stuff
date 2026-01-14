@@ -11,9 +11,9 @@ COLORS = [
 
 
 ICONS = {
-    "labels_header" : "labels_header.png",
-    "labels_header_left" : "labels_header_left.png",
-    "labels_left" :  "labels_left.png",
+    "header_label" : "labels_header.png",
+    "header-left_label" : "labels_header_left.png",
+    "left_label" :  "labels_left.png",
     "data_series_columns" : "data_series_columns.png",
     "data_series_rows" : "data_series_rows.png",
     "column_chart" : "column_chart.png",

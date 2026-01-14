@@ -3,9 +3,9 @@ from bpy.props import EnumProperty, FloatVectorProperty, StringProperty, Collect
 import csv
 import os
 from . import render
-from .constants import CHART_TYPES, CSV_FORMATS, DATA_SERIES, BC_SUB_TYPES, BC_SHAPES, ROUGHNESS, METALLIC, ALPHA
+from .constants import DATA_SERIES, BC_SUB_TYPES, BC_SHAPES, ROUGHNESS, METALLIC, ALPHA
 from .handlers import handle_csv_filename_update
-from .properties import CSVColumnTypeItems
+from .properties import CSVColumnTypeItems, get_chart_types_enum_items, get_csv_format_enum_items
 from .panels import draw_panel
 def read_complete_csv(props):
     rows = []
@@ -44,11 +44,11 @@ class OBJECT_OT_CreateChart(Operator):
     bl_description = "Create Chart"
     bl_options = {'REGISTER', 'UNDO'}
     csv_filename: StringProperty(name="CSV File", subtype='FILE_PATH', description="CSV File", default="", update=handle_csv_filename_update)
-    csv_format: EnumProperty(items=CSV_FORMATS, name="Labels")
+    csv_format: EnumProperty(items=get_csv_format_enum_items, name="Labels")
     column_types: CollectionProperty(type=CSVColumnTypeItems)
     column_types_idx: IntProperty()
 
-    chart_type: EnumProperty(items=CHART_TYPES, name="Chart Type", description="Chart type", default='column', )
+    chart_type: EnumProperty(items=get_chart_types_enum_items, name="Chart Type", description="Chart type" )
     data_series: EnumProperty(items=DATA_SERIES, name="Data Series", default='columns', )
     bc_shape: EnumProperty(items=BC_SHAPES, name="Shape")
     bc_sub_type: EnumProperty(items=BC_SUB_TYPES, name="Subtype")
