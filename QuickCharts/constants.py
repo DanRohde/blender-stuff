@@ -25,6 +25,7 @@ BC_SHAPES = [("bar","Bar","Bar"),("cylinder","Cylinder","Cylinder"),("cone","Con
 
 BC_SUB_TYPES = [("normal", "Normal", "Normal"),
                 ("stacked", "Stacked", "Stacked"),
+                ("percstacked", "Percent Stacked", "Percent Stacked"),
                 ("deep", "Deep", "Deep")]
 
 DATA_SERIES = [("columns","Columns", "Columns"), ("rows","Rows", "Rows"), ]
