@@ -22,10 +22,10 @@ ICONS = {
     "bc_subtype_stacked" : "bc_subtype_stacked.png",
     "bc_subtype_percstacked" : "bc_subtype_percstacked.png",
     "bc_subtype_normal" : "bc_subtype_normal.png",
-    "bc_shape_bar" : "bc_shape_bar.png",
-    "bc_shape_cylinder" : "bc_shape_cylinder.png",
-    "bc_shape_cone" : "bc_shape_cone.png",
-    "bc_shape_pyramid" : "bc_shape_pyramind.png",
+    "bar_shape" : "bar_shape.png",
+    "cylinder_shape" : "cylinder_shape.png",
+    "cone_shape" : "cone_shape.png",
+    "pyramid_shape" : "pyramid_shape.png",
 }
 
 CHART_TYPES = [

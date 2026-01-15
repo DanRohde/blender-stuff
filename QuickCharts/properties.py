@@ -20,6 +20,9 @@ def get_chart_types_enum_items(_self, _context):
 def get_csv_format_enum_items(_self, _context):
     return get_enum_items(CSV_FORMATS, "label")
 
+def get_bc_shapes_enum_items(_self, _context):
+    return get_enum_items(BC_SHAPES, "shape")
+
 class CSVColumnTypeItems(PropertyGroup):
     name: StringProperty(name="", default="", description="Column label")
     column_type: EnumProperty(name="", items=[("float","Float","Float"),("label","Label","Label"), ("int","Integer","Integer")], description="Column type")
@@ -36,7 +39,7 @@ class Properties(PropertyGroup):
     # Chart:
     chart_type: EnumProperty(items=get_chart_types_enum_items, name="Chart", description="Chart type")
     # bar, column charts:
-    bc_shape: EnumProperty(items=BC_SHAPES, name="Shape", description="Shape")
+    bc_shape: EnumProperty(items=get_bc_shapes_enum_items, name="Shape", description="Shape")
     bc_sub_type: EnumProperty(items=BC_SUB_TYPES, name="Subtype", description="Subtype")
 
     data_series: EnumProperty(items=DATA_SERIES, name="Data series", description="Data series")
@@ -56,5 +59,4 @@ class Properties(PropertyGroup):
     metallic: FloatProperty(default=METALLIC, name="Metallic", description="Chart Metallic", min=0, max=1)
     alpha: FloatProperty(default=ALPHA, name="Alpha", description="Chart Alpha", min=0, max=1)
 properties = [ CSVColumnTypeItems, Properties ]
-
 
