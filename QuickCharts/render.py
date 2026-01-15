@@ -64,11 +64,11 @@ def create_cone(mat, r1=.5, r2=0, depth=1):
     mesh.update()
     return create_object(name, mesh, mat)
 
-def create_pyramid(mat):
+def create_pyramid(mat, base_size = 1):
     name = "QuickChartPyramid"
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
-    half = .5
+    half = base_size / 2
     v0 = bm.verts.new((-half, -half, 0))
     v1 = bm.verts.new(( half, -half, 0))
     v2 = bm.verts.new(( half,  half, 0))
@@ -185,7 +185,7 @@ def create_stacked_object(target, shape, mat, loc, scale, val, height, maxv, rot
         if maxv != 0:
             bs = (maxv-height)/maxv
             ts = (maxv-height-val)/maxv
-            obj = create_pyramid_frustam(mat, bs, ts)
+            obj = create_pyramid(mat, base_size=bs) if ts == 0 else create_pyramid_frustam(mat, bs, ts)
         else:
             obj = create_pyramid(mat)
     else:
