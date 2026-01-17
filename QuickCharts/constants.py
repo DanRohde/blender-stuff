@@ -18,14 +18,14 @@ ICONS = {
     "data_series_rows" : "data_series_rows.png",
     "column_chart" : "column_chart.png",
     "bar_chart" : "bar_chart.png",
-    "bc_subtype_deep" : "bc_subtype_deep.png",
-    "bc_subtype_stacked" : "bc_subtype_stacked.png",
-    "bc_subtype_percstacked" : "bc_subtype_percstacked.png",
-    "bc_subtype_normal" : "bc_subtype_normal.png",
-    "bar_shape" : "bar_shape.png",
-    "cylinder_shape" : "cylinder_shape.png",
-    "cone_shape" : "cone_shape.png",
-    "pyramid_shape" : "pyramid_shape.png",
+    #"bc_subtype_deep" : "bc_subtype_deep.png",
+    #"bc_subtype_stacked" : "bc_subtype_stacked.png",
+    #"bc_subtype_percstacked" : "bc_subtype_percstacked.png",
+    #"bc_subtype_normal" : "bc_subtype_normal.png",
+    #"bar_shape" : "bar_shape.png",
+    #"cylinder_shape" : "cylinder_shape.png",
+    #"cone_shape" : "cone_shape.png",
+    #"pyramid_shape" : "pyramid_shape.png",
 }
 
 CHART_TYPES = [

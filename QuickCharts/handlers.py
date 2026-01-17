@@ -41,7 +41,8 @@ def handle_csv_filename_update(self, _context):
     #   label, float, int, date
     if re.match("^[0-9.,+-]+", rows[0][1]):
         self.csv_format = 'left'
-        self.data_series = 'columns'
+        self.data_series = 'rows'
+        self.legend = False
         if len(rows[0]) > 2: self.bc_sub_type = 'deep'
         for i in range(len(rows[0])):
             item = self.column_types.add()
@@ -50,7 +51,8 @@ def handle_csv_filename_update(self, _context):
 
     elif re.match("^[0-9.+-]+", rows[1][0]):
         self.csv_format = 'header'
-        self.data_series = 'rows'
+        self.data_series = 'columns'
+        self.legend = True
         for i in range(len(rows[0])):
             item = self.column_types.add()
             item.name = rows[0][i]
@@ -59,6 +61,7 @@ def handle_csv_filename_update(self, _context):
         self.csv_format = 'header-left'
         self.chart_type = 'column'
         self.bc_sub_type = 'deep'
+        self.legend = True
         for i in range(len(rows[0])):
             item = self.column_types.add()
             item.name = rows[0][i]

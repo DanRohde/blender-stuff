@@ -22,20 +22,25 @@ def draw_panel(props, layout):
     row.prop(props, "values")
     row.prop(props, "legend")
 
-    row = layout.row()
-    row.label(text="Roughness")
-    row.label(text="Metallic")
-    row.label(text="Alpha/Color")
-
     row = layout.row(align=True)
-    row.prop(props, "roughness", text="")
-    row.prop(props, "metallic", text="")
-    row.prop(props, "alpha", text="")
+    row.alignment = "LEFT"
+    row.prop(props,"material_collapsed", emboss=False, icon="RIGHTARROW" if props.material_collapsed else "DOWNARROW_HLT")
+    if not props.material_collapsed:
 
-    row = layout.row(align=True)
-    row.prop(props, "label_roughness", text="")
-    row.prop(props, "label_metallic", text="")
-    row.prop(props, "label_color", text="")
+        row = layout.row()
+        row.label(text="Roughness")
+        row.label(text="Metallic")
+        row.label(text="Alpha/Color")
+
+        row = layout.row(align=True)
+        row.prop(props, "roughness", text="")
+        row.prop(props, "metallic", text="")
+        row.prop(props, "alpha", text="")
+
+        row = layout.row(align=True)
+        row.prop(props, "label_roughness", text="")
+        row.prop(props, "label_metallic", text="")
+        row.prop(props, "label_color", text="")
 
     row = layout.row(align=True)
     row.column().prop(props, "size")

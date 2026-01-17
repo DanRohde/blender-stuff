@@ -11,7 +11,11 @@ def get_enum_items(consts, prefix):
     items = []
     pcoll = preview_collections["main"]
     for idx, ct in enumerate(consts):
-        items.append((ct[0], ct[1], ct[2], pcoll[f"{ct[0]}_{prefix}"].icon_id, idx))
+        id = f"{ct[0]}_{prefix}"
+        if id in ICONS:
+            items.append((ct[0], ct[1], ct[2], pcoll[id].icon_id, idx))
+        else:
+            items.append(ct)
     return items
 
 def get_chart_types_enum_items(_self, _context):
@@ -22,6 +26,9 @@ def get_csv_format_enum_items(_self, _context):
 
 def get_bc_shapes_enum_items(_self, _context):
     return get_enum_items(BC_SHAPES, "shape")
+
+def get_bc_sub_types_enum_items(_self, _context):
+    return get_enum_items(BC_SUB_TYPES, "subtype")
 
 class CSVColumnTypeItems(PropertyGroup):
     name: StringProperty(name="", default="", description="Column label")
@@ -36,11 +43,13 @@ class Properties(PropertyGroup):
     column_types_idx: IntProperty()
     column_types_collapsed: BoolProperty(name="Column Types", default=True)
 
+    material_collapsed: BoolProperty(name="Material", default=True)
+
     # Chart:
     chart_type: EnumProperty(items=get_chart_types_enum_items, name="Chart", description="Chart type")
     # bar, column charts:
     bc_shape: EnumProperty(items=get_bc_shapes_enum_items, name="Shape", description="Shape")
-    bc_sub_type: EnumProperty(items=BC_SUB_TYPES, name="Subtype", description="Subtype")
+    bc_sub_type: EnumProperty(items=get_bc_sub_types_enum_items, name="Subtype", description="Subtype")
 
     data_series: EnumProperty(items=DATA_SERIES, name="Data series", description="Data series")
 

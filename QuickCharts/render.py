@@ -12,7 +12,7 @@ def create_object(name, mesh, mat):
 def clone_and_scale_object(target, obj, scale, loc, rot = (0,0,0)):
     new_obj = bpy.data.objects.new(name=obj.name, object_data=obj.data)
     mw = new_obj.matrix_world.copy()
-    new_obj.parent = target["parent"]
+    new_obj.parent = target["chart"]
     new_obj.matrix_world = mw
 
     new_obj.scale = scale
@@ -126,7 +126,7 @@ def create_material(color, roughness = 0.5, metallic = 0, alpha = None):
     bsdf.inputs["Alpha"].default_value = alpha if alpha is not None else color[3]
     return mat
 
-def render_text_object(target, text, loc, mat, rot = (0, 0, np.pi / 2), x_align = 'RIGHT', y_align = 'BOTTOM', size = 1):
+def render_text_object(collection, parent, text, loc, mat, rot = (0, 0, np.pi / 2), x_align = 'RIGHT', y_align = 'BOTTOM', size = 1):
     name = f"Label {text}"
     text_data = bpy.data.curves.new(name=name,type='FONT')
     text_data.body = text
@@ -141,19 +141,26 @@ def render_text_object(target, text, loc, mat, rot = (0, 0, np.pi / 2), x_align 
     text_obj = bpy.data.objects.new(name=name, object_data = text_data)
     text_obj.location = loc
     text_obj.rotation_euler = rot
-    text_obj.parent = target["parent"]
-    target["collection"].objects.link(text_obj)
+    text_obj.parent = parent
+    collection.objects.link(text_obj)
     text_obj.data.materials.append(mat)
 
 def init_target_collection():
     target_collection = bpy.data.collections.new("QuickChartCollection")
     bpy.context.scene.collection.children.link(target_collection)
-    empty = bpy.data.objects.new("QuickChartEmpty", None)
-    empty.empty_display_type = 'ARROWS'
-    empty.location = bpy.context.scene.cursor.location
-    empty.rotation_euler = bpy.context.scene.cursor.rotation_euler
-    target_collection.objects.link(empty)
-    return { "collection": target_collection, "parent": empty }
+    chart = bpy.data.objects.new("QuickChart", None)
+    chart.empty_display_type = 'ARROWS'
+    chart.location = bpy.context.scene.cursor.location
+    chart.rotation_euler = bpy.context.scene.cursor.rotation_euler
+    target_collection.objects.link(chart)
+    legend = bpy.data.objects.new("QuickChartLegend", None)
+    legend.empty_display_type = 'ARROWS'
+    legend.location = bpy.context.scene.cursor.location
+    cr = bpy.context.scene.cursor.rotation_euler
+    legend.rotation_euler = (cr[0], cr[1], cr[2] - np.pi / 2)
+
+    target_collection.objects.link(legend)
+    return { "collection": target_collection, "chart": chart, "legend": legend }
 
 def get_color(color_idx):
     if color_idx > len(COLORS)-1:
@@ -191,7 +198,7 @@ def create_stacked_object(target, shape, mat, loc, scale, val, height, maxv, rot
     else:
         obj = create_bar(mat)
 
-    obj.parent = target["parent"]
+    obj.parent = target["chart"]
     obj.scale = scale
     obj.data.materials.append(mat)
     obj.location = loc
@@ -221,21 +228,45 @@ def get_value_from_data(data):
     except ValueError:
         val = 0.0
     return val
+def render_legend(target, props, data, mats, label_mat, label_size, transposed):
+    loc = bpy.context.scene.cursor.location
+    labels = [ row[0] for row in data ]
+    space = label_size
+
+    label_len = [ len(label) for label in labels ]
+    loc = (loc[0] - props.size[0], loc[1] + props.size[1], loc[2])
+    render_text_object(target["collection"], target["legend"], "Legend", loc, label_mat, size = space, x_align="LEFT", y_align="TOP")
+    color_idx = 0
+    for idx, label in enumerate(labels):
+        if idx==0 and props.csv_format in {'header-left', 'header'} and not transposed: continue
+        if idx==0 and props.csv_format in {'header-left', 'left'} and transposed: continue
+        loc = (loc[0] + space, loc[1], loc[2])
+        if (not transposed and props.csv_format in {'header-left', 'left'}) or (transposed and props.csv_format in {'header-left','header'}):
+            text = label
+        else:
+            text = f"{color_idx+1}"
+
+        render_text_object(target["collection"], target["legend"], text, loc, mats[color_idx], size=space, x_align="LEFT", y_align="TOP")
+        color_idx += 1
+
 
 def render_column_chart(target, props, csv):
     cx, cy, cz = bpy.context.scene.cursor.location
     transposed = props.data_series == 'columns'
     data = csv["rows"] if not transposed else list(map(list, zip(*csv["rows"])))
+    mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(data))]
     if props.bc_sub_type in {'normal','deep'}:
-        objects = [get_object_from_shape(props.bc_shape, create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha)) for i in range(len(data))]
+        objects = [get_object_from_shape(props.bc_shape, mats[i]) for i in range(len(data))]
 
-    maxcolumns  = len(data)
-    if props.csv_format in {'header-left'}: maxcolumns+=1
-    if transposed and props.csv_format in {'left', 'header-left'}: maxcolumns+=1
+    maxcolumns  = len(data[0])
+    if not transposed and props.csv_format in {'header-left', 'left'}: maxcolumns+=1
+    if transposed and props.csv_format in {'header', 'header-left'}: maxcolumns-=1
     xspace = props.size[0] / maxcolumns
     label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
     minv = min(0, csv["minv"])
     zero_z_position = remap(0, minv, csv["maxv"], 0, props.size[2])
+    if props.legend: render_legend(target, props, data, mats, label_mat, xspace/2, transposed)
+
     if props.bc_sub_type == 'normal':
         xs_space = xspace / len(data) - props.spacing[0] # space 4 all
         columnidx = 0
@@ -248,7 +279,7 @@ def render_column_chart(target, props, csv):
             for xs in range(len(data)):
                 if xs == 0:
                     if (not transposed and props.csv_format in {'header','header-left'}) or (transposed and props.csv_format in {'left','header-left'}):
-                        if props.labels: render_text_object(target, data[0][x], (cx + columnidx * xspace + xspace/2, cy - xspace/2, cz + zero_z_position), label_mat, size= xspace/2)
+                        if props.labels: render_text_object(target["collection"], target["chart"], data[0][x], (cx + columnidx * xspace + xspace/2, cy - xspace/2, cz + zero_z_position), label_mat, size= xspace/2)
                         continue  # skip label
 
                 loc = (cx + columnidx * xspace + xs * xs_space, cy, cz + zero_z_position)
@@ -257,7 +288,7 @@ def render_column_chart(target, props, csv):
                 zscale = remap(val, minv, csv["maxv"], 0, props.size[2]) - zero_z_position
                 clone_and_scale_object(target, objects[color_idx], (xs_space, xs_space, zscale), loc)
                 color_idx += 1
-                if props.values: render_text_object(target, valstr, (loc[0], loc[1], cz + zero_z_position + (zscale if val > 0 else 0)), label_mat, size = xs_space/2.5 * 3/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
+                if props.values: render_text_object(target["collection"], target["chart"], valstr, (loc[0], loc[1], cz + zero_z_position + (zscale if val > 0 else 0)), label_mat, size = xs_space/2.5 * 3/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
             columnidx += 1
     elif props.bc_sub_type == 'deep':
         maxrows = max(len(data[0]),len(data))
@@ -269,11 +300,11 @@ def render_column_chart(target, props, csv):
             for y in range(len(data)):
                 if x == 0:
                     if (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header','header-left'}):
-                        if props.labels: render_text_object(target, data[y][x], (cx + len(data[0]) * xspace, cy + y * yspace, cz + zero_z_position), label_mat, size = xspace/2, rot=(0,0,0), x_align='LEFT', y_align='CENTER')
+                        if props.labels: render_text_object(target["collection"], target["chart"], data[y][x], (cx + len(data[0]) * xspace, cy + y * yspace, cz + zero_z_position), label_mat, size = xspace/2, rot=(0,0,0), x_align='LEFT', y_align='CENTER')
                         continue  # skip label
                 if y == 0:
                     if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'}):
-                        if props.labels: render_text_object(target, data[0][x], (cx + columnidx * xspace, cy, cz + zero_z_position ), label_mat, y_align='CENTER', size = xspace/2)
+                        if props.labels: render_text_object(target["collection"], target["chart"], data[0][x], (cx + columnidx * xspace, cy, cz + zero_z_position ), label_mat, y_align='CENTER', size = xspace/2)
                         continue # skip label
                 loc = (cx + columnidx * xspace, cy + y * yspace, cz + zero_z_position)
                 val = get_value_from_data(data[y][x])
@@ -281,10 +312,9 @@ def render_column_chart(target, props, csv):
                 zscale = remap(val, minv, csv["maxv"], 0, props.size[2]) - zero_z_position
                 clone_and_scale_object(target, objects[color_idx], (xspace - props.spacing[0]*2, yspace - props.spacing[1]*2, zscale), loc)
                 color_idx += 1
-                if props.values: render_text_object(target, valstr, (loc[0], loc[1], cz + zero_z_position + (zscale if val > 0 else 0)), label_mat, size = xspace/2.5 * 2/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
+                if props.values: render_text_object(target["collection"], target["chart"], valstr, (loc[0], loc[1], cz + zero_z_position + (zscale if val > 0 else 0)), label_mat, size = xspace/2.5 * 2/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
             columnidx += 1
     elif props.bc_sub_type in {'stacked','percstacked'}:
-        mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(data))]
         column_idx = 0
         sums = csv["row_sums"] if transposed else csv["col_sums"]
         for x in range(len(data[0])):
@@ -297,13 +327,13 @@ def render_column_chart(target, props, csv):
             zscale = remap(sums[x], min(sums), max(sums), 0, props.size[2]) - zero_z_position if props.bc_sub_type == 'stacked' else props.size[2] - zero_z_position
             if props.values and props.bc_sub_type == 'stacked':
                 valstr = format_value_label(props, sums[x], x, None, transposed)
-                render_text_object(target, valstr,
+                render_text_object(target["collection"], target["chart"], valstr,
                                    (cx + column_idx * xspace, cy, cz + zero_z_position + (zscale if sums[x] > 0 else 0) ), label_mat,
                                    size = xspace/2.5 * 2/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
             for y in range(len(data)):
                 if y == 0:
                     if (not transposed and props.csv_format in {'header','header-left'}) or (transposed and props.csv_format in {'left','header-left'}):
-                        if props.labels: render_text_object(target, data[0][x], (cx + column_idx * xspace, cy - xspace/2, cz + zero_z_position), label_mat, y_align='CENTER', size = xspace/2)
+                        if props.labels: render_text_object(target["collection"], target["chart"], data[0][x], (cx + column_idx * xspace, cy - xspace/2, cz + zero_z_position), label_mat, y_align='CENTER', size = xspace/2)
                         continue  # skip label
                 val = get_value_from_data(data[y][x])
                 perc = val / sums[x]
@@ -324,12 +354,13 @@ def render_bar_chart(target, props, csv):
     if props.csv_format in {'header-left'}: maxcolumns += 1
     if transposed and props.csv_format in {'left', 'header-left'}: maxcolumns += 1
     zspace = props.size[0] / maxcolumns
-
-    objects = [get_object_from_shape(props.bc_shape, create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha)) for i in range(len(data))]
+    mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(data))]
+    objects = [get_object_from_shape(props.bc_shape, mats[i]) for i in range(len(data))]
     label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
 
     minv = min(0, csv["minv"])
     zero_x_position = remap(0, minv, csv["maxv"], 0, props.size[0])
+    if props.legend: render_legend(target, props, data, mats, label_mat, zspace/2, transposed)
 
     if props.bc_sub_type == 'normal':
         zs_space = zspace / len(data) - props.spacing[0]
@@ -342,7 +373,7 @@ def render_bar_chart(target, props, csv):
             for zs in range(len(data)):
                 if zs == 0:
                     if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'left', 'header-left'}):
-                        if props.labels: render_text_object(target, data[0][z], (cx + zero_x_position , cy - zspace / 2, cz + rowindex * zspace + zspace / 2), label_mat, size=zspace / 2, rot=(ph, 0, ph), x_align='RIGHT', y_align='TOP')
+                        if props.labels: render_text_object(target["collection"], target["chart"], data[0][z], (cx + zero_x_position , cy - zspace / 2, cz + rowindex * zspace + zspace / 2), label_mat, size=zspace / 2, rot=(ph, 0, ph), x_align='RIGHT', y_align='TOP')
                         continue  # skip label
                 loc = (cx + zero_x_position, cy, cz + rowindex * zspace + zs * zs_space)
                 try:
@@ -353,7 +384,7 @@ def render_bar_chart(target, props, csv):
                 xscale = remap(val, minv, csv["maxv"], 0, props.size[0]) - zero_x_position
                 clone_and_scale_object(target, objects[color_idx], (zs_space, zs_space, xscale), loc, rot=(0, ph, 0))
                 color_idx += 1
-                if props.values: render_text_object(target, valstr, (cx + zero_x_position + (xscale if val > 0 else 0), loc[1], loc[2]), label_mat, size=zs_space / 2.5 * 3 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(ph, 0, 0))
+                if props.values: render_text_object(target["collection"], target["chart"], valstr, (cx + zero_x_position + (xscale if val > 0 else 0), loc[1], loc[2]), label_mat, size=zs_space / 2.5 * 3 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(ph, 0, 0))
             rowindex += 1
     elif props.bc_sub_type == 'deep':
         maxcolumns = max(len(data), len(data[0]))
@@ -364,11 +395,11 @@ def render_bar_chart(target, props, csv):
             for y in range(len(data)):
                 if z == 0:
                     if (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'}):
-                        if props.labels: render_text_object(target, data[y][z], (cx + zero_x_position, cy + y * yspace, cz + len(data[0]) * zspace), label_mat, size=zspace/2, rot=(ph, 0, ph), x_align='RIGHT' if y==0 else 'CENTER', y_align='CENTER')
+                        if props.labels: render_text_object(target["collection"], target["chart"], data[y][z], (cx + zero_x_position, cy + y * yspace, cz + len(data[0]) * zspace), label_mat, size=zspace/2, rot=(ph, 0, ph), x_align='RIGHT' if y==0 else 'CENTER', y_align='CENTER')
                         continue  # skip label
                 if y == 0:
                     if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'}):
-                        if props.labels: render_text_object(target, data[0][z], (cx + zero_x_position , cy, cz + rowindex * zspace ), label_mat, size=zspace/2, x_align='RIGHT', y_align='CENTER', rot=(ph, 0, ph))
+                        if props.labels: render_text_object(target["collection"], target["chart"], data[0][z], (cx + zero_x_position , cy, cz + rowindex * zspace ), label_mat, size=zspace/2, x_align='RIGHT', y_align='CENTER', rot=(ph, 0, ph))
                         continue  # skip label
                 loc = (cx + zero_x_position , cy + y * yspace, cz + rowindex * zspace )
                 try:
@@ -379,10 +410,9 @@ def render_bar_chart(target, props, csv):
                 xscale = remap(val, minv, csv["maxv"], 0, props.size[0]) - zero_x_position
                 clone_and_scale_object(target, objects[color_idx], (zspace - props.spacing[0] * 2, yspace - props.spacing[1] * 2, xscale ), loc, rot=(0, ph, 0))
                 color_idx += 1
-                if props.values: render_text_object(target, valstr, (cx + zero_x_position + (xscale if val > 0 else 0), loc[1], loc[2]) , label_mat, size=zspace / 2.5 * 2 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(ph, 0, 0))
+                if props.values: render_text_object(target["collection"], target["chart"], valstr, (cx + zero_x_position + (xscale if val > 0 else 0), loc[1], loc[2]) , label_mat, size=zspace / 2.5 * 2 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(ph, 0, 0))
             rowindex += 1
     elif props.bc_sub_type in {'stacked', 'percstacked'}:
-        mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(data))]
         row_idx = 0
         sums = csv["row_sums"] if transposed else csv["col_sums"]
         for z in range(len(data[0])):
@@ -395,14 +425,14 @@ def render_bar_chart(target, props, csv):
             xscale = remap(sums[z], min(sums), max(sums), 0, props.size[0]) - zero_x_position if props.bc_sub_type == 'stacked' else props.size[0] - zero_x_position
             if props.values and props.bc_sub_type == 'stacked':
                 valstr = format_value_label(props, sums[z], z, None, transposed)
-                render_text_object(target, valstr,
+                render_text_object(target["collection"], target["chart"], valstr,
                                    (cx + zero_x_position + (xscale if sums[z] > 0 else 0) , cy, cz + row_idx * zspace ), label_mat,
                                    size=zspace / 2.5 * 2 / len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi / 2, 0, 0))
             for y in range(len(data)):
                 if y == 0:
                     if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'left', 'header-left'}):
                         if props.labels:
-                            render_text_object(target, data[0][z],
+                            render_text_object(target["collection"], target["chart"], data[0][z],
                                                (cx + zero_x_position, cy - zspace / 2, cz + row_idx * zspace), label_mat, y_align='CENTER', size=zspace / 2, rot=(ph, 0, 0))
                         continue  # skip label
                 val = get_value_from_data(data[y][z])

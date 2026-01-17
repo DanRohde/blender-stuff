@@ -1,11 +1,8 @@
 from bpy.types import Operator
-from bpy.props import EnumProperty, FloatVectorProperty, StringProperty, CollectionProperty, IntProperty, BoolProperty, FloatProperty
 import csv
 import os
 from . import render
-from .constants import DATA_SERIES, BC_SUB_TYPES, BC_SHAPES, ROUGHNESS, METALLIC, ALPHA
-from .handlers import handle_csv_filename_update
-from .properties import CSVColumnTypeItems, get_chart_types_enum_items, get_csv_format_enum_items
+from .properties import Properties, CSVColumnTypeItems, get_chart_types_enum_items, get_csv_format_enum_items
 from .panels import draw_panel
 def read_complete_csv(props):
     rows = []
@@ -38,37 +35,12 @@ def read_complete_csv(props):
     except Exception as e:
         print(f"Could not read {props.csv_filename}: {e}")
     return  { "rows": rows, "minv": minv, "maxv": maxv, "row_sums": row_sums, "abs_row_sums": abs_row_sums, "col_sums": col_sums, "abs_col_sums": abs_col_sums }
-class OBJECT_OT_CreateChart(Operator):
+class OBJECT_OT_CreateChart(Operator, Properties):
     bl_idname = "object.quick_charts_create_chart"
     bl_label = "Create Chart"
     bl_description = "Create Chart"
     bl_options = {'REGISTER', 'UNDO'}
-    csv_filename: StringProperty(name="CSV File", subtype='FILE_PATH', description="CSV File", default="", update=handle_csv_filename_update)
-    csv_format: EnumProperty(items=get_csv_format_enum_items, name="Labels")
-    column_types: CollectionProperty(type=CSVColumnTypeItems)
-    column_types_idx: IntProperty()
 
-    chart_type: EnumProperty(items=get_chart_types_enum_items, name="Chart Type", description="Chart type" )
-    data_series: EnumProperty(items=DATA_SERIES, name="Data Series", default='columns', )
-    bc_shape: EnumProperty(items=BC_SHAPES, name="Shape")
-    bc_sub_type: EnumProperty(items=BC_SUB_TYPES, name="Subtype")
-
-    size: FloatVectorProperty(name="Size", description="Chart size", default=(10,10,10), subtype="XYZ_LENGTH")
-    spacing: FloatVectorProperty(name="Spacing", description="Chart spacing", default=(0.1,0.1,0.1), subtype="XYZ_LENGTH")
-
-    legend: BoolProperty(name="Legend", default=True)
-    labels: BoolProperty(default=True, name="Labels", description="Enable/Disable labels")
-    values: BoolProperty(default=True, name="Values", description="Enable/Disable values")
-
-    roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Chart Roughness", min=0, max=1)
-    metallic: FloatProperty(default=METALLIC, name="Metallic", description="Chart Metallic", min=0, max=1)
-    alpha: FloatProperty(default=ALPHA, name="Alpha", description="Chart Alpha", min=0, max=1)
-
-    label_color: FloatVectorProperty(name="Label/Value Color", description="Label/Value color", size=4, subtype="COLOR", default=(1, 1, 1, 1), min=0, max=1)
-    label_roughness: FloatProperty(default=ROUGHNESS, name="Label/Value Roughness", description="Label/Value Roughness", min=0, max=1)
-    label_metallic: FloatProperty(default=METALLIC, name="Label/Value Metallic", description="Label/Value Metallic", min=0, max=1)
-
-    column_types_collapsed: BoolProperty(default=True, name="Column Types")
     def execute(self, context):
         if self.csv_filename == "": self.csv_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample.csv')
         render.render_chart(self, read_complete_csv(self))
