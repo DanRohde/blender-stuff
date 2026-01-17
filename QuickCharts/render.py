@@ -260,7 +260,7 @@ def render_column_chart(target, props, csv):
 
     maxcolumns  = len(data[0])
     if not transposed and props.csv_format in {'header-left', 'left'}: maxcolumns+=1
-    if transposed and props.csv_format in {'header', 'header-left'}: maxcolumns-=1
+    if transposed and props.csv_format in {'header-left','header'}: maxcolumns+=1
     xspace = props.size[0] / maxcolumns
     label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
     minv = min(0, csv["minv"])
@@ -317,6 +317,8 @@ def render_column_chart(target, props, csv):
     elif props.bc_sub_type in {'stacked','percstacked'}:
         column_idx = 0
         sums = csv["row_sums"] if transposed else csv["col_sums"]
+        abs_sums = csv["abs_row_sums"] if transposed else csv["abs_col_sums"]
+
         for x in range(len(data[0])):
             if x == 0:
                 if ((not transposed and props.csv_format in {'left', 'header-left'})
@@ -330,6 +332,16 @@ def render_column_chart(target, props, csv):
                 render_text_object(target["collection"], target["chart"], valstr,
                                    (cx + column_idx * xspace, cy, cz + zero_z_position + (zscale if sums[x] > 0 else 0) ), label_mat,
                                    size = xspace/2.5 * 2/len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi/2,0,0) )
+            if abs_sums[x] != sums[x]:
+                clone_and_scale_object(
+                    target,
+                    get_object_from_shape(props.bc_shape, create_material(get_color(len(data)), roughness = props.roughness, metallic=props.metallic, alpha=props.alpha)),
+                    (xspace - props.spacing[0]*2, xspace - props.spacing[1]*2, zscale ),
+                    (cx + column_idx * xspace, cy, cz + zero_z_position)
+                )
+                column_idx += 1
+                color_idx += 1
+                continue
             for y in range(len(data)):
                 if y == 0:
                     if (not transposed and props.csv_format in {'header','header-left'}) or (transposed and props.csv_format in {'left','header-left'}):
@@ -415,6 +427,7 @@ def render_bar_chart(target, props, csv):
     elif props.bc_sub_type in {'stacked', 'percstacked'}:
         row_idx = 0
         sums = csv["row_sums"] if transposed else csv["col_sums"]
+        abs_sums = csv["abs_row_sums"] if transposed else csv["abs_col_sums"]
         for z in range(len(data[0])):
             if z == 0:
                 if ((not transposed and props.csv_format in {'left', 'header-left'})
@@ -427,7 +440,19 @@ def render_bar_chart(target, props, csv):
                 valstr = format_value_label(props, sums[z], z, None, transposed)
                 render_text_object(target["collection"], target["chart"], valstr,
                                    (cx + zero_x_position + (xscale if sums[z] > 0 else 0) , cy, cz + row_idx * zspace ), label_mat,
-                                   size=zspace / 2.5 * 2 / len(valstr), x_align='CENTER', y_align='BOTTOM', rot=(np.pi / 2, 0, 0))
+                                   size=zspace / 2.5 * 2 / len(valstr), x_align='LEFT', y_align='BOTTOM', rot=(np.pi / 2, 0, 0))
+            if abs_sums[z] != sums[z]:
+                clone_and_scale_object(
+                    target,
+                    get_object_from_shape(props.bc_shape, create_material(get_color(len(data)), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha)),
+                    (zspace - props.spacing[0] * 2, zspace - props.spacing[1] * 2, xscale),
+                    (cx + zero_x_position, cy, cz  + row_idx * zspace),
+                    rot = (0, ph, 0)
+                )
+                color_idx += 1
+                row_idx += 1
+                continue
+
             for y in range(len(data)):
                 if y == 0:
                     if (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'left', 'header-left'}):
