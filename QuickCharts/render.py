@@ -231,22 +231,26 @@ def get_value_from_data(data):
 def render_legend(target, props, data, mats, label_mat, label_size, transposed):
     loc = bpy.context.scene.cursor.location
     labels = [ row[0] for row in data ]
-    space = label_size
+    space = label_size * 1.1
 
     label_len = [ len(label) for label in labels ]
-    loc = (loc[0] - props.size[0], loc[1] + props.size[1], loc[2])
+    loc = (loc[0] - space * (1+len(labels)), loc[1] + props.size[1], loc[2])
     render_text_object(target["collection"], target["legend"], "Legend", loc, label_mat, size = space, x_align="LEFT", y_align="TOP")
     color_idx = 0
     for idx, label in enumerate(labels):
         if idx==0 and props.csv_format in {'header-left', 'header'} and not transposed: continue
         if idx==0 and props.csv_format in {'header-left', 'left'} and transposed: continue
         loc = (loc[0] + space, loc[1], loc[2])
+        obj = get_object_from_shape(props.bc_shape, mats[color_idx]) if props.chart_type in {'bar','column'} else create_bar(mats[color_idx])
+        obj.parent = target["legend"]
+        obj.scale = (space * .8 , space * .8, space/2.2)
+        obj.location = ( loc[0] + space/2, loc[1] + space/2, loc[2] - space/4)
+        target["collection"].objects.link(obj)
         if (not transposed and props.csv_format in {'header-left', 'left'}) or (transposed and props.csv_format in {'header-left','header'}):
             text = label
         else:
             text = f"{color_idx+1}"
-
-        render_text_object(target["collection"], target["legend"], text, loc, mats[color_idx], size=space, x_align="LEFT", y_align="TOP")
+        render_text_object(target["collection"], target["legend"], text, (loc[0], loc[1] + space * 1.3, loc[2]), label_mat, size=space, x_align="LEFT", y_align="TOP")
         color_idx += 1
 
 
