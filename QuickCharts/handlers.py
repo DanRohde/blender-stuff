@@ -61,7 +61,7 @@ def handle_csv_filename_update(self, _context):
         self.csv_format = 'header-left'
         self.chart_type = 'column'
         self.bc_sub_type = 'deep'
-        self.legend = True
+        self.legend = False
         for i in range(len(rows[0])):
             item = self.column_types.add()
             item.name = rows[0][i]

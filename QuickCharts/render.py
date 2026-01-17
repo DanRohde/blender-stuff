@@ -233,9 +233,9 @@ def render_legend(target, props, data, mats, label_mat, label_size, transposed):
     labels = [ row[0] for row in data ]
     space = label_size * 1.1
 
-    label_len = [ len(label) for label in labels ]
+    #label_len = [ len(label) for label in labels ]
     loc = (loc[0] - space * (1+len(labels)), loc[1] + props.size[1], loc[2])
-    render_text_object(target["collection"], target["legend"], "Legend", loc, label_mat, size = space, x_align="LEFT", y_align="TOP")
+    #render_text_object(target["collection"], target["legend"], "Legend", loc, label_mat, size = space, x_align="LEFT", y_align="TOP")
     color_idx = 0
     for idx, label in enumerate(labels):
         if idx==0 and props.csv_format in {'header-left', 'header'} and not transposed: continue
