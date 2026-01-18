@@ -606,17 +606,19 @@ def render_donut_chart(target, props, csv):
     data = csv["rows"] if not transposed else list(map(list, zip(*csv["rows"])))
     mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(data))]
     sums = csv["row_sums"] if transposed else csv["col_sums"]
+    abs_sums = csv["abs_row_sums"] if transposed else csv["abs_col_sums"]
 
     r1 = min(props.size[0]/20, props.size[2] /20)
     r = min(props.size[0]/2, props.size[2] /2)
     column_count = get_data_column_count(props, data, transposed)
     rs = (r-r1) / column_count
+    rsh = rs/2
     gap = min(props.spacing[0], props.spacing[2])
     last_radius = r1
 
     if props.legend:
         label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
-        render_legend(target, props, data, mats, label_mat, props.size[1] / column_count, transposed)
+        render_legend(target, props, data, mats, label_mat, props.size[1] / (2*column_count), transposed)
 
     loc = (cx + props.size[0] / 2, cy, cz + props.size[2] / 2)
     for row in range(len(data[0])):
@@ -625,6 +627,9 @@ def render_donut_chart(target, props, csv):
             if (not transposed and props.csv_format in  {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'}):
                 continue
         last_angle = 0
+        if abs_sums[row] != sums[row]:
+            last_radius += rs
+            continue
         for col in range(len(data)):
             if col == 0:
                 if (not transposed and props.csv_format in {'header','header-left'}) or (transposed and props.csv_format in {'left', 'header-left'}):
@@ -632,7 +637,7 @@ def render_donut_chart(target, props, csv):
             val = get_value_from_data(data[col][row])
             perc = val / sums[row]
             angle = tp * perc
-            obj, smooth = get_donut_object_from_shape(props.donut_shape, mats[color_idx], last_radius + rs, rs/2 - gap, angle)
+            obj, smooth = get_donut_object_from_shape(props.donut_shape, mats[color_idx], last_radius + rsh, rsh - gap, angle)
             render_object(target["collection"], target["chart"], obj, loc=loc, rot = (ph, -last_angle, 0), smooth = smooth)
             color_idx += 1
             last_angle += angle
