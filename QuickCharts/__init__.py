@@ -6,7 +6,7 @@ from . import icons, properties, operators, panels
 classes = (properties.properties + operators.operators + panels.panels)
 
 def add_menu_button(self, context):
-    self.layout.operator(operators.OBJECT_OT_CreateChart.bl_idname, text="Quick Charts", icon='PLUGIN', )
+    self.layout.operator(operators.OBJECT_OT_CreateChart.bl_idname, text="Quick Charts", icon_value = icons.preview_collections["main"]["quickcharts"].icon_id )
 
 def register():
     icons.register()

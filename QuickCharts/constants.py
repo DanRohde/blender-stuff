@@ -1,16 +1,20 @@
 COLORS = [
-    (1,0,0,1),
-    (0,1,0,1),
-    (0,0,1,1),
-    (1,0,1,1),
-    (1,1,0,1),
-    (1,1,1,1),
-    (0,1,1,1),
-    (0,0,0,1)
+    (0, 0, 1, 1), # BLUE
+    (1, 0, 0, 1), # RED
+    (1, 1, 0, 1), # YELLOW
+    (0, 1, 0, 1), # GREEN
+    (.49, 0, .13, 1), # DARK RED
+    (.51, .79, 1, 1), # LIGHT BLUE
+    (.19, .25, .02, 1), # DARK GREEN
+    (1, 0, 1, 1), # PINK
+    (1, 1, 1, 1), # WHITE
+    (0, 1, 1, 1), # CYAN
+    (0, 0, 0, 1)  # BLACK
 ]
 
 
 ICONS = {
+    "quickcharts" : "quickcharts.png",
     "header_label" : "labels_header.png",
     "header-left_label" : "labels_header_left.png",
     "left_label" :  "labels_left.png",
@@ -41,10 +45,11 @@ CSV_FORMATS = [("header","Header","Header"), ("left", "Left", "Left"), ("header-
 
 BC_SHAPES = [("bar","Bar","Bar"),("cylinder","Cylinder","Cylinder"),("cone","Cone","Cone"),("pyramid","Pyramid","Pyramid")]
 
-BC_SUB_TYPES = [("normal", "Normal", "Normal"),
+BC_SUB_TYPES = [("deep", "Deep", "Deep"),
+                ("normal", "Normal", "Normal"),
                 ("stacked", "Stacked", "Stacked"),
                 ("percstacked", "Percent Stacked", "Percent Stacked"),
-                ("deep", "Deep", "Deep")]
+                ]
 
 DONUT_SHAPES = [("cubic", "Cubic", "Cubic"), ("circle", "Circle", "Circle") ]
 

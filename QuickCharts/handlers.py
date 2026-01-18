@@ -43,10 +43,9 @@ def handle_csv_filename_update(self, _context):
         self.csv_format = 'left'
         self.data_series = 'rows'
         self.legend = False
-        if len(rows[0]) > 2: self.bc_sub_type = 'deep'
         for i in range(len(rows[0])):
             item = self.column_types.add()
-            item.name = rows[0][0]
+            item.name = ""
             item.column_type = "label" if i == 0 else get_cell_type(rows[0][i])
 
     elif re.match("^[0-9.+-]+", rows[1][0]):
@@ -59,8 +58,7 @@ def handle_csv_filename_update(self, _context):
             item.column_type = get_cell_type(rows[1][i])
     else:
         self.csv_format = 'header-left'
-        self.chart_type = 'column'
-        self.bc_sub_type = 'deep'
+        self.data_series = 'columns'
         self.legend = False
         for i in range(len(rows[0])):
             item = self.column_types.add()

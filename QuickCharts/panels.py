@@ -80,4 +80,4 @@ class VIEW3D_PT_Panel(Panel):
         return None
 
 
-panels = [ VIEW3D_UL_ColumnTypesList, VIEW3D_PT_Panel ]
+panels = [ VIEW3D_UL_ColumnTypesList  ]
