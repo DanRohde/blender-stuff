@@ -16,7 +16,9 @@ def draw_panel(props, layout):
         row = layout.row()
         row.prop(props, "bc_shape", text="")
         row.prop(props, "bc_sub_type", text="")
-
+    if props.chart_type in {"donut"}:
+        row = layout.row()
+        row.prop(props, "donut_shape")
     row = layout.row()
     row.prop(props, "labels")
     row.prop(props, "values")

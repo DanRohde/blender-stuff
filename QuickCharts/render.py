@@ -81,7 +81,9 @@ def create_pyramid(mat, base_size = 1):
     bm.faces.new((v2, v3, top))
     bm.faces.new((v3, v0, top))
 
-    bm.normal_update()
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+
+#    bm.normal_update()
     bm.to_mesh(mesh)
     bm.free()
     return create_object(name, mesh, mat)
@@ -111,6 +113,8 @@ def create_pyramid_frustam(mat, base_size = 1, top_size = 1):
     bm.faces.new((b3, b4, t4, t3))
     bm.faces.new((b4, b1, t1, t4))
 
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+
     bm.to_mesh(mesh)
     bm.free()
 
@@ -125,6 +129,108 @@ def create_material(color, roughness = 0.5, metallic = 0, alpha = None):
     bsdf.inputs["Metallic"].default_value = metallic
     bsdf.inputs["Alpha"].default_value = alpha if alpha is not None else color[3]
     return mat
+
+def create_partial_donat(mat, major_radius = 1.0, minor_radius = 0.3, angle=np.pi, major_segments = 64, minor_segments = 32):
+    name = "QuickChartPartialDonat"
+    mesh = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+    verts = []
+    for i in range(major_segments + 1):
+        phi = angle * i / major_segments
+        ring = []
+        for j in range(minor_segments):
+            theta = 2 * np.pi * j / minor_segments
+
+            x = (major_radius + minor_radius * np.cos(theta)) * np.cos(phi)
+            y = (major_radius + minor_radius * np.cos(theta)) * np.sin(phi)
+            z = minor_radius * np.sin(theta)
+
+            ring.append(bm.verts.new((x, y, z)))
+
+        verts.append(ring)
+    bm.verts.ensure_lookup_table()
+    for i in range(major_segments):
+        for j in range(minor_segments):
+            v1 = verts[i][j]
+            v2 = verts[i][(j + 1) % minor_segments]
+            v3 = verts[i + 1][(j + 1) % minor_segments]
+            v4 = verts[i + 1][j]
+            bm.faces.new((v1, v2, v3, v4))
+
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+
+    if angle != 2 * np.pi:
+        bm.faces.new(verts[0])
+        bm.faces.new(list(reversed(verts[-1])))
+
+    bm.to_mesh(mesh)
+    bm.free()
+    return create_object(name, mesh, mat)
+
+def create_cubic_partial_donut(mat, major_radius = 1.0, half_size = 0.3, angle=np.pi, segments = 64):
+    name = "QuickChartCubicPartialDonut"
+
+    mesh = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+    square = [
+        (-half_size, -half_size),
+        (half_size, -half_size),
+        (half_size, half_size),
+        (-half_size, half_size),
+    ]
+    rings = []
+    for i in range(segments + 1):
+        phi = angle * i / segments
+        cos_p = np.cos(phi)
+        sin_p = np.sin(phi)
+
+        ring = []
+        for x, z in square:
+            X = (major_radius + x) * cos_p
+            Y = (major_radius + x) * sin_p
+            Z = z
+            ring.append(bm.verts.new((X, Y, Z)))
+
+        rings.append(ring)
+    bm.verts.ensure_lookup_table()
+
+    for i in range(segments):
+        for j in range(4):
+            v1 = rings[i][j]
+            v2 = rings[i][(j + 1) % 4]
+            v3 = rings[i + 1][(j + 1) % 4]
+            v4 = rings[i + 1][j]
+            bm.faces.new((v1, v2, v3, v4))
+
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+
+    if angle != 2 * np.pi:
+        bm.faces.new((
+            rings[0][0],
+            rings[0][1],
+            rings[0][2],
+            rings[0][3],
+        ))
+
+        bm.faces.new((
+            rings[-1][3],
+            rings[-1][2],
+            rings[-1][1],
+            rings[-1][0],
+        ))
+
+    bm.to_mesh(mesh)
+    bm.free()
+    return create_object(name, mesh, mat)
+
+def render_object(collection, parent, obj, rot = (0, 0, 0), loc = (0, 0, 0), scale = (1,1,1), smooth = False):
+    obj.parent = parent
+    obj.rotation_euler = rot
+    obj.location = loc
+    obj.scale = scale
+    for p in obj.data.polygons:
+        p.use_smooth = smooth
+    collection.objects.link(obj)
 
 def render_text_object(collection, parent, text, loc, mat, rot = (0, 0, np.pi / 2), x_align = 'RIGHT', y_align = 'BOTTOM', size = 1):
     name = f"Label {text}"
@@ -176,6 +282,15 @@ def get_object_from_shape(shape, mat):
     elif shape == 'pyramid': obj = create_pyramid(mat)
     else: obj = create_bar(mat)
     return obj
+
+def get_donut_object_from_shape(shape, mat, r, mr, angle):
+    if shape in {'circle'}:
+        obj = create_partial_donat(mat, major_radius=r, minor_radius=mr, angle=angle)
+        smooth = True
+    else:
+        obj = create_cubic_partial_donut(mat, major_radius=r, half_size=mr, angle=angle)
+        smooth = False
+    return obj, smooth
 
 def create_stacked_object(target, shape, mat, loc, scale, val, height, maxv, rot=(0, 0, 0)):
 
@@ -241,18 +356,23 @@ def render_legend(target, props, data, mats, label_mat, label_size, transposed):
         if idx==0 and props.csv_format in {'header-left', 'header'} and not transposed: continue
         if idx==0 and props.csv_format in {'header-left', 'left'} and transposed: continue
         loc = (loc[0] + space, loc[1], loc[2])
-        obj = get_object_from_shape(props.bc_shape, mats[color_idx]) if props.chart_type in {'bar','column'} else create_bar(mats[color_idx])
-        obj.parent = target["legend"]
-        obj.scale = (space * .8 , space * .8, space/2.2)
-        obj.location = ( loc[0] + space/2, loc[1] + space/2, loc[2] - space/4)
-        target["collection"].objects.link(obj)
+        smooth = False
+        zoffset = - space / 4
+        if props.chart_type in {'bar','column'}:
+            obj = get_object_from_shape(props.bc_shape, mats[color_idx])
+        elif props.chart_type in {'donut'}:
+            zoffset = 0
+            obj, smooth = get_donut_object_from_shape(props.donut_shape, mats[color_idx], 0.4, 0.2, 2*np.pi )
+        else:
+            obj = create_bar(mats[color_idx])
+
+        render_object(target["collection"], target["legend"], obj, loc=( loc[0] + space/2, loc[1] + space/2, loc[2] + zoffset), scale=(space * .8 , space * .8, space/2.2), smooth=smooth)
         if (not transposed and props.csv_format in {'header-left', 'left'}) or (transposed and props.csv_format in {'header-left','header'}):
             text = label
         else:
             text = f"{color_idx+1}"
         render_text_object(target["collection"], target["legend"], text, (loc[0], loc[1] + space * 1.3, loc[2]), label_mat, size=space, x_align="LEFT", y_align="TOP")
         color_idx += 1
-
 
 def render_column_chart(target, props, csv):
     cx, cy, cz = bpy.context.scene.cursor.location
@@ -383,7 +503,7 @@ def render_bar_chart(target, props, csv):
         rowindex = 0
         for z in range(len(data[0])):
             if z == 0:
-                if (not transposed and props.csv_format in {'left', 'header-left'}) or (props.csv_format in {'header', 'header-left'} and transposed):
+                if (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'}):
                     continue  # skip label
             color_idx = 0
             for zs in range(len(data)):
@@ -473,7 +593,50 @@ def render_bar_chart(target, props, csv):
                 lastx += width
                 color_idx += 1
             row_idx += 1
+def get_data_column_count(props, data, transposed):
+    row_count = len(data[0])
+    if not transposed and props.csv_format in {'header', 'header-left'}: row_count -= 1
+    if transposed and props.csv_format in {'left', 'header-left'}: row_count -= 1
+    return row_count
+def render_donut_chart(target, props, csv):
+    cx, cy, cz = bpy.context.scene.cursor.location
+    ph = np.pi / 2
+    tp = np.pi * 2
+    transposed = props.data_series == 'columns'
+    data = csv["rows"] if not transposed else list(map(list, zip(*csv["rows"])))
+    mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(data))]
+    sums = csv["row_sums"] if transposed else csv["col_sums"]
 
+    r1 = min(props.size[0]/20, props.size[2] /20)
+    r = min(props.size[0]/2, props.size[2] /2)
+    column_count = get_data_column_count(props, data, transposed)
+    rs = (r-r1) / column_count
+    gap = min(props.spacing[0], props.spacing[2])
+    last_radius = r1
+
+    if props.legend:
+        label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
+        render_legend(target, props, data, mats, label_mat, props.size[1] / column_count, transposed)
+
+    loc = (cx + props.size[0] / 2, cy, cz + props.size[2] / 2)
+    for row in range(len(data[0])):
+        color_idx = 0
+        if row == 0:
+            if (not transposed and props.csv_format in  {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'}):
+                continue
+        last_angle = 0
+        for col in range(len(data)):
+            if col == 0:
+                if (not transposed and props.csv_format in {'header','header-left'}) or (transposed and props.csv_format in {'left', 'header-left'}):
+                    continue
+            val = get_value_from_data(data[col][row])
+            perc = val / sums[row]
+            angle = tp * perc
+            obj, smooth = get_donut_object_from_shape(props.donut_shape, mats[color_idx], last_radius + rs, rs/2 - gap, angle)
+            render_object(target["collection"], target["chart"], obj, loc=loc, rot = (ph, -last_angle, 0), smooth = smooth)
+            color_idx += 1
+            last_angle += angle
+        last_radius += rs
 def render_chart(props, csv):
     np.random.seed(0)
     target  = init_target_collection()
@@ -481,3 +644,5 @@ def render_chart(props, csv):
         render_column_chart(target , props, csv)
     elif props.chart_type == "bar":
         render_bar_chart(target, props, csv)
+    elif props.chart_type == "donut":
+        render_donut_chart(target, props, csv)

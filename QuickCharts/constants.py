@@ -33,7 +33,7 @@ CHART_TYPES = [
             ("bar","Bar Chart","Bar chart"),
             #("line","Line Chart","Line"),
             #("pie","Pie Chart","Pie"),
-            #("donut", "Donut Chart", "Donut Chart"),
+            ("donut", "Donut Chart", "Donut Chart"),
             # ("bubble", "Bubble Chart", "buble")
         ]
 
@@ -45,6 +45,8 @@ BC_SUB_TYPES = [("normal", "Normal", "Normal"),
                 ("stacked", "Stacked", "Stacked"),
                 ("percstacked", "Percent Stacked", "Percent Stacked"),
                 ("deep", "Deep", "Deep")]
+
+DONUT_SHAPES = [("cubic", "Cubic", "Cubic"), ("circle", "Circle", "Circle") ]
 
 DATA_SERIES = [("columns","Columns", "Columns"), ("rows","Rows", "Rows"), ]
 

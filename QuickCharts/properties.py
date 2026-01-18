@@ -3,7 +3,7 @@ from bpy.props import StringProperty, CollectionProperty, EnumProperty, BoolProp
 
 from .handlers import handle_csv_filename_update
 
-from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC, ALPHA, ICONS
+from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC, ALPHA, ICONS, DONUT_SHAPES
 from .icons import preview_collections
 
 
@@ -50,6 +50,8 @@ class Properties(PropertyGroup):
     # bar, column charts:
     bc_shape: EnumProperty(items=get_bc_shapes_enum_items, name="Shape", description="Shape")
     bc_sub_type: EnumProperty(items=get_bc_sub_types_enum_items, name="Subtype", description="Subtype")
+    # donat charts:
+    donut_shape: EnumProperty(items=DONUT_SHAPES, name="Shape", description="Shape")
 
     data_series: EnumProperty(items=DATA_SERIES, name="Data series", description="Data series")
 
