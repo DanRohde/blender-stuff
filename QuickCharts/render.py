@@ -635,6 +635,9 @@ def render_donut_chart(target, props, csv):
     ph = np.pi / 2
     tp = np.pi * 2
     transposed = props.data_series == 'columns'
+    labels_left = (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'})
+    labels_header = (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'})
+
     data = csv["rows"] if not transposed else list(map(list, zip(*csv["rows"])))
     mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(data))]
     sums = csv["row_sums"] if transposed else csv["col_sums"]
@@ -655,17 +658,13 @@ def render_donut_chart(target, props, csv):
     loc = (cx + props.size[0] / 2, cy, cz + props.size[2] / 2)
     for row in range(len(data[0])):
         color_idx = 0
-        if row == 0:
-            if (not transposed and props.csv_format in  {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'}):
-                continue
+        if row == 0 and labels_left: continue
         last_angle = ph
         if abs_sums[row] != sums[row]:
             last_radius += rs
             continue
         for col in range(len(data)):
-            if col == 0:
-                if (not transposed and props.csv_format in {'header','header-left'}) or (transposed and props.csv_format in {'left', 'header-left'}):
-                    continue
+            if col == 0 and labels_header: continue
             val = get_value_from_data(data[col][row])
             perc = val / sums[row]
             angle = tp * perc
