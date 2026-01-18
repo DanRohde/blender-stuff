@@ -147,7 +147,7 @@ def create_material(color, roughness = 0.5, metallic = 0, alpha = None):
     bsdf.inputs["Alpha"].default_value = alpha if alpha is not None else color[3]
     return mat
 
-def create_partial_donat(mat, major_radius = 1.0, minor_radius = 0.3, angle=np.pi, major_segments = 64, minor_segments = 32):
+def create_partial_donat(mat, major_radius = 1.0, minor_radius = 0.3, angle=np.pi, major_segments = 32, minor_segments = 16):
     name = "QuickChartPartialDonat"
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
@@ -186,7 +186,7 @@ def create_partial_donat(mat, major_radius = 1.0, minor_radius = 0.3, angle=np.p
     bm.free()
     return create_object(name, mesh, mat)
 
-def create_cubic_partial_donut(mat, major_radius = 1.0, half_size = 0.3, angle=np.pi, segments = 64):
+def create_cubic_partial_donut(mat, major_radius = 1.0, half_size = 0.3, angle=np.pi, segments = 32):
     name = "QuickChartCubicPartialDonut"
 
     mesh = bpy.data.meshes.new(name)
