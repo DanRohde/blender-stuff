@@ -31,6 +31,21 @@ def origin_to_bottom(bm):
     for v in bm.verts:
         v.co.z -= min_z
 
+def shade_smooth(bm):
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-6)
+    bm.normal_update()
+    for f in bm.faces:
+        f.smooth = True
+    angle_rad = np.radians(30)
+    for e in bm.edges:
+        if len(e.link_faces) != 2: continue
+        f1, f2 = e.link_faces
+        if f1.normal.length == 0 or f2.normal.length == 0: continue
+        if f1.normal.angle(f2.normal) > angle_rad:
+            e.smooth = False
+        else:
+            e.smooth = True
+
 def create_bar(mat):
     name = "QuickChartBar"
     mesh = bpy.data.meshes.new(name)
@@ -46,8 +61,9 @@ def create_cylinder(mat):
     name = "QuickChartCylinder"
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
-    bmesh.ops.create_cone(bm, segments=128, radius1=.5, radius2=.5, depth=1, cap_ends=True)
+    bmesh.ops.create_cone(bm, segments=32, radius1=.5, radius2=.5, depth=1, cap_ends=True)
     origin_to_bottom(bm)
+    shade_smooth(bm)
     bm.to_mesh(mesh)
     bm.free()
     mesh.update()
@@ -57,8 +73,9 @@ def create_cone(mat, r1=.5, r2=0, depth=1):
     name = "QuickChartCone"
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
-    bmesh.ops.create_cone(bm, segments=128, radius1=r1, radius2=r2, depth=depth, cap_ends=True)
+    bmesh.ops.create_cone(bm, segments=32, radius1=r1, radius2=r2, depth=depth, cap_ends=True)
     origin_to_bottom(bm)
+    shade_smooth(bm)
     bm.to_mesh(mesh)
     bm.free()
     mesh.update()
@@ -163,6 +180,8 @@ def create_partial_donat(mat, major_radius = 1.0, minor_radius = 0.3, angle=np.p
         bm.faces.new(verts[0])
         bm.faces.new(list(reversed(verts[-1])))
 
+    shade_smooth(bm)
+
     bm.to_mesh(mesh)
     bm.free()
     return create_object(name, mesh, mat)
@@ -218,18 +237,17 @@ def create_cubic_partial_donut(mat, major_radius = 1.0, half_size = 0.3, angle=n
             rings[-1][1],
             rings[-1][0],
         ))
+    shade_smooth(bm)
 
     bm.to_mesh(mesh)
     bm.free()
     return create_object(name, mesh, mat)
 
-def render_object(collection, parent, obj, rot = (0, 0, 0), loc = (0, 0, 0), scale = (1,1,1), smooth = False):
+def render_object(collection, parent, obj, rot = (0, 0, 0), loc = (0, 0, 0), scale = (1,1,1)):
     obj.parent = parent
     obj.rotation_euler = rot
     obj.location = loc
     obj.scale = scale
-    for p in obj.data.polygons:
-        p.use_smooth = smooth
     collection.objects.link(obj)
 
 def render_text_object(collection, parent, text, loc, mat, rot = (0, 0, np.pi / 2), x_align = 'RIGHT', y_align = 'BOTTOM', size = 1):
@@ -286,11 +304,9 @@ def get_object_from_shape(shape, mat):
 def get_donut_object_from_shape(shape, mat, r, mr, angle):
     if shape in {'circle'}:
         obj = create_partial_donat(mat, major_radius=r, minor_radius=mr, angle=angle)
-        smooth = True
     else:
         obj = create_cubic_partial_donut(mat, major_radius=r, half_size=mr, angle=angle)
-        smooth = False
-    return obj, smooth
+    return obj
 
 def create_stacked_object(target, shape, mat, loc, scale, val, height, maxv, rot=(0, 0, 0)):
 
@@ -369,17 +385,16 @@ def render_legend(target, props, data, mats, label_mat, label_size, transposed):
         if idx==0 and props.csv_format in {'header-left', 'header'} and not transposed: continue
         if idx==0 and props.csv_format in {'header-left', 'left'} and transposed: continue
         loc = (loc[0] + space, loc[1], loc[2])
-        smooth = False
         zoffset = - space / 4
         if props.chart_type in {'bar','column'}:
             obj = get_object_from_shape(props.bc_shape, mats[color_idx])
         elif props.chart_type in {'donut'}:
             zoffset = 0
-            obj, smooth = get_donut_object_from_shape(props.donut_shape, mats[color_idx], 0.4, 0.2, 2*np.pi )
+            obj = get_donut_object_from_shape(props.donut_shape, mats[color_idx], 0.4, 0.2, 2*np.pi )
         else:
             obj = create_bar(mats[color_idx])
 
-        render_object(target["collection"], target["legend"], obj, loc=( loc[0] + space/2, loc[1] + space/2, loc[2] + zoffset), scale=(space * .8 , space * .8, space/2.2), smooth=smooth)
+        render_object(target["collection"], target["legend"], obj, loc=( loc[0] + space/2, loc[1] + space/2, loc[2] + zoffset), scale=(space * .8 , space * .8, space/2.2))
         if (not transposed and props.csv_format in {'header-left', 'left'}) or (transposed and props.csv_format in {'header-left','header'}):
             text = label
         else:
@@ -654,8 +669,8 @@ def render_donut_chart(target, props, csv):
             val = get_value_from_data(data[col][row])
             perc = val / sums[row]
             angle = tp * perc
-            obj, smooth = get_donut_object_from_shape(props.donut_shape, mats[color_idx], last_radius + rsh, abs(rsh) - gap, angle)
-            render_object(target["collection"], target["chart"], obj, loc=loc, rot = (ph, -last_angle, 0), smooth = smooth)
+            obj = get_donut_object_from_shape(props.donut_shape, mats[color_idx], last_radius + rsh, abs(rsh) - gap, angle)
+            render_object(target["collection"], target["chart"], obj, loc=loc, rot = (ph, -last_angle, 0))
             color_idx += 1
             last_angle += angle
         last_radius += rs
