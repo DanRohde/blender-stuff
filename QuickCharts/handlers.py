@@ -15,9 +15,6 @@ def get_cell_type(cell):
 def handle_csv_filename_update(self, _context):
     self.column_types.clear()
 
-    self.chart_type = 'column'
-    self.bc_sub_type = 'normal'
-
     if not self.csv_filename or self.csv_filename == "": return None
 
     try:

@@ -2,7 +2,7 @@ from bpy.types import Operator
 import csv
 import os
 from . import render
-from .properties import Properties, CSVColumnTypeItems, get_chart_types_enum_items, get_csv_format_enum_items
+from .properties import Properties
 from .panels import draw_panel
 def read_complete_csv(props):
     rows = []

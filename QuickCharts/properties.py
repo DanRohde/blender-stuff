@@ -30,7 +30,7 @@ def get_bc_shapes_enum_items(_self, _context):
 def get_bc_sub_types_enum_items(_self, _context):
     return get_enum_items(BC_SUB_TYPES, "subtype")
 
-class CSVColumnTypeItems(PropertyGroup):
+class CSVCellTypeItems(PropertyGroup):
     name: StringProperty(name="", default="", description="Column label")
     column_type: EnumProperty(name="", items=[("float","Float","Float"),("label","Label","Label"), ("int","Integer","Integer")], description="Column type")
     precision: IntProperty(default=1, min=0, name="", description="Precision")
@@ -39,9 +39,15 @@ class Properties(PropertyGroup):
     # CSV:
     csv_filename: StringProperty(default="", subtype="FILE_PATH", name="CSV File", description="CSV File", update=handle_csv_filename_update)
     csv_format: EnumProperty(name="Labels", items=get_csv_format_enum_items)
-    column_types: CollectionProperty(type=CSVColumnTypeItems)
+    column_types: CollectionProperty(type=CSVCellTypeItems)
     column_types_idx: IntProperty()
     column_types_collapsed: BoolProperty(name="Column Types", default=True)
+
+    row_types: CollectionProperty(type=CSVCellTypeItems)
+    row_types_idx: IntProperty()
+    row_types_collapsed: BoolProperty(name="Row Types", default=True)
+
+
 
     material_collapsed: BoolProperty(name="Material", default=True)
 
@@ -69,5 +75,5 @@ class Properties(PropertyGroup):
     roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Chart Roughness", min=0, max=1)
     metallic: FloatProperty(default=METALLIC, name="Metallic", description="Chart Metallic", min=0, max=1)
     alpha: FloatProperty(default=ALPHA, name="Alpha", description="Chart Alpha", min=0, max=1)
-properties = [ CSVColumnTypeItems, Properties ]
+properties = [ CSVCellTypeItems, Properties ]
 
