@@ -30,6 +30,9 @@ def get_bc_shapes_enum_items(_self, _context):
 def get_bc_sub_types_enum_items(_self, _context):
     return get_enum_items(BC_SUB_TYPES, "subtype")
 
+def get_data_series_enum_items(_self, _context):
+    return get_enum_items(DATA_SERIES, "series")
+
 class CSVCellTypeItems(PropertyGroup):
     name: StringProperty(name="", default="", description="Column label")
     column_type: EnumProperty(name="", items=[("float","Float","Float"),("label","Label","Label"), ("int","Integer","Integer")], description="Column type")
@@ -59,7 +62,7 @@ class Properties(PropertyGroup):
     # donat charts:
     donut_shape: EnumProperty(items=DONUT_SHAPES, name="Shape", description="Shape")
 
-    data_series: EnumProperty(items=DATA_SERIES, name="Data series", description="Data series")
+    data_series: EnumProperty(items=get_data_series_enum_items, name="Data series", description="Data series")
 
     size: FloatVectorProperty(name="Size", size=3, description="Chart size", default=(10, 10, 10), subtype="XYZ_LENGTH")
     spacing: FloatVectorProperty(name="Spacing", size=3, subtype="XYZ_LENGTH", default=(0.1, 0.1, 0.1), min=0)
