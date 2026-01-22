@@ -36,7 +36,7 @@ def shade_smooth(bm):
     bm.normal_update()
     for f in bm.faces:
         f.smooth = True
-    angle_rad = np.radians(15)
+    angle_rad = np.radians(30)
     for e in bm.edges:
         if len(e.link_faces) != 2: continue
         f1, f2 = e.link_faces

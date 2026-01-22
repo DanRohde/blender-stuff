@@ -2,16 +2,11 @@ from bpy.types import Panel, UIList, Operator
 
 def draw_panel(props, layout):
     layout.prop(props, "csv_filename")
-    layout.prop(props, "csv_format")
-    layout.prop(props, "data_series")
 
-    row = layout.row(align=True)
-    row.alignment = "LEFT"
-    if isinstance(props, Operator):
-        row.prop(props, "column_types_collapsed", emboss=False, icon="RIGHTARROW" if props.column_types_collapsed else "DOWNARROW_HLT")
-        if not props.column_types_collapsed:
-            layout.template_list("VIEW3D_UL_ColumnTypesList", "", props, "column_types", props, "column_types_idx")
-    layout.prop(props, "chart_type")
+    row = layout.row()
+    row.prop(props, "chart_type")
+    row.prop(props, "data_series")
+
     if props.chart_type in {"column", "bar"}:
         row = layout.row()
         row.prop(props, "bc_shape", text="")
@@ -48,6 +43,13 @@ def draw_panel(props, layout):
     row.column().prop(props, "size")
     row.column().prop(props, "spacing")
 
+    layout.row().prop(props, "csv_format")
+    if isinstance(props, Operator):
+        row = layout.row(align=True)
+        row.alignment = "LEFT"
+        row.prop(props, "column_types_collapsed", emboss=False, icon="RIGHTARROW" if props.column_types_collapsed else "DOWNARROW_HLT")
+        if not props.column_types_collapsed:
+            layout.template_list("VIEW3D_UL_ColumnTypesList", "", props, "column_types", props, "column_types_idx")
 
 class VIEW3D_UL_ColumnTypesList(UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):

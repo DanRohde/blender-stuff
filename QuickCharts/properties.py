@@ -46,23 +46,18 @@ class Properties(PropertyGroup):
     column_types_idx: IntProperty()
     column_types_collapsed: BoolProperty(name="Column Types", default=True)
 
-    row_types: CollectionProperty(type=CSVCellTypeItems)
-    row_types_idx: IntProperty()
-    row_types_collapsed: BoolProperty(name="Row Types", default=True)
-
-
 
     material_collapsed: BoolProperty(name="Material", default=True)
 
     # Chart:
-    chart_type: EnumProperty(items=get_chart_types_enum_items, name="Chart", description="Chart type")
+    chart_type: EnumProperty(items=get_chart_types_enum_items, name="", description="Chart type")
     # bar, column charts:
-    bc_shape: EnumProperty(items=get_bc_shapes_enum_items, name="Shape", description="Shape")
-    bc_sub_type: EnumProperty(items=get_bc_sub_types_enum_items, name="Subtype", description="Subtype")
+    bc_shape: EnumProperty(items=get_bc_shapes_enum_items, name="", description="Shape")
+    bc_sub_type: EnumProperty(items=get_bc_sub_types_enum_items, name="", description="Subtype")
     # donat charts:
     donut_shape: EnumProperty(items=DONUT_SHAPES, name="Shape", description="Shape")
 
-    data_series: EnumProperty(items=get_data_series_enum_items, name="Data series", description="Data series")
+    data_series: EnumProperty(items=get_data_series_enum_items, name="", description="Data series")
 
     size: FloatVectorProperty(name="Size", size=3, description="Chart size", default=(10, 10, 10), subtype="XYZ_LENGTH")
     spacing: FloatVectorProperty(name="Spacing", size=3, subtype="XYZ_LENGTH", default=(0.1, 0.1, 0.1), min=0)
