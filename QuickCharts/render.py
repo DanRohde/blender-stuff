@@ -245,6 +245,25 @@ def create_cubic_partial_donut(mat, major_radius = 1.0, half_size = 0.3, angle=n
     bm.free()
     return create_object(name, mesh, mat)
 
+def create_line_chart(mat, data, x_space, minv, maxv, minz, maxz, z_offset):
+    name = "QuickChartLineChart"
+    curve_data = bpy.data.curves.new(name=name, type='CURVE')
+    curve_data.dimensions = '3D'
+    curve_data.fill_mode = 'FULL'
+    curve_data.bevel_depth = .1
+    curve_data.bevel_resolution = 4
+    curve_data.use_fill_caps = True
+
+    polyline = curve_data.splines.new('POLY')
+    point_count = len(data)
+    polyline.points.add(point_count-1)
+
+    for i in range(point_count):
+        print(f"i={i}, data[i]={data[i]}")
+        polyline.points[i].co = (i * x_space, 0, remap(float(data[i]), minv, maxv, minz, maxz)-z_offset, 1)
+
+    return create_object(name, curve_data, mat)
+
 def render_object(collection, parent, obj, rot = (0, 0, 0), loc = (0, 0, 0), scale = (1,1,1)):
     obj.parent = parent
     obj.rotation_euler = rot
@@ -748,6 +767,41 @@ def render_table(target, props, csv):
                               loc=barloc,
                               rot=(0, ph, 0),
                               scale=scale)
+def render_line_chart(target, props, csv):
+    cx, cy, cz = bpy.context.scene.cursor.location
+    ph = np.pi / 2
+    transposed = props.data_series == 'columns'
+    data = csv["rows"] if not transposed else list(map(list, zip(*csv["rows"])))
+    row_count = get_data_row_count(props, data, transposed)
+    col_count = get_data_column_count(props, data, transposed)
+    labels_left = (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'})
+    labels_header = (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'})
+
+    mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(row_count)]
+    x_space = props.size[0] / len(data[0])
+    label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
+    value_mat = create_material(props.value_color, roughness=props.value_roughness, metallic=props.value_metallic)
+    minv = min(0, csv["minv"])
+    zero_z_position = remap(0, minv, csv["maxv"], 0, props.size[2])
+    if props.legend:
+        render_legend(target, props, data, mats, label_mat, x_space/2, transposed)
+        target["legend"].rotation_euler = (0, ph, -ph)
+
+    row_idx = 0
+    for row in range(len(data)):
+        if row == 0 and labels_header:
+            if props.labels:
+                for col in range(len(data[row])):
+                    loc = (cx + col * x_space, cy, cz + zero_z_position )
+                    render_text_object(target["collection"], target["chart"],
+                                       data[row][col], loc, label_mat, size=x_space/2, x_align="RIGHT", y_align='CENTER',
+                                       rot=(ph, -np.pi/4, 0))
+            continue
+        loc = (cx + x_space if labels_left else 0, cy + row_idx * 0.2, cz + zero_z_position)
+        row_data = data[row][1:] if labels_left else data[row]
+        obj = create_line_chart(mats[row_idx], row_data, x_space, minv, csv["maxv"], 0, props.size[2], zero_z_position)
+        render_object(target["collection"], target["chart"], obj, loc=loc)
+        row_idx += 1
 
 def render_chart(props, csv):
     np.random.seed(0)
@@ -758,5 +812,7 @@ def render_chart(props, csv):
         render_bar_chart(target, props, csv)
     elif props.chart_type == "donut":
         render_donut_chart(target, props, csv)
-    elif props.chart_type == 'table':
+    elif props.chart_type == "table":
         render_table(target, props, csv)
+    elif props.chart_type == "line":
+        render_line_chart(target, props, csv)
