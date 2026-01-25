@@ -727,7 +727,7 @@ def render_table(target, props, csv):
             rot = [ph, 0, 0]
             val = cell
             x_align = 'CENTER'
-            size = min(xspace, zspace) * 0.5
+            size = min(xspace, zspace) * 0.5 - min(props.spacing[0], props.spacing[2])
             if row_idx == 0 and labels_header:
                 if not props.labels: continue
                 rot[1] = -ph/2
@@ -741,7 +741,7 @@ def render_table(target, props, csv):
             else:
                 if not props.values: continue
                 val = format_value_label(props, get_value_from_data(cell), col_idx, row_idx, transposed)
-                size = min(xspace, zspace) * .8 / len(val)
+                size = min(xspace, zspace) * .8 / len(val) - min(props.spacing[0], props.spacing[2])
                 mat = value_mat
 
             obj = render_text_object(target["collection"], target["chart"], val, loc, mat, size=size, x_align = x_align, y_align = 'CENTER', rot=rot)
