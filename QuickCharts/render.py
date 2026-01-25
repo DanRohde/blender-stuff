@@ -714,6 +714,7 @@ def render_table(target, props, csv):
                 rot[1] = -ph/2
                 x_align = 'LEFT'
                 mat = label_mat
+                loc = (cx + xspace/2 + xspace * col_idx, cy, cz + props.size[2] - zspace * row_idx)
 
             elif col_idx == 0 and labels_left:
                 if not props.labels: continue
@@ -725,18 +726,18 @@ def render_table(target, props, csv):
                 mat = value_mat
 
             obj = render_text_object(target["collection"], target["chart"], val, loc, mat, size=size, x_align = x_align, y_align = 'CENTER', rot=rot)
-            if row_idx == 0 and labels_header and col_idx < len(row)-1:
+            if row_idx == 0 and labels_header and col_idx < len(row)-1: # header bars
                 render_object(target["collection"], target["chart"],
                               create_cylinder(label_mat),
                               rot=(0, pq, 0),
-                              loc=(loc[0] + size / 2, loc[1], loc[2] - size / 2),
-                              scale=(0.1, 0.1, get_dimensions(obj)[0]))
-            elif col_idx < len(row) - 1 :
+                              loc=(cx + xspace * col_idx + xspace / 2, loc[1], loc[2] - zspace / 2),
+                              scale=(0.1, 0.1, xspace /2 + get_dimensions(obj)[0]))
+            elif col_idx < len(row) - 1: # vertical bars
                 render_object(target["collection"], target["chart"],
                           create_cylinder(label_mat),
                           loc=(loc[0] + xspace/2, loc[1], loc[2] - zspace/2),
                           scale=(0.1, 0.1, zspace))
-            if (not labels_header or row_idx > 0) and row_idx < len(data) - 1:
+            if (not labels_header or row_idx > 0) and row_idx < len(data) - 1: # horizontal bars
                 barloc = (loc[0] - xspace/2, loc[1], loc[2] - zspace / 2)
                 scale = (0.1, 0.1, xspace)
                 if col_idx == 0 and labels_left:
