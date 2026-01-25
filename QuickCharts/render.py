@@ -566,7 +566,7 @@ def render_bar_chart(target, props, csv):
                 if props.values:
                     render_text_object(target["collection"], target["chart"], valstr,
                                        (cx + zero_x_position + (xscale if val > 0 else 0), loc[1], loc[2]),
-                                       value_mat, size=zs_space / 2.5 * 3 / len(valstr), x_align='RIGHT', y_align='CENTER', rot=(ph, 0, 0))
+                                       value_mat, size=zs_space / 2.5 * 3 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(ph, 0, 0))
                 row_idx += 1
             col_idx += 1
     elif props.bc_sub_type == 'deep':
@@ -619,7 +619,7 @@ def render_bar_chart(target, props, csv):
             if props.values and props.bc_sub_type == 'stacked':
                 valstr = format_value_label(props, sums[col], col, None, transposed)
                 render_text_object(target["collection"], target["chart"], valstr,
-                                   (cx + zero_x_position + (xscale if sums[col] > 0 else 0), cy, cz  + col_idx * zspace ), label_mat,
+                                   (cx + zero_x_position + (xscale if sums[col] > 0 else 0), cy, cz  + col_idx * zspace ), value_mat,
                                    size=zspace / 2.5 * 2 / len(valstr), x_align='LEFT', y_align='CENTER', rot=(ph, 0, 0))
             for row in range(len(data)):
                 if row == 0 and labels_header:
