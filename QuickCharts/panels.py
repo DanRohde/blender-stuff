@@ -39,6 +39,11 @@ def draw_panel(props, layout):
         row.prop(props, "label_metallic", text="")
         row.prop(props, "label_color", text="")
 
+        row = layout.row(align=True)
+        row.prop(props, "value_roughness", text="")
+        row.prop(props, "value_metallic", text="")
+        row.prop(props, "value_color", text="")
+
     row = layout.row(align=True)
     row.column().prop(props, "size")
     row.column().prop(props, "spacing")

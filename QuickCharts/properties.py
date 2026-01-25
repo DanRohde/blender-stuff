@@ -66,9 +66,14 @@ class Properties(PropertyGroup):
     labels: BoolProperty(default=True, name="Labels", description="Enable/Disable labels")
     values: BoolProperty(default=True, name="Values", description="Enable/Disable values")
 
-    label_color: FloatVectorProperty(name="Label/Value Color", description="Label/Value color", size=4, subtype="COLOR", default=(1, 1, 1, 1), min=0, max=1)
-    label_roughness: FloatProperty(default=ROUGHNESS, name="Label/Value Roughness", description="Label/Value Roughness", min=0, max=1)
-    label_metallic: FloatProperty(default=METALLIC, name="Label/Value Metallic", description="Label/Value Metallic", min=0, max=1)
+    label_color: FloatVectorProperty(name="Label Color", description="Label color", size=4, subtype="COLOR", default=(1, 1, 1, 1), min=0, max=1)
+    label_roughness: FloatProperty(default=ROUGHNESS, name="Label Roughness", description="Label Roughness", min=0, max=1)
+    label_metallic: FloatProperty(default=METALLIC, name="Label Metallic", description="Label Metallic", min=0, max=1)
+
+    value_color: FloatVectorProperty(name="Value Color", description="Value color", size=4, subtype="COLOR", default=(1, 1, 1, 1), min=0, max=1)
+    value_roughness: FloatProperty(default=ROUGHNESS, name="Value Roughness", description="Value Roughness", min=0, max=1)
+    value_metallic: FloatProperty(default=METALLIC, name="Value Metallic", description="Value Metallic", min=0, max=1)
+
 
     roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Chart Roughness", min=0, max=1)
     metallic: FloatProperty(default=METALLIC, name="Metallic", description="Chart Metallic", min=0, max=1)

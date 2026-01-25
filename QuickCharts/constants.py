@@ -36,11 +36,11 @@ ICONS = {
 CHART_TYPES = [
             ("column","Column Chart","Column chart"),
             ("bar","Bar Chart","Bar chart"),
-            #("line","Line Chart","Line"),
-            #("pie","Pie Chart","Pie"),
+            ("line","Line Chart","Line"),
             ("donut", "Donut Chart", "Donut Chart"),
-            # ("bubble", "Bubble Chart", "buble")
-        ]
+            ("bubble", "Bubble Chart", "buble"),
+            ("table", "Table", "Table"),
+]
 
 CSV_FORMATS = [("header","Header","Header"), ("left", "Left", "Left"), ("header-left","Header and Left", "Header and Left")]
 
