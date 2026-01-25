@@ -47,9 +47,9 @@ def draw_panel(props, layout):
     if isinstance(props, Operator):
         row = layout.row(align=True)
         row.alignment = "LEFT"
-        row.prop(props, "column_types_collapsed", emboss=False, icon="RIGHTARROW" if props.column_types_collapsed else "DOWNARROW_HLT")
-        if not props.column_types_collapsed:
-            layout.template_list("VIEW3D_UL_ColumnTypesList", "", props, "column_types", props, "column_types_idx")
+        row.prop(props, "cell_types_collapsed", emboss=False, icon="RIGHTARROW" if props.cell_types_collapsed else "DOWNARROW_HLT")
+        if not props.cell_types_collapsed:
+            layout.template_list("VIEW3D_UL_ColumnTypesList", "", props, "cell_types", props, "cell_types_idx")
 
 class VIEW3D_UL_ColumnTypesList(UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
@@ -57,11 +57,11 @@ class VIEW3D_UL_ColumnTypesList(UIList):
         row.alignment = "LEFT"
         row.label(text=f"{index+1}. ")
         row.prop(item, "name")
-        row.prop(item, "column_type")
+        row.prop(item, "cell_type")
         col = row.column()
         col.alignment = "LEFT"
         col.prop(item, "precision")
-        col.enabled = item.column_type not in {"label"}
+        col.enabled = item.cell_type not in {"label"}
 
 class VIEW3D_PT_Panel(Panel):
     bl_idname = "VIEW3D_PT_quick_charts_panel"
@@ -76,7 +76,7 @@ class VIEW3D_PT_Panel(Panel):
 
         op = layout.operator("object.quick_charts_create_chart")
         for k in props.keys():
-            if k in {'column_types'}: continue
+            if k in {'cell_types'}: continue
             if hasattr(op, k): setattr(op, k, getattr(props,k))
         
         return None

@@ -1,7 +1,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import StringProperty, CollectionProperty, EnumProperty, BoolProperty, IntProperty, FloatVectorProperty, FloatProperty
 
-from .handlers import handle_csv_filename_update
+from .handlers import handle_csv_filename_update, handle_data_series_update
 
 from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC, ALPHA, ICONS, DONUT_SHAPES
 from .icons import preview_collections
@@ -35,16 +35,16 @@ def get_data_series_enum_items(_self, _context):
 
 class CSVCellTypeItems(PropertyGroup):
     name: StringProperty(name="", default="", description="Column label")
-    column_type: EnumProperty(name="", items=[("float","Float","Float"),("label","Label","Label"), ("int","Integer","Integer")], description="Column type")
+    cell_type: EnumProperty(name="", items=[("float","Float","Float"),("label","Label","Label"), ("int","Integer","Integer")], description="Column type")
     precision: IntProperty(default=1, min=0, name="", description="Precision")
 
 class Properties(PropertyGroup):
     # CSV:
     csv_filename: StringProperty(default="", subtype="FILE_PATH", name="CSV File", description="CSV File", update=handle_csv_filename_update)
     csv_format: EnumProperty(name="Labels", items=get_csv_format_enum_items)
-    column_types: CollectionProperty(type=CSVCellTypeItems)
-    column_types_idx: IntProperty()
-    column_types_collapsed: BoolProperty(name="Column Types", default=True)
+    cell_types: CollectionProperty(type=CSVCellTypeItems)
+    cell_types_idx: IntProperty()
+    cell_types_collapsed: BoolProperty(name="Cell Types", default=True)
 
 
     material_collapsed: BoolProperty(name="Material", default=True)
@@ -57,7 +57,7 @@ class Properties(PropertyGroup):
     # donat charts:
     donut_shape: EnumProperty(items=DONUT_SHAPES, name="Shape", description="Shape")
 
-    data_series: EnumProperty(items=get_data_series_enum_items, name="", description="Data series")
+    data_series: EnumProperty(items=get_data_series_enum_items, name="", description="Data series", update=handle_data_series_update)
 
     size: FloatVectorProperty(name="Size", size=3, description="Chart size", default=(10, 10, 10), subtype="XYZ_LENGTH")
     spacing: FloatVectorProperty(name="Spacing", size=3, subtype="XYZ_LENGTH", default=(0.1, 0.1, 0.1), min=0)

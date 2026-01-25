@@ -3,6 +3,7 @@ import bmesh
 import numpy as np
 
 from .constants import COLORS
+from .data import get_cell_type
 
 def create_object(name, mesh, mat):
     obj = bpy.data.objects.new(name, mesh)
@@ -341,16 +342,19 @@ def remap(x, in_min, in_max, out_min, out_max):
     return out_min + ((x - in_min) / (in_max - in_min)) * (out_max - out_min)
 
 def format_value_label(props, val, x, y, transposed):
-    c = y if transposed else x
-    item = props.column_types[c] if c is not None else None
+    if props.data_series in {'rows'}:
+        c = x if transposed else y
+    else:
+        c = y if transposed else x
+    item = props.cell_types[c] if c is not None and c < len(props.cell_types) else None
     if item is not None:
         precision = item.precision
-        column_type = item.column_type
+        cell_type = item.cell_type
     else:
-        column_type = "int" if int(val) == val else "float"
+        cell_type = get_cell_type(f"{val}")
         precision = 2
 
-    if column_type == 'int': return f"{int(val)}" if -1000000 < val <  1000000 else f"{int(val):.{precision}E}"
+    if cell_type == 'int': return f"{int(val)}" if -1000000 < val <  1000000 else f"{int(val):.{precision}E}"
     return f"{val:.{precision}f}" if -1000000 < val < 1000000 and not (-0.01 < val < 0.01) else f"{val:.{precision}E}"
 
 def get_value_from_data(data):

@@ -1,19 +1,8 @@
 import csv
 import re
-
-def get_cell_type(cell):
-    if re.match("^[+-]?\d+$", cell):
-        column_type = "int"
-    elif re.match("^[0-9.,+-]+$", cell):
-        column_type = "float"
-    elif re.match("^\w+$", cell):
-        column_type = "label"
-    else:
-        column_type = "label"
-    return column_type
+from .data import get_cell_type, update_cell_types
 
 def handle_csv_filename_update(self, _context):
-    self.column_types.clear()
 
     if not self.csv_filename or self.csv_filename == "": return None
 
@@ -40,25 +29,17 @@ def handle_csv_filename_update(self, _context):
         self.csv_format = 'left'
         self.data_series = 'rows'
         self.legend = False
-        for i in range(len(rows[0])):
-            item = self.column_types.add()
-            item.name = ""
-            item.column_type = "label" if i == 0 else get_cell_type(rows[0][i])
 
     elif re.match("^[0-9.+-]+", rows[1][0]):
         self.csv_format = 'header'
         self.data_series = 'columns'
         self.legend = True
-        for i in range(len(rows[0])):
-            item = self.column_types.add()
-            item.name = rows[0][i]
-            item.column_type = get_cell_type(rows[1][i])
     else:
         self.csv_format = 'header-left'
         self.data_series = 'columns'
         self.legend = False
-        for i in range(len(rows[0])):
-            item = self.column_types.add()
-            item.name = rows[0][i]
-            item.column_type = "label" if i == 0 else get_cell_type(rows[1][i])
+
     return None
+
+def handle_data_series_update(self, _context):
+    update_cell_types(self)
