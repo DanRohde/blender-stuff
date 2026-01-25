@@ -306,7 +306,80 @@ def init_target_collection():
     legend.rotation_euler = (cr[0], cr[1], cr[2] - np.pi / 2)
 
     target_collection.objects.link(legend)
+
+
     return { "collection": target_collection, "chart": chart, "legend": legend }
+
+def create_area_light(target, name, location, target_loc, power=500, size=5, color=(1.0, 1.0, 1.0), spread=60):
+    light_data = bpy.data.lights.new(name=name, type='AREA')
+    light_data.energy = power
+    light_data.size = size
+    light_data.color = color
+    light_data.spread = np.radians(spread)
+
+    light_obj = bpy.data.objects.new(name, light_data)
+    target["collection"].objects.link(light_obj)
+
+    light_obj.location = location
+    direction = Vector(target_loc) - light_obj.location
+    light_obj.rotation_euler = direction.to_track_quat('-Z', 'Y').to_euler()
+
+    return light_obj
+def create_camera(target, name, location, target_loc, ortho_scale=2):
+    cam_data = bpy.data.cameras.new(name)
+    cam_data.type = "ORTHO"
+    cam_data.ortho_scale = ortho_scale
+    cam_obj = bpy.data.objects.new(name, cam_data)
+    target["collection"].objects.link(cam_obj)
+
+    cam_obj.location = location
+    direction = Vector(target_loc) - cam_obj.location
+    cam_obj.rotation_euler = direction.to_track_quat('-Z', 'Y').to_euler()
+
+    bpy.context.scene.camera = cam_obj
+
+def setup_scene(target, props):
+    target_obj = target["chart"]
+    target_loc = (target_obj.location[0] + props.size[0]/2, target_obj.location[1] + props.size[1]/2, target_obj.location[2] + props.size[2]/2)
+
+    world = bpy.context.scene.world
+    world.use_nodes = True
+
+    bg = world.node_tree.nodes.get("Background")
+    bg.inputs["Color"].default_value = (0, 0, 0, 1)  # Schwarz
+    bg.inputs["Strength"].default_value = 1.0
+
+    ortho_scale = (max(props.size) ** 2) / 2
+    create_camera(target, "QuickChartCam", (props.size[0]*2, -props.size[1]*2, props.size[2]*2), target_loc, ortho_scale=ortho_scale)
+
+    create_area_light(
+        target,
+        "QuickChart_Key_Light",
+        location=(props.size[0] + 6, -props.size[1], props.size[2]/2),
+        target_loc=target_loc,
+        power=10000,
+        size=max(props.size)*2
+    )
+
+    create_area_light(
+        target,
+        "QuickChart_Fill_Light",
+        location=(-props.size[0], props.size[1]-4, props.size[2]+4),
+        target_loc = target_loc,
+        power=6000,
+        size=max(props.size)*2
+    )
+
+    create_area_light(
+        target,
+        "QuickChart_Rim_Light",
+        location=(0, props.size[1] + 6, props.size[2] + 5),
+        target_loc = target_loc,
+        power=4000,
+        size=max(props.size)*2
+    )
+
+    create_area_light(target, name="QuickChart_Top_Light", location=(props.size[0]/2, props.size[1]/2, props.size[2]*2), target_loc=target_loc, power=1000, size=max(props.size))
 
 def get_color(color_idx):
     if color_idx > len(COLORS)-1:
@@ -806,6 +879,7 @@ def render_line_chart(target, props, csv):
 def render_chart(props, csv):
     np.random.seed(0)
     target  = init_target_collection()
+    setup_scene(target, props)
     if props.chart_type == "column":
         render_column_chart(target , props, csv)
     elif props.chart_type == "bar":
