@@ -379,7 +379,7 @@ def setup_scene(target, props):
         size=max(props.size)*2
     )
 
-    create_area_light(target, name="QuickChart_Top_Light", location=(props.size[0]/2, props.size[1]/2, props.size[2]*2), target_loc=target_loc, power=1000, size=max(props.size))
+    #create_area_light(target, name="QuickChart_Top_Light", location=(props.size[0]/2, props.size[1]/2, props.size[2]*2), target_loc=target_loc, power=1000, size=max(props.size))
 
 def get_color(color_idx):
     if color_idx > len(COLORS)-1:
