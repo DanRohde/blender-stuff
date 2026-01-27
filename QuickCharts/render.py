@@ -447,7 +447,7 @@ def format_value_label(props, val, x, y, transposed):
     else:
         cell_type = get_cell_type(f"{val}")
         precision = 2
-    if cell_type == 'label': return val
+    if cell_type == 'label': return f"{val}"
     if cell_type == 'int': return f"{int(val)}" if -1000000 < val <  1000000 else f"{int(val):.{precision}E}"
     return f"{val:.{precision}f}" if -1000000 < val < 1000000 and not (-0.01 < val < 0.01) else f"{val:.{precision}E}"
 
@@ -738,15 +738,19 @@ def render_donut_chart(target, props, csv):
     labels_left = (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'})
     labels_header = (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'})
 
+
+    if props.values: value_mat = create_material(props.value_color, roughness=props.value_roughness, metallic=props.value_metallic)
+
     data = csv["rows"] if not transposed else list(map(list, zip(*csv["rows"])))
-    mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(data))]
+    mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(data[0]))]
     sums = csv["row_sums"] if transposed else csv["col_sums"]
     abs_sums = csv["abs_row_sums"] if transposed else csv["abs_col_sums"]
 
     r1 = min(props.size[0]/20, props.size[2] /20)
     r = min(props.size[0]/2, props.size[2] /2)
+    row_count = get_data_column_count(props, data, transposed)
     column_count = get_data_column_count(props, data, transposed)
-    rs = -(r-r1) / column_count
+    rs = -(r-r1) / row_count
     rsh = rs/2
     gap = min(props.spacing[0], props.spacing[2])
     last_radius = r
@@ -754,23 +758,34 @@ def render_donut_chart(target, props, csv):
     if props.legend:
         label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
         render_legend(target, props, data, mats, label_mat, props.size[1] / (2*column_count), transposed)
+        target["legend"].rotation_euler = (0, ph, -ph)
 
     loc = (cx + props.size[0] / 2, cy, cz + props.size[2] / 2)
-    for row in range(len(data[0])):
-        color_idx = 0
-        if row == 0 and labels_left: continue
+    for col in range(len(data[0])):
+        print(f"col={col}, sums[col]={sums[col]}")
+        row_idx = 0
+        if col == 0 and labels_left: continue
         last_angle = ph
-        if abs_sums[row] != sums[row]:
+        if abs_sums[col] != sums[col]:
             last_radius += rs
             continue
-        for col in range(len(data)):
-            if col == 0 and labels_header: continue
-            val = get_value_from_data(data[col][row])
-            perc = val / sums[row]
+        for row in range(len(data)):
+            if row == 0 and labels_header: continue
+            print(f"sums[row]={sums[row]}")
+            val = get_value_from_data(data[row][col])
+            perc = val / sums[col]
             angle = tp * perc
-            obj = get_donut_object_from_shape(props.donut_shape, mats[color_idx], last_radius + rsh, abs(rsh) - gap, angle)
+            obj = get_donut_object_from_shape(props.donut_shape, mats[row_idx], last_radius + rsh, abs(rsh) - gap, angle)
             render_object(target["collection"], target["chart"], obj, loc=loc, rot = (ph, -last_angle, 0))
-            color_idx += 1
+            if props.values:
+                val_str = format_value_label(props, val, col, row, transposed)
+                render_text_object(target["collection"], target["chart"],
+                                   val_str,
+                                   (loc[0]+(last_radius+rsh) * np.cos(angle/2+last_angle), loc[1]-abs(rsh), loc[2] + (last_radius+rsh) * np.sin(angle/2+last_angle)),
+                                   value_mat, rot=(ph, 0, 0),
+                                   size = abs(rsh)*1.5/len(val_str),
+                                   x_align="CENTER", y_align="CENTER")
+            row_idx += 1
             last_angle += angle
         last_radius += rs
 def get_dimensions(obj):
@@ -792,8 +807,7 @@ def render_table(target, props, csv):
     zspace = props.size[2] / len(data)
     label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
     value_mat = create_material(props.value_color, roughness=props.value_roughness, metallic=props.value_metallic)
-    if labels_header:
-        max_label_len=max([len(s) for s in data[0]])
+
     for row_idx, row in enumerate(data):
         for col_idx, cell in enumerate(row):
             loc = (cx + xspace * col_idx, cy, cz + props.size[2] - zspace * row_idx)
