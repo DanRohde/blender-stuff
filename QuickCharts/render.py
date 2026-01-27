@@ -750,19 +750,20 @@ def render_donut_chart(target, props, csv):
     r = min(props.size[0]/2, props.size[2] /2)
     row_count = get_data_column_count(props, data, transposed)
     column_count = get_data_column_count(props, data, transposed)
-    rs = -(r-r1) / row_count
-    rsh = rs/2
+    rs = - (r - r1) / row_count # ring space
+    rsh = rs / 2 # half ring space
+    text_size = abs(rsh) * 1.5
     gap = min(props.spacing[0], props.spacing[2])
+    donut_radius = abs(rsh) - gap
     last_radius = r
 
     if props.legend:
         label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
-        render_legend(target, props, data, mats, label_mat, props.size[1] / (2*column_count), transposed)
+        render_legend(target, props, data, mats, label_mat, props.size[2] / (2 * row_count), transposed)
         target["legend"].rotation_euler = (0, ph, -ph)
 
     loc = (cx + props.size[0] / 2, cy, cz + props.size[2] / 2)
     for col in range(len(data[0])):
-        print(f"col={col}, sums[col]={sums[col]}")
         row_idx = 0
         if col == 0 and labels_left: continue
         last_angle = ph
@@ -771,19 +772,20 @@ def render_donut_chart(target, props, csv):
             continue
         for row in range(len(data)):
             if row == 0 and labels_header: continue
-            print(f"sums[row]={sums[row]}")
             val = get_value_from_data(data[row][col])
             perc = val / sums[col]
             angle = tp * perc
-            obj = get_donut_object_from_shape(props.donut_shape, mats[row_idx], last_radius + rsh, abs(rsh) - gap, angle)
-            render_object(target["collection"], target["chart"], obj, loc=loc, rot = (ph, -last_angle, 0))
+            obj = get_donut_object_from_shape(props.donut_shape, mats[row_idx], last_radius + rsh, donut_radius, angle)
+            render_object(target["collection"], target["chart"], obj, loc=loc, rot=(ph, -last_angle, 0))
             if props.values:
                 val_str = format_value_label(props, val, col, row, transposed)
+                label_angle = angle / 2 + last_angle
+                label_radius = last_radius + rsh
                 render_text_object(target["collection"], target["chart"],
                                    val_str,
-                                   (loc[0]+(last_radius+rsh) * np.cos(angle/2+last_angle), loc[1]-abs(rsh), loc[2] + (last_radius+rsh) * np.sin(angle/2+last_angle)),
+                                   (loc[0] + label_radius * np.cos(label_angle), loc[1] - abs(rsh), loc[2] + label_radius * np.sin(label_angle)),
                                    value_mat, rot=(ph, 0, 0),
-                                   size = abs(rsh)*1.5/len(val_str),
+                                   size= text_size / len(val_str),
                                    x_align="CENTER", y_align="CENTER")
             row_idx += 1
             last_angle += angle
