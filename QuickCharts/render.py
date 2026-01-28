@@ -734,7 +734,7 @@ def render_donut_chart(target, props, csv):
     cx, cy, cz = bpy.context.scene.cursor.location
     ph = np.pi / 2
     tp = np.pi * 2
-    transposed = props.data_series == 'rows'
+    transposed = props.data_series == 'columns'
     labels_left = (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'})
     labels_header = (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'})
 
@@ -743,13 +743,12 @@ def render_donut_chart(target, props, csv):
 
     data = csv["rows"] if not transposed else list(map(list, zip(*csv["rows"])))
     mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(len(data[0]))]
-    sums = csv["row_sums"] if transposed else csv["col_sums"]
-    abs_sums = csv["abs_row_sums"] if transposed else csv["abs_col_sums"]
+    sums = csv["col_sums"] if transposed else csv["row_sums"]
+    abs_sums = csv["abs_col_sums"] if transposed else csv["abs_row_sums"]
 
     r1 = min(props.size[0]/20, props.size[2] /20)
     r = min(props.size[0]/2, props.size[2] /2)
-    row_count = get_data_column_count(props, data, transposed)
-    column_count = get_data_column_count(props, data, transposed)
+    row_count = get_data_row_count(props, data, transposed)
     rs = - (r - r1) / row_count # ring space
     rsh = rs / 2 # half ring space
     text_size = abs(rsh) * 1.5
@@ -763,19 +762,20 @@ def render_donut_chart(target, props, csv):
         target["legend"].rotation_euler = (0, ph, -ph)
 
     loc = (cx + props.size[0] / 2, cy, cz + props.size[2] / 2)
-    for col in range(len(data[0])):
-        row_idx = 0
-        if col == 0 and labels_left: continue
+    for row in range(len(data)):
+
+        col_idx = 0
+        if row == 0 and labels_header: continue
         last_angle = ph
-        if abs_sums[col] != sums[col]:
+        if abs_sums[row] != sums[row]:
             last_radius += rs
             continue
-        for row in range(len(data)):
-            if row == 0 and labels_header: continue
+        for col in range(len(data[0])):
+            if col == 0 and labels_left: continue
             val = get_value_from_data(data[row][col])
-            perc = val / sums[col]
+            perc = val / sums[row]
             angle = tp * perc
-            obj = get_donut_object_from_shape(props.donut_shape, mats[row_idx], last_radius + rsh, donut_radius, angle)
+            obj = get_donut_object_from_shape(props.donut_shape, mats[col_idx], last_radius + rsh, donut_radius, angle)
             render_object(target["collection"], target["chart"], obj, loc=loc, rot=(ph, -last_angle, 0))
             if props.values:
                 val_str = format_value_label(props, val, col, row, transposed)
@@ -787,7 +787,7 @@ def render_donut_chart(target, props, csv):
                                    value_mat, rot=(ph, 0, 0),
                                    size= text_size / len(val_str),
                                    x_align="CENTER", y_align="CENTER")
-            row_idx += 1
+            col_idx += 1
             last_angle += angle
         last_radius += rs
 def get_dimensions(obj):
