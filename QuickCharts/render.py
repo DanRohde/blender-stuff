@@ -734,7 +734,7 @@ def render_donut_chart(target, props, csv):
     cx, cy, cz = bpy.context.scene.cursor.location
     ph = np.pi / 2
     tp = np.pi * 2
-    transposed = props.data_series == 'columns'
+    transposed = props.data_series == 'rows'
     labels_left = (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'})
     labels_header = (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'})
 
