@@ -470,33 +470,44 @@ def get_data_row_count(props, data, transposed):
     if transposed and props.csv_format in {'left', 'header-left'}: row_count -= 1
     return row_count
 
-def render_legend(target, props, data, mats, label_mat, label_size, transposed):
-    loc = bpy.context.scene.cursor.location
-    labels = [ row[0] for row in data ]
-    space = label_size * 1.1
+def show_params_and_result(func):
+    """ Decorator to print function parameters and results to the console."""
+    def show(*arg,**kwargs):
+        res=func(*arg,**kwargs)
+        print(f"{func}({arg},{kwargs}) = {res}")
+        return res
+    return show
 
-    loc = (loc[0] - space * (1+len(labels)), loc[1] + props.size[1], loc[2])
-    color_idx = 0
+def get_labels(data, labels_left = False, labels_header = False):
+    if labels_left and labels_header:
+        return data[0][1:]
+    elif labels_header:
+        return data[0]
+    return list(range(1, len(data[0])))
+
+def get_labels_invert(data, labels_left = False, labels_header = False):
+    if labels_left and labels_header:
+        return [ data[i][0] for i in range(1, len(data)) ]
+    elif labels_left:
+        return [ data[i][0] for i in range(0, len(data)) ]
+    return list(range(1, len(data)))
+
+def render_legend(target, props, labels, mats, label_mat):
+    space = 1.1
+    loc = bpy.context.scene.cursor.location
+    target["legend"].location = (loc[0] + props.size[0] * space, loc[1], loc[2])
     for idx, label in enumerate(labels):
-        if idx==0 and props.csv_format in {'header-left', 'header'} and not transposed: continue
-        if idx==0 and props.csv_format in {'header-left'} and transposed: continue
-        loc = (loc[0] + space, loc[1], loc[2])
-        zoffset = - space / 4
+        loc = (loc[0] - space, loc[1], loc[2])
+        zoffset =  space / 4
         if props.chart_type in {'bar','column'}:
-            obj = get_object_from_shape(props.bc_shape, mats[color_idx])
+            obj = get_object_from_shape(props.bc_shape, mats[idx])
         elif props.chart_type in {'donut'}:
             zoffset = 0
-            obj = get_donut_object_from_shape(props.donut_shape, mats[color_idx], 0.4, 0.2, 2*np.pi )
+            obj = get_donut_object_from_shape(props.donut_shape, mats[idx], 0.4, 0.2, 2*np.pi )
         else:
-            obj = create_bar(mats[color_idx])
-
+            obj = create_bar(mats[idx])
         render_object(target["collection"], target["legend"], obj, loc=( loc[0] + space/2, loc[1] + space/2, loc[2] + zoffset), scale=(space * .8 , space * .8, space/2.2))
-        if (not transposed and props.csv_format in {'header-left', 'left'}) or (transposed and props.csv_format in {'header-left','header'}):
-            text = label
-        else:
-            text = f"{color_idx+1}"
-        render_text_object(target["collection"], target["legend"], text, (loc[0], loc[1] + space * 1.3, loc[2]), label_mat, size=space, x_align="LEFT", y_align="TOP")
-        color_idx += 1
+        render_text_object(target["collection"], target["legend"], f"{label}", (loc[0], loc[1] + space * 1.3, loc[2]), label_mat, size=space, x_align="LEFT", y_align="TOP")
 
 def render_column_chart(target, props, csv):
     cx, cy, cz = bpy.context.scene.cursor.location
@@ -519,7 +530,7 @@ def render_column_chart(target, props, csv):
     value_mat = create_material(props.value_color, roughness=props.value_roughness, metallic=props.value_metallic)
     minv = min(0, csv["minv"])
     zero_z_position = remap(0, minv, csv["maxv"], 0, props.size[2])
-    if props.legend: render_legend(target, props, data, mats, label_mat, xspace/2, transposed)
+    if props.legend: render_legend(target, props, get_labels_invert(data, labels_left=labels_left, labels_header=labels_header), mats, label_mat)
 
     if props.bc_sub_type == 'normal':
         xs_space = xspace / len(data) - props.spacing[0] # space 4 all
@@ -632,7 +643,7 @@ def render_bar_chart(target, props, csv):
     value_mat = create_material(props.value_color, roughness=props.value_roughness, metallic=props.value_metallic)
     minv = min(0, csv["minv"])
     zero_x_position = remap(0, minv, csv["maxv"], 0, props.size[0])
-    if props.legend: render_legend(target, props, data, mats, label_mat, zspace / 2, transposed)
+    if props.legend: render_legend(target, props, get_labels_invert(data, labels_left = labels_left, labels_header = labels_header), mats, label_mat)
 
     if props.bc_sub_type == 'normal':
         zs_space = zspace / len(data) - props.spacing[2]  # space 4 all
@@ -744,8 +755,8 @@ def render_donut_chart(target, props, csv):
     sums = csv["col_sums"] if transposed else csv["row_sums"]
     abs_sums = csv["abs_col_sums"] if transposed else csv["abs_row_sums"]
 
-    r1 = min(props.size[0]/20, props.size[2] /20)
     r = min(props.size[0]/2, props.size[2] /2)
+    r1 = r/10
     row_count = get_data_row_count(props, data, transposed)
     rs = - (r - r1) / row_count # ring space
     rsh = rs / 2 # half ring space
@@ -756,7 +767,7 @@ def render_donut_chart(target, props, csv):
 
     if props.legend:
         label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
-        render_legend(target, props, data, mats, label_mat, props.size[2] / (2 * row_count), transposed)
+        render_legend(target, props, get_labels(data, labels_left = labels_left, labels_header = labels_header), mats, label_mat)
         target["legend"].rotation_euler = (0, ph, -ph)
 
     loc = (cx + props.size[0] / 2, cy, cz + props.size[2] / 2)
@@ -871,7 +882,7 @@ def render_line_chart(target, props, csv):
     minv = min(0, csv["minv"])
     zero_z_position = remap(0, minv, csv["maxv"], 0, props.size[2])
     if props.legend:
-        render_legend(target, props, data, mats, label_mat, x_space/2, transposed)
+        render_legend(target, props, get_labels_invert(data, labels_left = labels_left, labels_header = labels_header), mats, label_mat)
         target["legend"].rotation_euler = (0, ph, -ph)
 
     row_idx = 0
