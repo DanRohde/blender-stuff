@@ -507,7 +507,7 @@ def render_legend(target, props, labels, mats, label_mat):
         else:
             obj = create_bar(mats[idx])
         render_object(target["collection"], target["legend"], obj, loc=( loc[0] + space/2, loc[1] + space/2, loc[2] + zoffset), scale=(space * .8 , space * .8, space/2.2))
-        render_text_object(target["collection"], target["legend"], f"{label}", (loc[0], loc[1] + space * 1.3, loc[2]), label_mat, size=space, x_align="LEFT", y_align="TOP")
+        render_text_object(target["collection"], target["legend"], f"{label}", (loc[0], loc[1] + space * 1.3, loc[2] + zoffset), label_mat, size=space, x_align="LEFT", y_align="TOP")
 
 def render_column_chart(target, props, csv):
     cx, cy, cz = bpy.context.scene.cursor.location
@@ -523,8 +523,9 @@ def render_column_chart(target, props, csv):
     if props.bc_sub_type in {'normal','deep'}:
         objects = [get_object_from_shape(props.bc_shape, mats[i]) for i in range(row_count)]
 
-    xspace = props.size[0] / col_count
-    yspace = props.size[1] / row_count
+    space = min(props.size[0], props.size[1])
+    xspace = min(space / col_count, space / row_count)
+    yspace = xspace
 
     label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
     value_mat = create_material(props.value_color, roughness=props.value_roughness, metallic=props.value_metallic)
@@ -637,8 +638,9 @@ def render_bar_chart(target, props, csv):
     if props.bc_sub_type in {'normal', 'deep'}:
         objects = [get_object_from_shape(props.bc_shape, mats[i]) for i in range(row_count)]
 
-    yspace = props.size[1] / row_count
-    zspace = props.size[2] / col_count
+    yspace = min(props.size[1] / row_count, props.size[2] / col_count)
+    zspace = yspace
+
     label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
     value_mat = create_material(props.value_color, roughness=props.value_roughness, metallic=props.value_metallic)
     minv = min(0, csv["minv"])
@@ -759,6 +761,7 @@ def render_donut_chart(target, props, csv):
     r1 = r/10
     row_count = get_data_row_count(props, data, transposed)
     rs = - (r - r1) / row_count # ring space
+    if row_count == 1: rs = - r / 2
     rsh = rs / 2 # half ring space
     text_size = abs(rsh) * 1.5
     gap = min(props.spacing[0], props.spacing[2])
