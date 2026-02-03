@@ -87,6 +87,7 @@ class Properties(PropertyGroup):
     axes_labels: BoolProperty(default=True, name="Label", description="Axes label")
     axes_shape: EnumProperty(items=(('cylinder','Cylinder','Cylinder shape'),('cube','Cube','Cube shape')), name="Shape", description="Axes shape")
     axes_thickness: FloatProperty(name="Thickness", min=0, subtype="DISTANCE", default=0.1)
+    axes_arrows: BoolProperty(name="Arrows", default=True, description="Show arrows")
 
     roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Chart Roughness", min=0, max=1)
     metallic: FloatProperty(default=METALLIC, name="Metallic", description="Chart Metallic", min=0, max=1)

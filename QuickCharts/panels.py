@@ -60,7 +60,10 @@ def draw_panel(props, layout):
     if not props.axes_collapsed:
         box = layout.box()
         row = box.row(align=True)
-        for s in ('x','y','z','values','labels'):
+        for s in ('x','y','z'):
+            row.prop(props, f"axes_{s}")
+        row = box.row(align=True)
+        for s in ('values', 'labels', 'arrows'):
             row.prop(props, f"axes_{s}")
         box.row().prop(props, "axes_shape")
         box.row().prop(props, "axes_thickness")

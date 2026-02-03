@@ -18,7 +18,6 @@ def create_line_chart(mat, data, x_space, minv, maxv, minz, maxz, z_offset):
     polyline.points.add(point_count-1)
 
     for i in range(point_count):
-        print(f"i={i}, data[i]={data[i]}")
         polyline.points[i].co = (i * x_space, 0, remap(float(data[i]), minv, maxv, minz, maxz)-z_offset, 1)
 
     return create_object(name, curve_data, mat)
