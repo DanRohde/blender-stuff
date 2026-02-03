@@ -17,13 +17,22 @@ def draw_panel(props, layout):
     row = layout.row()
     row.prop(props, "labels")
     row.prop(props, "values")
-    row.prop(props, "legend")
+    col = row.column()
+    col.prop(props, "legend")
+    col.enabled = props.chart_type not in {'table'}
+    col = row.column()
+    col.prop(props, "axis")
+    col.enabled = props.chart_type not in {'donut','table'}
 
     row = layout.row(align=True)
     row.alignment = "LEFT"
     row.prop(props,"material_collapsed", emboss=False, icon="RIGHTARROW" if props.material_collapsed else "DOWNARROW_HLT")
-    if not props.material_collapsed:
 
+    row = layout.row(align=True)
+    row.column().prop(props, "size")
+    row.column().prop(props, "spacing")
+
+    if not props.material_collapsed:
         row = layout.row()
         row.label(text="Roughness")
         row.label(text="Metallic")
@@ -43,10 +52,6 @@ def draw_panel(props, layout):
         row.prop(props, "value_roughness", text="")
         row.prop(props, "value_metallic", text="")
         row.prop(props, "value_color", text="")
-
-    row = layout.row(align=True)
-    row.column().prop(props, "size")
-    row.column().prop(props, "spacing")
 
     layout.row().prop(props, "csv_format")
     if isinstance(props, Operator):

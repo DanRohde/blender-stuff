@@ -62,9 +62,10 @@ class Properties(PropertyGroup):
     size: FloatVectorProperty(name="Size", size=3, description="Chart size", default=(10, 10, 10), subtype="XYZ_LENGTH")
     spacing: FloatVectorProperty(name="Spacing", size=3, subtype="XYZ_LENGTH", default=(0.1, 0.1, 0.1), min=0)
 
-    legend: BoolProperty(default=True, name="Legend", description="Enable/Disable legend")
-    labels: BoolProperty(default=True, name="Labels", description="Enable/Disable labels")
-    values: BoolProperty(default=True, name="Values", description="Enable/Disable values")
+    legend: BoolProperty(default=True, name="Legend", description="Show legend")
+    labels: BoolProperty(default=True, name="Labels", description="Show labels")
+    values: BoolProperty(default=True, name="Values", description="Show values")
+    axis: BoolProperty(default=True, name="Axis", description="Show axis")
 
     label_color: FloatVectorProperty(name="Label Color", description="Label color", size=4, subtype="COLOR", default=(0.24, 0.45, 1, 1), min=0, max=1)
     label_roughness: FloatProperty(default=ROUGHNESS, name="Label Roughness", description="Label Roughness", min=0, max=1)
