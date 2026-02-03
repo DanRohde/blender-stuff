@@ -56,6 +56,9 @@ DONUT_SHAPES = [("cubic", "Cubic", "Cubic"), ("circle", "Circle", "Circle") ]
 
 DATA_SERIES = [("columns","Columns", "Columns"), ("rows","Rows", "Rows"), ]
 
+VALUE_COLOR = (1, 0.9, 0.7, 1)
+LABEL_COLOR = (0.24, 0.45, 1, 1)
+AXIS_COLOR = LABEL_COLOR
 ROUGHNESS = 0.22
 METALLIC = 1
 ALPHA = 1

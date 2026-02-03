@@ -3,7 +3,7 @@ from bpy.props import StringProperty, CollectionProperty, EnumProperty, BoolProp
 
 from .handlers import handle_csv_filename_update, handle_data_series_update
 
-from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC, ALPHA, ICONS, DONUT_SHAPES
+from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC, ALPHA, ICONS, DONUT_SHAPES, LABEL_COLOR, AXIS_COLOR, VALUE_COLOR
 from .icons import preview_collections
 
 
@@ -65,16 +65,28 @@ class Properties(PropertyGroup):
     legend: BoolProperty(default=True, name="Legend", description="Show legend")
     labels: BoolProperty(default=True, name="Labels", description="Show labels")
     values: BoolProperty(default=True, name="Values", description="Show values")
-    axis: BoolProperty(default=True, name="Axis", description="Show axis")
+    axes: BoolProperty(default=True, name="Axes", description="Show axes")
 
-    label_color: FloatVectorProperty(name="Label Color", description="Label color", size=4, subtype="COLOR", default=(0.24, 0.45, 1, 1), min=0, max=1)
+    label_color: FloatVectorProperty(default=LABEL_COLOR, name="Label Color", description="Label color", size=4, subtype="COLOR", min=0, max=1)
     label_roughness: FloatProperty(default=ROUGHNESS, name="Label Roughness", description="Label Roughness", min=0, max=1)
     label_metallic: FloatProperty(default=METALLIC, name="Label Metallic", description="Label Metallic", min=0, max=1)
 
-    value_color: FloatVectorProperty(name="Value Color", description="Value color", size=4, subtype="COLOR", default=(1, 0.9, 0.7, 1), min=0, max=1)
+    value_color: FloatVectorProperty(default=VALUE_COLOR, name="Value Color", description="Value color", size=4, subtype="COLOR", min=0, max=1)
     value_roughness: FloatProperty(default=ROUGHNESS, name="Value Roughness", description="Value Roughness", min=0, max=1)
     value_metallic: FloatProperty(default=METALLIC, name="Value Metallic", description="Value Metallic", min=0, max=1)
 
+    axes_color: FloatVectorProperty(default=AXIS_COLOR, name="Axes Color", description="Axes color", size=4, subtype="COLOR", min=0, max=1)
+    axes_roughness: FloatProperty(default=ROUGHNESS, name="Axes Roughness", description="Axes Roughness", min=0, max=1)
+    axes_metallic: FloatProperty(default=METALLIC, name="Axes Metallic", description="Axes Metallic", min=0, max=1)
+
+    axes_collapsed: BoolProperty(default=True, name="Axes")
+    axes_x: BoolProperty(default=False, name="X", description="Show X axis")
+    axes_y: BoolProperty(default=False, name="Y", description="Show Y axis")
+    axes_z: BoolProperty(default=False, name="Z", description="Show Z axis")
+    axes_values: BoolProperty(default=True, name="Values", description="Show axes values")
+    axes_labels: BoolProperty(default=True, name="Label", description="Axes label")
+    axes_shape: EnumProperty(items=(('cylinder','Cylinder','Cylinder shape'),('cube','Cube','Cube shape')), name="Shape", description="Axes shape")
+    axes_thickness: FloatProperty(name="Thickness", min=0, subtype="DISTANCE", default=0.1)
 
     roughness: FloatProperty(default=ROUGHNESS, name="Roughness", description="Chart Roughness", min=0, max=1)
     metallic: FloatProperty(default=METALLIC, name="Metallic", description="Chart Metallic", min=0, max=1)

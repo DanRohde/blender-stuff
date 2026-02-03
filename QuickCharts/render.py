@@ -1,9 +1,8 @@
-from mathutils import Vector
 
-from .common import remap, get_color
+from .common import remap, get_color, get_dimensions
 from .data import get_cell_type
 from .objects import *
-
+from .axes import draw_2d_axes
 
 def create_line_chart(mat, data, x_space, minv, maxv, minz, maxz, z_offset):
     name = "QuickChartLineChart"
@@ -458,13 +457,7 @@ def render_donut_chart(target, props, csv):
             col_idx += 1
             last_angle += angle
         last_radius += rs
-def get_dimensions(obj):
-    bbox = [Vector(v) for v in obj.bound_box]
-    return (
-        max(v.x for v in bbox) - min(v.x for v in bbox),
-        max(v.y for v in bbox) - min(v.y for v in bbox),
-        max(v.z for v in bbox) - min(v.z for v in bbox)
-    )
+
 def render_table(target, props, csv):
     ph = np.pi / 2
     pq = np.pi / 4
@@ -543,13 +536,13 @@ def render_line_chart(target, props, csv):
     if props.legend:
         render_legend(target, props, get_labels_invert(data, labels_left = labels_left, labels_header = labels_header), mats, label_mat)
         target["legend"].rotation_euler = (0, ph, -ph)
-
+    if props.axes: draw_2d_axes(target, props, data)
     row_idx = 0
     for row in range(len(data)):
         if row == 0 and labels_header:
             if props.labels:
                 for col in range(len(data[row])):
-                    loc = (cx + col * x_space, cy, cz + zero_z_position )
+                    loc = (cx + col * x_space, cy, cz + zero_z_position - props.spacing[2] )
                     render_text_object(target["collection"], target["chart"],
                                        data[row][col], loc, label_mat, size=x_space/2, x_align="RIGHT", y_align='CENTER',
                                        rot=(ph, -np.pi/4, 0))

@@ -1,3 +1,4 @@
+
 from bpy.types import Panel, UIList, Operator
 
 def draw_panel(props, layout):
@@ -21,45 +22,60 @@ def draw_panel(props, layout):
     col.prop(props, "legend")
     col.enabled = props.chart_type not in {'table'}
     col = row.column()
-    col.prop(props, "axis")
+    col.prop(props, "axes")
     col.enabled = props.chart_type not in {'donut','table'}
-
-    row = layout.row(align=True)
-    row.alignment = "LEFT"
-    row.prop(props,"material_collapsed", emboss=False, icon="RIGHTARROW" if props.material_collapsed else "DOWNARROW_HLT")
 
     row = layout.row(align=True)
     row.column().prop(props, "size")
     row.column().prop(props, "spacing")
 
+    row = layout.row(align=True)
+    row.alignment = "LEFT"
+    row.prop(props, "material_collapsed", emboss=False, icon="RIGHTARROW" if props.material_collapsed else "DOWNARROW_HLT")
+
     if not props.material_collapsed:
-        row = layout.row()
+        box = layout.box()
+        row = box.row()
+        row.label(text="")
         row.label(text="Roughness")
         row.label(text="Metallic")
         row.label(text="Alpha/Color")
 
-        row = layout.row(align=True)
+        row = box.row(align=True)
+        row.label(text="Chart:")
         row.prop(props, "roughness", text="")
         row.prop(props, "metallic", text="")
         row.prop(props, "alpha", text="")
 
-        row = layout.row(align=True)
-        row.prop(props, "label_roughness", text="")
-        row.prop(props, "label_metallic", text="")
-        row.prop(props, "label_color", text="")
+        for s in ('label', 'axes', 'value'):
+            row = box.row(align=True)
+            row.label(text=f"{s.title()}:")
+            row.prop(props, f"{s}_roughness", text="")
+            row.prop(props, f"{s}_metallic", text="")
+            row.prop(props, f"{s}_color", text="")
 
-        row = layout.row(align=True)
-        row.prop(props, "value_roughness", text="")
-        row.prop(props, "value_metallic", text="")
-        row.prop(props, "value_color", text="")
+    row = layout.row(align=True)
+    row.alignment="LEFT"
+    row.prop(props, "axes_collapsed", emboss=False, icon="RIGHTARROW" if props.axes_collapsed else "DOWNARROW_HLT")
+    if not props.axes_collapsed:
+        box = layout.box()
+        row = box.row(align=True)
+        for s in ('x','y','z','values','labels'):
+            row.prop(props, f"axes_{s}")
+        box.row().prop(props, "axes_shape")
+        box.row().prop(props, "axes_thickness")
 
-    layout.row().prop(props, "csv_format")
+
     if isinstance(props, Operator):
         row = layout.row(align=True)
         row.alignment = "LEFT"
         row.prop(props, "cell_types_collapsed", emboss=False, icon="RIGHTARROW" if props.cell_types_collapsed else "DOWNARROW_HLT")
         if not props.cell_types_collapsed:
-            layout.template_list("VIEW3D_UL_ColumnTypesList", "", props, "cell_types", props, "cell_types_idx")
+            box = layout.box()
+            box.row().prop(props, "csv_format")
+            box.template_list("VIEW3D_UL_ColumnTypesList", "", props, "cell_types", props, "cell_types_idx")
+
+
 
 class VIEW3D_UL_ColumnTypesList(UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):

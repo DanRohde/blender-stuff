@@ -162,6 +162,7 @@ def create_partial_donat(mat, major_radius = 1.0, minor_radius = 0.3, angle=np.p
     bm.to_mesh(mesh)
     bm.free()
     return create_object(name, mesh, mat)
+
 def create_cubic_partial_donut(mat, major_radius = 1.0, half_size = 0.3, angle=np.pi, segments = 32):
     name = "QuickChartCubicPartialDonut"
 
