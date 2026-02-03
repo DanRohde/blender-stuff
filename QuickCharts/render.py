@@ -1,34 +1,8 @@
 from mathutils import Vector
 
-from .constants import COLORS
+from .common import remap, get_color
 from .data import get_cell_type
 from .objects import *
-
-
-def clone_and_scale_object(target, obj, scale, loc, rot = (0,0,0)):
-    new_obj = bpy.data.objects.new(name=obj.name, object_data=obj.data)
-    mw = new_obj.matrix_world.copy()
-    new_obj.parent = target["chart"]
-    new_obj.matrix_world = mw
-
-    new_obj.scale = scale
-    new_obj.location = loc
-    new_obj.rotation_euler = rot
-    new_obj.hide_viewport = False
-    target["collection"].objects.link(new_obj)
-    return new_obj
-
-
-def create_material(color, roughness = 0.5, metallic = 0, alpha = None):
-    mat = bpy.data.materials.new("QuickChartMat1")
-    mat.use_nodes = True
-    bsdf = mat.node_tree.nodes.get("Principled BSDF")
-    bsdf.inputs["Base Color"].default_value = color
-    bsdf.inputs["Roughness"].default_value = roughness
-    bsdf.inputs["Metallic"].default_value = metallic
-    bsdf.inputs["Alpha"].default_value = alpha if alpha is not None else color[3]
-    return mat
-
 
 
 def create_line_chart(mat, data, x_space, minv, maxv, minz, maxz, z_offset):
@@ -50,12 +24,6 @@ def create_line_chart(mat, data, x_space, minv, maxv, minz, maxz, z_offset):
 
     return create_object(name, curve_data, mat)
 
-def render_object(collection, parent, obj, rot = (0, 0, 0), loc = (0, 0, 0), scale = (1,1,1)):
-    obj.parent = parent
-    obj.rotation_euler = rot
-    obj.location = loc
-    obj.scale = scale
-    collection.objects.link(obj)
 
 
 def init_target_collection():
@@ -122,59 +90,6 @@ def setup_scene(target, props):
 
     #create_area_light(target, name="QuickChart_Top_Light", location=(props.size[0]/2, props.size[1]/2, props.size[2]*2), target_loc=target_loc, power=1000, size=max(props.size))
 
-def get_color(color_idx):
-    if color_idx > len(COLORS)-1:
-        color = np.random.rand(4)
-        color[3] = 1
-    else:
-        color = COLORS[color_idx]
-    return color
-
-def get_object_from_shape(shape, mat):
-    if shape == 'cone': obj = create_cone(mat)
-    elif shape == 'cylinder': obj = create_cylinder(mat)
-    elif shape == 'pyramid': obj = create_pyramid(mat)
-    else: obj = create_bar(mat)
-    return obj
-
-def get_donut_object_from_shape(shape, mat, r, mr, angle):
-    if shape in {'circle'}:
-        obj = create_partial_donat(mat, major_radius=r, minor_radius=mr, angle=angle)
-    else:
-        obj = create_cubic_partial_donut(mat, major_radius=r, half_size=mr, angle=angle)
-    return obj
-
-def create_stacked_object(target, shape, mat, loc, scale, val, height, maxv, rot=(0, 0, 0)):
-
-    if shape == 'cone':
-        if maxv != 0:
-            r1 = (maxv-height) * 0.5/maxv
-            r2 = (maxv-height-val) * 0.5/maxv
-            obj = create_cone(mat,r1=r1,r2=r2)
-        else:
-            obj = create_cone(mat)
-    elif shape == 'cylinder':
-        obj = create_cylinder(mat)
-    elif shape == 'pyramid':
-        if maxv != 0:
-            bs = (maxv-height)/maxv
-            ts = (maxv-height-val)/maxv
-            obj = create_pyramid(mat, base_size=bs) if ts == 0 else create_pyramid_frustam(mat, bs, ts)
-        else:
-            obj = create_pyramid(mat)
-    else:
-        obj = create_bar(mat)
-
-    obj.parent = target["chart"]
-    obj.scale = scale
-    obj.data.materials.append(mat)
-    obj.location = loc
-    obj.rotation_euler = rot
-    target["collection"].objects.link(obj)
-
-
-def remap(x, in_min, in_max, out_min, out_max):
-    return out_min + ((x - in_min) / (in_max - in_min)) * (out_max - out_min)
 
 def format_value_label(props, val, x, y, transposed):
     if props.data_series in {'rows'}:

@@ -267,3 +267,75 @@ def create_camera(target, name, location, target_loc, ortho_scale=2):
     cam_obj.rotation_euler = direction.to_track_quat('-Z', 'Y').to_euler()
 
     bpy.context.scene.camera = cam_obj
+
+def create_stacked_object(target, shape, mat, loc, scale, val, height, maxv, rot=(0, 0, 0)):
+
+    if shape == 'cone':
+        if maxv != 0:
+            r1 = (maxv-height) * 0.5/maxv
+            r2 = (maxv-height-val) * 0.5/maxv
+            obj = create_cone(mat,r1=r1,r2=r2)
+        else:
+            obj = create_cone(mat)
+    elif shape == 'cylinder':
+        obj = create_cylinder(mat)
+    elif shape == 'pyramid':
+        if maxv != 0:
+            bs = (maxv-height)/maxv
+            ts = (maxv-height-val)/maxv
+            obj = create_pyramid(mat, base_size=bs) if ts == 0 else create_pyramid_frustam(mat, bs, ts)
+        else:
+            obj = create_pyramid(mat)
+    else:
+        obj = create_bar(mat)
+
+    obj.parent = target["chart"]
+    obj.scale = scale
+    obj.data.materials.append(mat)
+    obj.location = loc
+    obj.rotation_euler = rot
+    target["collection"].objects.link(obj)
+
+def create_material(color, roughness = 0.5, metallic = 0, alpha = None):
+    mat = bpy.data.materials.new("QuickChartMat1")
+    mat.use_nodes = True
+    bsdf = mat.node_tree.nodes.get("Principled BSDF")
+    bsdf.inputs["Base Color"].default_value = color
+    bsdf.inputs["Roughness"].default_value = roughness
+    bsdf.inputs["Metallic"].default_value = metallic
+    bsdf.inputs["Alpha"].default_value = alpha if alpha is not None else color[3]
+    return mat
+
+def get_object_from_shape(shape, mat):
+    if shape == 'cone': obj = create_cone(mat)
+    elif shape == 'cylinder': obj = create_cylinder(mat)
+    elif shape == 'pyramid': obj = create_pyramid(mat)
+    else: obj = create_bar(mat)
+    return obj
+
+def get_donut_object_from_shape(shape, mat, r, mr, angle):
+    if shape in {'circle'}:
+        obj = create_partial_donat(mat, major_radius=r, minor_radius=mr, angle=angle)
+    else:
+        obj = create_cubic_partial_donut(mat, major_radius=r, half_size=mr, angle=angle)
+    return obj
+
+def clone_and_scale_object(target, obj, scale, loc, rot = (0,0,0)):
+    new_obj = bpy.data.objects.new(name=obj.name, object_data=obj.data)
+    mw = new_obj.matrix_world.copy()
+    new_obj.parent = target["chart"]
+    new_obj.matrix_world = mw
+
+    new_obj.scale = scale
+    new_obj.location = loc
+    new_obj.rotation_euler = rot
+    new_obj.hide_viewport = False
+    target["collection"].objects.link(new_obj)
+    return new_obj
+
+def render_object(collection, parent, obj, rot = (0, 0, 0), loc = (0, 0, 0), scale = (1,1,1)):
+    obj.parent = parent
+    obj.rotation_euler = rot
+    obj.location = loc
+    obj.scale = scale
+    collection.objects.link(obj)
