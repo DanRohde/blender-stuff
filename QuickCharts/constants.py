@@ -55,7 +55,7 @@ BC_SUB_TYPES = [("deep", "Deep", "Deep"),
 
 DONUT_SHAPES = [("cubic", "Cubic", "Cubic"), ("circle", "Circle", "Circle") ]
 
-AREA_SUB_TYPES = [("normal", "Normal", "Normal"), ("stacked"," Stacked", "Stacked")]
+AREA_SUB_TYPES = [("normal", "Normal", "Normal"), ("stacked"," Stacked", "Stacked"), ("percstacked", "Percent Stacked", "Percent Stacked")]
 
 DATA_SERIES = [("columns","Columns", "Columns"), ("rows","Rows", "Rows"), ]
 

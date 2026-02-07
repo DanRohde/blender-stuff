@@ -533,7 +533,57 @@ def render_line_chart(target, props, csv):
         render_object(target["collection"], target["chart"], obj, loc=loc)
         row_idx += 1
 def render_area_chart(target, props, csv):
-    pass
+    cx, cy, cz = bpy.context.scene.cursor.location
+    ph = np.pi / 2
+    transposed = props.data_series == 'columns'
+    data = csv["rows"] if not transposed else list(map(list, zip(*csv["rows"])))
+    row_count = get_data_row_count(props, data, transposed)
+
+    labels_left = (not transposed and props.csv_format in {'left', 'header-left'}) or (transposed and props.csv_format in {'header', 'header-left'})
+    labels_header = (not transposed and props.csv_format in {'header', 'header-left'}) or (transposed and props.csv_format in {'header-left', 'left'})
+    mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i in range(row_count)]
+    minv = min(0, csv["minv"])
+    zero_z_position = remap(0, minv, csv["maxv"], 0, props.size[2])
+    x_space = props.size[0] / len(data[0])
+    y_space = props.size[1] / len(data)
+    sums = csv["row_sums"] if transposed else csv["col_sums"]
+    if labels_left: sums = sums[1:]
+
+    label_mat = create_material(props.label_color, roughness=props.label_roughness, metallic=props.label_metallic)
+    if props.legend:
+        render_legend(target, props, get_labels_invert(data, labels_left = labels_left, labels_header = labels_header), mats, label_mat)
+        target["legend"].rotation_euler = (0, ph, -ph)
+
+    max_sums = max(sums)
+    row_idx = 0
+    sum_bottom = [ 0 ] * len(sums)
+    for row in range(len(data)):
+        if row == 0 and labels_header:
+            continue
+        row_data = data[row][1:] if labels_left else data[row]
+        if props.area_sub_type == 'normal':
+            obj = create_area_chart(mats[row_idx], row_data, minv=minv, maxv=csv["maxv"], minz=0, maxz=props.size[2], thickness=y_space-props.spacing[1], x_space=x_space-props.spacing[0], z_offset=zero_z_position)
+            loc = (cx + x_space if labels_left else 0, cy + row_idx * y_space, cz + zero_z_position)
+        else:
+            min_idx = 1 if labels_header else 0
+            if row > min_idx:
+                bottom_data = data[row-1][1:] if labels_left else data[row-1]
+                sum_bottom = [ x + float(y) for x,y in zip(sum_bottom, bottom_data) ]
+            if props.area_sub_type == 'percstacked':
+                maxv = 1
+                rd = [ float(x)/sums[i] for i,x in enumerate(row_data)]
+                sb = [ float(x)/sums[i] for i,x in enumerate(sum_bottom)]
+            else:
+                maxv = max_sums
+                rd = row_data
+                sb = sum_bottom
+
+            obj = create_area_chart(mats[row_idx], rd, bottom=sb, minv=0, maxv=maxv, minz=0, maxz=props.size[2],
+                                    thickness=y_space - props.spacing[1], x_space=x_space - props.spacing[0],
+                                    z_offset=zero_z_position)
+            loc = (cx + x_space if labels_left else 0, cy, cz + zero_z_position)
+        render_object(target["collection"], target["chart"], obj, loc=loc)
+        row_idx += 1
 def render_chart(props, csv):
     np.random.seed(0)
     target  = init_target_collection()

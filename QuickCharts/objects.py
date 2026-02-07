@@ -240,7 +240,7 @@ def create_line_chart(mat, data, x_space, minv, maxv, minz, maxz, z_offset):
     return create_object(name, curve_data, mat)
 
 
-def create_area_chart(mat, data, bottom=None, thickness = 1, minv = 0, maxv = 1, minz = 0, maxz = 1, x_space = 1):
+def create_area_chart(mat, data, bottom=None, thickness = 1, minv = 0, maxv = 1, minz = 0, maxz = 1, x_space = 1, z_offset = 0):
     name = "QuickChartAreaChart"
     point_count = len(data)
     if point_count<2:
@@ -249,57 +249,49 @@ def create_area_chart(mat, data, bottom=None, thickness = 1, minv = 0, maxv = 1,
     bm = bmesh.new()
 
     xp = 0
-    front_face = []
-    back_face = []
-    bottom_face = []
+    zv = float(data[0]) if bottom is None else float(bottom[0]) + float(data[0])
+    z = remap(zv, minv, maxv, minz, maxz) - z_offset
+    t1 = bm.verts.new((xp, 0, z))
+    t4 = bm.verts.new((xp, thickness, z))
+
+    zv = 0 if bottom is None else float(bottom[0])
+    z = remap(zv, minv, maxv, minz, maxz) - z_offset
+    b1 = bm.verts.new((xp, 0, z))
+    b4 = bm.verts.new((xp, thickness, z))
     for idx in range(point_count-1):
         # top face:
-        z1 = remap(float(data[idx]), minv, maxv, minz, maxz)
-        z2 = remap(float(data[idx+1]), minv, maxv, minz, maxz)
-        v1 = bm.verts.new((xp, 0, z1))
-        v2 = bm.verts.new((xp + x_space, 0, z2))
-        v3 = bm.verts.new((xp + x_space, thickness, z2))
-        v4 = bm.verts.new((xp, thickness, z1))
-        front_face.extend((v1, v2))
-        back_face.extend ((v3, v4))
-        bm.faces.new((v1, v2, v3, v4))
+        zv = float(data[idx+1]) if bottom is None else float(bottom[idx+1]) + float(data[idx+1])
+        z = remap(zv, minv, maxv, minz, maxz) - z_offset
+        t2 = bm.verts.new((xp + x_space, 0, z))
+        t3 = bm.verts.new((xp + x_space, thickness, z))
+        bm.faces.new((t1, t2, t3, t4))
+
+        zv = 0 if bottom is None else float(bottom[idx+1])
+        z = remap(zv, minv, maxv, minz, maxz) - z_offset
+        b2 = bm.verts.new((xp + x_space, 0, z))
+        b3 = bm.verts.new((xp + x_space, thickness, z))
+        # bottom face:
+        bm.faces.new((b1, b2, b3, b4))
 
         if idx == 0:
             # left face:
-            if bottom is not None:
-                z3 = remap(bottom[0], minv, maxv, minz, maxz)
-                l1 = bm.verts.new((0, 0, z3))
-                l2 = bm.verts.new((0, thickness, z3))
-            else:
-                l1 = bm.verts.new((0, 0, 0))
-                l2 = bm.verts.new((0, thickness, 0))
-            bm.faces.new((l1, v2, v4, l2))
-            bottom_face.extend((l1, l2))
-        elif idx == point_count - 1:
+            bm.faces.new((t1, t4, b4, b1))
+        elif idx == point_count - 2:
             # right face:
-            if bottom is not None:
-                z3 = remap(bottom[idx], minv, maxv, minz, maxz)
-                r1 = bm.verts.new((xp + x_space, 0, z3))
-                r2 = bm.verts.new((xp + x_space, thickness, z3))
-            else:
-                r1 = bm.verts.new((xp + x_space, 0, 0))
-                r2 = bm.verts.new((xp + x_space, thickness, 0))
-            bm.faces.new((v2, v3, r2, r1))
-            bottom_face.extend((r1, r2))
-        if bottom is not None:
-            z3 = remap(bottom[idx], minv, maxv, minz, maxz)
-            z4 = remap(bottom[idx+1], minv, maxv, minz, maxz)
-            b1 = bm.verts.new((xp, 0, z3))
-            b2 = bm.verts.new((xp + x_space, 0, z4))
-            b3 = bm.verts.new((xp + x_space, thickness, z4))
-            b4 = bm.verts.new((xp, thickness, z3))
-            # bottom face:
-            bm.faces.new((b1, b2, b3, b4))
-        xp += x_space
+            bm.faces.new((t2, t3, b3, b2))
 
-    if bottom is None: bm.faces.new(bottom_face)
-    bm.faces.new(front_face)
-    bm.faces.new(back_face)
+        # front face:
+        bm.faces.new((b1,b2,t2,t1))
+        # back face:
+        bm.faces.new((t3,t4,b4,b3))
+        xp += x_space
+        t1, t4 = t2, t3
+        b1, b4 = b2, b3
+
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+
+    bm.to_mesh(mesh)
+    bm.free()
     return create_object(name, mesh, mat)
 
 def render_text_object(collection, parent, text, loc, mat, rot = (0, 0, np.pi / 2), x_align = 'RIGHT', y_align = 'BOTTOM', size = 1):
