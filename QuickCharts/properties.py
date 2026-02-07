@@ -3,7 +3,9 @@ from bpy.props import StringProperty, CollectionProperty, EnumProperty, BoolProp
 
 from .handlers import handle_csv_filename_update, handle_data_series_update
 
-from .constants import CHART_TYPES, CSV_FORMATS, BC_SHAPES, BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC, ALPHA, ICONS, DONUT_SHAPES, LABEL_COLOR, AXIS_COLOR, VALUE_COLOR
+from .constants import (CHART_TYPES, CSV_FORMATS, BC_SHAPES,
+                        BC_SUB_TYPES, DATA_SERIES, ROUGHNESS, METALLIC, ALPHA, ICONS, DONUT_SHAPES,
+                        LABEL_COLOR, AXIS_COLOR, VALUE_COLOR, AREA_SUB_TYPES)
 from .icons import preview_collections
 
 
@@ -33,6 +35,10 @@ def get_bc_sub_types_enum_items(_self, _context):
 def get_data_series_enum_items(_self, _context):
     return get_enum_items(DATA_SERIES, "series")
 
+def get_area_sub_types_enum_items(_self, _context):
+    return get_enum_items(AREA_SUB_TYPES, "subtype")
+
+
 class CSVCellTypeItems(PropertyGroup):
     name: StringProperty(name="", default="", description="Column label")
     cell_type: EnumProperty(name="", items=[("float","Float","Float"),("label","Label","Label"), ("int","Integer","Integer")], description="Column type")
@@ -56,6 +62,8 @@ class Properties(PropertyGroup):
     bc_sub_type: EnumProperty(items=get_bc_sub_types_enum_items, name="", description="Subtype")
     # donat charts:
     donut_shape: EnumProperty(items=DONUT_SHAPES, name="Shape", description="Shape")
+    # area charts:
+    area_sub_type: EnumProperty(items=get_area_sub_types_enum_items, name="", description="Subtype")
 
     data_series: EnumProperty(items=get_data_series_enum_items, name="", description="Data series", update=handle_data_series_update)
 

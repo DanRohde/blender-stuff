@@ -18,6 +18,8 @@ def read_complete_csv(props):
     abs_row_sums = []
     col_sums = []
     abs_col_sums = []
+    total = 0
+    abs_total = 0
     minv = None
     maxv = None
     try:
@@ -38,11 +40,14 @@ def read_complete_csv(props):
                     abs_row_sums[row_idx] += abs(v)
                     col_sums[col_idx] += v
                     abs_col_sums[col_idx] += abs(v)
+                    total += v
+                    abs_total += abs(v)
                     minv = min(minv, v) if minv is not None else v
                     maxv = max(maxv, v) if maxv is not None else v
     except Exception as e:
         print(f"Could not read {props.csv_filename}: {e}")
     return  { "rows": rows, "minv": minv, "maxv": maxv,
+              "total": total, "abs_total": abs_total,
               "row_sums": row_sums, "abs_row_sums": abs_row_sums,
               "col_sums": col_sums, "abs_col_sums": abs_col_sums }
 

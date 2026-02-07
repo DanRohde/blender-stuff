@@ -2,6 +2,7 @@ import bpy
 import bmesh
 import numpy as np
 from mathutils import Vector
+from .common import remap
 
 def create_object(name, mesh, mat):
     obj = bpy.data.objects.new(name, mesh)
@@ -218,6 +219,87 @@ def create_cubic_partial_donut(mat, major_radius = 1.0, half_size = 0.3, angle=n
 
     bm.to_mesh(mesh)
     bm.free()
+    return create_object(name, mesh, mat)
+
+def create_line_chart(mat, data, x_space, minv, maxv, minz, maxz, z_offset):
+    name = "QuickChartLineChart"
+    curve_data = bpy.data.curves.new(name=name, type='CURVE')
+    curve_data.dimensions = '3D'
+    curve_data.fill_mode = 'FULL'
+    curve_data.bevel_depth = .1
+    curve_data.bevel_resolution = 4
+    curve_data.use_fill_caps = True
+
+    polyline = curve_data.splines.new('POLY')
+    point_count = len(data)
+    polyline.points.add(point_count-1)
+
+    for i in range(point_count):
+        polyline.points[i].co = (i * x_space, 0, remap(float(data[i]), minv, maxv, minz, maxz)-z_offset, 1)
+
+    return create_object(name, curve_data, mat)
+
+
+def create_area_chart(mat, data, bottom=None, thickness = 1, minv = 0, maxv = 1, minz = 0, maxz = 1, x_space = 1):
+    name = "QuickChartAreaChart"
+    point_count = len(data)
+    if point_count<2:
+        return None
+    mesh = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+
+    xp = 0
+    front_face = []
+    back_face = []
+    bottom_face = []
+    for idx in range(point_count-1):
+        # top face:
+        z1 = remap(float(data[idx]), minv, maxv, minz, maxz)
+        z2 = remap(float(data[idx+1]), minv, maxv, minz, maxz)
+        v1 = bm.verts.new((xp, 0, z1))
+        v2 = bm.verts.new((xp + x_space, 0, z2))
+        v3 = bm.verts.new((xp + x_space, thickness, z2))
+        v4 = bm.verts.new((xp, thickness, z1))
+        front_face.extend((v1, v2))
+        back_face.extend ((v3, v4))
+        bm.faces.new((v1, v2, v3, v4))
+
+        if idx == 0:
+            # left face:
+            if bottom is not None:
+                z3 = remap(bottom[0], minv, maxv, minz, maxz)
+                l1 = bm.verts.new((0, 0, z3))
+                l2 = bm.verts.new((0, thickness, z3))
+            else:
+                l1 = bm.verts.new((0, 0, 0))
+                l2 = bm.verts.new((0, thickness, 0))
+            bm.faces.new((l1, v2, v4, l2))
+            bottom_face.extend((l1, l2))
+        elif idx == point_count - 1:
+            # right face:
+            if bottom is not None:
+                z3 = remap(bottom[idx], minv, maxv, minz, maxz)
+                r1 = bm.verts.new((xp + x_space, 0, z3))
+                r2 = bm.verts.new((xp + x_space, thickness, z3))
+            else:
+                r1 = bm.verts.new((xp + x_space, 0, 0))
+                r2 = bm.verts.new((xp + x_space, thickness, 0))
+            bm.faces.new((v2, v3, r2, r1))
+            bottom_face.extend((r1, r2))
+        if bottom is not None:
+            z3 = remap(bottom[idx], minv, maxv, minz, maxz)
+            z4 = remap(bottom[idx+1], minv, maxv, minz, maxz)
+            b1 = bm.verts.new((xp, 0, z3))
+            b2 = bm.verts.new((xp + x_space, 0, z4))
+            b3 = bm.verts.new((xp + x_space, thickness, z4))
+            b4 = bm.verts.new((xp, thickness, z3))
+            # bottom face:
+            bm.faces.new((b1, b2, b3, b4))
+        xp += x_space
+
+    if bottom is None: bm.faces.new(bottom_face)
+    bm.faces.new(front_face)
+    bm.faces.new(back_face)
     return create_object(name, mesh, mat)
 
 def render_text_object(collection, parent, text, loc, mat, rot = (0, 0, np.pi / 2), x_align = 'RIGHT', y_align = 'BOTTOM', size = 1):

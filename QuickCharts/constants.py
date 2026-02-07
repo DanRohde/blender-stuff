@@ -36,6 +36,7 @@ ICONS = {
 CHART_TYPES = [
             ("column","Column Chart","Column chart"),
             ("bar","Bar Chart","Bar chart"),
+            ("area", "Area Chart", "Area chart"),
             ("line","Line Chart","Line"),
             ("donut", "Donut Chart", "Donut Chart"),
             ("bubble", "Bubble Chart", "buble"),
@@ -53,6 +54,8 @@ BC_SUB_TYPES = [("deep", "Deep", "Deep"),
                 ]
 
 DONUT_SHAPES = [("cubic", "Cubic", "Cubic"), ("circle", "Circle", "Circle") ]
+
+AREA_SUB_TYPES = [("normal", "Normal", "Normal"), ("stacked"," Stacked", "Stacked")]
 
 DATA_SERIES = [("columns","Columns", "Columns"), ("rows","Rows", "Rows"), ]
 

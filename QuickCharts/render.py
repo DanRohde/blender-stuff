@@ -4,25 +4,6 @@ from .data import get_cell_type
 from .objects import *
 from .axes import draw_2d_axes
 
-def create_line_chart(mat, data, x_space, minv, maxv, minz, maxz, z_offset):
-    name = "QuickChartLineChart"
-    curve_data = bpy.data.curves.new(name=name, type='CURVE')
-    curve_data.dimensions = '3D'
-    curve_data.fill_mode = 'FULL'
-    curve_data.bevel_depth = .1
-    curve_data.bevel_resolution = 4
-    curve_data.use_fill_caps = True
-
-    polyline = curve_data.splines.new('POLY')
-    point_count = len(data)
-    polyline.points.add(point_count-1)
-
-    for i in range(point_count):
-        polyline.points[i].co = (i * x_space, 0, remap(float(data[i]), minv, maxv, minz, maxz)-z_offset, 1)
-
-    return create_object(name, curve_data, mat)
-
-
 
 def init_target_collection():
     target_collection = bpy.data.collections.new("QuickChartCollection")
@@ -551,7 +532,8 @@ def render_line_chart(target, props, csv):
         obj = create_line_chart(mats[row_idx], row_data, x_space, minv, csv["maxv"], 0, props.size[2], zero_z_position)
         render_object(target["collection"], target["chart"], obj, loc=loc)
         row_idx += 1
-
+def render_area_chart(target, props, csv):
+    pass
 def render_chart(props, csv):
     np.random.seed(0)
     target  = init_target_collection()
@@ -566,3 +548,5 @@ def render_chart(props, csv):
         render_table(target, props, csv)
     elif props.chart_type == "line":
         render_line_chart(target, props, csv)
+    elif props.chart_type == "area":
+        render_area_chart(target, props, csv)
