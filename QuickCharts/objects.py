@@ -276,7 +276,7 @@ def create_area_chart(mat, data, bottom=None, thickness = 1, minv = 0, maxv = 1,
         if idx == 0:
             # left face:
             bm.faces.new((t1, t4, b4, b1))
-        elif idx == point_count - 2:
+        if idx == point_count - 2:
             # right face:
             bm.faces.new((t2, t3, b3, b2))
 

@@ -74,4 +74,5 @@ paths_exclude_pattern = [
    "/*.zip",
    "*.xcf",
    "*.svg",
+   "/test/",
 ]
