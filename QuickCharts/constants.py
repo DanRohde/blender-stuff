@@ -23,6 +23,7 @@ ICONS = {
     "column_chart" : "column_chart.png",
     "bar_chart" : "bar_chart.png",
     "donut_chart" : "donut_chart.png",
+    "area_chart" : "area_chart.png",
     #"bc_subtype_deep" : "bc_subtype_deep.png",
     #"bc_subtype_stacked" : "bc_subtype_stacked.png",
     #"bc_subtype_percstacked" : "bc_subtype_percstacked.png",
