@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.3 (fcd0343856, 2026-01-01)"
+   sodipodi:docname="line_chart.svg"
+   inkscape:export-filename="line_chart.png"
+   inkscape:export-xdpi="32.720001"
+   inkscape:export-ydpi="32.720001"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="2.9304259"
+     inkscape:cx="397.21189"
+     inkscape:cy="186.15042"
+     inkscape:window-width="3376"
+     inkscape:window-height="1371"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="ruler"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1.3.1"
+       unit="px"
+       mark_distance="20"
+       mark_angle="0"
+       mark_length="14"
+       minor_mark_length="7"
+       minor_mark_gap="0"
+       major_mark_gap="0"
+       major_mark_steps="5"
+       shift="0"
+       offset="0"
+       mark_dir="left"
+       border_marks="both" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#6aa8ff;fill-opacity:1;stroke-width:0.264583"
+       d="m 76.5448,59.28 0.7595,2.3953 0.7594,2.3952 0.7595,2.3953 0.7595,2.3953 0.7595,2.3953 0.7595,2.3953 0.7595,2.3953 0.7594,2.3953 0.7595,2.3953 0.7595,2.3953 0.7595,2.3953 0.7595,2.3953 0.7595,2.3953 0.7595,2.3953 0.7594,2.3953 0.7595,2.3953 L 89.456,100 86.446407,100.27087 74.696883,60.905142 33.411029,42.93776 13.1744,100 H 10.544 l 0.8523,-2.4306 0.8523,-2.4305 0.8524,-2.4306 0.8523,-2.4305 0.8523,-2.4306 0.8523,-2.4306 0.8523,-2.4305 0.8524,-2.4306 0.8523,-2.4306 0.8523,-2.4305 0.8523,-2.4306 0.8524,-2.4305 0.8523,-2.4306 0.8523,-2.4306 0.8523,-2.4305 0.8523,-2.4306 0.8524,-2.4306 0.8523,-2.4305 0.8523,-2.4306 0.8523,-2.4305 0.8524,-2.4306 0.8523,-2.4306 0.8523,-2.4305 0.8523,-2.4306 0.8523,-2.4306"
+       id="rect1"
+       sodipodi:nodetypes="cccccccccccccccccccccccccccccccccccccccccccccccc" />
+  </g>
+</svg>

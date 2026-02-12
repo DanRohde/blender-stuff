@@ -8,8 +8,8 @@
    version="1.1"
    id="svg1"
    inkscape:version="1.4.3 (fcd0343856, 2026-01-01)"
-   sodipodi:docname="bar_chart.svg"
-   inkscape:export-filename="bar_chart.png"
+   sodipodi:docname="bubble_chart.svg"
+   inkscape:export-filename="bubble_chart.png"
    inkscape:export-xdpi="32.720001"
    inkscape:export-ydpi="32.720001"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -41,30 +41,23 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <g
-       id="g1"
-       transform="rotate(90,57.06568,57.06568)">
-      <rect
-         style="fill:#6aa8ff;stroke-width:0.174596"
-         id="rect1"
-         width="9.7490616"
-         height="39.997742"
-         x="25.158979"
-         y="59.951469" />
-      <rect
-         style="fill:#6aa8ff;stroke-width:0.234039"
-         id="rect1-3"
-         width="9.7490616"
-         height="71.86953"
-         x="45.125469"
-         y="28.196594" />
-      <rect
-         style="fill:#6aa8ff;stroke-width:0.215678"
-         id="rect1-1"
-         width="9.7490616"
-         height="61.034927"
-         x="65.091957"
-         y="39.013947" />
-    </g>
+    <circle
+       style="fill:#6aa8ff;stroke-width:0.264583"
+       id="path1"
+       cx="29.659725"
+       cy="54.940464"
+       r="7.4487891" />
+    <circle
+       style="fill:#6aa8ff;stroke-width:0.264583"
+       id="path2"
+       cx="55.43705"
+       cy="44.421867"
+       r="11.105467" />
+    <circle
+       style="fill:#6aa8ff;stroke-width:0.264583"
+       id="path3"
+       cx="66.271652"
+       cy="68.709435"
+       r="5.4173012" />
   </g>
 </svg>
