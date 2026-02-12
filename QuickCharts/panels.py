@@ -10,8 +10,8 @@ def draw_panel(props, layout):
 
     if props.chart_type in {"column", "bar"}:
         row = layout.row()
-        row.prop(props, "bc_shape", text="")
         row.prop(props, "bc_sub_type", text="")
+        row.prop(props, "bc_shape", text="")
     if props.chart_type in {"donut"}:
         row = layout.row()
         row.prop(props, "donut_shape")

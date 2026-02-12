@@ -166,7 +166,10 @@ def render_column_chart(target, props, csv):
     value_mat = create_material(props.value_color, roughness=props.value_roughness, metallic=props.value_metallic)
     minv = min(0, csv["minv"])
     zero_z_position = remap(0, minv, csv["maxv"], 0, props.size[2])
-    if props.legend: render_legend(target, props, get_labels_invert(data, labels_left=labels_left, labels_header=labels_header), mats, label_mat)
+    if props.legend:
+        render_legend(target, props, get_labels_invert(data, labels_left=labels_left, labels_header=labels_header), mats, label_mat)
+        target["legend"].rotation_euler = (0, ph, -ph)
+
 
     if props.bc_sub_type == 'normal':
         xs_space = xspace / len(data) - props.spacing[0] # space 4 all
@@ -280,7 +283,9 @@ def render_bar_chart(target, props, csv):
     value_mat = create_material(props.value_color, roughness=props.value_roughness, metallic=props.value_metallic)
     minv = min(0, csv["minv"])
     zero_x_position = remap(0, minv, csv["maxv"], 0, props.size[0])
-    if props.legend: render_legend(target, props, get_labels_invert(data, labels_left = labels_left, labels_header = labels_header), mats, label_mat)
+    if props.legend:
+        render_legend(target, props, get_labels_invert(data, labels_left = labels_left, labels_header = labels_header), mats, label_mat)
+        target["legend"].rotation_euler = (0, ph, -ph)
 
     if props.bc_sub_type == 'normal':
         zs_space = zspace / len(data) - props.spacing[2]  # space 4 all
@@ -581,9 +586,30 @@ def render_area_chart(target, props, csv):
             obj = create_area_chart(mats[row_idx], rd, bottom=sb, minv=0, maxv=maxv, minz=0, maxz=props.size[2],
                                     thickness=y_space - props.spacing[1], x_space=x_space - props.spacing[0],
                                     z_offset=zero_z_position)
+            if props.values or props.labels:
+                for col in range(len(data[0])):
+                    if props.values:
+                        ...
+                    if props.labels:
+                        ...
             loc = (cx + x_space if labels_left else 0, cy, cz + zero_z_position)
         render_object(target["collection"], target["chart"], obj, loc=loc)
         row_idx += 1
+
+def render_bubble_chart(target, props, csv):
+    cx, cy, cz = bpy.context.scene.cursor.location
+    ph = np.pi / 2
+    transposed = props.data_series == 'columns'
+    data = csv["rows"] if not transposed else list(map(list, zip(*csv["rows"])))
+    row_count = get_data_row_count(props, data, transposed)
+
+    labels_left = (not transposed and props.csv_format in {'left', 'header-left'}) or (
+                transposed and props.csv_format in {'header', 'header-left'})
+    labels_header = (not transposed and props.csv_format in {'header', 'header-left'}) or (
+                transposed and props.csv_format in {'header-left', 'left'})
+    mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i
+            in range(row_count)]
+
 def render_chart(props, csv):
     np.random.seed(0)
     target  = init_target_collection()
@@ -600,3 +626,5 @@ def render_chart(props, csv):
         render_line_chart(target, props, csv)
     elif props.chart_type == "area":
         render_area_chart(target, props, csv)
+    elif props.chart_type == "bubble":
+        render_bubble_chart(target, props, csv)
