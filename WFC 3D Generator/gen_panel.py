@@ -1,7 +1,7 @@
 import bpy
 import numpy as np
 import json
-from .helper import seed_in_seeds_list, render_source_collection, render_collection_actions, get_default_empty_name
+from .helper import seed_in_seeds_list, render_source_collection, render_collection_actions, get_target_name, render_target_object_actions
 class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Generator"
@@ -63,7 +63,11 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
         row.prop(props, "target_collection", placeholder="Target object name" if props.use_parent_object else "Target collection name")
         row.operator("object.wfc_target_collection_inc_number", emboss=False, icon="REMOVE").operator = "-"
         row.operator("object.wfc_target_collection_inc_number", emboss=False, icon="ADD").operator = "+"
-        render_collection_actions(context, row, props.target_collection if props.target_collection != "" else None)
+        target_name = get_target_name(props)
+        if props.use_parent_object:
+            render_target_object_actions(context, row, target_name)
+        else:
+            render_collection_actions(context, row, target_name)
 
         box = layout.box()
         row = box.row()
@@ -105,10 +109,6 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
         layout.separator(type="LINE", factor=0.2)
 
         if props.remove_target_collection and props.collection_obj:
-            target_name = props.target_collection
-            if target_name == "": target_name = "Object" if props.use_parent_object else "Collection"
-            if not props.use_parent_object and target_name == props.collection_obj.name: target_name = "Collection.001"
-
             if not props.use_parent_object and target_name in bpy.data.collections:
                 layout.box().label(text="Target collection will be removed!", icon="WARNING_LARGE")
             elif props.use_parent_object and target_name in bpy.data.objects:

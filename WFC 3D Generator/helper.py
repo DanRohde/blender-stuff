@@ -495,29 +495,55 @@ def seed_in_seeds_list(props):
                  ]
     return len(seed_idx) > 0, seed_idx
 def render_collection_actions(context, row, collection_name):
-    view_layer = context.view_layer.layer_collection.children[collection_name] \
-        if collection_name is not None and collection_name in context.view_layer.layer_collection.children else None
+    target = bpy.context.view_layer.active_layer_collection.children[collection_name] \
+        if collection_name in bpy.context.view_layer.active_layer_collection.children else None
 
     col = row.column(align=True)
-    is_src_excluded = view_layer is None or view_layer.exclude
+    is_src_excluded = target is None or target.exclude
     op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="CHECKBOX_DEHLT" if is_src_excluded else "CHECKBOX_HLT")
-    op.collection_name = collection_name if collection_name is not None else ""
+    op.target = collection_name
+    op.target_type = "collection"
     op.attribute_name = "exclude"
-    col.enabled = collection_name is not None
-
+    col.enabled = target is not None
     col = row.column(align=True)
-    is_src_hidden = view_layer is None or view_layer.hide_viewport
+    is_src_hidden = target is None or target.hide_viewport
     op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="HIDE_ON" if is_src_hidden else "HIDE_OFF")
-    op.collection_name = collection_name if collection_name is not None else ""
+    op.target = collection_name
+    op.target_type = "collection"
     op.attribute_name = "hide_viewport"
-    col.enabled = collection_name is not None
+    col.enabled = target is not None
 
     col = row.column(align=True)
-    is_src_rendered = view_layer is None or not bpy.data.collections[collection_name].hide_render
+    is_src_rendered = target is None or not bpy.data.collections[collection_name].hide_render
     op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="RESTRICT_RENDER_OFF" if is_src_rendered else "RESTRICT_RENDER_ON")
-    op.collection_name = collection_name if collection_name is not None else ""
+    op.target = collection_name
+    op.target_type = "collection"
     op.attribute_name = "hide_render"
-    col.enabled = collection_name is not None and collection_name in bpy.data.collections
+    col.enabled = target is not None
+
+def render_target_object_actions(context, row, target_name):
+    target =bpy.data.objects[target_name] if target_name in bpy.data.objects else None
+
+    col = row.column(align=True)
+    col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="CHECKBOX_DEHLT")
+    col.enabled = False
+
+    col = row.column(align=True)
+    is_src_hidden = target is None or target.hide_get()
+    op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="HIDE_ON" if is_src_hidden else "HIDE_OFF")
+    op.target = target_name
+    op.attribute_name = "hide_viewport"
+    op.target_type = "object"
+    col.enabled = target is not None
+
+    col = row.column(align=True)
+    is_src_rendered = target is None or not target.hide_render
+    op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="RESTRICT_RENDER_OFF" if is_src_rendered else "RESTRICT_RENDER_ON")
+    op.target = target_name
+    op.target_type = "object"
+    op.attribute_name = "hide_render"
+    col.enabled = target is not None
+
 
 def render_source_collection(context, layout):
     props = context.scene.wfc_props
@@ -525,4 +551,8 @@ def render_source_collection(context, layout):
     row.prop(props, "collection_obj", placeholder="Source Collection")
     render_collection_actions(context, row, props.collection_obj.name if props.collection_obj is not None else None)
 
-
+def get_target_name(props):
+    target_name = props.target_collection
+    if target_name == "": target_name = "Object" if props.use_parent_object else "Collection"
+    if not props.use_parent_object and target_name == props.collection_obj.name: target_name = "Collection.001"
+    return target_name

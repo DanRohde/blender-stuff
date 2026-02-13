@@ -281,14 +281,26 @@ class OBJECT_OT_ToggleHideCollection(bpy.types.Operator):
     bl_idname = "object.wfc_toggle_hide_collection"
     bl_label = ""
     bl_description = "Show/Hide Collection"
-    collection_name: bpy.props.StringProperty(default="")
+    target: bpy.props.StringProperty(default="")
+    target_type: bpy.props.StringProperty(default="collection")
     attribute_name: bpy.props.StringProperty(default="hide_viewport")
     def execute(self, context):
-        if self.collection_name != "":
-            if self.attribute_name == "hide_render":
-                bpy.data.collections[self.collection_name].hide_render = not bpy.data.collections[self.collection_name].hide_render
-            elif self.collection_name in context.view_layer.layer_collection.children:
-                setattr(context.view_layer.layer_collection.children[self.collection_name], self.attribute_name, not getattr(context.view_layer.layer_collection.children[self.collection_name],self.attribute_name))
+        if self.target_type == "collection":
+            target_obj = context.view_layer.active_layer_collection.children[self.target] if self.target in context.view_layer.active_layer_collection.children else None
+        else:
+            target_obj = context.scene.objects[self.target] if self.target in context.scene.objects else None
+        if target_obj is None: return {'CANCELED'}
+        obj_list = [ target_obj ]
+        if self.target_type == "object":
+            obj_list.extend(target_obj.children)
+
+        for obj in obj_list:
+            if self.attribute_name == "hide_render" and self.target_type == "collection":
+                obj.collection.hide_render = not obj.collection.hide_render
+            elif self.attribute_name == "hide_viewport" and self.target_type == "object":
+                obj.hide_set(not obj.hide_get())
+            else:
+                setattr(obj, self.attribute_name, not getattr(obj, self.attribute_name))
 
 
 
