@@ -286,10 +286,10 @@ class OBJECT_OT_ToggleHideCollection(bpy.types.Operator):
     attribute_name: bpy.props.StringProperty(default="hide_viewport")
     def execute(self, context):
         if self.target_type == "collection":
-            target_obj = context.view_layer.active_layer_collection.children[self.target] if self.target in context.view_layer.active_layer_collection.children else None
+            target_obj = context.view_layer.layer_collection.children[self.target] if self.target in context.view_layer.layer_collection.children else None
         else:
             target_obj = context.scene.objects[self.target] if self.target in context.scene.objects else None
-        if target_obj is None: return {'CANCELED'}
+        if target_obj is None: return {'CANCELLED'}
         obj_list = [ target_obj ]
         if self.target_type == "object":
             obj_list.extend(target_obj.children)

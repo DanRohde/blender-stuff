@@ -495,8 +495,8 @@ def seed_in_seeds_list(props):
                  ]
     return len(seed_idx) > 0, seed_idx
 def render_collection_actions(context, row, collection_name):
-    target = bpy.context.view_layer.active_layer_collection.children[collection_name] \
-        if collection_name in bpy.context.view_layer.active_layer_collection.children else None
+    target = bpy.context.view_layer.layer_collection.children[collection_name] \
+        if collection_name in bpy.context.view_layer.layer_collection.children else None
 
     col = row.column(align=True)
     is_src_excluded = target is None or target.exclude
