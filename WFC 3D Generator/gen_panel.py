@@ -104,9 +104,15 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
         render_seed_selection(props, prefs,box.row(align=True), render_allowed)
         layout.separator(type="LINE", factor=0.2)
 
-        if props.remove_target_collection and props.target_collection != "" and props.target_collection in bpy.data.collections:
-            layout.box().label(text="Target collection will be removed!", icon="WARNING_LARGE")
-            
+        if props.remove_target_collection and props.collection_obj:
+            target_name = props.target_collection
+            if target_name == "": target_name = "Object" if props.use_parent_object else "Collection"
+            if not props.use_parent_object and target_name == props.collection_obj.name: target_name = "Collection.001"
+
+            if not props.use_parent_object and target_name in bpy.data.collections:
+                layout.box().label(text="Target collection will be removed!", icon="WARNING_LARGE")
+            elif props.use_parent_object and target_name in bpy.data.objects:
+                layout.box().label(text="Target object will be removed!", icon="WARNING_LARGE")
 
         render_generate_button(props, layout.row(), render_allowed)
 
