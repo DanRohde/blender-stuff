@@ -50,6 +50,8 @@ class WFC3DRenderer:
 
     def init_target_collection(self, progress):
         collection_name = self.props.target_collection
+        if collection_name == "": collection_name = "Object" if self.props.use_parent_object else "Collection"
+        if collection_name == self.props.collection_obj.name and not self.props.use_parent_object: collection_name = "Collection.001"
         if self.props.use_parent_object:
             self.target_collection_obj = bpy.context.scene.collection \
                 if self.props.collection_obj == bpy.context.view_layer.active_layer_collection.collection \
