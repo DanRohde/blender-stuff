@@ -109,6 +109,9 @@ def take_known_conn_name(_self, _context):
     if props.conn_known_names == '_NONE_': return
     props.conn_name = props.conn_known_names
 
+def handle_target_type_update(self, context):
+    self.use_parent_object = self.target_type == 'object'
+
 class WFC3DEditPanelMultiSelItem(bpy.types.PropertyGroup):
     obj: bpy.props.PointerProperty(type=bpy.types.ID)
     selected: bpy.props.BoolProperty(default=False, update=update_edit_form, name="", description="(De)Select building block.")
@@ -244,7 +247,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     location: bpy.props.FloatVectorProperty(name="", description="Location", subtype="TRANSLATION", default=(0.0, 0.0, 0.0), precision=3)
     use_cursor: bpy.props.BoolProperty(name="", description="Use cursor location (rotation is ignored if you use a target collection instead of a target object)", default=False,)
     use_constraints: bpy.props.BoolProperty(name="", description="Use constraints", default=True,)
-    target_collection: bpy.props.StringProperty(name="", description="Target collection for the 3D grid", default="WFC_Generated",)
+    target_collection: bpy.props.StringProperty(name="", description="Target for the 3D grid", default="WFC_Generated",)
+    target_type: bpy.props.EnumProperty(items=[("collection","Target Collection", "Target Collection", "GROUP", 0),("object", "Target Object", "Target Object","OUTLINER_OB_EMPTY",1)], description="Switch between target collection and target object", name="", update=handle_target_type_update)
     use_parent_object: bpy.props.BoolProperty(name="", description="Switch between target collection and target object", default=False,)
     parent_object: bpy.props.PointerProperty(type=bpy.types.Object, name="", description="")
     render_delay: bpy.props.FloatProperty(name="Render Delay", description="Render delay in milliseconds", default=0, min=0,step=10,precision=2)

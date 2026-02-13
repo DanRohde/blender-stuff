@@ -49,8 +49,7 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
 
         box = layout.box()
         row = box.row(align=True)
-        row.prop(props, "use_parent_object", emboss=False, icon="OUTLINER_OB_EMPTY" if props.use_parent_object else "GROUP", text="Target Object" if props.use_parent_object else "Target Collection" )
-
+        row.prop(props, "target_type")
         row.prop(props, "link_objects", icon="LINKED", text="")
         col = row.column()
         col.prop(props, "copy_modifiers", icon="MODIFIER", text="")
@@ -61,7 +60,7 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
         col.enabled = not props.remove_target_collection
 
         row = box.row(align=True)
-        row.prop(props, "target_collection", placeholder="Target collection")
+        row.prop(props, "target_collection", placeholder="Target object name" if props.use_parent_object else "Target collection name")
         row.operator("object.wfc_target_collection_inc_number", emboss=False, icon="REMOVE").operator = "-"
         row.operator("object.wfc_target_collection_inc_number", emboss=False, icon="ADD").operator = "+"
         render_collection_actions(context, row, props.target_collection if props.target_collection != "" else None)
