@@ -10,11 +10,20 @@ from .generator import WFC3DGenerator
 from .renderer import WFC3DRenderer
 
 
+def hide_recursive(name, collection):
+    for child in collection.children:
+        hide_recursive(name, child)
+    if collection.name.startswith(name): collection.hide_viewport = True
+
 def hide_old_target_collections(props):
+    if props.use_parent_object and props.hide_last_target_collections:
+        for obj in bpy.data.objects:
+            if not obj.name.startswith(props.target_collection): continue
+            for child in obj.children:
+                child.hide_set(True)
+        return True
     if not props.remove_target_collection and props.hide_last_target_collections:
-        vl = bpy.context.view_layer
-        for c in vl.layer_collection.children:
-            if c.name.startswith(props.target_collection): c.hide_viewport = True
+        hide_recursive(props.target_collection, bpy.context.view_layer.layer_collection)
         return True
     return False
 
@@ -56,8 +65,11 @@ def end_render_result(props):
 
 def generate_model(props, context):
     progress_offset = 0
-    if not hide_old_target_collections(props) and props.target_collection in bpy.data.collections:
-        progress_offset += len(bpy.data.collections[props.target_collection].objects)
+    if props.use_parent_object and props.target_collection in bpy.data.objects and not hide_old_target_collections(props):
+        progress_offset = len(bpy.data.objects[props.target_collection].children)
+    else:
+        if not hide_old_target_collections(props) and props.target_collection in bpy.data.collections:
+            progress_offset += len(bpy.data.collections[props.target_collection].objects)
     gs = np.prod(props.grid_size)
     progress = WFC3DProgress(progress_offset + 2*gs, context, cursor = not props.background_generation, end_callback = functools.partial(end_render_result, props))
     progress.begin()

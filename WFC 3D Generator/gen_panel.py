@@ -49,7 +49,7 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
 
         box = layout.box()
         row = box.row(align=True)
-        row.label(text="Target Collection")
+        row.prop(props, "use_parent_object", emboss=False, icon="OUTLINER_OB_EMPTY" if props.use_parent_object else "GROUP", text="Target Object" if props.use_parent_object else "Target Collection" )
 
         row.prop(props, "link_objects", icon="LINKED", text="")
         col = row.column()

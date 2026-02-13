@@ -50,14 +50,39 @@ class WFC3DRenderer:
 
     def init_target_collection(self, progress):
         collection_name = self.props.target_collection
-        if self.props.remove_target_collection and collection_name in bpy.data.collections:
-            for obj in bpy.data.collections[collection_name].objects:
-                bpy.data.objects.remove(obj,do_unlink=True)
-                if progress: progress.update_inc()
-            bpy.data.collections.remove(bpy.data.collections[collection_name])
-            bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
-        self.target_collection_obj = bpy.data.collections.new(collection_name)
-        bpy.context.scene.collection.children.link(self.target_collection_obj)
+        if self.props.use_parent_object:
+            self.target_collection_obj = bpy.context.scene.collection \
+                if self.props.collection_obj == bpy.context.view_layer.active_layer_collection.collection \
+                else bpy.context.view_layer.active_layer_collection.collection
+            if self.props.remove_target_collection and collection_name in bpy.data.objects:
+                self.props.parent_object = bpy.data.objects[collection_name]
+                children = [ obj for obj in bpy.data.objects if obj.parent == self.props.parent_object]
+                for child in children:
+                    bpy.data.objects.remove(child, do_unlink=True)
+                    if progress: progress.update_inc()
+                bpy.data.objects.remove(self.props.parent_object, do_unlink=True)
+                bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
+
+            self.props.parent_object = bpy.data.objects.new(collection_name, None)
+            self.target_collection_obj.objects.link(self.props.parent_object)
+            if self.props.use_cursor:
+                self.props.parent_object.location = bpy.context.scene.cursor.location
+                self.props.parent_object.rotation_euler = bpy.context.scene.cursor.rotation_euler
+            else:
+                self.props.parent_object.location = self.location
+                self.props.parent_object.rotation_euler = (0, 0, 0)
+        else:
+            if self.props.remove_target_collection and collection_name in bpy.data.collections:
+                for obj in bpy.data.collections[collection_name].objects:
+                    bpy.data.objects.remove(obj,do_unlink=True)
+                    if progress: progress.update_inc()
+                bpy.data.collections.remove(bpy.data.collections[collection_name])
+                bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
+            self.target_collection_obj = bpy.data.collections.new(collection_name)
+            if self.props.collection_obj == bpy.context.view_layer.active_layer_collection.collection:
+                bpy.context.scene.collection.children.link(self.target_collection_obj)
+            else:
+                bpy.context.view_layer.active_layer_collection.collection.children.link(self.target_collection_obj)
 
     def render_object(self, progress):
         if len(self.collapsed_cells) == 0: return False
@@ -115,12 +140,16 @@ class WFC3DRenderer:
             new_obj = original_obj.copy()
             new_obj.data = original_obj.data.copy()
 
-        lx, ly, lz = self.location if not self.use_cursor else bpy.context.scene.cursor.location
+        if self.props.use_parent_object:
+            lx, ly, lz = (0, 0, 0)
+        else:
+            lx, ly, lz = self.location if not self.use_cursor else bpy.context.scene.cursor.location
 
         new_obj.location = (lx + x * self.spacing[0] + (self.odd_offset[0] * (y % 2)), ly + y * self.spacing[1] + (self.odd_offset[1] * (x % 2)), lz + z * self.spacing[2] + (self.odd_offset[2] * (x % 2)))
 
         if self.props.use_constraints: self.constraints.apply_draw_constraints((x, y, z), self.props.spacing, obj_name, new_obj)
 
+        if self.props.use_parent_object: new_obj.parent = self.props.parent_object
         collection.objects.link(new_obj)
 
     def clean(self):
