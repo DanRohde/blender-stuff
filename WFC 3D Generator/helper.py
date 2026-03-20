@@ -496,29 +496,32 @@ def seed_in_seeds_list(props):
     return len(seed_idx) > 0, seed_idx
 def render_collection_actions(context, row, collection_name):
     target = bpy.context.view_layer.layer_collection.children[collection_name] \
-        if collection_name in bpy.context.view_layer.layer_collection.children else None
+        if collection_name is not None and collection_name in bpy.context.view_layer.layer_collection.children else None
 
     col = row.column(align=True)
     is_src_excluded = target is None or target.exclude
     op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="CHECKBOX_DEHLT" if is_src_excluded else "CHECKBOX_HLT")
-    op.target = collection_name
-    op.target_type = "collection"
-    op.attribute_name = "exclude"
+    if target is not None:
+        op.target = collection_name
+        op.target_type = "collection"
+        op.attribute_name = "exclude"
     col.enabled = target is not None
     col = row.column(align=True)
     is_src_hidden = target is None or target.hide_viewport
     op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="HIDE_ON" if is_src_hidden else "HIDE_OFF")
-    op.target = collection_name
-    op.target_type = "collection"
-    op.attribute_name = "hide_viewport"
+    if target is not None:
+        op.target = collection_name
+        op.target_type = "collection"
+        op.attribute_name = "hide_viewport"
     col.enabled = target is not None
 
     col = row.column(align=True)
     is_src_rendered = target is None or not bpy.data.collections[collection_name].hide_render
     op = col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="RESTRICT_RENDER_OFF" if is_src_rendered else "RESTRICT_RENDER_ON")
-    op.target = collection_name
-    op.target_type = "collection"
-    op.attribute_name = "hide_render"
+    if target is not None:
+        op.target = collection_name
+        op.target_type = "collection"
+        op.attribute_name = "hide_render"
     col.enabled = target is not None
 
 def render_target_object_actions(context, row, target_name):
@@ -554,5 +557,5 @@ def render_source_collection(context, layout):
 def get_target_name(props):
     target_name = props.target_collection
     if target_name == "": target_name = "Object" if props.use_parent_object else "Collection"
-    if not props.use_parent_object and target_name == props.collection_obj.name: target_name = "Collection.001"
+    if props.collection_obj is not None and not props.use_parent_object and target_name == props.collection_obj.name: target_name = "Collection.001"
     return target_name
