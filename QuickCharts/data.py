@@ -16,8 +16,12 @@ def read_complete_csv(props):
     rows = []
     row_sums = []
     abs_row_sums = []
+    min_row = {}
+    max_row = {}
     col_sums = []
     abs_col_sums = []
+    min_col = {}
+    max_col = {}
     total = 0
     abs_total = 0
     minv = None
@@ -44,12 +48,19 @@ def read_complete_csv(props):
                     abs_total += abs(v)
                     minv = min(minv, v) if minv is not None else v
                     maxv = max(maxv, v) if maxv is not None else v
+                    min_col[col_idx] = min(min_col[col_idx] if col_idx in min_col else v, v)
+                    max_col[col_idx] = max(max_col[col_idx] if col_idx in max_col else v, v)
+                    min_row[row_idx] = min(min_row[row_idx] if row_idx in min_row else v, v)
+                    max_row[row_idx] = max(max_row[row_idx] if row_idx in max_row else v, v)
+
     except Exception as e:
         print(f"Could not read {props.csv_filename}: {e}")
     return  { "rows": rows, "minv": minv, "maxv": maxv,
               "total": total, "abs_total": abs_total,
               "row_sums": row_sums, "abs_row_sums": abs_row_sums,
-              "col_sums": col_sums, "abs_col_sums": abs_col_sums }
+              "col_sums": col_sums, "abs_col_sums": abs_col_sums,
+              "min_col" : min_col, "max_col" : max_col,
+              "min_row" : min_row, "max_row" : max_row}
 
 def update_cell_types(props):
     props.cell_types.clear()

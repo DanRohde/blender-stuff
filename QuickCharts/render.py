@@ -610,6 +610,9 @@ def render_bubble_chart(target, props, csv):
     mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i
             in range(row_count)]
 
+    obj = create_sphere(mats[0], 1)
+    render_object(target["collection"], target["chart"], obj, loc=(0,0,0))
+
 def render_chart(props, csv):
     np.random.seed(0)
     target  = init_target_collection()

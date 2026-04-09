@@ -239,6 +239,17 @@ def create_line_chart(mat, data, x_space, minv, maxv, minz, maxz, z_offset):
 
     return create_object(name, curve_data, mat)
 
+def create_sphere(mat, radius):
+    name = "QuickChartSphere"
+    bm = bmesh.new()
+    bmesh.ops.create_uvsphere(bm, u_segments=32, v_segments=16, radius=radius)
+    mesh = bpy.data.meshes.new(name=name)
+    shade_smooth(bm)
+    bm.to_mesh(mesh)
+    bm.free()
+
+    return create_object(name, mesh, mat)
+
 
 def create_area_chart(mat, data, bottom=None, thickness = 1, minv = 0, maxv = 1, minz = 0, maxz = 1, x_space = 1, z_offset = 0):
     name = "QuickChartAreaChart"
