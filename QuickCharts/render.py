@@ -596,6 +596,34 @@ def render_area_chart(target, props, csv):
         render_object(target["collection"], target["chart"], obj, loc=loc)
         row_idx += 1
 
+def _get_bubble_data(row_data, labels_left):
+    dx = row_data[1] if labels_left else row_data[0]
+    dy = row_data[2] if labels_left else row_data[1]
+    if labels_left:
+        if len(row_data) > 4:
+            dz = row_data[3]
+            r = row_data[4]
+        else:
+            dz = 0
+            r = row_data[3]
+    else:
+        if len(row_data) > 3:
+            dz = row_data[2]
+            r = row_data[3]
+        else:
+            dz = 0
+            r = row_data[2]
+    return dx, dy, dz, r
+def _get_bubble_max_values(csv, data, labels_left):
+    maxx = csv["max_col"][1] if labels_left else csv["max_col"][0]
+    maxy = csv["max_col"][2] if labels_left else csv["max_col"][1]
+    if len(data[0]) > 4:
+        maxz = csv["max_col"][3] if labels_left else csv["max_col"][2]
+        maxr = csv["max_col"][4] if labels_left else csv["max_col"][3]
+    else:
+        maxz = 0
+        maxr = csv["max_col"][3] if labels_left else csv["max_col"][4]
+    return maxx, maxy, maxz, maxr
 def render_bubble_chart(target, props, csv):
     cx, cy, cz = bpy.context.scene.cursor.location
     ph = np.pi / 2
@@ -607,12 +635,17 @@ def render_bubble_chart(target, props, csv):
                 transposed and props.csv_format in {'header', 'header-left'})
     labels_header = (not transposed and props.csv_format in {'header', 'header-left'}) or (
                 transposed and props.csv_format in {'header-left', 'left'})
-    mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha) for i
-            in range(row_count)]
+    mats = [create_material(get_color(i), roughness=props.roughness, metallic=props.metallic, alpha=props.alpha)
+            for i in range(row_count)]
+    maxx, maxy, maxz, maxr = _get_bubble_max_values(csv, data, labels_left)
+    color_idx = 0
+    for row in range(len(data)):
+        if row == 0 and labels_header: continue
+        dy, dy, dz, r = _get_bubble_data(data[row], labels_left)
 
-    obj = create_sphere(mats[0], 1)
-    render_object(target["collection"], target["chart"], obj, loc=(0,0,0))
-
+        obj = create_sphere(mats[color_idx] if labels_left else mats[0], 1)
+        render_object(target["collection"], target["chart"], obj, loc=(cx,cy,cz))
+        color_idx += 1
 def render_chart(props, csv):
     np.random.seed(0)
     target  = init_target_collection()
