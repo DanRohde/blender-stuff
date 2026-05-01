@@ -558,15 +558,19 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
 
         box.row().label(text="Applies only to mesh objects.", icon="INFO_LARGE")
         row = box.row()
+        row.label(text="Match")
+        row.prop(props, "geo_match_edges")
+        row.prop(props, "geo_match_faces")
+
+        row = box.row()
+        row.enabled = props.geo_match_edges or props.geo_match_faces
         row.column().label(text="Faces:")
         col = row.column()
         for i, d in enumerate(FACE_DIRECTIONS):
             if i !=0 and i % 2 == 0: col = row.column()
             col.prop(props, f"geo_{d.lower()}")
         row = box.row()
-        row.prop(props, "geo_match_edges")
-        row.prop(props, "geo_match_faces")
-        row = box.row()
+        row.enabled = props.geo_match_edges or props.geo_match_faces
         row.prop(props, "geo_tolerance")
         row.prop(props, "geo_threshold")
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')

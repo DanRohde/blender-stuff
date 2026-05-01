@@ -302,8 +302,20 @@ class OBJECT_OT_ToggleHideCollection(bpy.types.Operator):
             else:
                 setattr(obj, self.attribute_name, not getattr(obj, self.attribute_name))
 
-
-
         return {'FINISHED'}
-operators = [ OBJECT_OT_ToggleHideCollection, OBJECT_OT_RandomSeed, OBJECT_OT_TargetCollectionIncNumber, OBJECT_OT_ResetRenderResult,
-              OBJECT_OT_AutoGenerateToggle, OBJECT_OT_CherryPicking, OBJECT_OT_ToggleButton, OBJECT_OT_StopButton, OBJECT_OT_Generate ]
+
+class OBJECT_OT_ToggleRelationshipLines(bpy.types.Operator):
+    bl_idname = "object.wfc_toggle_lines"
+    bl_label = ""
+    bl_description = "Toggle Relationship Lines"
+    def execute(self, context):
+        for area in bpy.context.screen.areas:
+            if area.type == 'VIEW_3D':
+                for space in area.spaces:
+                    if space.type == 'VIEW_3D':
+                        space.overlay.show_relationship_lines = not space.overlay.show_relationship_lines
+        return {"FINISHED"}
+
+operators = [ OBJECT_OT_ToggleRelationshipLines, OBJECT_OT_ToggleHideCollection, OBJECT_OT_RandomSeed, OBJECT_OT_TargetCollectionIncNumber,
+              OBJECT_OT_ResetRenderResult, OBJECT_OT_AutoGenerateToggle, OBJECT_OT_CherryPicking, OBJECT_OT_ToggleButton, OBJECT_OT_StopButton,
+              OBJECT_OT_Generate ]

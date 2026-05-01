@@ -524,12 +524,19 @@ def render_collection_actions(context, row, collection_name):
         op.attribute_name = "hide_render"
     col.enabled = target is not None
 
+
+def _are_relationship_lines_enabled():
+    space = bpy.context.space_data
+    if space and space.type == 'VIEW_3D':
+        return space.overlay.show_relationship_lines
+    return False
+
 def render_target_object_actions(context, row, target_name):
     target =bpy.data.objects[target_name] if target_name in bpy.data.objects else None
 
     col = row.column(align=True)
-    col.operator("object.wfc_toggle_hide_collection", emboss=False, icon="CHECKBOX_DEHLT")
-    col.enabled = False
+    col.operator("object.wfc_toggle_lines", depress=_are_relationship_lines_enabled(), icon="DRIVER_DISTANCE")
+    col.enabled = target is not None
 
     col = row.column(align=True)
     is_src_hidden = target is None or target.hide_get()
