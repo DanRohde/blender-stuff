@@ -2,10 +2,12 @@ import bpy
 from .constants import *
 
 
-def _create_and_link(ng, loc, node_type, input_sockets, output_sockets={}):
+def _create_and_link(ng, loc, node_type, input_sockets, output_sockets={}, attr={}):
     loc[0] += loc[2]
     loc[1] += loc[3]
     nn = ng.nodes.new(node_type)
+    for a, v in attr.items():
+        if hasattr(nn, a): setattr(nn, a, v)
     nn.location = (loc[0], loc[1])
     for input_socket_name, s in input_sockets.items():
         ng.links.new(s, nn.inputs[input_socket_name])
@@ -19,10 +21,18 @@ def _create_direction_text_nodes(ng, loc, ig, dirname, dirvec, jg, vmin, vmax):
     if "_" in dirname: dirname = dirname.split("_")[1]
     stc.inputs[0].default_value = dirname.lower()
     stc.inputs[1].default_value = 1
-    align_x = { -1: 'RIGHT', 0 : 'CENTER', 1 : 'LEFT'}
-    stc.align_x = align_x[dirvec[0]]
-    align_y = { -1: 'TOP', 0: 'MIDDLE', 1: 'BOTTOM'}
-    stc.align_y = align_y[dirvec[1]]
+    if hasattr(stc, "align_x"): 
+        align_x = { -1: 'RIGHT', 0 : 'CENTER', 1 : 'LEFT'}
+        stc.align_x = align_x[dirvec[0]]
+    else:
+        align_x = { -1: 'Right', 0 : 'Center', 1 : 'Left'}
+        stc.inputs[3].default_value = align_x[dirvec[0]]
+    if hasattr(stc, "align_y"):
+        align_y = { -1: 'TOP', 0: 'MIDDLE', 1: 'BOTTOM'}
+        stc.align_y = align_y[dirvec[1]]
+    else:
+        align_y = { -1: 'Top', 0: 'Middle', 1: 'Bottom'}
+        stc.inputs[4].default_value = align_y[dirvec[1]]
 
     sp, loc = _create_and_link(ng, loc, 'GeometryNodeSetPosition', {'Geometry':stc.outputs[0]},{0:jg.inputs[0]})
     input_sockets = {}
@@ -69,11 +79,11 @@ def _get_directions_geometry_nodegroup(gn):
     loc = [1000,0,-200,0]
     # Original Object to Curve -> Switch -> Join Geometry -> Output
     jg, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry',{},{'Geometry':og.inputs['Geometry']})
-    nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch':ig.outputs['Hide Object']},{'Output':jg.inputs['Geometry']})
+    nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch':ig.outputs['Hide Object']},{'Output':jg.inputs['Geometry']}, {'input_type':'GEOMETRY'})
     _m2c,_loc = _create_and_link(ng, loc, 'GeometryNodeMeshToCurve', {  'Mesh' : ig.outputs['Geometry']}, { 'Curve' : nsw.inputs['False']})
 
     loc = [800,200,-200,0]
-    nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch': ig.outputs['Hide Bounding Box']}, {'Output':jg.inputs['Geometry']})
+    nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch': ig.outputs['Hide Bounding Box']}, {'Output':jg.inputs['Geometry']}, {'input_type':'GEOMETRY'})
     m2c, loc = _create_and_link(ng, loc, 'GeometryNodeMeshToCurve', {},{'Curve': nsw.inputs['False']})
     bb, loc = _create_and_link(ng, loc, 'GeometryNodeBoundBox', {'Geometry': ig.outputs['Geometry']}, {'Bounding Box': m2c.inputs['Mesh']})
 
@@ -88,21 +98,21 @@ def _get_directions_geometry_nodegroup(gn):
     _ri, _loc = _create_and_link(ng, loc, 'GeometryNodeRotateInstances',{'Instances' : jtn.outputs[0],'Rotation':cxyz.outputs['Vector']}, {0:jg.inputs[0]})
 
     loc = [400,400,200,0]
-    nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch',{'Switch':ig.outputs['Hide Face Names']}, {'Output':jtn.inputs[0]})
+    nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch',{'Switch':ig.outputs['Hide Face Names']}, {'Output':jtn.inputs[0]}, {'input_type':'GEOMETRY'})
     jgd, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry', {}, {0:nsw.inputs['False']})
 
     for dirname, dirvec in FACE_DIRECTIONS.items():
         loc = _create_direction_text_nodes(ng, loc, ig, dirname, dirvec, jgd, vmin, vmax)
 
     loc = [400,700,200,0]
-    nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch',{'Switch':ig.outputs['Hide Edge Names']}, {'Output':jtn.inputs[0]})
+    nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch',{'Switch':ig.outputs['Hide Edge Names']}, {'Output':jtn.inputs[0]}, {'input_type':'GEOMETRY'})
     jgd, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry', {}, {0:nsw.inputs['False']})
 
     for dirname, dirvec in EDGE_DIRECTIONS.items():
         loc = _create_direction_text_nodes(ng, loc, ig, dirname, dirvec, jgd, vmin, vmax)
 
     loc = [400,1000,200,0]
-    nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch': ig.outputs['Hide Corner Names']},{'Output': jtn.inputs[0]})
+    nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch': ig.outputs['Hide Corner Names']},{'Output': jtn.inputs[0]}, {'input_type':'GEOMETRY'})
     jgd, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry', {}, {0: nsw.inputs['False']})
 
     for dirname, dirvec in CORNER_DIRECTIONS.items():
