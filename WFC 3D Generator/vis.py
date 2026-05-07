@@ -69,6 +69,7 @@ def _get_directions_geometry_nodegroup(gn):
                       {'name': 'Hide Face Names', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Hide Corner Names', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Hide Edge Names', 'socket_type': 'NodeSocketBool'},
+                      {'name': 'Radius', 'socket_type': 'NodeSocketFloat', 'subtype':'DISTANCE', 'default_value': 0.01},
     ]
     for in_sockets in input_sockets:
         ng.interface.new_socket(name=in_sockets['name'], in_out='INPUT', socket_type=in_sockets['socket_type'])
@@ -78,7 +79,10 @@ def _get_directions_geometry_nodegroup(gn):
 
     loc = [1000,0,-200,0]
     # Original Object to Curve -> Switch -> Join Geometry -> Output
-    jg, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry',{},{'Geometry':og.inputs['Geometry']})
+    #jg, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry',{},{'Geometry':og.inputs['Geometry']})
+    jg, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry', {})
+    ctm, loc = _create_and_link(ng, loc, 'GeometryNodeCurveToMesh', {'Curve': jg.outputs['Geometry']}, {'Mesh': og.inputs['Geometry']})
+    cc, loc = _create_and_link(ng, loc, 'GeometryNodeCurvePrimitiveCircle', {'Radius': ig.outputs['Radius']}, {'Curve': ctm.inputs['Profile Curve']})
     nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch':ig.outputs['Hide Object']},{'Output':jg.inputs['Geometry']}, {'input_type':'GEOMETRY'})
     _m2c,_loc = _create_and_link(ng, loc, 'GeometryNodeMeshToCurve', {  'Mesh' : ig.outputs['Geometry']}, { 'Curve' : nsw.inputs['False']})
 
@@ -95,7 +99,10 @@ def _get_directions_geometry_nodegroup(gn):
 
     jtn, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry', {})
     cxyz, loc = _create_and_link(ng, loc, 'ShaderNodeCombineXYZ',{'X':ig.outputs['Text Rotation']})
-    _ri, _loc = _create_and_link(ng, loc, 'GeometryNodeRotateInstances',{'Instances' : jtn.outputs[0],'Rotation':cxyz.outputs['Vector']}, {0:jg.inputs[0]})
+    ri, loc = _create_and_link(ng, loc, 'GeometryNodeRotateInstances',{'Instances' : jtn.outputs[0],'Rotation':cxyz.outputs['Vector']})
+    _create_and_link(ng, loc, 'GeometryNodeRealizeInstances', {'Geometry' : ri.outputs[0]}, {0:jg.inputs[0]})
+
+
 
     loc = [400,400,200,0]
     nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch',{'Switch':ig.outputs['Hide Face Names']}, {'Output':jtn.inputs[0]}, {'input_type':'GEOMETRY'})
