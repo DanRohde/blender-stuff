@@ -63,7 +63,7 @@ def _get_directions_geometry_nodegroup(gn):
     og.location = (1000, 0)
     input_sockets = [ {'name': 'Geometry', 'socket_type': 'NodeSocketGeometry' },
                       {'name': 'Text Size', 'socket_type': 'NodeSocketFloat', 'attr': { 'min_value': 0, 'default_value': .5, 'subtype': 'DISTANCE'}},
-                      {'name': 'Text Rotation', 'socket_type': 'NodeSocketFloat', 'attr': { 'min_value': 0, 'max_value': np.pi*2 , 'default_value': np.pi/2}, 'subtype': 'ANGLE'},
+                      {'name': 'Text Rotation', 'socket_type': 'NodeSocketFloat', 'attr': { 'min_value': 0, 'max_value': np.pi*2 , 'default_value': np.pi/2, 'subtype': 'ANGLE'}},
                       {'name': 'Hide Object', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Hide Bounding Box', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Hide Face Names', 'socket_type': 'NodeSocketBool'},
