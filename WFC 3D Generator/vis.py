@@ -62,19 +62,21 @@ def _get_directions_geometry_nodegroup(gn):
     og = nodes.new('NodeGroupOutput')
     og.location = (1000, 0)
     input_sockets = [ {'name': 'Geometry', 'socket_type': 'NodeSocketGeometry' },
-                      {'name': 'Text Size', 'socket_type': 'NodeSocketFloat', 'subtype':'DISTANCE', 'default_value': .5},
+                      {'name': 'Text Size', 'socket_type': 'NodeSocketFloat', 'subtype':'DISTANCE', 'attr': { 'min_value': 0, 'default_value': .5}},
                       {'name': 'Text Rotation', 'socket_type': 'NodeSocketFloat', 'subtype':'ANGLE'},
                       {'name': 'Hide Object', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Hide Bounding Box', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Hide Face Names', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Hide Corner Names', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Hide Edge Names', 'socket_type': 'NodeSocketBool'},
-                      {'name': 'Radius', 'socket_type': 'NodeSocketFloat', 'subtype':'DISTANCE', 'default_value': 0.01},
+                      {'name': 'Radius', 'socket_type': 'NodeSocketFloat', 'subtype':'DISTANCE', 'attr': {'min_value': 0, 'default_value': 0.01}},
     ]
     for in_sockets in input_sockets:
         ng.interface.new_socket(name=in_sockets['name'], in_out='INPUT', socket_type=in_sockets['socket_type'])
         if 'subtype' in in_sockets: ng.interface.items_tree[in_sockets['name']].subtype = in_sockets.get('subtype')
-        if 'default_value' in in_sockets: ng.interface.items_tree[in_sockets['name']].default_value = in_sockets['default_value']
+        if 'attr' in in_sockets:
+            for a, v in in_sockets['attr'].items():
+                setattr(ng.interface.items_tree[in_sockets['name']], a, v)
     ng.interface.new_socket(name='Geometry',in_out='OUTPUT',socket_type='NodeSocketGeometry')
 
     loc = [1000,0,-200,0]
