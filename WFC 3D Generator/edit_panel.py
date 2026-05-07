@@ -582,10 +582,10 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_DistanceList","distance_input_list")
 
     def draw_connector_exclusion_panel(self, props, layout, obj, obj_name):
-        self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_ConnectorExclusionList","conn_excl_input_list")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_ConnectorExclusionList","conn_excl_input_list", True)
 
     def draw_multiple_connector_panel(self, props, layout, obj, obj_name):
-        self._draw_list_constraints_panel(props, layout, obj, obj_name, "VIEW3D_UL_MultipleConnectorList", "mult_conn_input_list")
+        self._draw_list_constraints_panel(props, layout, obj, obj_name, "VIEW3D_UL_MultipleConnectorList", "mult_conn_input_list", True)
 
     def draw_empty_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
@@ -622,7 +622,7 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
 
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
-    def _draw_list_constraints_panel(self, props, layout, _obj, obj_name, ui_list, list_name):
+    def _draw_list_constraints_panel(self, props, layout, _obj, obj_name, ui_list, list_name, with_dir_vis = False):
         box = layout.box()
         row = box.row()
         row.label(text=obj_name)
@@ -631,7 +631,10 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         col = row.column()
         col.template_list(ui_list, "", props, list_name, props, f"{list_name}_idx", sort_lock = True)
         draw_list_order_actions(props, col, list_name)
-        self._draw_list_modify_actions(props, row.box().column(), list_name)
+        col = row.box().column()
+        self._draw_list_modify_actions(props, col, list_name)
+        if with_dir_vis: col.operator("object.wfc_vis_directions", text="", icon="CUBE", depress=props.vis_directions)
+
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
     def _draw_list_modify_actions(self, props, col, list_name):
