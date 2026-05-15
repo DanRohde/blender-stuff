@@ -412,8 +412,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     noise_prob_threshold: bpy.props.FloatProperty(name="Threshold", description="Threshold", min=0.0, max=1.0, default=PROP_DEFAULTS['noise_prob_threshold'], update=auto_save)
     noise_prob_scale: bpy.props.FloatProperty(name="Scale", description="Scale", min=0, default=PROP_DEFAULTS['noise_prob_scale'], update=auto_save)
 
-    noise_transf_function: bpy.props.EnumProperty(name="Noise Function", description="Noise function", items=NOISE_FUNCTIONS, update=auto_save, )
-    noise_transf_basis: bpy.props.EnumProperty(name="Noise Basis", description="Select a noise basis", items=get_noise_basis, update=auto_save, )
+    noise_transf_function: bpy.props.EnumProperty(name="Function", description="Select a noise function", items=NOISE_FUNCTIONS, update=auto_save, )
+    noise_transf_basis: bpy.props.EnumProperty(name="Basis", description="Select a noise basis", items=get_noise_basis, update=auto_save, )
     noise_transf_scale: bpy.props.FloatProperty(name="Scale", description="Scale", min=0, default=PROP_DEFAULTS['noise_transf_scale'], update=auto_save)
     noise_transf_h: bpy.props.FloatProperty(name="H", description="The fractal dimension of the roughest areas.", default=PROP_DEFAULTS['noise_transf_h'], update=auto_save)
     noise_transf_octaves: bpy.props.FloatProperty(name="Octaves", description="The number of different noise frequencies used.", default=PROP_DEFAULTS['noise_transf_octaves'], update=auto_save)

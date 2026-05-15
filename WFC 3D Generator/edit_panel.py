@@ -533,15 +533,17 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_RegFreqList","regfreq_input_list")
 
     def draw_noise_panel(self, props, layout, _obj, obj_name):
-        box = layout.box()
-        row = box.row()
+        bbox = layout.box()
+        row = bbox.row()
         row.label(text=obj_name)
         row.operator("object.wfc_reset_constraints")
+        box = bbox.box()
         box.row().label(text="Noise on probability of occurrence:")
         box.row().prop(props, "noise_prob_basis")
         if props.noise_prob_basis != "_NONE_":
             box.row().prop(props, "noise_prob_threshold")
             box.row().prop(props, "noise_prob_scale")
+        box = bbox.box()
         box.row().label(text="Noise on transformations:")
         box.row().prop(props, "noise_transf_function")
         if props.noise_transf_function != "_NONE_":
