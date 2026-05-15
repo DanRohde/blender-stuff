@@ -543,9 +543,19 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
             box.row().prop(props, "noise_prob_threshold")
             box.row().prop(props, "noise_prob_scale")
         box.row().label(text="Noise on transformations:")
-        box.row().prop(props, "noise_transf_basis")
-        if props.noise_transf_basis != "_NONE_":
+        box.row().prop(props, "noise_transf_function")
+        if props.noise_transf_function != "_NONE_":
+            box.row().prop(props, "noise_transf_basis")
             box.row().prop(props, "noise_transf_scale")
+            if props.noise_transf_function in {'jBM', 'MF','RMF','HMF','HT'}:
+                box.row().prop(props, "noise_transf_h")
+                box.row().prop(props, "noise_transf_lacunarity")
+                box.row().prop(props, "noise_transf_octaves")
+
+                if props.noise_transf_function in {'RMF','HMF','HT'}:
+                    box.row().prop(props, "noise_transf_offset")
+                    if props.noise_transf_function in {'RMF', 'HMF'}: box.row().prop(props, "noise_transf_gain")
+
 
         box.row().prop(props, "noise_randomize_position")
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')

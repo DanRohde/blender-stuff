@@ -425,7 +425,7 @@ def get_active_constraints():
 
 def get_noise_basis(_self, _context = None):
     ret = [('_NONE_','Please select a noise basis','Please select a noise basis'),None]
-    for nb, nt in NOISE_FUNCTIONS.items():
+    for nb, nt in NOISE_BASIS.items():
         ret.append((nb, nt, nt))
     return ret
 
@@ -437,6 +437,35 @@ def get_noise(pos, basis, scale, minv = None, maxv = None):
     if basis < 2 or basis >= len(nb): basis = 3
     v = Vector(((pos[0]+1) * scale, (pos[1]+1) * scale, (pos[2]+1) * scale))
     n = noise.noise(v, noise_basis=nb[basis][0])
+    if minv is None or maxv is None: return n
+    return remap(n, -1, 1, minv, maxv)
+
+def get_better_noise(pos, constraints, prefix, minv = None, maxv = None):
+    nb = get_noise_basis(None)
+    f = NOISE_FUNCTIONS[constraints[prefix + '_function']][0]
+    basis = constraints[prefix + '_basis']
+    scale = constraints[prefix + '_scale']
+    h = constraints[prefix + '_h']
+    lacunarity = constraints[prefix + '_lacunarity']
+    octaves = constraints[prefix + '_octaves']
+    offset = constraints[prefix + '_offset']
+    gain = constraints[prefix + '_gain']
+    if basis < 2 or basis >= len(nb): basis = 3
+    v = Vector(((pos[0] + 1) * scale, (pos[1] + 1) * scale, (pos[2] + 1) * scale))
+    match f:
+        case 'MF':
+            n = noise.multi_fractal(v, h, lacunarity, octaves, noise_basis = nb[basis][0])
+        case 'RMF':
+            n = noise.ridged_multi_fractal(v, h, lacunarity, octaves, offset, gain, noise_basis = nb[basis][0])
+        case 'HMF':
+            n = noise.hybrid_multi_fractal(v, h, lacunarity, octaves, offset, gain, noise_basis = nb[basis][0])
+        case 'jBM':
+            n = noise.fractal(v, h, lacunarity, octaves, noise_basis = nb[basis][0])
+        case 'HT':
+            n = noise.hetero_terrain(v, h, lacunarity, octaves, offset, noise_basis = nb[basis][0])
+        case _:
+            n = noise.noise(v, noise_basis=nb[basis][0])
+
     if minv is None or maxv is None: return n
     return remap(n, -1, 1, minv, maxv)
 

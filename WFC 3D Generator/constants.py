@@ -96,7 +96,10 @@ PROP_DEFAULTS = {
     'regfreq_name' : '', 'regfreq_min' : (0,0,0), 'regfreq_max' : (0,0,0), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : .1,
+    'noise_transf_function' : 'N',
     'noise_transf_basis' : 0, 'noise_transf_scale' : .1, 'noise_randomize_position' : False,
+    'noise_transf_h' : 1, 'noise_transf_octaves' : 0, 'noise_transf_lacunarity': 2,
+    'noise_transf_offset' : 0, 'noise_transf_gain' : 1,
     # geo constraints:
     'geo_left': False, 'geo_right': False, 'geo_bottom': False, 'geo_top': False, 'geo_front': False, 'geo_back': False,
     'geo_match_edges': False, 'geo_match_faces': False,
@@ -198,6 +201,9 @@ SELECTION_CONSTRAINTS = {
 
 NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_scale',
                       'noise_transf_basis', 'noise_transf_scale', 'noise_randomize_position',
+                      'noise_transf_function',
+                      'noise_transf_h', 'noise_transf_octaves', 'noise_transf_lacunarity',
+                      'noise_transf_offset', 'noise_transf_gain',
                     ]
 
 GEOMETRY_CONSTRAINTS = [ 'geo_top', 'geo_bottom', 'geo_left', 'geo_right', 'geo_front', 'geo_back', 'geo_match_edges', 'geo_match_faces', 'geo_tolerance', 'geo_threshold']
@@ -284,7 +290,16 @@ CONSTRAINTS_MENU = [("_none_","Select a Constraint Type","Select a constraint ty
                ("transformations", "Transformations", "Transformations"),
                ("noise","Noise Constraints","Noise constraints"),
                ]
-NOISE_FUNCTIONS = {
+NOISE_FUNCTIONS = [
+    ('_NONE_', 'Please select a noise function', 'Please select a noise function'),
+    ('N', 'Noise', 'Noise'),
+    ('MF', 'Multifractal', 'Multifractal'),
+    ('RMF', 'Ridged Multifractal', 'Ridged Multifractal'),
+    ('HMF', 'Hybrid Multifractal', 'Hybrid Multifractal'),
+    ('jBM', 'jBM', 'jBM' ),
+    ('HT',  'Hetero Terrain', 'Hetero Terrain'),
+]
+NOISE_BASIS = {
     'BLENDER' : 'Blender', 'PERLIN_ORIGINAL' : 'Perlin (original)', 'PERLIN_NEW' : 'Perlin new',
     'VORONOI_F1' : 'Voronoi F1', 'VORONOI_F2' : 'Voronoi F2', 'VORONOI_F3' : 'Voronoi F3', 'VORONOI_F4' : 'Voronoi F4',
     'VORONOI_F2F1' : 'Voronoi F2F1', 'VORONOI_CRACKLE' : 'Voronoi crackle', 'CELLNOISE' : 'Cell noise'
