@@ -284,3 +284,8 @@ CONSTRAINTS_MENU = [("_none_","Select a Constraint Type","Select a constraint ty
                ("transformations", "Transformations", "Transformations"),
                ("noise","Noise Constraints","Noise constraints"),
                ]
+NOISE_FUNCTIONS = {
+    'BLENDER' : 'Blender', 'PERLIN_ORIGINAL' : 'Perlin (original)', 'PERLIN_NEW' : 'Perlin new',
+    'VORONOI_F1' : 'Voronoi F1', 'VORONOI_F2' : 'Voronoi F2', 'VORONOI_F3' : 'Voronoi F3', 'VORONOI_F4' : 'Voronoi F4',
+    'VORONOI_F2F1' : 'Voronoi F2F1', 'VORONOI_CRACKLE' : 'Voronoi crackle', 'CELLNOISE' : 'Cell noise'
+}

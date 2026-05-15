@@ -425,8 +425,8 @@ def get_active_constraints():
 
 def get_noise_basis(_self, _context = None):
     ret = [('_NONE_','Please select a noise basis','Please select a noise basis'),None]
-    for nb in ['BLENDER', 'PERLIN_ORIGINAL', 'PERLIN_NEW', 'VORONOI_F1', 'VORONOI_F2', 'VORONOI_F3', 'VORONOI_F4', 'VORONOI_F2F1', 'VORONOI_CRACKLE', 'CELLNOISE']:
-        ret.append((nb,nb,nb))
+    for nb, nt in NOISE_FUNCTIONS.items():
+        ret.append((nb, nt, nt))
     return ret
 
 def remap(x, in_min, in_max, out_min, out_max):
