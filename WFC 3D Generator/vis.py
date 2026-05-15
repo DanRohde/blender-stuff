@@ -69,8 +69,10 @@ def _get_directions_geometry_nodegroup(gn):
                       {'name': 'Hide Face Names', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Hide Corner Names', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Hide Edge Names', 'socket_type': 'NodeSocketBool'},
+                      {'name': 'Realize instances and create mesh', 'socket_type': 'NodeSocketBool'},
                       {'name': 'Radius', 'socket_type': 'NodeSocketFloat', 'attr': {'min_value': 0, 'default_value': 0.01, 'subtype': 'DISTANCE'}},
                       {'name': 'Resolution', 'socket_type': 'NodeSocketInt', 'attr': {'min_value': 3, 'default_value': 3}},
+                      {'name': 'Fill caps', 'socket_type': 'NodeSocketBool'},
     ]
     for in_sockets in input_sockets:
         ng.interface.new_socket(name=in_sockets['name'], in_out='INPUT', socket_type=in_sockets['socket_type'])
@@ -83,7 +85,8 @@ def _get_directions_geometry_nodegroup(gn):
     # Original Object to Curve -> Switch -> Join Geometry -> Output
     #jg, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry',{},{'Geometry':og.inputs['Geometry']})
     jg, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry', {})
-    ctm, loc = _create_and_link(ng, loc, 'GeometryNodeCurveToMesh', {'Curve': jg.outputs['Geometry']}, {'Mesh': og.inputs['Geometry']})
+    ricm, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch': ig.outputs['Realize instances and create mesh'], 'False' : jg.outputs['Geometry'] }, {'Output': og.inputs['Geometry']}, {'input_type':'GEOMETRY'})
+    ctm, loc = _create_and_link(ng, loc, 'GeometryNodeCurveToMesh', {'Curve': jg.outputs['Geometry'], 3: ig.outputs['Fill caps']}, {'Mesh': ricm.inputs['True']})
     cc, loc = _create_and_link(ng, loc, 'GeometryNodeCurvePrimitiveCircle', {'Radius': ig.outputs['Radius'], 'Resolution': ig.outputs['Resolution']}, {'Curve': ctm.inputs['Profile Curve']}, {'mode':'RADIUS'})
     nsw, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch':ig.outputs['Hide Object']},{'Output':jg.inputs['Geometry']}, {'input_type':'GEOMETRY'})
     _m2c,_loc = _create_and_link(ng, loc, 'GeometryNodeMeshToCurve', {  'Mesh' : ig.outputs['Geometry']}, { 'Curve' : nsw.inputs['False']})
@@ -102,7 +105,8 @@ def _get_directions_geometry_nodegroup(gn):
     jtn, loc = _create_and_link(ng, loc, 'GeometryNodeJoinGeometry', {})
     cxyz, loc = _create_and_link(ng, loc, 'ShaderNodeCombineXYZ',{'X':ig.outputs['Text Rotation']})
     ri, loc = _create_and_link(ng, loc, 'GeometryNodeRotateInstances',{'Instances' : jtn.outputs[0],'Rotation':cxyz.outputs['Vector']})
-    _create_and_link(ng, loc, 'GeometryNodeRealizeInstances', {'Geometry' : ri.outputs[0]}, {0:jg.inputs[0]})
+    ricm, loc = _create_and_link(ng, loc, 'GeometryNodeSwitch', {'Switch': ig.outputs['Realize instances and create mesh'], 'False' : ri.outputs[0] }, {'Output': jg.inputs[0]}, {'input_type':'GEOMETRY'})
+    _create_and_link(ng, loc, 'GeometryNodeRealizeInstances', {'Geometry' : ri.outputs[0]}, {0:ricm.inputs['True']})
 
 
 
