@@ -96,7 +96,7 @@ PROP_DEFAULTS = {
     'regfreq_name' : '', 'regfreq_min' : (0,0,0), 'regfreq_max' : (0,0,0), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : .1,
-    'noise_transf_function' : 'N',
+    'noise_transf_function' : 1,
     'noise_transf_basis' : 0, 'noise_transf_scale' : .1, 'noise_randomize_position' : False,
     'noise_transf_h' : 1, 'noise_transf_octaves' : 0, 'noise_transf_lacunarity': 2,
     'noise_transf_offset' : 0, 'noise_transf_gain' : 1,
