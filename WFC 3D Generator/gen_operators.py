@@ -1,3 +1,5 @@
+from unittest import case
+
 import bpy
 import time
 import gc
@@ -284,6 +286,16 @@ class OBJECT_OT_ToggleHideCollection(bpy.types.Operator):
     target: bpy.props.StringProperty(default="")
     target_type: bpy.props.StringProperty(default="collection")
     attribute_name: bpy.props.StringProperty(default="hide_viewport")
+    @classmethod
+    def description(cls, context, properties):
+        match properties.attribute_name:
+            case 'hide_viewport':
+                return "Show/Hide in Viewport"
+            case 'hide_render':
+                return "Enable/Disable in Render"
+            case _:
+                return "Exclude from Viewlayer"
+
     def execute(self, context):
         if self.target_type == "collection":
             target_obj = context.view_layer.layer_collection.children[self.target] if self.target in context.view_layer.layer_collection.children else None
