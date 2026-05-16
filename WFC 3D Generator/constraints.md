@@ -194,6 +194,9 @@ Noise constraints either influence the probability of an object occurring or rep
 | Noise Basis                         | Noise function to influence the appearance of a building block.                                                                                                         |
 | Threshold                           | Threshold that must be exceeded by the noise function for an object to be allowed to appear in a specific cell of the grid.                                             |
 | Scale                               | Scaling factor for the position to calculate the noise function value.                                                                                                  |
+
+| **Parameter**                       | **Description**                                                                                                                                                         |
+|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | *Noise on transformations*          | This allows replacing the random value function for a transformation with a noise function.                                                                             |
 | Function                            | Noise function                                                                                                                                                          |
 | Basis                               | Noise basis to influence transformations of a building block.                                                                                                           |
