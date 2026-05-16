@@ -95,11 +95,11 @@ PROP_DEFAULTS = {
     # region frequency constraints:
     'regfreq_name' : '', 'regfreq_min' : (0,0,0), 'regfreq_max' : (0,0,0), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
     # noise constraints:
-    'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : .1,
+    'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : 0.1,
     'noise_transf_function' : 1,
-    'noise_transf_basis' : 0, 'noise_transf_scale' : .1, 'noise_randomize_position' : False,
-    'noise_transf_h' : 1, 'noise_transf_octaves' : 0, 'noise_transf_lacunarity': 2,
-    'noise_transf_offset' : 0, 'noise_transf_gain' : 1,
+    'noise_transf_basis' : 0.0, 'noise_transf_scale' : 0.1, 'noise_randomize_position' : False,
+    'noise_transf_h' : 1.0, 'noise_transf_octaves' : 0.0, 'noise_transf_lacunarity': 2.0,
+    'noise_transf_offset' : 0.0, 'noise_transf_gain' : 1.0,
     # geo constraints:
     'geo_left': False, 'geo_right': False, 'geo_bottom': False, 'geo_top': False, 'geo_front': False, 'geo_back': False,
     'geo_match_edges': False, 'geo_match_faces': False,

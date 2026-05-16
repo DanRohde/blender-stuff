@@ -531,10 +531,12 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_RegFreqList","regfreq_input_list")
 
     def _draw_preset_prop(self, layout, props, prop_name):
-        row = layout.row();
+        row = layout.row()
         row.prop(props, prop_name)
-        op = row.operator("object.wfc_set_props_to_default", icon="PRESET", text="")
+        col = row.column()
+        op = col.operator("object.wfc_set_props_to_default", icon="PRESET", text="")
         op.prop_names = prop_name
+        col.enabled = not cmpall(PROP_DEFAULTS[prop_name], getattr(props,prop_name))
 
     def draw_noise_panel(self, props, layout, _obj, obj_name):
         bbox = layout.box()
