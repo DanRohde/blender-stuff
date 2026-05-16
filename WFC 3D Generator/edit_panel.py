@@ -2,6 +2,7 @@ import bpy
 from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name, count_selected_items, get_active_constraints, render_source_collection
 from .properties import get_known_conn_names
 from .constants import *
+from .gen_panel import render_generate_button
 import fnmatch
 class WFC3DULGenericFilter:
     case_sensitive : bpy.props.BoolProperty(default=False, name="", description="Case sensitive", )
@@ -252,6 +253,7 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         col.operator("object.wfc_copy_constraints_from_object", icon="COPYDOWN")
         col.enabled = props.copy_from is not None
         if props.edit_constraints != "":
+            render_generate_button(props, layout.row(), props.collection_obj is not None and len(props.obj_list) != 0 and props.collection_obj.name != props.target_collection)
             row = layout.row()
             row.operator("object.wfc_open_web_link", icon="URL", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
     def draw_neighbor_panel(self, props, layout, obj, obj_name):
