@@ -97,7 +97,7 @@ PROP_DEFAULTS = {
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : 0.1,
     'noise_transf_function' : 1,
-    'noise_transf_basis' : 0.0, 'noise_transf_scale' : 0.1, 'noise_randomize_position' : False,
+    'noise_transf_basis' : 0, 'noise_transf_scale' : 0.1, 'noise_randomize_position' : False,
     'noise_transf_h' : 1.0, 'noise_transf_octaves' : 0.0, 'noise_transf_lacunarity': 2.0,
     'noise_transf_offset' : 0.0, 'noise_transf_gain' : 1.0,
     # geo constraints:
