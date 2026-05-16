@@ -397,8 +397,19 @@ class OBJECT_OT_CopyConstraintsFromObject(bpy.types.Operator):
         update_edit_form(self, context)
         self.report({'INFO'}, f"Constraints have been copied.")
         return {'FINISHED'}
-
+class OBJECT_OT_SetProps2Default(bpy.types.Operator):
+    bl_idname = "object.wfc_set_props_to_default"
+    bl_label = ""
+    bl_description = "Set properties to default values."
+    prop_names : bpy.props.StringProperty()
+    def execute(self, context):
+        props = context.scene.wfc_props
+        for prop_name in self.prop_names.split(","):
+            if prop_name in PROP_DEFAULTS:
+                setattr(props, prop_name, PROP_DEFAULTS[prop_name])
+        return {'FINISHED'}
 operators = [
+    OBJECT_OT_SetProps2Default,
     OBJECT_OT_CopyConstraintsFromObject,
     OBJECT_OT_SaveActiveConstraints,
     OBJECT_OT_GenericListOrderUp,

@@ -176,6 +176,8 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
             draw_list_selection_actions(props, col,"active_constraints_input_list")
             box.prop(props, "show_inactive_constraints_menu_items")
             if not props.auto_save: box.operator("object.wfc_save_active_constraints", icon='IMPORT')
+            render_generate_button(props, layout.row(), props.collection_obj is not None and len(props.obj_list) != 0 and props.collection_obj.name != props.target_collection)
+
             return
 
         if props.edit_type == 'reset':
@@ -252,10 +254,9 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         col = row.column()
         col.operator("object.wfc_copy_constraints_from_object", icon="COPYDOWN")
         col.enabled = props.copy_from is not None
+        render_generate_button(props, layout.row(), props.collection_obj is not None and len(props.obj_list) != 0 and props.collection_obj.name != props.target_collection)
         if props.edit_constraints != "":
-            render_generate_button(props, layout.row(), props.collection_obj is not None and len(props.obj_list) != 0 and props.collection_obj.name != props.target_collection)
-            row = layout.row()
-            row.operator("object.wfc_open_web_link", icon="URL", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
+            layout.row().operator("object.wfc_open_web_link", icon="URL", text="Visit GitHub to get help").url = HELP["constraints"]["url"]+"#"+HELP["constraints"]["anchormap"][props.edit_constraints]
     def draw_neighbor_panel(self, props, layout, obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -534,31 +535,45 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
     def draw_regfreq_panel(self, props, layout, obj, obj_name):
         self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_RegFreqList","regfreq_input_list")
 
+    def _draw_preset_prop(self, layout, props, prop_name):
+        row = layout.row();
+        row.prop(props, prop_name)
+        op = row.operator("object.wfc_set_props_to_default", icon="PRESET", text="")
+        op.prop_names = prop_name
+
     def draw_noise_panel(self, props, layout, _obj, obj_name):
         bbox = layout.box()
         row = bbox.row()
         row.label(text=obj_name)
         row.operator("object.wfc_reset_constraints")
         box = bbox.box()
-        box.row().label(text="Noise on probability of occurrence:")
+        row = box.row();
+        row.label(text="Noise on probability of occurrence:")
+        op=row.operator("object.wfc_set_props_to_default", icon="PRESET")
+        op.prop_names = "noise_prob_threshold,noise_prob_scale"
         box.row().prop(props, "noise_prob_basis")
         if props.noise_prob_basis != "_NONE_":
-            box.row().prop(props, "noise_prob_threshold")
-            box.row().prop(props, "noise_prob_scale")
+            self._draw_preset_prop(box, props, "noise_prob_threshold")
+            self._draw_preset_prop(box, props, "noise_prob_scale")
         box = bbox.box()
-        box.row().label(text="Noise on transformations:")
+        row = box.row()
+        row.label(text="Noise on transformations:")
+        op = row.operator("object.wfc_set_props_to_default", icon="PRESET")
+        op.prop_names = "noise_transf_scale,noise_transf_h,noise_transf_lacunarity,noise_transf_octaves,noise_transf_offset,noise_transf_gain"
+
         box.row().prop(props, "noise_transf_function")
+
         if props.noise_transf_function != "_NONE_":
             box.row().prop(props, "noise_transf_basis")
-            box.row().prop(props, "noise_transf_scale")
+            self._draw_preset_prop(box, props, "noise_transf_scale")
             if props.noise_transf_function in {'jBM', 'MF','RMF','HMF','HT'}:
-                box.row().prop(props, "noise_transf_h")
-                box.row().prop(props, "noise_transf_lacunarity")
-                box.row().prop(props, "noise_transf_octaves")
+                self._draw_preset_prop(box, props, "noise_transf_h")
+                self._draw_preset_prop(box, props, "noise_transf_lacunarity")
+                self._draw_preset_prop(box, props, "noise_transf_octaves")
 
                 if props.noise_transf_function in {'RMF','HMF','HT'}:
-                    box.row().prop(props, "noise_transf_offset")
-                    if props.noise_transf_function in {'RMF', 'HMF'}: box.row().prop(props, "noise_transf_gain")
+                    self._draw_preset_prop(box, props, "noise_transf_offset")
+                    if props.noise_transf_function in {'RMF', 'HMF'}: self._draw_preset_prop(box, props, "noise_transf_gain")
 
 
         box.row().prop(props, "noise_randomize_position")
