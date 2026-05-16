@@ -595,8 +595,11 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
             col.prop(props, f"geo_{d.lower()}")
         row = box.row()
         row.enabled = props.geo_match_edges or props.geo_match_faces
-        row.prop(props, "geo_tolerance")
-        row.prop(props, "geo_threshold")
+        self._draw_preset_prop(row, props, "geo_tolerance")
+        row = box.row()
+        row.enabled = props.geo_match_edges or props.geo_match_faces
+        self._draw_preset_prop(row,props, "geo_threshold")
+
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
     def draw_regprob_panel(self, props, layout, obj, obj_name):
