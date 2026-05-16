@@ -356,10 +356,8 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row = box.row()
         row.label(text=obj_name)
         row.operator("object.wfc_reset_constraints")
-        row = box.row()
-        row.prop(props, "region_min")
-        row = box.row()
-        row.prop(props, "region_max")
+        self._draw_preset_prop(box.row(), props, "region_min")
+        self._draw_preset_prop(box.row(), props, "region_max")
 
         row = box.row()
         row.label(text="Quadrant:")
@@ -383,8 +381,8 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row = box.row()
         row.label(text=obj_name)
         row.operator("object.wfc_reset_constraints")
-        box.prop(props, "probability")
-        box.prop(props, "weight")
+        self._draw_preset_prop(box, props, "probability")
+        self._draw_preset_prop(box, props, "weight")
         box.prop(props, "auto_weight", icon="MOD_VERTEX_WEIGHT")
 
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
@@ -395,30 +393,27 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row.operator("object.wfc_reset_constraints")
         newbox = box.box()
         newbox.label(text="Translation Offset")
-        newbox.row().prop(props, "translation_min")
-        newbox.row().prop(props, "translation_max")
-        newbox.row().prop(props, "translation_steps")
+        for p in ["translation_min", "translation_max", "translation_steps"]:
+            self._draw_preset_prop(newbox.row(), props, p)
 
         newbox = box.box()
         newbox.label(text="Rotation")
-        newbox.row().prop(props, "rotation_min")
-        newbox.row().prop(props, "rotation_max")
-        newbox.row().prop(props, "rotation_steps")
+        for p in ["rotation_min", "rotation_max", "rotation_steps"]:
+            self._draw_preset_prop(newbox.row(), props, p)
 
         newbox = box.box()
         newrow = newbox.row()
         newrow.label(text="Scale")
         newrow.prop(props, "scale_type")
         if props.scale_type == 'uniform':
-            newbox.prop(props, "scale_uni")
+            self._draw_preset_prop(newbox, props, "scale_uni")
         elif props.scale_type == 'non-uniform':
-            newbox.row().prop(props, "scale_min")
-            newbox.row().prop(props, "scale_max")
-            newbox.row().prop(props, "scale_steps")
+            for p in ["scale_min", "scale_max", "scale_steps"]:
+                self._draw_preset_prop(newbox.row(), props, p)
 
         newbox = box.box()
         newrow = newbox.row()
-        newrow.prop(props, "flipping")
+        self._draw_preset_prop(newrow, props, "flipping")
         if not props.auto_save: box.operator('object.wfc_update_constraints', icon='IMPORT')
     def draw_frequency_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
@@ -429,24 +424,23 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         newbox = box.box()
         newbox.label(text="Same Object")
         row = newbox.row()
-        row.prop(props, "freq_grid")
-        row.prop(props, "freq_grid_pct")
-        newbox.prop(props, "freq_neighbor")
-        newbox.prop(props, "freq_neighbor_face")
-        newbox.prop(props, "freq_neighbor_corner")
-        newbox.prop(props, "freq_neighbor_edge")
-        row = newbox.row()
-        row.prop(props, "freq_axes")
+        self._draw_preset_prop(row, props, "freq_grid")
+        self._draw_preset_prop(row, props, "freq_grid_pct")
+        self._draw_preset_prop(newbox, props, "freq_neighbor")
+        self._draw_preset_prop(newbox, props,"freq_neighbor_face")
+        self._draw_preset_prop(newbox, props, "freq_neighbor_corner")
+        self._draw_preset_prop(newbox, props, "freq_neighbor_edge")
+
+        self._draw_preset_prop(newbox.row(), props, "freq_axes")
 
         newbox = box.box()
         newbox.label(text="Any Object")
-        newbox.prop(props, "freq_any_neighbor")
-        newbox.prop(props, "freq_any_neighbor_face")
-        newbox.prop(props, "freq_any_neighbor_corner")
-        newbox.prop(props, "freq_any_neighbor_edge")
+        self._draw_preset_prop(newbox, props, "freq_any_neighbor")
+        self._draw_preset_prop(newbox, props, "freq_any_neighbor_face")
+        self._draw_preset_prop(newbox, props, "freq_any_neighbor_corner")
+        self._draw_preset_prop(newbox, props, "freq_any_neighbor_edge")
 
-        row = newbox.row()
-        row.prop(props, "freq_any_axes")
+        self._draw_preset_prop(newbox.row(), props, "freq_any_axes")
 
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
@@ -487,8 +481,8 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
 
         box.label(text="Rotational Symmetry")
         newbox = box.box()
-        newbox.row().prop(props, "sym_rotate_axis")
-        newbox.prop(props, "sym_rotate_n")
+        self._draw_preset_prop(newbox.row(), props, "sym_rotate_axis")
+        self._draw_preset_prop(newbox, props, "sym_rotate_n")
 
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
@@ -526,7 +520,8 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row = box.row()
         row.label(text=obj_name)
         row.operator("object.wfc_reset_constraints")
-        box.row().prop(props, "dim_xyz")
+        self._draw_preset_prop(box.row(), props, "dim_xyz")
+
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
     def draw_fixed_position_panel(self, props, layout, obj, obj_name):

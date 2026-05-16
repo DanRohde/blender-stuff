@@ -400,8 +400,11 @@ class OBJECT_OT_CopyConstraintsFromObject(bpy.types.Operator):
 class OBJECT_OT_SetProps2Default(bpy.types.Operator):
     bl_idname = "object.wfc_set_props_to_default"
     bl_label = ""
-    bl_description = "Set properties to default values."
     prop_names : bpy.props.StringProperty()
+    @classmethod
+    def description(self, context, properties):
+        prop_names_arr = properties.prop_names.split(",")
+        return "Set properties to default values." if len(prop_names_arr) > 1 else f"Set the property '{context.scene.wfc_props.bl_rna.properties[prop_names_arr[0]].name}' to the default value {repr(PROP_DEFAULTS[prop_names_arr[0]])}."
     def execute(self, context):
         props = context.scene.wfc_props
         for prop_name in self.prop_names.split(","):
