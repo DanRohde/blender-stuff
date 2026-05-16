@@ -3,7 +3,7 @@ import bpy
 from mathutils import noise, Vector
 from .constants import *
 from .vis import is_directions_geometry_nodegroup_visible
-
+import numpy as np
 
 def get_icon_name(item):
     return ICON_MAP[item.obj.type] if item.obj.id_type != 'COLLECTION' else ICON_MAP[item.obj.id_type]
@@ -349,7 +349,10 @@ def cmpall(a, b):
         iter(b)
         return all(x == y for x, y in zip(a, b))
     except TypeError:
-        return a == b
+        if isinstance(a, (float)):
+            return np.isclose(a, b)
+        else:
+            return a == b
 
 def handle_update_collection(_self, context = None):
     props = context.scene.wfc_props if context is not None else bpy.context.scene.wfc_props
