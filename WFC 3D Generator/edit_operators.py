@@ -403,13 +403,16 @@ class OBJECT_OT_SetProps2Default(bpy.types.Operator):
     prop_names : bpy.props.StringProperty()
     @classmethod
     def description(self, context, properties):
-        prop_names_arr = properties.prop_names.split(",")
-        return "Set properties to default values." if len(prop_names_arr) > 1 else f"Set the property '{context.scene.wfc_props.bl_rna.properties[prop_names_arr[0]].name}' to the default value {repr(PROP_DEFAULTS[prop_names_arr[0]])}."
+        prop_names_arr = properties.prop_names.split(",") if properties.prop_names != "" else []
+        if len(prop_names_arr) == 1:
+            return f"Set the property '{context.scene.wfc_props.bl_rna.properties[prop_names_arr[0]].name}' to the default value {repr(PROP_DEFAULTS[prop_names_arr[0]])}."
+        return "Set properties to default values."
+
     def execute(self, context):
         props = context.scene.wfc_props
         for prop_name in self.prop_names.split(","):
             if prop_name in PROP_DEFAULTS:
-                setattr(props, prop_name, PROP_DEFAULTS[prop_name])
+                if prop_name != "": setattr(props, prop_name, PROP_DEFAULTS[prop_name])
         return {'FINISHED'}
 operators = [
     OBJECT_OT_SetProps2Default,

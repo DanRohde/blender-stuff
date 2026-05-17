@@ -392,12 +392,16 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row.label(text=obj_name)
         row.operator("object.wfc_reset_constraints")
         newbox = box.box()
-        newbox.label(text="Translation Offset")
+        newrow = newbox.row()
+        newrow.label(text="Translation Offset")
+        self._draw_preset_props(newrow, props, ["translation_min", "translation_max", "translation_steps"])
         for p in ["translation_min", "translation_max", "translation_steps"]:
             self._draw_preset_prop(newbox.row(), props, p)
 
         newbox = box.box()
-        newbox.label(text="Rotation")
+        newrow = newbox.row()
+        newrow.label(text="Rotation")
+        self._draw_preset_props(newrow, props, ["rotation_min", "rotation_max", "rotation_steps"])
         for p in ["rotation_min", "rotation_max", "rotation_steps"]:
             self._draw_preset_prop(newbox.row(), props, p)
 
@@ -405,12 +409,16 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         newrow = newbox.row()
         newrow.label(text="Scale")
         newrow.prop(props, "scale_type")
-        if props.scale_type == 'uniform':
-            self._draw_preset_prop(newbox, props, "scale_uni")
-        elif props.scale_type == 'non-uniform':
-            for p in ["scale_min", "scale_max", "scale_steps"]:
-                self._draw_preset_prop(newbox.row(), props, p)
-
+        match props.scale_type:
+            case "non-uniform":
+                prop_names = ["scale_min", "scale_max", "scale_steps"]
+            case "uniform":
+                prop_names = [ "scale_uni" ]
+            case _:
+                prop_names = []
+        self._draw_preset_props(newrow, props, prop_names)
+        for p in prop_names:
+            self._draw_preset_prop(newbox.row(), props, p)
         newbox = box.box()
         newrow = newbox.row()
         self._draw_preset_prop(newrow, props, "flipping")
@@ -534,9 +542,15 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row = layout.row()
         row.prop(props, prop_name)
         col = row.column()
-        op = col.operator("object.wfc_set_props_to_default", icon="PRESET", text="")
+        op = col.operator("object.wfc_set_props_to_default", icon="LOOP_BACK", text="")
         op.prop_names = prop_name
-        col.enabled = not cmpall(PROP_DEFAULTS[prop_name], getattr(props,prop_name))
+        col.enabled = not cmpall(PROP_DEFAULTS[prop_name], getattr(props, prop_name))
+
+    def _draw_preset_props(self, layout, props, prop_names):
+        col = layout.column()
+        op = col.operator("object.wfc_set_props_to_default", icon="LOOP_BACK", text="")
+        op.prop_names = ",".join(prop_names)
+        col.enabled = len(prop_names)>0 and not all(cmpall(PROP_DEFAULTS[p], getattr(props, p)) for p in prop_names)
 
     def draw_noise_panel(self, props, layout, _obj, obj_name):
         bbox = layout.box()
@@ -546,8 +560,7 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         box = bbox.box()
         row = box.row();
         row.label(text="Noise on probability of occurrence:")
-        op=row.operator("object.wfc_set_props_to_default", icon="PRESET")
-        op.prop_names = "noise_prob_threshold,noise_prob_scale"
+        self._draw_preset_props(row, props,  ["noise_prob_threshold", "noise_prob_scale"])
         box.row().prop(props, "noise_prob_basis")
         if props.noise_prob_basis != "_NONE_":
             self._draw_preset_prop(box, props, "noise_prob_threshold")
@@ -555,23 +568,19 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         box = bbox.box()
         row = box.row()
         row.label(text="Noise on transformations:")
-        op = row.operator("object.wfc_set_props_to_default", icon="PRESET")
-        op.prop_names = "noise_transf_scale,noise_transf_h,noise_transf_lacunarity,noise_transf_octaves,noise_transf_offset,noise_transf_gain"
+        match props.noise_transf_function:
+            case "N"          : prop_names = ["noise_transf_scale"]
+            case "jBM" | "MF" : prop_names = ["noise_transf_scale", "noise_transf_h", "noise_transf_lacunarity", "noise_transf_octaves"]
+            case "HT"         : prop_names = ["noise_transf_scale", "noise_transf_h", "noise_transf_lacunarity", "noise_transf_octaves", "noise_transf_offset"]
+            case "RMF" | "HMF": prop_names = ["noise_transf_scale", "noise_transf_h", "noise_transf_lacunarity", "noise_transf_octaves", "noise_transf_offset", "noise_transf_gain"]
+            case _            : prop_names = []
 
+        self._draw_preset_props(row, props, prop_names)
         box.row().prop(props, "noise_transf_function")
-
         if props.noise_transf_function != "_NONE_":
             box.row().prop(props, "noise_transf_basis")
-            self._draw_preset_prop(box, props, "noise_transf_scale")
-            if props.noise_transf_function in {'jBM', 'MF','RMF','HMF','HT'}:
-                self._draw_preset_prop(box, props, "noise_transf_h")
-                self._draw_preset_prop(box, props, "noise_transf_lacunarity")
-                self._draw_preset_prop(box, props, "noise_transf_octaves")
-
-                if props.noise_transf_function in {'RMF','HMF','HT'}:
-                    self._draw_preset_prop(box, props, "noise_transf_offset")
-                    if props.noise_transf_function in {'RMF', 'HMF'}: self._draw_preset_prop(box, props, "noise_transf_gain")
-
+            for p in prop_names:
+                self._draw_preset_prop(box, props, p)
 
         box.row().prop(props, "noise_randomize_position")
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
