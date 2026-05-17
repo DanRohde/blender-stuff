@@ -430,25 +430,23 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row.operator("object.wfc_reset_constraints")
 
         newbox = box.box()
-        newbox.label(text="Same Object")
+        newrow = newbox.row()
+        newrow.label(text="Same Object")
+        pn=["freq_grid", "freq_grid_pct", "freq_neighbor", "freq_neighbor_face", "freq_neighbor_corner", "freq_neighbor_edge", "freq_axes"]
+        self._draw_preset_props(newrow, props, pn)
         row = newbox.row()
-        self._draw_preset_prop(row, props, "freq_grid")
-        self._draw_preset_prop(row, props, "freq_grid_pct")
-        self._draw_preset_prop(newbox, props, "freq_neighbor")
-        self._draw_preset_prop(newbox, props,"freq_neighbor_face")
-        self._draw_preset_prop(newbox, props, "freq_neighbor_corner")
-        self._draw_preset_prop(newbox, props, "freq_neighbor_edge")
-
-        self._draw_preset_prop(newbox.row(), props, "freq_axes")
+        for i, p in enumerate(pn):
+            if i < 2:
+                self._draw_preset_prop(row, props, p)
+            else:
+                self._draw_preset_prop(newbox, props, p)
 
         newbox = box.box()
-        newbox.label(text="Any Object")
-        self._draw_preset_prop(newbox, props, "freq_any_neighbor")
-        self._draw_preset_prop(newbox, props, "freq_any_neighbor_face")
-        self._draw_preset_prop(newbox, props, "freq_any_neighbor_corner")
-        self._draw_preset_prop(newbox, props, "freq_any_neighbor_edge")
-
-        self._draw_preset_prop(newbox.row(), props, "freq_any_axes")
+        newrow = newbox.row()
+        newrow.label(text="Any Object")
+        pn=["freq_any_neighbor", "freq_any_neighbor_face", "freq_any_neighbor_corner", "freq_any_neighbor_edge", "freq_any_axes"]
+        self._draw_preset_props(newrow, props, pn)
+        for p in pn: self._draw_preset_prop(newbox, props, p)
 
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
