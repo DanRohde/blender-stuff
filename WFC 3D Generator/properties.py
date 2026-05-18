@@ -408,9 +408,15 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     fixed_position_input_list: bpy.props.CollectionProperty(type=WFC3DFixedPositionListItem)
     fixed_position_input_list_idx: bpy.props.IntProperty()
 
+    noise_prob_function: bpy.props.EnumProperty(name="Function", description="Select a noise function", items=NOISE_FUNCTIONS, update=auto_save, )
     noise_prob_basis: bpy.props.EnumProperty(name="Noise Basis", description="Select a noise basis", items=get_noise_basis, update=auto_save, )
     noise_prob_threshold: bpy.props.FloatProperty(name="Threshold", description="Threshold", min=0.0, max=1.0, default=PROP_DEFAULTS['noise_prob_threshold'], update=auto_save)
     noise_prob_scale: bpy.props.FloatProperty(name="Scale", description="Scale", min=0, default=PROP_DEFAULTS['noise_prob_scale'], update=auto_save)
+    noise_prob_h: bpy.props.FloatProperty(name="H", description="The fractal dimension of the roughest areas or the fractal increment parameter.", default=PROP_DEFAULTS['noise_prob_h'], update=auto_save)
+    noise_prob_octaves: bpy.props.FloatProperty(name="Octaves", description="The number of different noise frequencies used.", default=PROP_DEFAULTS['noise_prob_octaves'], update=auto_save)
+    noise_prob_lacunarity: bpy.props.FloatProperty(name="Lacunarity", description="The gap between successive frequencies.", default=PROP_DEFAULTS['noise_prob_lacunarity'], update=auto_save)
+    noise_prob_offset: bpy.props.FloatProperty(name="Offset", description="The height of the terrain above ‘sea level’", default=PROP_DEFAULTS['noise_prob_offset'], update=auto_save)
+    noise_prob_gain: bpy.props.FloatProperty(name="Gain", description="Scaling applied to the values.", default=PROP_DEFAULTS['noise_prob_gain'], update=auto_save)
 
     noise_transf_function: bpy.props.EnumProperty(name="Function", description="Select a noise function", items=NOISE_FUNCTIONS, update=auto_save, )
     noise_transf_basis: bpy.props.EnumProperty(name="Basis", description="Select a noise basis", items=get_noise_basis, update=auto_save, )

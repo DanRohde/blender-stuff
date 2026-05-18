@@ -6,7 +6,7 @@ import random
 from collections import deque
 
 from .constants import *
-from .helper import get_default_empty_object, get_default_empty_name, get_noise, get_better_noise, remap, get_active_constraints
+from .helper import get_default_empty_object, get_default_empty_name, get_better_noise, remap, get_active_constraints
 from .geometry import compare_edges, compare_faces
 
 class WFC3DConstraints:
@@ -281,7 +281,7 @@ class WFC3DConstraints:
                         and self.grid.is_inside_region(pos, pmin, pmax)): return False
         if "noise" in self.active_constraints:
             if self.constraints[name]['noise_prob_basis'] > 1:
-                n = get_noise(self.apply_noise_randomize_position_constraint(name, pos), self.constraints[name]['noise_prob_basis'], self.constraints[name]['noise_prob_scale'], 0, 1)
+                n = get_better_noise(self.apply_noise_randomize_position_constraint(name, pos), self.constraints[name],'noise_prob', 0, 1)
                 return n >= self.constraints[name]['noise_prob_threshold']
         return True
 

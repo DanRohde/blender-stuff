@@ -96,6 +96,9 @@ PROP_DEFAULTS = {
     'regfreq_name' : '', 'regfreq_min' : (0,0,0), 'regfreq_max' : (0,0,0), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : 0.1,
+    'noise_prob_function' : 0,
+    'noise_prob_h' : 1.0, 'noise_prob_octaves' : 0.0, 'noise_prob_lacunarity': 2.0,
+    'noise_prob_offset' : 0.0, 'noise_prob_gain' : 1.0,
     'noise_transf_function' : 1,
     'noise_transf_basis' : 0, 'noise_transf_scale' : 0.1, 'noise_randomize_position' : False,
     'noise_transf_h' : 1.0, 'noise_transf_octaves' : 0.0, 'noise_transf_lacunarity': 2.0,
@@ -200,6 +203,9 @@ SELECTION_CONSTRAINTS = {
 }
 
 NOISE_CONSTRAINTS = [ 'noise_prob_basis' , 'noise_prob_threshold', 'noise_prob_scale',
+                      'noise_prob_function',
+                      'noise_prob_h', 'noise_prob_octaves', 'noise_prob_lacunarity',
+                      'noise_prob_offset', 'noise_prob_gain',
                       'noise_transf_basis', 'noise_transf_scale', 'noise_randomize_position',
                       'noise_transf_function',
                       'noise_transf_h', 'noise_transf_octaves', 'noise_transf_lacunarity',

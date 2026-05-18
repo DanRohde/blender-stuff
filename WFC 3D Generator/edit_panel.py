@@ -550,6 +550,21 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         op.prop_names = ",".join(prop_names)
         col.enabled = len(prop_names)>0 and not all(cmpall(PROP_DEFAULTS[p], getattr(props, p)) for p in prop_names)
 
+    def _get_noise_prop_names(self, props, prefix):
+        match getattr(props, f"{prefix}_function"):
+            case "N":
+                prop_names = [f"{prefix}_scale"]
+            case "jBM" | "MF":
+                prop_names = [f"{prefix}_scale", f"{prefix}_h", f"{prefix}_lacunarity", f"{prefix}_octaves"]
+            case "HT":
+                prop_names = [f"{prefix}_scale", f"{prefix}_h", f"{prefix}_lacunarity", f"{prefix}_octaves",
+                              f"{prefix}_offset"]
+            case "RMF" | "HMF":
+                prop_names = [f"{prefix}_scale", f"{prefix}_h", f"{prefix}_lacunarity", f"{prefix}_octaves",
+                              f"{prefix}_offset", f"{prefix}_gain"]
+            case _:
+                prop_names = []
+        return prop_names
     def draw_noise_panel(self, props, layout, _obj, obj_name):
         bbox = layout.box()
         row = bbox.row()
@@ -558,21 +573,18 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         box = bbox.box()
         row = box.row();
         row.label(text="Noise on probability of occurrence:")
-        self._draw_preset_props(row, props,  ["noise_prob_threshold", "noise_prob_scale"])
-        box.row().prop(props, "noise_prob_basis")
-        if props.noise_prob_basis != "_NONE_":
+        prop_names = self._get_noise_prop_names(props, "noise_prob")
+        self._draw_preset_props(row, props,  ["noise_prob_threshold"] + prop_names)
+        box.row().prop(props, "noise_prob_function")
+        if props.noise_prob_function != "_NONE_":
+            box.row().prop(props, "noise_prob_basis")
             self._draw_preset_prop(box, props, "noise_prob_threshold")
-            self._draw_preset_prop(box, props, "noise_prob_scale")
+            for p in prop_names:
+                self._draw_preset_prop(box, props, p)
         box = bbox.box()
         row = box.row()
         row.label(text="Noise on transformations:")
-        match props.noise_transf_function:
-            case "N"          : prop_names = ["noise_transf_scale"]
-            case "jBM" | "MF" : prop_names = ["noise_transf_scale", "noise_transf_h", "noise_transf_lacunarity", "noise_transf_octaves"]
-            case "HT"         : prop_names = ["noise_transf_scale", "noise_transf_h", "noise_transf_lacunarity", "noise_transf_octaves", "noise_transf_offset"]
-            case "RMF" | "HMF": prop_names = ["noise_transf_scale", "noise_transf_h", "noise_transf_lacunarity", "noise_transf_octaves", "noise_transf_offset", "noise_transf_gain"]
-            case _            : prop_names = []
-
+        prop_names = self._get_noise_prop_names(props, "noise_transf")
         self._draw_preset_props(row, props, prop_names)
         box.row().prop(props, "noise_transf_function")
         if props.noise_transf_function != "_NONE_":
@@ -580,7 +592,7 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
             for p in prop_names:
                 self._draw_preset_prop(box, props, p)
 
-        box.row().prop(props, "noise_randomize_position")
+        bbox.row().prop(props, "noise_randomize_position")
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
     def draw_geometry_panel(self, props, layout, _obj, obj_name):
