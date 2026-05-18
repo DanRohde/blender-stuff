@@ -280,7 +280,7 @@ class WFC3DConstraints:
                 if ((self.constraints[name]['regfreq_freq'][i] == 0 or (i < len(self.constraints[name]['regfreq_freq_pct']) and self.constraints[name]['regfreq_freq_pct'][i] == 0))
                         and self.grid.is_inside_region(pos, pmin, pmax)): return False
         if "noise" in self.active_constraints:
-            if self.constraints[name]['noise_prob_basis'] > 1:
+            if self.constraints[name]['noise_prob_function'] > 0:
                 n = get_better_noise(self.apply_noise_randomize_position_constraint(name, pos), self.constraints[name],'noise_prob', 0, 1)
                 return n >= self.constraints[name]['noise_prob_threshold']
         return True
