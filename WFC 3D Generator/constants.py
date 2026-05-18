@@ -99,7 +99,7 @@ PROP_DEFAULTS = {
     'noise_prob_function' : 0,
     'noise_prob_h' : 1.0, 'noise_prob_octaves' : 0.0, 'noise_prob_lacunarity': 2.0,
     'noise_prob_offset' : 0.0, 'noise_prob_gain' : 1.0,
-    'noise_transf_function' : 1,
+    'noise_transf_function' : 0,
     'noise_transf_basis' : 0, 'noise_transf_scale' : 0.1, 'noise_randomize_position' : False,
     'noise_transf_h' : 1.0, 'noise_transf_octaves' : 0.0, 'noise_transf_lacunarity': 2.0,
     'noise_transf_offset' : 0.0, 'noise_transf_gain' : 1.0,
