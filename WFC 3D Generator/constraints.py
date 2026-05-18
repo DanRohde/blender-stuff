@@ -563,8 +563,7 @@ class WFC3DConstraints:
                 return
 
         symtransmat = [0.0, 0.0, 0.0 , 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1, 1, 1] # transformations, scale, rotation, flipping
-        # noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_noise(self.apply_noise_randomize_position_constraint(obj_name, cell), constraints["noise_transf_basis"], constraints["noise_transf_scale"])
-        noisefactor = 1 if constraints["noise_transf_basis"] < 2 else get_better_noise(self.apply_noise_randomize_position_constraint(obj_name, cell), constraints, 'noise_transf')
+        noisefactor = 1 if constraints["noise_transf_function"] == 0 else get_better_noise(self.apply_noise_randomize_position_constraint(obj_name, cell), constraints, 'noise_transf')
         if "transformations" in self.active_constraints:
             if constraints["translation_min"] is not None or constraints["translation_max"] is not None or constraints["translation_steps"] is not None:
                 tmin = constraints.get("translation_min",PROP_DEFAULTS["translation_min"])
