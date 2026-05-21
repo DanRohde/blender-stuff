@@ -787,6 +787,7 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
 
         self._draw_properties(props, box, "Frequency constraints", FREQUENCY_CONSTRAINTS)
         self._draw_list_properties(props, box, "Region frequency constraints", REGFREQ_CONSTRAINTS)
+        self._draw_list_properties(props, box, "Object frequency constraints", OBJECT_FREQUENCY_CONSTRAINTS)
         self._draw_properties(props, box, "Symmetry constraints", SYMMETRY_CONSTRAINTS)
         self._draw_properties(props, box, "Transformations", TRANSFORMATION_CONSTRAINTS)
         self._draw_properties(props, box, "Probability constraints", PROBABILITY_CONSTRAINTS)
