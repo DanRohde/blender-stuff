@@ -8,6 +8,7 @@
 * [Transformations](#transformations): 12
 * [Frequency constraints](#frequency-constraints): 12
 * [Region frequency constraints](#region-frequency-constraints): 5
+* [Object frequency constraints](#object-frequency-constraints): 6
 * [Symmetry constraints](#symmetry-constraints): 19
 * [Connector constraints](#connector-constraints): 30
 * [Connector exclusion constraints](#connector-exclusion-constraints): 2
@@ -19,7 +20,7 @@
 * [Distance constraints](#distance-constraints): 8
 * [Empty Neighbor constraints](#empty-neighbor-constraints): 2
 * [Active Constraints](#active-constraints): 2
-* **Sum: 168**
+* **Sum: 174**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -139,6 +140,13 @@
   * `wfc_regfreq_min_[0..n], wfc_regfreq_max_[0..n]`: an integer vector (x,y,z)
   * `wfc_regfreq_freq`: an integer
   * `wfc_reqgreq_freq_pct`: a float (-1..100)
+
+## Object Frequency Constraints:
+* Used custom properties: `wfc_objfreq_obj_[0..n],wfc_ojbfreq_neighbor_[0..n],wfc_objfreq_face_[0..n],wfc_objfreq_edge_[0..n],wfc_objfreq_corner_[0..n],,wfc_objfreq_axes_[0..n]`
+* Allowed property values:
+  * `wfc_objfreq_obj_[0..n]`: an object reference 
+  * `wfc_objfreq_[neighbor|face|corner|edge]_[0..n]`: an integer
+  * `wfc_objfreq_freq`: an integer vector
 
 ## Symmetry Constraints
 * Used custom properties: `wfc_sym_mirror,wfc_sym_rotate_axis,wfc_sym_rotate_n,wfc_sym_mirror_axes_[x|y|z|xy|xz|yz|xyz],wfc_sym_mirror_flip_[x|y|z|xy|xz|yz|xyz],wfc_sym_mirror_flip_transl, wfc_sym_mirror_trans`

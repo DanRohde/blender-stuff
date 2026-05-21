@@ -139,6 +139,18 @@ Define how often the same object may occur in a specific region.
 | Frequency     | Frequency of the building block itself within the region (min-max).                 |
 | Frequency %   | Frequency as a percentage of the building block itself within the region (min-max). |
 
+## Object Frequency Constraints
+Define how often a defined object may occur in the immediate vicinity or on one of the 3 axes.
+
+| **Parameter** | **Description**                                                                                                     |
+|---------------|---------------------------------------------------------------------------------------------------------------------|
+| Object        | Object                                                                                                              | 
+| Neighbor      | Frequency in the direct neighborhood (26 directions) of the building block itself.                                  |
+| Face          | Frequency in all six face directions of the building block itself.                                                  |
+| Corner        | Frequency at all eight corners of the building block itself.                                                        |
+| Edge          | Frequency at all twelve edges of the building block itself.                                                         |
+| Axes          | Frequency along the three axes (XYZ) of the building block itself.                                                  |
+
 
 ## Symmetry Constraints
 These constraints allow mirror-symmetric and/or rotation-symmetric objects to be generated.
@@ -213,6 +225,9 @@ Noise constraints either influence the probability of an object occurring or rep
 | Octaves                             | The number of different noise frequencies used.                                                                                                                                                                        |
 | Offset                              | The height of the terrain above ‘sea level’.                                                                                                                                                                                                                       |
 | Gain                                | Scaling applied to the values.                                                                                                                                                                                                                                                                   |
+
+| **Parameter**                       | **Description**                                                                                                                                                         |
+|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Randomize the starting position     | When enabled, a random value is multiplied with the position of the building block in the grid. This allows generating different results when changing the random seed. |
 
 
@@ -259,7 +274,7 @@ All these constraints reduce entropy in grid cells:
 
 ### Propagate Phase
 1. Symmetry constraints (collapse cells)
-2. Frequency constraints
+2. (Object) Frequency constraints
 3. Region frequency constraints
 4. Distance from object constraints: are influenced by dimensions constraints
 5. Dimensions constraints (collapse cells): are influenced by symmetry (flipping)

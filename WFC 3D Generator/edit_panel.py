@@ -77,6 +77,21 @@ class VIEW3D_UL_RegFreqList(bpy.types.UIList, WFC3DULGenericFilter):
         row = col.row()
         row.separator()
 
+class VIEW3D_UL_ObjFreqList(bpy.types.UIList, WFC3DULGenericFilter):
+    def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
+        row = layout.row(align=True)
+        col = row.column(align=True)
+        row = col.row()
+        row.column(align=True).prop(item, "selected")
+        row.column(align=True).prop(item, "objfreq_obj")
+        col.row().prop(item, "objfreq_neighbor")
+        col.row().prop(item, "objfreq_face")
+        col.row().prop(item, "objfreq_edge")
+        col.row().prop(item, "objfreq_corner")
+        col.row().prop(item, "objfreq_axes")
+        row = col.row()
+        row.separator()
+
 class VIEW3D_UL_FixedPositionList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
         row = layout.row(align=True)
@@ -536,6 +551,9 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
     def draw_regfreq_panel(self, props, layout, obj, obj_name):
         self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_RegFreqList","regfreq_input_list")
 
+    def draw_objfreq_panel(self, props, layout, obj, obj_name):
+        self._draw_list_constraints_panel(props, layout, obj, obj_name,"VIEW3D_UL_ObjFreqList","objfreq_input_list")
+
     def _draw_preset_prop(self, layout, props, prop_name):
         row = layout.row()
         row.prop(props, prop_name)
@@ -838,6 +856,6 @@ def draw_list_order_actions(props, column, list_name, call_auto_save = True):
     op.call_auto_save = call_auto_save
 
 panels = [ VIEW3D_UL_ActiveConstraintsList, VIEW3D_UL_MultipleConnectorList, VIEW3D_UL_ConnectorExclusionList, VIEW3D_UL_EmptyNeighborList, VIEW3D_UL_EmptyAnyNeighborList, VIEW3D_UL_DistanceList, VIEW3D_UL_RegProbList, VIEW3D_UL_FixedPositionList,\
-           VIEW3D_UL_RegFreqList, VIEW3D_UL_EditPanelMultiSelList, VIEW3D_UL_EditPanelNeighborMultiSelList, VIEW3D_PT_EditPanel,]
+           VIEW3D_UL_ObjFreqList, VIEW3D_UL_RegFreqList, VIEW3D_UL_EditPanelMultiSelList, VIEW3D_UL_EditPanelNeighborMultiSelList, VIEW3D_PT_EditPanel,]
 
         

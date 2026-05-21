@@ -94,6 +94,8 @@ PROP_DEFAULTS = {
     'fixed_position_xyz' : (0,0,0), 'fixed_position_pct' : (0,0,0), 'fixed_position_type' : 'absolute',
     # region frequency constraints:
     'regfreq_name' : '', 'regfreq_min' : (0,0,0), 'regfreq_max' : (0,0,0), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
+    # object frequncy constraints:
+    'objfreq_obj': None, 'objfreq_neighbor' : -1, 'objfreq_face' : -1,  'objfreq_corner' : -1,  'objfreq_edge' : -1,  'objfreq_axes' : (-1,-1,-1),
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : 0.1,
     'noise_prob_function' : 0,
@@ -134,6 +136,7 @@ FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_grid_pct', 'freq_neighbor', 'freq_n
                           'freq_neighbor_corner', 'freq_axes', 'freq_any_neighbor',
                           'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner', 'freq_any_axes',
 ]
+OBJECT_FREQUENCY_CONSTRAINTS = [ 'objfreq_obj', 'objfreq_neighbor', 'objfreq_face', 'objreq_edge', 'objfreq_corner', 'objfreq_axes']
 
 PROBABILITY_CONSTRAINTS = [ 'probability', 'weight', 'auto_weight']
 
@@ -188,6 +191,13 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'conn_excl_direction' : 'conn_excl_input_list',
                      'mult_conn_name' : 'mult_conn_input_list',
                      'mult_conn_direction' : 'mult_conn_input_list',
+                     'objfreq_obj' : 'objfreq_input_list',
+                     'objfreq_neighbor' : 'objfreq_input_list',
+                     'objfreq_face' : 'objfreq_input_list',
+                     'objfreq_edge' : 'objfreq_input_list',
+                     'objfreq_corner' : 'objfreq_input_list',
+                     'objfreq_axes' : 'objfreq_input_list',
+
                    }
 ENUM_CONSTRAINTS = { 'distance_from' : [ 'object', 'position', 'sub-collection'], 'distance_type' : [ 'minimum', 'maximum' ,'equal'],
                      'fixed_position_type' : [ 'absolute', 'pct'],
@@ -217,7 +227,30 @@ GEOMETRY_CONSTRAINTS = [ 'geo_top', 'geo_bottom', 'geo_left', 'geo_right', 'geo_
 GEN_CONSTRAINTS = (SYMMETRY_CONSTRAINTS + TRANSFORMATION_CONSTRAINTS + FREQUENCY_CONSTRAINTS + PROBABILITY_CONSTRAINTS
                    + REGION_CONSTRAINTS + FIXED_POSITION_CONSTRAINTS + DIMENSIONS_CONSTRAINTS + REGFREQ_CONSTRAINTS
                    + CONNECTOR_EXCLUSION_CONSTRAINTS + MULTIPLE_CONNECTOR_CONSTRAINTS
-                   + NOISE_CONSTRAINTS + GEOMETRY_CONSTRAINTS + REGPROB_CONSTRAINTS + DISTANCE_CONSTRAINTS + EMPTY_NEIGHBOR_CONSTRAINTS)
+                   + NOISE_CONSTRAINTS + GEOMETRY_CONSTRAINTS + REGPROB_CONSTRAINTS + DISTANCE_CONSTRAINTS + EMPTY_NEIGHBOR_CONSTRAINTS
+                   + OBJECT_FREQUENCY_CONSTRAINTS)
+
+EDIT_CONSTRAINTS_MAP = {
+    'symmetry': SYMMETRY_CONSTRAINTS,
+    'frequency': FREQUENCY_CONSTRAINTS,
+    'transformations': TRANSFORMATION_CONSTRAINTS,
+    'probability': PROBABILITY_CONSTRAINTS,
+    'region':  REGION_CONSTRAINTS,
+    'grid': GRID_CONSTRAINTS,
+    'neighbor': [d.lower() for d in DIRECTIONS] + ADD_NEIGHBOR_CONSTRAINTS,
+    'connector': CONNECTOR_CONSTRAINTS,
+    'connector_exclusion': CONNECTOR_EXCLUSION_CONSTRAINTS,
+    'multiple_connector': MULTIPLE_CONNECTOR_CONSTRAINTS,
+    'dimensions': DIMENSIONS_CONSTRAINTS,
+    'fixed_position': FIXED_POSITION_CONSTRAINTS,
+    'regfreq': REGFREQ_CONSTRAINTS,
+    'objfreq': OBJECT_FREQUENCY_CONSTRAINTS,
+    'noise': NOISE_CONSTRAINTS,
+    'geometry': GEOMETRY_CONSTRAINTS,
+    'regprob': REGPROB_CONSTRAINTS,
+    'distance': DISTANCE_CONSTRAINTS,
+    'empty': EMPTY_NEIGHBOR_CONSTRAINTS,
+}
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
 
@@ -266,7 +299,7 @@ HELP = {
     'constraints' : {
         'url' : 'https://github.com/DanRohde/blender-stuff/blob/main/WFC%203D%20Generator/constraints.md',
         'anchormap' : { '_none_': 'constraints', 'transformations' : 'transformations', 'neighbor' : 'neighbor-constraints', 'connector' : 'connector-constraints', 'geometry': 'geometry-constraints',
-                      'regfreq' : 'region-frequency-constraints', 'noise' : 'noise-constraints', 'regprob' : 'region-probability-constraints', 'grid': 'grid-constraints',
+                      'regfreq' : 'region-frequency-constraints', 'objfreq': 'object-frequency-constraints', 'noise' : 'noise-constraints', 'regprob' : 'region-probability-constraints', 'grid': 'grid-constraints',
                       'dimensions' : 'dimensions-constraints', 'fixed_position' : 'fixed-position-constraints', 'region' : 'region-constraints', 'distance' : 'distance-constraints',
                       'frequency' : 'frequency-constraints', 'symmetry' : 'symmetry-constraints', 'probability' : 'probability-constraints', 'empty':'empty-neighbor-constraints',
                         'connector_exclusion' : 'connector-exclusion-constraints', 'multiple_connector' : 'multiple-connector-constraints',
@@ -287,7 +320,7 @@ CONSTRAINTS_MENU = [("_none_","Select a Constraint Type","Select a constraint ty
                ('fixed_position', 'Fixed Position Constraints', 'Fixed position constraints'),
                ("grid","Grid Constraints","Grid constraints"),("region","Region Constraints","Region constraints"),
                ('distance','Distance Constraints','Distance constraints'),
-               ('frequency',"Frequency Constraints","Frequency constraints"), ('regfreq','Region Frequency Constraints','Region Frequency constraints'),
+               ('frequency',"Frequency Constraints","Frequency constraints"), ('regfreq','Region Frequency Constraints','Region Frequency constraints'), ('objfreq','Object Frequency Constraints','Object Frequency Constraints'),
                ("symmetry","Symmetry Constraints","Symmetry constraints"),
                None,
                ("probability", "Probability Constraints", "Probability constraints"),

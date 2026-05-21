@@ -35,44 +35,7 @@ def get_object_by_name(props, name):
     return None
 
 def get_constraints(props):
-    constraints = []
-    if props.edit_constraints == 'symmetry':
-        constraints = SYMMETRY_CONSTRAINTS
-    elif props.edit_constraints == 'frequency':
-        constraints = FREQUENCY_CONSTRAINTS
-    elif props.edit_constraints == 'transformations':
-        constraints = TRANSFORMATION_CONSTRAINTS
-    elif props.edit_constraints == 'probability':
-        constraints = PROBABILITY_CONSTRAINTS
-    elif props.edit_constraints == 'region':
-        constraints = REGION_CONSTRAINTS
-    elif props.edit_constraints == 'grid':
-        constraints = GRID_CONSTRAINTS
-    elif props.edit_constraints == 'neighbor':
-        constraints = [ d.lower() for d in DIRECTIONS ] + ADD_NEIGHBOR_CONSTRAINTS
-    elif props.edit_constraints == 'connector':
-        constraints = CONNECTOR_CONSTRAINTS
-    elif props.edit_constraints == 'connector_exclusion':
-        constraints = CONNECTOR_EXCLUSION_CONSTRAINTS
-    elif props.edit_constraints == 'multiple_connector':
-        constraints = MULTIPLE_CONNECTOR_CONSTRAINTS
-    elif props.edit_constraints == 'dimensions':
-        constraints = DIMENSIONS_CONSTRAINTS
-    elif props.edit_constraints == 'fixed_position':
-        constraints = FIXED_POSITION_CONSTRAINTS
-    elif props.edit_constraints == 'regfreq':
-        constraints = REGFREQ_CONSTRAINTS
-    elif props.edit_constraints == 'noise':
-        constraints = NOISE_CONSTRAINTS
-    elif props.edit_constraints == 'geometry':
-        constraints = GEOMETRY_CONSTRAINTS
-    elif props.edit_constraints == 'regprob':
-        constraints = REGPROB_CONSTRAINTS
-    elif props.edit_constraints == 'distance':
-        constraints = DISTANCE_CONSTRAINTS
-    elif props.edit_constraints == 'empty':
-        constraints = EMPTY_NEIGHBOR_CONSTRAINTS
-    return constraints
+    return EDIT_CONSTRAINTS_MAP[props.edit_constraints]
 
 def get_selected_items(obj_list):
     return [item.obj.name for item in obj_list if item.obj is not None and item.selected]

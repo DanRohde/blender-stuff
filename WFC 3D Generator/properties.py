@@ -137,6 +137,15 @@ class WFC3DRegionFrequencyListItem(bpy.types.PropertyGroup):
     regfreq_freq_pct: bpy.props.FloatProperty(update=auto_save, name="Frequency %", description="Region frequency in %", min=-1, max=100, subtype="PERCENTAGE", default=PROP_DEFAULTS["regfreq_freq_pct"])
     selected: bpy.props.BoolProperty(default=False, name="", description="(De)Select constraint.")
 
+class WFC3DObjectFrequencyListItem(bpy.types.PropertyGroup):
+    objfreq_obj: bpy.props.PointerProperty(type=bpy.types.Object, name="Object", description="Object from the source collection", update=auto_save, poll=is_sub_element)
+    objfreq_neighbor: bpy.props.IntProperty(name='Neighbor', min=-1, update=auto_save, description="Neighbor frequency max.", default=PROP_DEFAULTS["objfreq_neighbor"])
+    objfreq_face: bpy.props.IntProperty(name='Face', min=-1, update=auto_save, description="Face frequency max.", default=PROP_DEFAULTS["objfreq_face"])
+    objfreq_corner: bpy.props.IntProperty(name='Corner', min=-1, update=auto_save, description="Corner frequency max.", default=PROP_DEFAULTS["objfreq_corner"])
+    objfreq_edge: bpy.props.IntProperty(name='Edge', min=-1, update=auto_save, description="Edge frequency max.", default=PROP_DEFAULTS["objfreq_edge"])
+    objfreq_axes: bpy.props.IntVectorProperty(size=3, min=-1, update=auto_save, name="Axes", description="Axes frequency max.", default=PROP_DEFAULTS["objfreq_axes"])
+    selected: bpy.props.BoolProperty(default=False, name="", description="(De)select objects")
+
 class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):
     fixed_position_xyz: bpy.props.IntVectorProperty(name="",
                                                     description="Fixed Position for a building block",
@@ -352,6 +361,8 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     freq_any_neighbor_face : bpy.props.IntProperty(name="Any Face",description="Neighbor face frequency max", default=PROP_DEFAULTS["freq_any_neighbor_face"], min=-1,max=6, update=auto_save)
     freq_any_neighbor_corner : bpy.props.IntProperty(name="Any Corner",description="Neighbor corner frequency max", default=PROP_DEFAULTS["freq_any_neighbor_corner"], min=-1,max=8, update=auto_save)
     freq_any_neighbor_edge : bpy.props.IntProperty(name="Any Edge",description="Neighbor edge frequency max", default=PROP_DEFAULTS["freq_any_neighbor_edge"], min=-1,max=12, update=auto_save)
+    objfreq_input_list: bpy.props.CollectionProperty(type=WFC3DObjectFrequencyListItem)
+    objfreq_input_list_idx: bpy.props.IntProperty()
     sym_mirror_axes : bpy.props.BoolVectorProperty(name="Axes",description="Symmetry Axes", default=PROP_DEFAULTS["sym_mirror_axes"], update=auto_save)
     sym_mirror_axes_rotate: bpy.props.BoolProperty(name="Rotate Object", description="Rotate Objects", default=PROP_DEFAULTS["sym_mirror_axes_rotate"], update=auto_save)
     sym_mirror_axes_x:  bpy.props.PointerProperty(name="x", description="Select a mirror partner", type=bpy.types.Object, update=auto_save, poll=is_sub_element)
@@ -524,4 +535,4 @@ class WFC3DAddonPreferences(bpy.types.AddonPreferences):
         f.prop(self, "auto_save")
         f.prop(self, "default_empty_name")
 
-properties = [ WFC3DSearchOptions, WFC3DSearchResult, WFC3DRenderResult, WFC3DActiveConstraintsListItem, WFC3DSeedsListItem, WFC3DMultipleConnectorListItem, WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
+properties = [ WFC3DObjectFrequencyListItem, WFC3DSearchOptions, WFC3DSearchResult, WFC3DRenderResult, WFC3DActiveConstraintsListItem, WFC3DSeedsListItem, WFC3DMultipleConnectorListItem, WFC3DConnectorExclusionListItem, WFC3DEmptyNeighborListItem, WFC3DEmptyAnyNeighborListItem, WFC3DDistanceListItem, WFC3DRotationPanelMultiSelItem, WFC3DRegionProbabilityListItem, WFC3DFixedPositionListItem, WFC3DRegionFrequencyListItem, WFC3DValidatorOutputItem, WFC3DAddonPreferences, WFC3DEditPanelMultiSelItem, WFC3DEditPanelNeighborMultiSelItem, WFC3DProperties, ]
