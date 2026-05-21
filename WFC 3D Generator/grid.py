@@ -260,8 +260,8 @@ class WFC3DGrid:
         xa, ya, za = (1 - axis[0]) * x, (1 - axis[1]) * y, (1 - axis[2]) * z
         while self.within_boundaries(xa, ya, za):
             if ((xa != x or ya != y or za != z) or (max_count == 0)) and len(self.grid[xa, ya, za]) > 0:
-                if neighbor is not None and neighbor not in self.grid[xa, ya, za]: continue
-                neighbor_pos.append([xa, ya, za])
+                if neighbor is None or neighbor in self.grid[xa, ya, za]:
+                    neighbor_pos.append([xa, ya, za])
             xa, ya, za = xa + axis[0], ya + axis[1], za + axis[2]
 
         if max_count > len(neighbor_pos): max_count = len(neighbor_pos)
