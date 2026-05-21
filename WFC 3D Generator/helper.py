@@ -35,7 +35,7 @@ def get_object_by_name(props, name):
     return None
 
 def get_constraints(props):
-    return EDIT_CONSTRAINTS_MAP[props.edit_constraints]
+    return EDIT_CONSTRAINTS_MAP[props.edit_constraints] if props.edit_constraints in EDIT_CONSTRAINTS_MAP else []
 
 def get_selected_items(obj_list):
     return [item.obj.name for item in obj_list if item.obj is not None and item.selected]

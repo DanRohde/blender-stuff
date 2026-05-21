@@ -44,6 +44,10 @@ def get_connector_exclusion_direction_list(_self, _context):
 def get_multiple_connector_direction_list(_self, _context):
     return get_direction_list([], 'wfc_mult_conn_', with_sep = False)
 
+def get_object_frequency_direction_list(_self, _context):
+    return get_direction_list([], 'wfc_objfreq_', with_sep = False)
+
+
 def _get_connector_names_from_object(obj, s, cache):
     items = []
     idx = 0
@@ -144,6 +148,8 @@ class WFC3DObjectFrequencyListItem(bpy.types.PropertyGroup):
     objfreq_corner: bpy.props.IntProperty(name='Corner', min=-1, update=auto_save, description="Corner frequency max.", default=PROP_DEFAULTS["objfreq_corner"])
     objfreq_edge: bpy.props.IntProperty(name='Edge', min=-1, update=auto_save, description="Edge frequency max.", default=PROP_DEFAULTS["objfreq_edge"])
     objfreq_axes: bpy.props.IntVectorProperty(size=3, min=-1, update=auto_save, name="Axes", description="Axes frequency max.", default=PROP_DEFAULTS["objfreq_axes"])
+    objfreq_direction: bpy.props.EnumProperty(name="Direction", description="Direction",items=get_object_frequency_direction_list, default=PROP_DEFAULTS["objfreq_direction"], update=auto_save)
+    objfreq_direction_freq: bpy.props.IntProperty(name='', min=-1, update=auto_save, description="Direction frequency max.", default=PROP_DEFAULTS["objfreq_direction_freq"])
     selected: bpy.props.BoolProperty(default=False, name="", description="(De)select objects")
 
 class WFC3DFixedPositionListItem(bpy.types.PropertyGroup):

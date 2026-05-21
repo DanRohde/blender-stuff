@@ -46,6 +46,7 @@ ROTATE_DIMENSIONS = {
     'Y' : { 0 : 2, 1 : 1, 2 : 0 },
     'Z' : { 0 : 1, 1 : 0, 2 : 2 },
 }
+DIRECTIONS_LENGTH = len(DIRECTIONS)
 PROP_DEFAULTS = {
     # neighbor constraints
     'left' : '', 'right' : '', 'top' : '', 'bottom' : '', 'front' : '', 'back' : '',
@@ -85,9 +86,9 @@ PROP_DEFAULTS = {
     'conn_cn_bbl':'','conn_cn_bbr':'','conn_cn_btl':'','conn_cn_btr':'',
     'conn_any':'','conn_any_face':'','conn_any_edge':'','conn_any_corner':'',
     # connector exclusion constraints:
-    'conn_excl_name':'','conn_excl_direction': len(DIRECTIONS)-1,
+    'conn_excl_name':'','conn_excl_direction': DIRECTIONS_LENGTH-1,
     # multiple connector constraints:
-    'mult_conn_name':'','mult_conn_direction': len(DIRECTIONS)-1,
+    'mult_conn_name':'','mult_conn_direction': DIRECTIONS_LENGTH-1,
     # dimensions constraints:
     'dim_xyz' : (1,1,1),
     # fixed position constraints:
@@ -96,6 +97,7 @@ PROP_DEFAULTS = {
     'regfreq_name' : '', 'regfreq_min' : (0,0,0), 'regfreq_max' : (0,0,0), 'regfreq_freq' : -1, 'regfreq_freq_pct' : -1,
     # object frequncy constraints:
     'objfreq_obj': None, 'objfreq_neighbor' : -1, 'objfreq_face' : -1,  'objfreq_corner' : -1,  'objfreq_edge' : -1,  'objfreq_axes' : (-1,-1,-1),
+    'objfreq_direction' : DIRECTIONS_LENGTH-1 , 'objfreq_direction_freq' : -1,
     # noise constraints:
     'noise_prob_basis' : 0, 'noise_prob_threshold' : 1.0, 'noise_prob_scale' : 0.1,
     'noise_prob_function' : 0,
@@ -136,7 +138,7 @@ FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_grid_pct', 'freq_neighbor', 'freq_n
                           'freq_neighbor_corner', 'freq_axes', 'freq_any_neighbor',
                           'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner', 'freq_any_axes',
 ]
-OBJECT_FREQUENCY_CONSTRAINTS = [ 'objfreq_obj', 'objfreq_neighbor', 'objfreq_face', 'objfreq_edge', 'objfreq_corner', 'objfreq_axes']
+OBJECT_FREQUENCY_CONSTRAINTS = [ 'objfreq_obj', 'objfreq_neighbor', 'objfreq_face', 'objfreq_edge', 'objfreq_corner', 'objfreq_axes', 'objfreq_direction', 'objfreq_direction_freq']
 
 PROBABILITY_CONSTRAINTS = [ 'probability', 'weight', 'auto_weight']
 
@@ -197,13 +199,17 @@ LIST_CONSTRAINTS = { 'regfreq_min' :'regfreq_input_list',
                      'objfreq_edge' : 'objfreq_input_list',
                      'objfreq_corner' : 'objfreq_input_list',
                      'objfreq_axes' : 'objfreq_input_list',
+                     'objfreq_direction' : 'objfreq_input_list',
+                     'objfreq_direction_freq' : 'objfreq_input_list',
 
                    }
+DIRECTIONS_KEYS = list(DIRECTIONS.keys())
 ENUM_CONSTRAINTS = { 'distance_from' : [ 'object', 'position', 'sub-collection'], 'distance_type' : [ 'minimum', 'maximum' ,'equal'],
                      'fixed_position_type' : [ 'absolute', 'pct'],
                      'distance_position_type' : [ 'absolute', 'pct'],
-                     'conn_excl_direction' : list(DIRECTIONS.keys()),
-                     'mult_conn_direction' : list(DIRECTIONS.keys()),
+                     'conn_excl_direction' : DIRECTIONS_KEYS,
+                     'mult_conn_direction' : DIRECTIONS_KEYS,
+                     'objfreq_direction' : DIRECTIONS_KEYS,
                      }
 
 EMPTY_NEIGHBOR_CONSTRAINTS = [ 'empty_neighbor', 'empty_any_neighbor' ]
@@ -250,6 +256,7 @@ EDIT_CONSTRAINTS_MAP = {
     'regprob': REGPROB_CONSTRAINTS,
     'distance': DISTANCE_CONSTRAINTS,
     'empty': EMPTY_NEIGHBOR_CONSTRAINTS,
+    '_none_' : [],
 }
 
 DEFAULT_EMPTY_NAME = '_WFC3D_DEFAULTS_'
