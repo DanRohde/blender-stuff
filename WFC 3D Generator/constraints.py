@@ -684,7 +684,7 @@ class WFC3DConstraints:
         # object frequency
         if "objfreq" in self.active_constraints:
             for i in range(len(self.constraints[current_obj]['objfreq_obj'])):
-                neighbor = self.constraints[current_obj]['objfreq_obj'][i].name if self.constraints[current_obj]['objfreq_obj'][i] is not None else None
+                neighbor = self.constraints[current_obj]['objfreq_obj'][i].name if self.constraints[current_obj]['objfreq_obj'][i] is not None and isinstance(self.constraints[current_obj]['objfreq_obj'][i], bpy.types.Object) else None
                 for k, direction in nf.items():
                     p = f"objfreq_{k}"
                     if i < len(self.constraints[current_obj][p]) and self.constraints[current_obj][p][i] > -1:
@@ -696,7 +696,6 @@ class WFC3DConstraints:
                         if max_count[v] < 0 : continue
                         diff = max_count[v] - self.grid.count_axis_neighbors(x, y, z, neighbor, axis[v])[v]
                         if diff < 0 : self.grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[v], neighbor)
-                    pass
                 if i < len(self.constraints[current_obj]["objfreq_direction_freq"]) and self.constraints[current_obj]["objfreq_direction_freq"][i] > -1:
                     direction = self.constraints[current_obj]["objfreq_direction"][i]
                     direction_name = DIRECTIONS_KEYS[direction]

@@ -156,7 +156,7 @@ class WFC3DGrid:
                 nx, ny, nz = ox + dx, oy + dy, oz + dz
                 ox, oy, oz = nx, ny, nz
                 if not self.within_boundaries(nx, ny, nz): break
-                if (neighbor is None and len(self.grid[nx, ny, nz]) > 0) or neighbor in self.grid[nx, ny, nz]: count += 1
+                if (neighbor is None and len(self.grid[nx, ny, nz]) > 0) or (neighbor in self.grid[nx, ny, nz]): count += 1
         return count
     def count_axis_neighbors(self, x, y, z, neighbor, axis):
         """Count objects in a given axis"""
@@ -238,7 +238,6 @@ class WFC3DGrid:
             while True:
                 nx, ny, nz = ox + dx, oy + dy, oz + dz
                 ox, oy, oz = nx, ny, nz
-                print((nx, ny, nz))
                 if not self.within_boundaries(nx, ny, nz): break
                 if neighbor is not None and neighbor not in self.grid[nx, ny, nz]: continue
                 neighbors_pos.append([nx, ny, nz])
