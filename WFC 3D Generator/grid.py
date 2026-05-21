@@ -197,13 +197,14 @@ class WFC3DGrid:
             xa, ya, za = xa + axis[0], ya + axis[1], za + axis[2]
         return reduced_cells
 
-    def remove_max_neighbors(self, x, y, z, max_count, d):
+    def remove_max_neighbors(self, x, y, z, max_count, d, neighbor = None):
         """Remove max any random neighbor"""
         neighbors_pos = []
         ## collect neighbors
         for direction, (dx, dy, dz) in d.items():
             nx, ny, nz = x + dx, y + dy, z + dz
             if not self.within_boundaries(nx, ny, nz) or len(self.grid[nx, ny, nz]) < 1: continue
+            if neighbor is not None and neighbor not in self.grid[nx, ny, nz]: continue
             neighbors_pos.append([nx, ny, nz])
 
         if max_count > len(neighbors_pos): max_count = len(neighbors_pos)
@@ -215,12 +216,13 @@ class WFC3DGrid:
             self.grid[dx, dy, dz] = []
         return []
 
-    def remove_max_axis_neighbors(self, x, y, z, max_count, axis):
+    def remove_max_axis_neighbors(self, x, y, z, max_count, axis, neighbor = None):
         """Remove max any random axis neighbor"""
         neighbor_pos = []
         xa, ya, za = (1 - axis[0]) * x, (1 - axis[1]) * y, (1 - axis[2]) * z
         while self.within_boundaries(xa, ya, za):
             if ((xa != x or ya != y or za != z) or (max_count == 0)) and len(self.grid[xa, ya, za]) > 0:
+                if neighbor is not None and neighbor not in self.grid[xa, ya, za]: continue
                 neighbor_pos.append([xa, ya, za])
             xa, ya, za = xa + axis[0], ya + axis[1], za + axis[2]
 

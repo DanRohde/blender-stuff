@@ -136,7 +136,7 @@ FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_grid_pct', 'freq_neighbor', 'freq_n
                           'freq_neighbor_corner', 'freq_axes', 'freq_any_neighbor',
                           'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner', 'freq_any_axes',
 ]
-OBJECT_FREQUENCY_CONSTRAINTS = [ 'objfreq_obj', 'objfreq_neighbor', 'objfreq_face', 'objreq_edge', 'objfreq_corner', 'objfreq_axes']
+OBJECT_FREQUENCY_CONSTRAINTS = [ 'objfreq_obj', 'objfreq_neighbor', 'objfreq_face', 'objfreq_edge', 'objfreq_corner', 'objfreq_axes']
 
 PROBABILITY_CONSTRAINTS = [ 'probability', 'weight', 'auto_weight']
 

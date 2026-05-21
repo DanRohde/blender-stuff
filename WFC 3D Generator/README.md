@@ -63,6 +63,8 @@ but taking the constraints into account, e.g., works of art, buildings, cities, 
   * Define how often the same object or any other object may occur in the immediate vicinity or on one of the 3 axes XYZ.
 * Region Frequency Constraints:
   * Define how often the same object may occur in a specific region.
+* Object Frequency Constraints:
+  * Define how often a specific object may occur in a in the immediate vicinity or on one of the 3 axes.
 * Symmetry Constraints:
   * These constraints allow mirror-symmetric and/or rotation-symmetric objects to be generated.
   * It is possible to transfer random transformations to mirror partners, flip mirror partners accordingly,
