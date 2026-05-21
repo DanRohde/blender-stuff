@@ -142,14 +142,14 @@ Define how often the same object may occur in a specific region.
 ## Object Frequency Constraints
 Define how often a defined object may occur in the immediate vicinity or on one of the 3 axes.
 
-| **Parameter** | **Description**                                                                                                     |
-|---------------|---------------------------------------------------------------------------------------------------------------------|
-| Object        | Object                                                                                                              | 
-| Neighbor      | Frequency in the direct neighborhood (26 directions) of the building block itself.                                  |
-| Face          | Frequency in all six face directions of the building block itself.                                                  |
-| Corner        | Frequency at all eight corners of the building block itself.                                                        |
-| Edge          | Frequency at all twelve edges of the building block itself.                                                         |
-| Axes          | Frequency along the three axes (XYZ) of the building block itself.                                                  |
+| **Parameter** | **Description**                                                                    |
+|---------------|------------------------------------------------------------------------------------|
+| Object        | Object (an empty object means any neighbor)                                        | 
+| Neighbor      | Frequency in the direct neighborhood (26 directions) of the building block itself. |
+| Face          | Frequency in all six face directions of the building block itself.                 |
+| Corner        | Frequency at all eight corners of the building block itself.                       |
+| Edge          | Frequency at all twelve edges of the building block itself.                        |
+| Axes          | Frequency along the three axes (XYZ) of the building block itself.                 |
 
 
 ## Symmetry Constraints

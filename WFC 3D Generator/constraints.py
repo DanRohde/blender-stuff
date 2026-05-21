@@ -653,14 +653,18 @@ class WFC3DConstraints:
             max_count = self.constraints[current_obj]["freq_grid_pct"]/100 * np.prod(self.grid.grid_size)
             if count >= max_count: self.grid.remove_obj(current_obj)
 
-        # neighbor frequency
-        nf = [ { "freq_neighbor_face" : FACE_DIRECTIONS}, {"freq_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_neighbor" : DIRECTIONS}]
-        for a in nf:
-            for p,direction in a.items():
-                if self.constraints[current_obj][p] is not None and self.constraints[current_obj][p]>-1:
-                    if self.grid.count_neighbors(x, y, z, current_obj, direction) > self.constraints[current_obj][p]:
-                        self.grid.remove_neighbors(x, y, z, current_obj, direction)
-        
+        nf = {"face": FACE_DIRECTIONS, "corner": CORNER_DIRECTIONS, "edge": EDGE_DIRECTIONS, "neighbor": DIRECTIONS}
+        for k, direction in nf.items():
+            p = f"freq_neighbor_{k}" if k != "neighbor" else "freq_neighbor"
+            # neighbor frequency
+            if self.constraints[current_obj][p] is not None and self.constraints[current_obj][p]>-1:
+                if self.grid.count_neighbors(x, y, z, current_obj, direction) > self.constraints[current_obj][p]:
+                    self.grid.remove_neighbors(x, y, z, current_obj, direction)
+            # any neighbor frequency
+            p = f"freq_any_neighbor_{k}" if k != "neighbor" else "freq_any_neighbor"
+            if self.constraints[current_obj][p] is not None and self.constraints[current_obj][p] > -1:
+                diff = self.constraints[current_obj][p] - self.grid.count_neighbors(x, y, z, None, direction)
+                if diff < 0: self.grid.remove_max_neighbors(x, y, z, abs(diff), direction)
         # axes
         axis={ 0: [1,0,0], 1: [0,1,0], 2 : [0,0,1]}
         if self.constraints[current_obj]["freq_axes"] is not None:
@@ -669,31 +673,22 @@ class WFC3DConstraints:
                 if max_count[i] < 0: continue
                 if self.grid.count_axis_neighbors(x,y,z,current_obj,axis[i])[i] >= max_count[i]:
                     self.grid.remove_axis_neighbors(x,y,z,current_obj,axis[i])
-        
-        nf = [ { "freq_any_neighbor_face" : FACE_DIRECTIONS}, {"freq_any_neighbor_corner" : CORNER_DIRECTIONS}, {"freq_any_neighbor_edge" : EDGE_DIRECTIONS}, {"freq_any_neighbor" : DIRECTIONS}]
-        # any neighbor frequency
-        for a in nf:
-            for p, direction in a.items():
-                if self.constraints[current_obj][p] is not None and self.constraints[current_obj][p]>-1:
-                    diff = self.constraints[current_obj][p] - self.grid.count_neighbors(x, y, z, None, direction)
-                    if diff < 0: self.grid.remove_max_neighbors(x, y, z, abs(diff), direction)
-        
+
         if self.constraints[current_obj]["freq_any_axes"] is not None:
             max_count = self.constraints[current_obj]["freq_any_axes"]
             for i in range(3):
-                if max_count[i]<0: continue
+                if max_count[i] < 0: continue
                 diff = max_count[i] - self.grid.count_axis_neighbors(x, y, z, None, axis[i])[i]
                 if diff < 0: self.grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i])
 
         # object frequency
         if "objfreq" in self.active_constraints:
-            nf = {"face" : FACE_DIRECTIONS, "corner" : CORNER_DIRECTIONS, "edge": EDGE_DIRECTIONS, "neighbor" : DIRECTIONS}
             for i in range(len(self.constraints[current_obj]['objfreq_obj'])):
                 neighbor = self.constraints[current_obj]['objfreq_obj'][i].name if self.constraints[current_obj]['objfreq_obj'][i] is not None else None
-                for p, direction in nf.items():
-                    k = f"objfreq_{p}"
-                    if i < len(self.constraints[current_obj][k]) and self.constraints[current_obj][k][i] > -1:
-                        diff = self.constraints[current_obj][k][i] - self.grid.count_neighbors(x, y, z, neighbor, direction)
+                for k, direction in nf.items():
+                    p = f"objfreq_{k}"
+                    if i < len(self.constraints[current_obj][p]) and self.constraints[current_obj][p][i] > -1:
+                        diff = self.constraints[current_obj][p][i] - self.grid.count_neighbors(x, y, z, neighbor, direction)
                         if diff < 0: self.grid.remove_max_neighbors(x, y, z, abs(diff), direction, neighbor)
                 if i < len(self.constraints[current_obj]["objfreq_axes"]):
                     max_count = self.constraints[current_obj]["objfreq_axes"][i]
