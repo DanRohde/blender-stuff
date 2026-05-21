@@ -147,7 +147,17 @@ class WFC3DGrid:
             if not self.within_boundaries(nx, ny, nz): continue
             if (neighbor is None and len(self.grid[nx, ny, nz]) > 0) or neighbor in self.grid[nx, ny, nz]: count += 1
         return count
-
+    def count_all_neighbors(self, x, y, z, neighbor, dirs):
+        """count neighbors"""
+        count = 0
+        for direction, (dx, dy, dz) in dirs.items():
+            ox, oy, oz = x, y, z
+            while True:
+                nx, ny, nz = ox + dx, oy + dy, oz + dz
+                ox, oy, oz = nx, ny, nz
+                if not self.within_boundaries(nx, ny, nz): break
+                if (neighbor is None and len(self.grid[nx, ny, nz]) > 0) or neighbor in self.grid[nx, ny, nz]: count += 1
+        return count
     def count_axis_neighbors(self, x, y, z, neighbor, axis):
         """Count objects in a given axis"""
         count = [0, 0, 0]
@@ -213,7 +223,36 @@ class WFC3DGrid:
         random.shuffle(neighbors_pos)
         for i in range(max_count):
             dx, dy, dz = neighbors_pos[i]
-            self.grid[dx, dy, dz] = []
+            if neighbor is not None:
+                self.grid[dx, dy, dz].remove(neighbor)
+            else:
+                self.grid[dx, dy, dz] = []
+        return []
+
+    def remove_max_all_neighbors(self, x, y, z, max_count, d, neighbor = None):
+        """Remove max all random neighbors"""
+        neighbors_pos = []
+        ## collect neighbors
+        for direction, (dx, dy, dz) in d.items():
+            ox, oy, oz = x, y, z
+            while True:
+                nx, ny, nz = ox + dx, oy + dy, oz + dz
+                ox, oy, oz = nx, ny, nz
+                print((nx, ny, nz))
+                if not self.within_boundaries(nx, ny, nz): break
+                if neighbor is not None and neighbor not in self.grid[nx, ny, nz]: continue
+                neighbors_pos.append([nx, ny, nz])
+
+        if max_count > len(neighbors_pos): max_count = len(neighbors_pos)
+
+        ## randomize neighbor positions and remove first max_count neighbors
+        random.shuffle(neighbors_pos)
+        for i in range(max_count):
+            dx, dy, dz = neighbors_pos[i]
+            if neighbor is not None:
+                self.grid[dx, dy, dz].remove(neighbor)
+            else:
+                self.grid[dx, dy, dz] = []
         return []
 
     def remove_max_axis_neighbors(self, x, y, z, max_count, axis, neighbor = None):
@@ -230,7 +269,10 @@ class WFC3DGrid:
         random.shuffle(neighbor_pos)
         for i in range(max_count):
             xa, ya, za = neighbor_pos[i]
-            self.grid[xa, ya, za] = []
+            if neighbor is not None:
+                self.grid[xa, ya, za].remove(neighbor)
+            else:
+                self.grid[xa, ya, za] = []
         return []
     def remove_max_region_neighbors(self, x, y, z, max_count, rmin, rmax):
         if not self.within_boundaries(x,y,z) or self.grid[x,y,z] == 0: return

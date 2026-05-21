@@ -653,7 +653,7 @@ class WFC3DConstraints:
             max_count = self.constraints[current_obj]["freq_grid_pct"]/100 * np.prod(self.grid.grid_size)
             if count >= max_count: self.grid.remove_obj(current_obj)
 
-        nf = {"face": FACE_DIRECTIONS, "corner": CORNER_DIRECTIONS, "edge": EDGE_DIRECTIONS, "neighbor": DIRECTIONS}
+        nf = {"face": FACE_DIRECTIONS, "corner": CORNER_DIRECTIONS, "edge": EDGE_DIRECTIONS, "neighbor": {**FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS}}
         for k, direction in nf.items():
             p = f"freq_neighbor_{k}" if k != "neighbor" else "freq_neighbor"
             # neighbor frequency
@@ -697,7 +697,19 @@ class WFC3DConstraints:
                         diff = max_count[v] - self.grid.count_axis_neighbors(x, y, z, neighbor, axis[v])[v]
                         if diff < 0 : self.grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[v], neighbor)
                     pass
+                if i < len(self.constraints[current_obj]["objfreq_direction_freq"]) and self.constraints[current_obj]["objfreq_direction_freq"][i] > -1:
+                    direction = self.constraints[current_obj]["objfreq_direction"][i]
+                    direction_name = DIRECTIONS_KEYS[direction]
+                    match direction_name:
+                        case 'ANY': dirs = { **FACE_DIRECTIONS, **EDGE_DIRECTIONS, **CORNER_DIRECTIONS }
+                        case 'ANY_FACE': dirs = FACE_DIRECTIONS
+                        case 'ANY_EDGE': dirs = EDGE_DIRECTIONS
+                        case 'ANY_CORNER': dirs = CORNER_DIRECTIONS
+                        case _: dirs = { direction_name : DIRECTIONS[direction_name] }
 
+                    freq = self.grid.count_all_neighbors(x, y, z, neighbor, dirs)
+                    diff = self.constraints[current_obj]["objfreq_direction_freq"][i] - freq
+                    if diff < 0: self.grid.remove_max_all_neighbors(x, y, z, abs(diff), dirs, neighbor)
 
     def propagate_region_frequency_constraints(self, cell):
         if "regfreq" not in self.active_constraints: return

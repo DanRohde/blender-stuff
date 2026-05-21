@@ -140,7 +140,7 @@ Define how often the same object may occur in a specific region.
 | Frequency %   | Frequency as a percentage of the building block itself within the region (min-max). |
 
 ## Object Frequency Constraints
-Define how often a defined object may occur in the immediate vicinity or on one of the 3 axes.
+Define how often a defined object may occur in the immediate vicinity, on one of the 3 axes, or in a specific direction.
 
 | **Parameter** | **Description**                                                                      |
 |---------------|--------------------------------------------------------------------------------------|
