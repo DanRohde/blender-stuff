@@ -6,7 +6,7 @@
 * [Probability constraints](#probability-constraints): 3
 * [Region probability constraints](#region-probability-constraints): 5
 * [Transformations](#transformations): 12
-* [Frequency constraints](#frequency-constraints): 12
+* [Frequency constraints](#frequency-constraints): 16
 * [Region frequency constraints](#region-frequency-constraints): 5
 * [Object frequency constraints](#object-frequency-constraints): 8
 * [Symmetry constraints](#symmetry-constraints): 19
@@ -20,7 +20,7 @@
 * [Distance constraints](#distance-constraints): 8
 * [Empty Neighbor constraints](#empty-neighbor-constraints): 2
 * [Active Constraints](#active-constraints): 2
-* **Sum: 176**
+* **Sum: 180**
 
 ## Neighbor Constraints
 * Allows neighbors to be restrict in all directions: face neighbors, edge neighbors (`wfc_en_...`), corner neighbors (`wfc_cn_...`)
@@ -127,11 +127,13 @@
     
    
 ## Frequency Constraints
-* Used custom properties: `wfc_freq_[any_]neighbor[_face|_edge|_corner],wfc_freq_grid[_pct],wfc_freq_[any_]axes`
+* Used custom properties: `wfc_freq_[any_]neighbor[_face|_edge|_corner],wfc_freq_grid[_pct],wfc_freq_[any_]axes,wfc_freq_[any_]direction[_freq]`
 * Allowed property values:
    * wfc_grid, wfc_freq_[any_]neighbor[_face|_edge|_corner]: an integer
-   * wfc_[_any]_axes: an integer vector
+   * wfc_[any_]axes: an integer vector
    * wfc_grid_pct: float (-1..100)
+   * wfc_[any_]direction: an integer (0..29)
+   * wfc_[any_]direction_freq: an integer
 
 ## Region Frequency Constraints:
 * Used custom properties: `wfc_regfreq_name_[0..n],wfc_regfreq_min_[0..n],wfc_regfreq_max_[0..n],wfc_regfreq_freq_[pct_][0..n]`

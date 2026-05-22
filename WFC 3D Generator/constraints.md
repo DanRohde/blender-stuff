@@ -121,12 +121,16 @@ Define how often the same object or any other object may occur in the immediate 
 | Corner        | Frequency at all eight corners of the building block itself.                                                       |
 | Edge          | Frequency at all twelve edges of the building block itself.                                                         |
 | Axes          | Frequency along the three axes (XYZ) of the building block itself.                                                 |
+| Direction     | Direction for the direction frequency of the selected bulding block.                 |
+| Direction Frequency | Frequency in the selected direction of the selected building block. |  
 | *Any Object*  | In these constraints, the frequency of all building blocks from the Source Collection can be set.                   |
 | Any Neighbor  | Frequency of building blocks in the direct neighborhood (26 directions).                                           |
 | Any Face      | Frequency of building blocks in the six face directions.                                                           |
 | Any Corner    | Frequency of building blocks at the eight corners.                                                                |
 | Any Edge      | Frequency of building blocks at the twelve edges.                                                                  |
 | Any Axes      | Frequency of building blocks along the three axes (XYZ).                                                           |
+| Direction     | Direction for the direction frequency of the selected bulding block.                 |
+| Direction Frequency | Frequency in the selected direction of the selected building block. |  
 
 ## Region Frequency Constraints
 Define how often the same object may occur in a specific region.
