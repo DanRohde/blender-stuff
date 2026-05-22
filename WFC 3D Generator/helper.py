@@ -561,3 +561,17 @@ def get_target_name(props):
     if target_name == "": target_name = "Object" if props.use_parent_object else "Collection"
     if props.collection_obj is not None and not props.use_parent_object and target_name == props.collection_obj.name: target_name = "Collection.001"
     return target_name
+
+def get_directions_by_name(direction_name):
+    match direction_name:
+        case 'ANY':
+            dirs = {**FACE_DIRECTIONS, **EDGE_DIRECTIONS, **CORNER_DIRECTIONS}
+        case 'ANY_FACE':
+            dirs = FACE_DIRECTIONS
+        case 'ANY_EDGE':
+            dirs = EDGE_DIRECTIONS
+        case 'ANY_CORNER':
+            dirs = CORNER_DIRECTIONS
+        case _:
+            dirs = {direction_name: DIRECTIONS[direction_name]}
+    return dirs

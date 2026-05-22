@@ -65,8 +65,10 @@ PROP_DEFAULTS = {
     'scale_type' : 0, 'scale_uni': (1,1,0), 'flipping' : (0, 0, 0),
     # frequency constraints:
     'freq_grid' : -1, 'freq_grid_pct': -1, 'freq_neighbor' : -1, 'freq_axes' : (-1,-1,-1), 'freq_any_neighbor' : -1, 'freq_any_axes' : (-1,-1,-1),
+    'freq_direction' : DIRECTIONS_LENGTH -1, 'freq_direction_freq': -1,
     'freq_neighbor_face': -1, 'freq_neighbor_edge' : -1, 'freq_neighbor_corner' : -1,
     'freq_any_neighbor_face': -1, 'freq_any_neighbor_edge' : -1, 'freq_any_neighbor_corner' : -1,
+    'freq_any_direction' : DIRECTIONS_LENGTH -1, 'freq_any_direction_freq': -1,
     # symmetry constraints:
     'sym_mirror_axes': (False, False, False), 'sym_rotate_axis' : (-1,-1,-1), 'sym_rotate_n': -1, 'sym_mirror_axes_rotate' : False,
     'sym_mirror_axes_x':None, 'sym_mirror_axes_y':None, 'sym_mirror_axes_z':None, 'sym_mirror_axes_xy':None,
@@ -135,8 +137,9 @@ TRANSFORMATION_CONSTRAINTS = [ 'translation_min', 'translation_max', 'translatio
                                'flipping']
 
 FREQUENCY_CONSTRAINTS = [ 'freq_grid', 'freq_grid_pct', 'freq_neighbor', 'freq_neighbor_face', 'freq_neighbor_edge',
-                          'freq_neighbor_corner', 'freq_axes', 'freq_any_neighbor',
+                          'freq_neighbor_corner', 'freq_axes', 'freq_direction', 'freq_direction_freq', 'freq_any_neighbor',
                           'freq_any_neighbor_face', 'freq_any_neighbor_edge','freq_any_neighbor_corner', 'freq_any_axes',
+                          'freq_any_direction', 'freq_any_direction_freq'
 ]
 OBJECT_FREQUENCY_CONSTRAINTS = [ 'objfreq_obj', 'objfreq_neighbor', 'objfreq_face', 'objfreq_edge', 'objfreq_corner', 'objfreq_axes', 'objfreq_direction', 'objfreq_direction_freq']
 
@@ -210,6 +213,8 @@ ENUM_CONSTRAINTS = { 'distance_from' : [ 'object', 'position', 'sub-collection']
                      'conn_excl_direction' : DIRECTIONS_KEYS,
                      'mult_conn_direction' : DIRECTIONS_KEYS,
                      'objfreq_direction' : DIRECTIONS_KEYS,
+                     'freq_direction' : DIRECTIONS_KEYS,
+                     'freq_any_direction' : DIRECTIONS_KEYS,
                      }
 
 EMPTY_NEIGHBOR_CONSTRAINTS = [ 'empty_neighbor', 'empty_any_neighbor' ]

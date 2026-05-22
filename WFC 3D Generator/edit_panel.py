@@ -461,14 +461,18 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
                 self._draw_preset_prop(row, props, p)
             else:
                 self._draw_preset_prop(newbox, props, p)
-
+        row = newbox.row()
+        row.prop(props, "freq_direction")
+        self._draw_preset_prop(row, props, "freq_direction_freq")
         newbox = box.box()
         newrow = newbox.row()
         newrow.label(text="Any Object")
         pn=["freq_any_neighbor", "freq_any_neighbor_face", "freq_any_neighbor_corner", "freq_any_neighbor_edge", "freq_any_axes"]
         self._draw_preset_props(newrow, props, pn)
         for p in pn: self._draw_preset_prop(newbox, props, p)
-
+        row = newbox.row()
+        row.prop(props, "freq_any_direction")
+        self._draw_preset_prop(row, props, "freq_any_direction_freq")
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
     def draw_symmetry_panel(self, props, layout, _obj, obj_name):

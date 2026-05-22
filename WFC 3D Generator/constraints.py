@@ -6,7 +6,7 @@ import random
 from collections import deque
 
 from .constants import *
-from .helper import get_default_empty_object, get_default_empty_name, get_better_noise, remap, get_active_constraints
+from .helper import get_default_empty_object, get_default_empty_name, get_better_noise, remap, get_active_constraints, get_directions_by_name
 from .geometry import compare_edges, compare_faces
 
 class WFC3DConstraints:
@@ -669,7 +669,6 @@ class WFC3DConstraints:
                     diff = self.constraints[current_obj][p] - self.grid.count_neighbors(x, y, z, None, direction)
                     if diff < 0: self.grid.remove_max_neighbors(x, y, z, abs(diff), direction)
             # axes
-
             if self.constraints[current_obj]["freq_axes"] is not None:
                 max_count = self.constraints[current_obj]["freq_axes"]
                 for i in range(3):
@@ -683,7 +682,13 @@ class WFC3DConstraints:
                     if max_count[i] < 0: continue
                     diff = max_count[i] - self.grid.count_axis_neighbors(x, y, z, None, axis[i])[i]
                     if diff < 0: self.grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i])
-
+            # direction
+            for p, obj in { "freq_direction" : current_obj, "freq_any_direction" : None }.items():
+                if self.constraints[current_obj][f"{p}_freq"] == -1: continue
+                dirs = get_directions_by_name(DIRECTIONS_KEYS[self.constraints[current_obj][p]])
+                freq = self.grid.count_all_neighbors(x, y, z, obj, dirs)
+                diff = self.constraints[current_obj][f"{p}_freq"] - freq
+                if diff < 0: self.grid.remove_max_all_neighbors(x, y, z, abs(diff), dirs, obj)
         # object frequency
         if "objfreq" in self.active_constraints:
             for i in range(len(self.constraints[current_obj]['objfreq_obj'])):
@@ -701,14 +706,7 @@ class WFC3DConstraints:
                         if diff < 0 : self.grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[v], neighbor)
                 if i < len(self.constraints[current_obj]["objfreq_direction_freq"]) and self.constraints[current_obj]["objfreq_direction_freq"][i] > -1:
                     direction = self.constraints[current_obj]["objfreq_direction"][i]
-                    direction_name = DIRECTIONS_KEYS[direction]
-                    match direction_name:
-                        case 'ANY': dirs = { **FACE_DIRECTIONS, **EDGE_DIRECTIONS, **CORNER_DIRECTIONS }
-                        case 'ANY_FACE': dirs = FACE_DIRECTIONS
-                        case 'ANY_EDGE': dirs = EDGE_DIRECTIONS
-                        case 'ANY_CORNER': dirs = CORNER_DIRECTIONS
-                        case _: dirs = { direction_name : DIRECTIONS[direction_name] }
-
+                    dirs = get_directions_by_name(DIRECTIONS_KEYS[direction])
                     freq = self.grid.count_all_neighbors(x, y, z, neighbor, dirs)
                     diff = self.constraints[current_obj]["objfreq_direction_freq"][i] - freq
                     if diff < 0: self.grid.remove_max_all_neighbors(x, y, z, abs(diff), dirs, neighbor)

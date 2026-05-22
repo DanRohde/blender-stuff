@@ -47,6 +47,10 @@ def get_multiple_connector_direction_list(_self, _context):
 def get_object_frequency_direction_list(_self, _context):
     return get_direction_list([], 'wfc_objfreq_', with_sep = False)
 
+def get_frequency_direction_list(_self, _context):
+    return get_direction_list([], 'wfc_freq_', with_sep=False)
+def get_any_frequency_direction_list(_self, _context):
+    return get_direction_list([], 'wfc_freq_any_', with_sep=False)
 
 def _get_connector_names_from_object(obj, s, cache):
     items = []
@@ -359,11 +363,15 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     freq_grid_pct: bpy.props.FloatProperty(name="Grid %",description="Grid frequency max. %", default=PROP_DEFAULTS["freq_grid_pct"], min=-1, max=100, subtype="PERCENTAGE", update=auto_save)
     freq_neighbor: bpy.props.IntProperty(name="Neighbor",description="Neighbor frequency max", default=PROP_DEFAULTS["freq_neighbor"], min=-1,max=26, update=auto_save)
     freq_axes: bpy.props.IntVectorProperty(name="Axes",description="Axes frequency max", default=PROP_DEFAULTS["freq_axes"], size=3, min=-1, update=auto_save)
+    freq_direction : bpy.props.EnumProperty(name="Direction", description="Direction",items=get_frequency_direction_list, default=PROP_DEFAULTS["freq_direction"], update=auto_save)
+    freq_direction_freq : bpy.props.IntProperty(name='', min=-1, update=auto_save, description="Direction frequency max.", default=PROP_DEFAULTS["freq_direction_freq"])
     freq_any_neighbor: bpy.props.IntProperty(name="Any Neighbor",description="Any Neighbor frequency max", default=PROP_DEFAULTS["freq_any_neighbor"], min=-1,max=26, update=auto_save)
     freq_any_axes: bpy.props.IntVectorProperty(name="Any Axes",description="Any Object in Axes frequency max", default=PROP_DEFAULTS["freq_any_axes"], size=3, min=-1, update=auto_save)
     freq_neighbor_face : bpy.props.IntProperty(name="Face",description="Neighbor face frequency max", default=PROP_DEFAULTS["freq_neighbor_face"], min=-1,max=6, update=auto_save)
     freq_neighbor_corner : bpy.props.IntProperty(name="Corner",description="Neighbor corner frequency max", default=PROP_DEFAULTS["freq_neighbor_corner"], min=-1,max=8, update=auto_save)
     freq_neighbor_edge : bpy.props.IntProperty(name="Edge",description="Neighbor edge frequency max", default=PROP_DEFAULTS["freq_neighbor_edge"], min=-1,max=12, update=auto_save)
+    freq_any_direction: bpy.props.EnumProperty(name="Direction", description="Direction", items=get_any_frequency_direction_list, default=PROP_DEFAULTS["freq_any_direction"], update=auto_save)
+    freq_any_direction_freq: bpy.props.IntProperty(name='', min=-1, update=auto_save, description="Direction frequency max.", default=PROP_DEFAULTS["freq_any_direction_freq"])
     freq_any_neighbor_face : bpy.props.IntProperty(name="Any Face",description="Neighbor face frequency max", default=PROP_DEFAULTS["freq_any_neighbor_face"], min=-1,max=6, update=auto_save)
     freq_any_neighbor_corner : bpy.props.IntProperty(name="Any Corner",description="Neighbor corner frequency max", default=PROP_DEFAULTS["freq_any_neighbor_corner"], min=-1,max=8, update=auto_save)
     freq_any_neighbor_edge : bpy.props.IntProperty(name="Any Edge",description="Neighbor edge frequency max", default=PROP_DEFAULTS["freq_any_neighbor_edge"], min=-1,max=12, update=auto_save)
