@@ -649,7 +649,7 @@ class WFC3DConstraints:
 
         if "frequency" in self.active_constraints:
             # grid frequency
-            if self.constraints[current_obj]["freq_grid"]>-1:
+            if self.constraints[current_obj]["freq_grid"] > -1:
                 count = self.grid.count_obj(current_obj) / dim_fac
                 if count >= self.constraints[current_obj]["freq_grid"]: self.grid.remove_obj(current_obj)
 
@@ -670,7 +670,7 @@ class WFC3DConstraints:
                     diff = self.constraints[current_obj][p] - self.grid.count_neighbors(x, y, z, None, direction)
                     if diff < 0: self.grid.remove_max_neighbors(x, y, z, abs(diff), direction)
             # axes
-            for p, obj in { "freq_axes" : current_obj, "freq_any_axes" : None}.items():
+            for p, obj in {"freq_axes" : current_obj, "freq_any_axes" : None}.items():
                 if self.constraints[current_obj][p] is None: continue
                 max_count = self.constraints[current_obj][p]
                 for i in range(3):
@@ -678,7 +678,7 @@ class WFC3DConstraints:
                     diff = max_count[i] - self.grid.count_axis_neighbors(x, y, z, obj, axis[i])[i]
                     if diff < 0: self.grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i], obj)
             # direction
-            for p, obj in { "freq_direction" : current_obj, "freq_any_direction" : None }.items():
+            for p, obj in {"freq_direction" : current_obj, "freq_any_direction" : None}.items():
                 if self.constraints[current_obj][f"{p}_freq"] == -1: continue
                 dirs = get_directions_by_name(DIRECTIONS_KEYS[self.constraints[current_obj][p]])
                 freq = self.grid.count_all_neighbors(x, y, z, obj, dirs)
