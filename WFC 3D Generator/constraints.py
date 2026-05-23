@@ -646,8 +646,9 @@ class WFC3DConstraints:
         nf = {"face": FACE_DIRECTIONS, "corner": CORNER_DIRECTIONS, "edge": EDGE_DIRECTIONS,
               "neighbor": {**FACE_DIRECTIONS, **CORNER_DIRECTIONS, **EDGE_DIRECTIONS}}
         axis = {0: [1, 0, 0], 1: [0, 1, 0], 2: [0, 0, 1]}
-        # grid frequency
+
         if "frequency" in self.active_constraints:
+            # grid frequency
             if self.constraints[current_obj]["freq_grid"]>-1:
                 count = self.grid.count_obj(current_obj) / dim_fac
                 if count >= self.constraints[current_obj]["freq_grid"]: self.grid.remove_obj(current_obj)
@@ -669,19 +670,13 @@ class WFC3DConstraints:
                     diff = self.constraints[current_obj][p] - self.grid.count_neighbors(x, y, z, None, direction)
                     if diff < 0: self.grid.remove_max_neighbors(x, y, z, abs(diff), direction)
             # axes
-            if self.constraints[current_obj]["freq_axes"] is not None:
-                max_count = self.constraints[current_obj]["freq_axes"]
+            for p, obj in { "freq_axes" : current_obj, "freq_any_axes" : None}.items():
+                if self.constraints[current_obj][p] is None: continue
+                max_count = self.constraints[current_obj][p]
                 for i in range(3):
                     if max_count[i] < 0: continue
-                    if self.grid.count_axis_neighbors(x,y,z,current_obj,axis[i])[i] >= max_count[i]:
-                        self.grid.remove_axis_neighbors(x,y,z,current_obj,axis[i])
-
-            if self.constraints[current_obj]["freq_any_axes"] is not None:
-                max_count = self.constraints[current_obj]["freq_any_axes"]
-                for i in range(3):
-                    if max_count[i] < 0: continue
-                    diff = max_count[i] - self.grid.count_axis_neighbors(x, y, z, None, axis[i])[i]
-                    if diff < 0: self.grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i])
+                    diff = max_count[i] - self.grid.count_axis_neighbors(x, y, z, obj, axis[i])[i]
+                    if diff < 0: self.grid.remove_max_axis_neighbors(x, y, z, abs(diff), axis[i], obj)
             # direction
             for p, obj in { "freq_direction" : current_obj, "freq_any_direction" : None }.items():
                 if self.constraints[current_obj][f"{p}_freq"] == -1: continue
