@@ -1,5 +1,5 @@
 import bpy
-from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name, count_selected_items, get_active_constraints, render_source_collection
+from .helper import get_default_empty_object, get_icon_name, cmpall, get_selected_items, get_object_by_name, count_selected_items, get_active_constraints, render_source_collection, get_info_icon
 from .properties import get_known_conn_names
 from .constants import *
 from .gen_panel import render_generate_button
@@ -250,14 +250,14 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
             obj_name = 'Collection Defaults'
 
         row = box.box().row(align=True)
-        row.operator('object.wfc_info_toggle',icon='INFO_LARGE', depress = props.info_toggle)
+        row.operator('object.wfc_info_toggle',icon=get_info_icon(), depress = props.info_toggle)
         row.prop(props,"edit_constraints",icon="SETTINGS")
         row.operator("object.wfc_open_web_link", icon="URL", text="").url = HELP["constraints"]["url"] + "#" + HELP["constraints"]["anchormap"][props.edit_constraints]
         row.operator('object.wfc_auto_save_toggle',icon='IMPORT',depress = props.auto_save)
 
         if hasattr(self, f"draw_{props.edit_constraints}_panel") and callable(getattr(self, f"draw_{props.edit_constraints}_panel")):
             if props.edit_constraints not in get_active_constraints():
-                box.label(text="These constraints are disabled.", icon="INFO_LARGE")
+                box.label(text="These constraints are disabled.", icon=get_info_icon())
                 box = box.box()
                 box.enabled = False
             draw_method = getattr(self, f"draw_{props.edit_constraints}_panel")
@@ -629,7 +629,7 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row.label(text=obj_name)
         row.operator("object.wfc_reset_constraints")
 
-        box.row().label(text="Applies only to mesh objects.", icon="INFO_LARGE")
+        box.row().label(text="Applies only to mesh objects.", icon=get_info_icon())
         row = box.row()
         row.label(text="Match")
         row.prop(props, "geo_match_edges")
@@ -729,7 +729,7 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
     def draw_info_panel(self, layout, props, obj):
         box = layout.box()
 
-        box.label(text="Constraints Information",icon="INFO_LARGE")
+        box.label(text="Constraints Information",icon=get_info_icon())
 
         labels = []
         for d in DIRECTIONS:

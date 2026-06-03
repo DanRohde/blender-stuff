@@ -1,7 +1,7 @@
 import bpy
 import numpy as np
 import json
-from .helper import seed_in_seeds_list, render_source_collection, render_collection_actions, get_target_name, render_target_object_actions
+from .helper import seed_in_seeds_list, render_source_collection, render_collection_actions, get_target_name, render_target_object_actions, get_info_icon
 class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Generator"
@@ -119,11 +119,11 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
         render_render_result(props, layout)
 
         if props.collection_obj is None:
-            layout.label(text="Please select a source collection.", icon="INFO_LARGE")
+            layout.label(text="Please select a source collection.", icon=get_info_icon())
         if props.collection_obj is not None and props.collection_obj.name == props.target_collection:
             layout.label(text="Source and target collection should not be the same.", icon="WARNING_LARGE")
         if props.collection_obj and len(props.collection_obj.objects)==0 and len(props.collection_obj.children)==0:
-            layout.label(text="Please select a non-empty source collection.", icon="INFO_LARGE")
+            layout.label(text="Please select a non-empty source collection.", icon=get_info_icon())
 
 def render_render_result(props, layout):
     if props.render_result.cell_count > 0:

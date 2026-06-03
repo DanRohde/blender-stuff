@@ -1,5 +1,5 @@
 import bpy
-from .helper import get_icon_name, get_selected_items, render_source_collection
+from .helper import get_icon_name, get_selected_items, render_source_collection, get_info_icon
 from .edit_panel import WFC3DULObjectFilter
 class VIEW3D_UL_RotationPanelMultiSelList(bpy.types.UIList, WFC3DULObjectFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
@@ -78,7 +78,7 @@ class VIEW3D_PT_RotationToolPanel(bpy.types.Panel):
         layout.box().row(align=True).prop(props, "rt_offset")
         layout.separator()
         copies = len(selected)*(sum(props.rt_rotation_x)+sum(props.rt_rotation_y)+sum(props.rt_rotation_z))
-        layout.label(text=f"{copies} copies will be created." if copies > 1 else f"One copy will be created.", icon="INFO_LARGE")
+        layout.label(text=f"{copies} copies will be created." if copies > 1 else f"One copy will be created.", icon=get_info_icon())
         layout.row(align=True).operator("object.wfc_rotation")
 
 

@@ -575,3 +575,9 @@ def get_directions_by_name(direction_name):
         case _:
             dirs = {direction_name: DIRECTIONS[direction_name]}
     return dirs
+
+def get_info_icon():
+    if bpy.app.version >= (4, 3, 0):
+        return "INFO_LARGE"
+    else:
+        return "INFO"
