@@ -581,3 +581,8 @@ def get_info_icon():
         return "INFO_LARGE"
     else:
         return "INFO"
+def get_warning_icon():
+    if bpy.app.version >= (4, 3, 0):
+        return "WARNING_LARGE"
+    else:
+        return "ERROR"

@@ -1,5 +1,5 @@
 import bpy
-from .helper import render_source_collection
+from .helper import render_source_collection, get_warning_icon
 class VIEW3D_PT_ValidatorPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Validator"
@@ -21,7 +21,7 @@ class VIEW3D_PT_ValidatorPanel(bpy.types.Panel):
 
 class VIEW3D_UL_ValidatorOutputList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
-        icon_map = { 0 : 'INFO_LARGE', 1: 'WARNING_LARGE', 2: 'ERROR'}
+        icon_map = { 0 : 'INFO_LARGE', 1: get_warning_icon(), 2: 'ERROR'}
         layout.label(text=item.logentry,icon=icon_map[item.severity])
 
 panels = [VIEW3D_UL_ValidatorOutputList, VIEW3D_PT_ValidatorPanel]

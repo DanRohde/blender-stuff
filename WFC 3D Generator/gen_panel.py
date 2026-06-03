@@ -1,7 +1,7 @@
 import bpy
 import numpy as np
 import json
-from .helper import seed_in_seeds_list, render_source_collection, render_collection_actions, get_target_name, render_target_object_actions, get_info_icon
+from .helper import seed_in_seeds_list, render_source_collection, render_collection_actions, get_target_name, render_target_object_actions, get_info_icon, get_warning_icon
 class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Generator"
@@ -110,9 +110,9 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
 
         if props.remove_target_collection and props.collection_obj:
             if not props.use_parent_object and target_name in bpy.data.collections:
-                layout.box().label(text="Target collection will be removed!", icon="WARNING_LARGE")
+                layout.box().label(text="Target collection will be removed!", icon=get_warning_icon())
             elif props.use_parent_object and target_name in bpy.data.objects:
-                layout.box().label(text="Target object will be removed!", icon="WARNING_LARGE")
+                layout.box().label(text="Target object will be removed!", icon=get_warning_icon())
 
         render_generate_button(props, layout.row(), render_allowed)
 
@@ -121,7 +121,7 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
         if props.collection_obj is None:
             layout.label(text="Please select a source collection.", icon=get_info_icon())
         if props.collection_obj is not None and props.collection_obj.name == props.target_collection:
-            layout.label(text="Source and target collection should not be the same.", icon="WARNING_LARGE")
+            layout.label(text="Source and target collection should not be the same.", icon=get_warning_icon())
         if props.collection_obj and len(props.collection_obj.objects)==0 and len(props.collection_obj.children)==0:
             layout.label(text="Please select a non-empty source collection.", icon=get_info_icon())
 
