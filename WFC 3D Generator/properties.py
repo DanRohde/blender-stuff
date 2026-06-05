@@ -268,7 +268,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     use_constraints: bpy.props.BoolProperty(name="", description="Use constraints", default=True,)
     target_collection: bpy.props.StringProperty(name="", description="Target for the 3D grid", default="WFC_Generated",)
     target_type: bpy.props.EnumProperty(items=[("object", "Target Object", "Target Object","OUTLINER_OB_EMPTY",0), ("collection","Target Collection", "Target Collection", "GROUP", 1)], description="Switch between target collection and target object", name="", update=handle_target_type_update)
-    use_parent_object: bpy.props.BoolProperty(name="", description="Switch between target collection and target object", default=False,)
+    use_parent_object: bpy.props.BoolProperty(name="", description="Switch between target collection and target object", default=True,)
     parent_object: bpy.props.PointerProperty(type=bpy.types.Object, name="", description="")
     render_delay: bpy.props.FloatProperty(name="Render Delay", description="Render delay in milliseconds", default=0, min=0,step=10,precision=2)
     running_delayed_renderer : bpy.props.BoolProperty(name="Running Delayed Renderer", description="Running Delayed Renderer", default=False,)
