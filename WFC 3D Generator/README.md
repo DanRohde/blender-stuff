@@ -15,6 +15,8 @@ Each object in the source collection can use custom properties to define the per
 
 Some examples can be found on [GitHub](https://github.com/DanRohde/blender-stuff/tree/main/Examples).
 
+Some tutorial videos can be found on [Youtube](https://www.youtube.com/playlist?list=PLmm0ZTMaohTjqHYDzzNuGz3Xi0HUvXXF0).
+
 ## Features
 The WFC 3D Generator Extension implements a very simple variant of the [Wave Function Collapse algorithm](https://en.wikipedia.org/wiki/Model_synthesis). 
 With cleverly chosen building blocks and constraints, any object can be created on a random basis, 
