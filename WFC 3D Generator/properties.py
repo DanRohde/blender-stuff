@@ -267,7 +267,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     use_cursor: bpy.props.BoolProperty(name="", description="Use cursor location (rotation is ignored if you use a target collection instead of a target object)", default=False,)
     use_constraints: bpy.props.BoolProperty(name="", description="Use constraints", default=True,)
     target_collection: bpy.props.StringProperty(name="", description="Target for the 3D grid", default="WFC_Generated",)
-    target_type: bpy.props.EnumProperty(items=[("object", "Target Object", "Target Object","OUTLINER_OB_EMPTY",1), ("collection","Target Collection", "Target Collection", "GROUP", 0)], description="Switch between target collection and target object", name="", update=handle_target_type_update)
+    target_type: bpy.props.EnumProperty(items=[("object", "Target Object", "Target Object","OUTLINER_OB_EMPTY",0), ("collection","Target Collection", "Target Collection", "GROUP", 1)], description="Switch between target collection and target object", name="", update=handle_target_type_update)
     use_parent_object: bpy.props.BoolProperty(name="", description="Switch between target collection and target object", default=False,)
     parent_object: bpy.props.PointerProperty(type=bpy.types.Object, name="", description="")
     render_delay: bpy.props.FloatProperty(name="Render Delay", description="Render delay in milliseconds", default=0, min=0,step=10,precision=2)
