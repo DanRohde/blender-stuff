@@ -1,5 +1,5 @@
 import bpy
-from .helper import render_source_collection, get_warning_icon
+from .helper import render_source_collection, get_warning_icon, get_info_icon
 class WFC3D_PT_BackupPanel(bpy.types.Panel):
     bl_idname = "VIEW3D_PT_wfc_backup"
     bl_label = "WFC 3D Backup"
@@ -25,6 +25,7 @@ class WFC3D_PT_BackupPanel(bpy.types.Panel):
         row.prop(props, "backup_import_replace")
         if props.backup_import_replace: box.label(text="All existing constraints will be deleted!", icon=get_warning_icon())
         elif props.backup_import_overwrite: box.label(text="Existing constraints will be overwritten!", icon=get_warning_icon())
+        else: box.label(text="Imported constraints will be added.", icon=get_info_icon())
 
         box.operator("object.wfc_import_json")
 
