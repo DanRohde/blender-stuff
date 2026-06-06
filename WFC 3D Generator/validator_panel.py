@@ -1,5 +1,5 @@
 import bpy
-from .helper import render_source_collection, get_warning_icon
+from .helper import render_source_collection, get_warning_icon, get_info_icon
 class VIEW3D_PT_ValidatorPanel(bpy.types.Panel):
     """User interface for WFC 3D Add-On"""
     bl_label = "WFC 3D Validator"
@@ -19,9 +19,10 @@ class VIEW3D_PT_ValidatorPanel(bpy.types.Panel):
                 layout.template_list("VIEW3D_UL_ValidatorOutputList","",props,"validator_output_list",props,"validator_output_list_idx", sort_lock = True, item_dyntip_propname="description")
                 layout.operator("object.wfc_validator_clear_log")
 
+icon_map = { 0 : get_info_icon(), 1: get_warning_icon(), 2: 'ERROR'}
 class VIEW3D_UL_ValidatorOutputList(bpy.types.UIList):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, _index):
-        icon_map = { 0 : 'INFO_LARGE', 1: get_warning_icon(), 2: 'ERROR'}
+
         layout.label(text=item.logentry,icon=icon_map[item.severity])
 
 panels = [VIEW3D_UL_ValidatorOutputList, VIEW3D_PT_ValidatorPanel]
