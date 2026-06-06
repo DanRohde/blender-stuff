@@ -48,7 +48,7 @@ class WFC3D_PT_SearchPanel(bpy.types.Panel):
             op = row.operator("object.wfc_search", text="Search Seed")
             op.search_operator, op.search_scope, op.search_object, op.search_count, op.randomize_seed = \
                 props.search_options.search_operator, props.search_options.search_scope, \
-                    props.search_options.search_object.name if props.search_options.search_object else "", props.search_options.search_count, props.randomize_seed 
+                    props.search_options.search_object.name if props.search_options.search_object else "", props.search_options.search_count, props.randomize_seed
         if props.search_result.steps > -1:
             box = layout.box()
             row = box.row(align=True)

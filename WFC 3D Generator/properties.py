@@ -283,7 +283,7 @@ class WFC3DProperties(bpy.types.PropertyGroup):
     remove_target_collection: bpy.props.BoolProperty(name="", description="Remove existing target",)
     hide_last_target_collections: bpy.props.BoolProperty(name="", description="Hide last target(s)", default=False,)
     search_iterations: bpy.props.IntProperty(name="Search Iterations", description="Search iterations", min=1, default=100, max=1000)
-    randomize_seed: bpy.props.BoolProperty(name="Randomize seed", description="Randomise the seed rather than incrementing it sequentially", default=False,)
+    randomize_seed: bpy.props.BoolProperty(name="Randomize seed", description="Randomize the seed rather than incrementing it sequentially", default=False,)
     search_result: bpy.props.PointerProperty(type=WFC3DSearchResult)
     search_options: bpy.props.PointerProperty(type=WFC3DSearchOptions)
     search_progress: bpy.props.FloatProperty(default=0, min=0, max=1)
