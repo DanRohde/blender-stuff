@@ -2,13 +2,15 @@ import bpy
 import numpy as np
 import time
 from .gen_operators import generate_model, WFC3DProgress, WFC3DGenerator
+import random
 
 class WFC3DBackgroundSearch:
-    def __init__(self, search_operator = "max", search_scope = "occupancy", search_object = "", search_count = -1):
+    def __init__(self, search_operator = "max", search_scope = "occupancy", search_object = "", search_count = -1, randomize_seed = False):
         self.search_operator = search_operator
         self.search_scope = search_scope
         self.search_object = search_object
         self.search_count = search_count
+        self.randomize_seed = randomize_seed
         self.progress = None
         self.props = None
         self.auto_generate = False
@@ -64,7 +66,11 @@ class WFC3DBackgroundSearch:
             self._set_result(props, oc, props.seed)
         if (self.search_operator == "max" and cellcount == self.gs) or (self.search_operator == "min" and oc == 0): return self._done(props)
         if self._compare_value_with_search_count(oc): return self._done(props, result = oc, seed = props.seed)
-        props.seed += 1
+        if self.randomize_seed:
+            props.seed = random.randint(-0x7fffffff - 1, 0x7fffffff)
+        else:
+            props.seed += 1
+
         props.search_running_iterations -= 1
         return 0
 
@@ -101,8 +107,9 @@ class WFC3D_OT_Search(bpy.types.Operator):
     search_scope : bpy.props.StringProperty(default="occupancy")
     search_object : bpy.props.StringProperty(default="")
     search_count : bpy.props.IntProperty(default=-1)
+    randomize_seed : bpy.props.BoolProperty(default=False)
     def execute(self, context):
-        search = WFC3DBackgroundSearch(search_operator = self.search_operator, search_scope = self.search_scope, search_object = self.search_object, search_count = self.search_count)
+        search = WFC3DBackgroundSearch(search_operator = self.search_operator, search_scope = self.search_scope, search_object = self.search_object, search_count = self.search_count, randomize_seed = self.randomize_seed)
         search.start_search(context)
         return {'FINISHED'}
 
