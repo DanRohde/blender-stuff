@@ -260,7 +260,7 @@ INDEX_FILE="$OUTPUT_DIR/asset-index.json"
     printf '  "file_count": %d,\n' "$TOTAL_FILE_COUNT"
     printf '  "pages": [\n'
     printf '    {\n'
-    printf '      "url": "%s",\n' "${API_VERSION}/assets-1.json"
+    printf '      "url": "%s",\n' "_${API_VERSION}/assets-1.json"
     printf '      "hash": "SHA256:%s"\n' "$PAGE_HASH"
     printf '    }\n'
     printf '  ],\n'
@@ -278,7 +278,7 @@ META_FILE="_asset-library-meta.json"
     printf '{\n'
     printf '  "api_versions": {\n'
     printf '    "%s": {\n' "$API_VERSION"
-    printf '      "url": "%s",\n' "${API_VERSION}/asset-index.json"
+    printf '      "url": "%s",\n' "_${API_VERSION}/asset-index.json"
     printf '      "hash": "SHA256:%s"\n' "$INDEX_HASH"
     printf '    }\n'
     printf '  },\n'
