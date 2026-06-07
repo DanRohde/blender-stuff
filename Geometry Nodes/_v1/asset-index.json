@@ -11,14 +11,14 @@
   ],
   "catalogs": [
     {
-      "path": "00000000-0000-0000-0000-000000000000/Uncategorized",
-      "simple_name": "00000000-0000-0000-0000-000000000000/Uncategorized",
-      "uuids": ["00000000-0000-0000-0000-000000000000/Uncategorized"]
+      "path": "00000000-0000-0000-0000-000000000000",
+      "simple_name": "00000000-0000-0000-0000-000000000000",
+      "uuids": ["00000000-0000-0000-0000-000000000000"]
     },
     {
-      "path": "3934253d-7ef6-43d0-a2cd-507be2c4369d/Uncategorized",
-      "simple_name": "3934253d-7ef6-43d0-a2cd-507be2c4369d/Uncategorized",
-      "uuids": ["3934253d-7ef6-43d0-a2cd-507be2c4369d/Uncategorized"]
+      "path": "3934253d-7ef6-43d0-a2cd-507be2c4369d",
+      "simple_name": "3934253d-7ef6-43d0-a2cd-507be2c4369d",
+      "uuids": ["3934253d-7ef6-43d0-a2cd-507be2c4369d"]
     },
     {
       "path": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
@@ -26,9 +26,9 @@
       "uuids": ["7543a56c-1f58-4bbe-8d0d-5608eaabba71"]
     },
     {
-      "path": "7543a56c-1f58-4bbe-8d0d-5608eaabba71/Uncategorized",
-      "simple_name": "7543a56c-1f58-4bbe-8d0d-5608eaabba71/Uncategorized",
-      "uuids": ["7543a56c-1f58-4bbe-8d0d-5608eaabba71/Uncategorized"]
+      "path": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
+      "simple_name": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
+      "uuids": ["7543a56c-1f58-4bbe-8d0d-5608eaabba71"]
     },
     {
       "path": "Uncategorized",
