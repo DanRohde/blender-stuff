@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "asset_size_bytes": 0,
+  "asset_count": 0,
+  "file_count": 0,
+  "pages": [
+    {
+      "url": "v1/assets-1.json",
+      "hash": "SHA256:2504e56ec5a66620ae5fb93cfe1f2866fb719932ec45094270f14090ead97831"
+    }
+  ],
+  "catalogs": [
+    {
+      "path": "00000000-0000-0000-0000-000000000000
+Uncategorized",
+      "simple_name": "00000000-0000-0000-0000-000000000000
+Uncategorized",
+      "uuids": ["00000000-0000-0000-0000-000000000000
+Uncategorized"]
+    },
+    {
+      "path": "3934253d-7ef6-43d0-a2cd-507be2c4369d
+Uncategorized",
+      "simple_name": "3934253d-7ef6-43d0-a2cd-507be2c4369d
+Uncategorized",
+      "uuids": ["3934253d-7ef6-43d0-a2cd-507be2c4369d
+Uncategorized"]
+    },
+    {
+      "path": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
+      "simple_name": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
+      "uuids": ["7543a56c-1f58-4bbe-8d0d-5608eaabba71
+"]
+    },
+    {
+      "path": "7543a56c-1f58-4bbe-8d0d-5608eaabba71
+Uncategorized",
+      "simple_name": "7543a56c-1f58-4bbe-8d0d-5608eaabba71
+Uncategorized",
+      "uuids": ["7543a56c-1f58-4bbe-8d0d-5608eaabba71
+Uncategorized"]
+    },
+    {
+      "path": "Uncategorized",
+      "simple_name": "Uncategorized",
+      "uuids": ["Uncategorized"]
+    }
+
+  ]
+}

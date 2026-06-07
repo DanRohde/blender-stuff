@@ -1,0 +1,158 @@
+{
+  "asset_count": 0,
+  "file_count": 0,
+  "assets": [
+    {
+      "name": "Icicles",
+      "id_type": "NODETREE",
+      "files": [
+        "icicles.blend"
+      ],
+      "thumbnail": null,
+      "meta": {
+        "catalog_id": "7543a56c-1f58-4bbe-8d0d-5608eaabba71"
+      },
+      "bl_versions": {
+        "min": "5.1"
+      }
+    }
+,
+    {
+      "name": "Icicle Mat",
+      "id_type": "MATERIAL",
+      "files": [
+        "icicles.blend"
+      ],
+      "thumbnail": null,
+      "meta": {
+        "catalog_id": "00000000-0000-0000-0000-000000000000"
+      },
+      "bl_versions": {
+        "min": "5.1"
+      }
+    }
+,
+    {
+      "name": "Stalagmite",
+      "id_type": "MATERIAL",
+      "files": [
+        "icicles.blend"
+      ],
+      "thumbnail": null,
+      "meta": {
+        "catalog_id": "00000000-0000-0000-0000-000000000000"
+      },
+      "bl_versions": {
+        "min": "5.1"
+      }
+    }
+,
+    {
+      "name": "Icicle Mat 4 EEVEE",
+      "id_type": "MATERIAL",
+      "files": [
+        "icicles.blend"
+      ],
+      "thumbnail": null,
+      "meta": {
+        "catalog_id": "00000000-0000-0000-0000-000000000000"
+      },
+      "bl_versions": {
+        "min": "5.1"
+      }
+    }
+,
+    {
+      "name": "Sierpinski Triangle",
+      "id_type": "NODETREE",
+      "files": [
+        "sierpinski_triangle.blend"
+      ],
+      "thumbnail": null,
+      "meta": {
+        "catalog_id": "3934253d-7ef6-43d0-a2cd-507be2c4369d"
+      },
+      "bl_versions": {
+        "min": "5.1"
+      }
+    }
+,
+    {
+      "name": "Snow",
+      "id_type": "NODETREE",
+      "files": [
+        "snow.blend"
+      ],
+      "thumbnail": null,
+      "meta": {
+        "catalog_id": "7543a56c-1f58-4bbe-8d0d-5608eaabba71"
+      },
+      "bl_versions": {
+        "min": "5.1"
+      }
+    }
+,
+    {
+      "name": "Snow Mat",
+      "id_type": "MATERIAL",
+      "files": [
+        "snow.blend"
+      ],
+      "thumbnail": null,
+      "meta": {
+        "catalog_id": "00000000-0000-0000-0000-000000000000"
+      },
+      "bl_versions": {
+        "min": "5.1"
+      }
+    }
+,
+    {
+      "name": "Step Pyramid",
+      "id_type": "NODETREE",
+      "files": [
+        "steppyramid.blend"
+      ],
+      "thumbnail": null,
+      "meta": {
+        "catalog_id": "7543a56c-1f58-4bbe-8d0d-5608eaabba71"
+      },
+      "bl_versions": {
+        "min": "5.1"
+      }
+    }
+
+
+  ],
+  "files": [
+    {
+      "path": "icicles.blend",
+      "url": "files/icicles.blend",
+      "size_in_bytes": 1593665,
+      "hash": "SHA256:c3c0029e4de74e62422e2543f0d81117ce7f531422e27c5f979cd18386a88df1",
+      "blender_version": "5.1"
+    },
+    {
+      "path": "sierpinski_triangle.blend",
+      "url": "files/sierpinski_triangle.blend",
+      "size_in_bytes": 865226,
+      "hash": "SHA256:f35e300c3c30a76663f77800f97d6f0d77250855c71a73b9cb88b743385074f6",
+      "blender_version": "5.1"
+    },
+    {
+      "path": "snow.blend",
+      "url": "files/snow.blend",
+      "size_in_bytes": 1101717,
+      "hash": "SHA256:6eac02eda32dc0cfc1c0dc02153698e3db145d34ac2bf84dd3c37e64397857a1",
+      "blender_version": "5.1"
+    },
+    {
+      "path": "steppyramid.blend",
+      "url": "files/steppyramid.blend",
+      "size_in_bytes": 824949,
+      "hash": "SHA256:7c76b39bed365305192c87f19ed7425b51364d223a488d35a46061595080c3cb",
+      "blender_version": "5.1"
+    }
+
+  ]
+}
