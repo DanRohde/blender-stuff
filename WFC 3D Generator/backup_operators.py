@@ -3,7 +3,7 @@ import bpy
 import json
 from bpy.props import StringProperty
 from bpy_extras.io_utils import ImportHelper, ExportHelper
-from .helper import get_default_empty_name, get_default_empty_object
+from .helper import get_default_empty_name, get_default_empty_object, handle_update_collection
 
 def remove_existing_constraints(obj):
     property_keys = [ k for k in obj.keys() if k.startswith("wfc_") ]
@@ -41,6 +41,7 @@ def import_data(props, data):
         for p in data["objects"][o]:
             if p in obj and not props.backup_import_overwrite: continue
             put_data_into_object(data["objects"][o][p], p, obj)
+    handle_update_collection(None, None)
 
 class OBJECT_OT_ImportJson(bpy.types.Operator, ImportHelper):
     bl_idname = "object.wfc_import_json"
