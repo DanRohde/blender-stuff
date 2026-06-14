@@ -332,39 +332,43 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         newrow = newbox.row()
         newrow.label(text="Corners")
         newrow.prop(props, "corner_none")
-        if not props.corner_none:
-            row = newbox.row()
-            for c in ['fbl', 'fbr', 'ftl', 'ftr']:
-                row.prop(props, "corner_" + c)
+        row = newbox.row()
+        row.enabled = not props.corner_none
+        for c in ['fbl', 'fbr', 'ftl', 'ftr']:
+            row.prop(props, "corner_" + c)
 
-            row = newbox.row()
-            for c in ['bbl', 'bbr', 'btl', 'btr']:
-                row.prop(props, "corner_" + c)
+        row = newbox.row()
+        row.enabled = not props.corner_none
+        for c in ['bbl', 'bbr', 'btl', 'btr']:
+            row.prop(props, "corner_" + c)
 
         newbox = box.box()
         newrow = newbox.row()
         newrow.label(text="Edges")
         newrow.prop(props, "edge_none")
-        if not props.edge_none:
-            for p in ['f', 'b']:
-                row = newbox.row()
-                for c in ['b', 'l', 't', 'r']:
-                    row.prop(props, "edge_" + p + c)
+
+        for p in ['f', 'b']:
             row = newbox.row()
-            for p in ['lb', 'lt', 'rb', 'rt']:
-                row.prop(props, "edge_" + p)
+            row.enabled = not props.edge_none
+            for c in ['b', 'l', 't', 'r']:
+                row.prop(props, "edge_" + p + c)
+        row = newbox.row()
+        row.enabled = not props.edge_none
+        for p in ['lb', 'lt', 'rb', 'rt']:
+            row.prop(props, "edge_" + p)
 
         newbox = box.box()
         newrow = newbox.row()
         newrow.label(text="Faces")
         newrow.prop(props, "face_none")
-        if not props.face_none:
-            row = newbox.row()
-            for f in ['front', 'left', 'top']:
-                row.prop(props, "face_" + f)
-            row = newbox.row()
-            for f in ['back', 'right', 'bottom']:
-                row.prop(props, "face_" + f)
+        row = newbox.row()
+        row.enabled = not props.face_none
+        for f in ['front', 'left', 'top']:
+            row.prop(props, "face_" + f)
+        row = newbox.row()
+        row.enabled = not props.face_none
+        for f in ['back', 'right', 'bottom']:
+            row.prop(props, "face_" + f)
 
         newbox = box.box()
         newrow = newbox.row()
