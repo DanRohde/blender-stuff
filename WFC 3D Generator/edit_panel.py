@@ -479,6 +479,14 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         self._draw_preset_prop(row, props, "freq_any_direction_freq")
         if not props.auto_save: box.operator("object.wfc_update_constraints", icon='IMPORT')
 
+    def _add_prop(self, layout, props, propname, text = None, active = True):
+        col = layout.column()
+        col.enabled = active
+        if text is not None:
+            col.prop(props, propname, text=text)
+        else:
+            col.prop(props, propname)
+
     def draw_symmetry_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -489,30 +497,29 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         newbox = box.box()
         newbox.row().prop(props, "sym_mirror_axes")
         if props.edit_type == 'objects':
-            if props.sym_mirror_axes[0]: newbox.prop(props, "sym_mirror_axes_x", text="X Partner")
-            if props.sym_mirror_axes[1]: newbox.prop(props, "sym_mirror_axes_y", text="Y Partner")
-            if props.sym_mirror_axes[2]: newbox.prop(props, "sym_mirror_axes_z", text="Z Partner")
-            if props.sym_mirror_axes[0] and props.sym_mirror_axes[1]: newbox.prop(props, "sym_mirror_axes_xy", text="XY Partner")
-            if props.sym_mirror_axes[0] and props.sym_mirror_axes[2]: newbox.prop(props, "sym_mirror_axes_xz", text="XZ Partner")
-            if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: newbox.prop(props, "sym_mirror_axes_yz", text="YZ Partner")
-            if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: newbox.prop(props, "sym_mirror_axes_xyz", text="XYZ Partner")
+            self._add_prop(newbox, props, "sym_mirror_axes_x", text="X Partner", active = props.sym_mirror_axes[0])
+            self._add_prop(newbox, props, "sym_mirror_axes_y", text="Y Partner", active = props.sym_mirror_axes[1])
+            self._add_prop(newbox, props, "sym_mirror_axes_z", text="Z Partner", active = props.sym_mirror_axes[2])
+            self._add_prop(newbox, props, "sym_mirror_axes_xy", text="XY Partner", active = props.sym_mirror_axes[0] and props.sym_mirror_axes[1])
+            self._add_prop(newbox, props, "sym_mirror_axes_xz", text="XZ Partner", active = props.sym_mirror_axes[0] and props.sym_mirror_axes[2])
+            self._add_prop(newbox, props, "sym_mirror_axes_yz", text="YZ Partner", active = props.sym_mirror_axes[1] and props.sym_mirror_axes[2])
+            self._add_prop(newbox, props, "sym_mirror_axes_xyz", text="XYZ Partner", active = props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2])
 
-        if sum(props['sym_mirror_axes']) > 0:
-            newbox.row().label(text="Flip Mirror Partner")
-            fmpbox = newbox.box()
-            row = fmpbox.column_flow(columns=4, align=True)
-            if props.sym_mirror_axes[0]: row.prop(props, "sym_mirror_flip_x")
-            if props.sym_mirror_axes[1]: row.prop(props, "sym_mirror_flip_y")
-            if props.sym_mirror_axes[2]: row.prop(props, "sym_mirror_flip_z")
-            if props.sym_mirror_axes[0] and props.sym_mirror_axes[1]: row.prop(props, "sym_mirror_flip_xy")
-            if props.sym_mirror_axes[0] and props.sym_mirror_axes[2]: row.prop(props, "sym_mirror_flip_xz")
-            if props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: row.prop(props, "sym_mirror_flip_yz")
-            if props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2]: row.prop(props, "sym_mirror_flip_xyz")
+        newbox.row().label(text="Flip Mirror Partner")
+        fmpbox = newbox.box()
+        row = fmpbox.column_flow(columns=4, align=True)
+        self._add_prop(row, props, "sym_mirror_flip_x", active=props.sym_mirror_axes[0])
+        self._add_prop(row, props, "sym_mirror_flip_y", active=props.sym_mirror_axes[1])
+        self._add_prop(row, props, "sym_mirror_flip_z", active=props.sym_mirror_axes[2])
+        self._add_prop(row, props, "sym_mirror_flip_xy", active=props.sym_mirror_axes[0] and props.sym_mirror_axes[1])
+        self._add_prop(row, props, "sym_mirror_flip_xz", active=props.sym_mirror_axes[0] and props.sym_mirror_axes[2])
+        self._add_prop(row, props, "sym_mirror_flip_yz", active=props.sym_mirror_axes[1] and props.sym_mirror_axes[2])
+        self._add_prop(row, props, "sym_mirror_flip_xyz", active=props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2])
 
-            flip = sum([props['sym_mirror_flip_' + k] for k in ['x', 'y', 'z', 'xy', 'xz', 'yz', 'xyz']])
-            if flip > 0: fmpbox.row().prop(props, "sym_mirror_flip_transl")
+        flip = sum([props['sym_mirror_flip_' + k] for k in ['x', 'y', 'z', 'xy', 'xz', 'yz', 'xyz']])
+        self._add_prop(fmpbox.row(), props, "sym_mirror_flip_transl", active=flip>0)
+        self._add_prop(newbox.row(), props, "sym_mirror_trans", active=sum(props['sym_mirror_axes']) > 0)
 
-            newbox.row().prop(props, "sym_mirror_trans")
 
         box.label(text="Rotational Symmetry")
         newbox = box.box()
@@ -603,7 +610,7 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row.label(text=obj_name)
         row.operator("object.wfc_reset_constraints")
         box = bbox.box()
-        row = box.row();
+        row = box.row()
         row.label(text="Noise on probability of occurrence:")
         prop_names = self._get_noise_prop_names(props, "noise_prob")
         self._draw_preset_props(row, props,  ["noise_prob_threshold"] + prop_names)
