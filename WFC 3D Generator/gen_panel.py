@@ -22,7 +22,7 @@ class VIEW3D_PT_GeneratorPanel(bpy.types.Panel):
         row = box.row()
         row.alignment = "LEFT"
         row.label(text="Grid Size (width/depth/height)")
-        row.label(text=f"{grid_size} Cells")
+        row.label(text=f"{grid_size:,} Cells")
         box.row().prop(props, "grid_size")
         if grid_size > 3000 or props.background_generation:
             row = box.row()
@@ -161,8 +161,14 @@ def render_seed_selection(props, prefs, row, render_allowed):
 
 def render_generate_button(props, row, render_allowed):
     if not props.progress_running and not props.running_delayed_renderer:
-        row.enabled = render_allowed and not props.running_delayed_renderer and not props.search_running
-        row.operator("object.wfc_generate")
+        large_grid_size = props.grid_size[0] * props.grid_size[1] *  props.grid_size[2] > 10000
+        gen_enabled = render_allowed and not props.running_delayed_renderer and not props.search_running
+        if large_grid_size:
+            gen_enabled = gen_enabled and props.allow_large_grid_size
+            row.column().prop(props, "allow_large_grid_size")
+        col = row.column()
+        col.enabled = gen_enabled
+        col.operator("object.wfc_generate")
     else:
         row.progress(factor=props.progress, text=f"{round(props.progress * 100)}% (et: {round(props.progress_elapsed_time, 0):.0f}s/eta: {props.progress_eta:.0f}s)", type="BAR")
         if props.progress_running:

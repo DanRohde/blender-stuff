@@ -258,6 +258,7 @@ class WFC3DSearchOptions(bpy.types.PropertyGroup):
 class WFC3DProperties(bpy.types.PropertyGroup):
     collection_obj: bpy.props.PointerProperty(name="", description="Select a collection", type=bpy.types.Collection, update=handle_update_collection)
     grid_size: bpy.props.IntVectorProperty(name="", description="Size of the 3D grid", size=3, default=(5, 5, 5), min=1, subtype="XYZ")
+    allow_large_grid_size: bpy.props.BoolProperty(name="Allow a large grid", description="Allow a grid size larger then 10,000 cells. This can cause Blender to crash.", default=False)
     background_generation: bpy.props.BoolProperty(name="Background Processing", description="Generate the model in a background process so that it can be canceled or paused.", default=False)
     background_iterations: bpy.props.IntProperty(name="Grid Cells", description="Generate the selected number of cells at once before pausing or canceling is possible.", min=1, default=1000)
     spacing: bpy.props.FloatVectorProperty(name="", description="Size of a Grid Cell", subtype="TRANSLATION", default=(2.0,2.0,2.0), min=0.1, precision=3)
