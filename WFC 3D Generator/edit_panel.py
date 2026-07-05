@@ -516,16 +516,19 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         self._add_prop(row, props, "sym_mirror_flip_yz", active=props.sym_mirror_axes[1] and props.sym_mirror_axes[2])
         self._add_prop(row, props, "sym_mirror_flip_xyz", active=props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2])
 
+        any_sym_mirror_enabled = any(props.sym_mirror_axes)
+
         col = row.column()
         prop_names = "sym_mirror_flip_x,sym_mirror_flip_y,sym_mirror_flip_z,sym_mirror_flip_xy,sym_mirror_flip_xz,sym_mirror_flip_yz,sym_mirror_flip_xyz"
         select_all = not all(getattr(props, name) is True for name in prop_names.split(","))
         op = col.operator("object.wfc_select_all_bool_props", icon = "CHECKBOX_HLT" if select_all else "CHECKBOX_DEHLT")
         op.prop_names = prop_names
         op.select_all = select_all
+        col.enabled = any(props.sym_mirror_axes)
 
-        flip = sum([props['sym_mirror_flip_' + k] for k in ['x', 'y', 'z', 'xy', 'xz', 'yz', 'xyz']])
-        self._add_prop(fmpbox.row(), props, "sym_mirror_flip_transl", active=flip>0)
-        self._add_prop(newbox.row(), props, "sym_mirror_trans", active=sum(props['sym_mirror_axes']) > 0)
+        flip = any_sym_mirror_enabled and any([props['sym_mirror_flip_' + k] for k in ['x', 'y', 'z', 'xy', 'xz', 'yz', 'xyz']])
+        self._add_prop(fmpbox.row(), props, "sym_mirror_flip_transl", active=flip)
+        self._add_prop(newbox.row(), props, "sym_mirror_trans", active=any_sym_mirror_enabled)
 
 
         box.label(text="Rotational Symmetry")
