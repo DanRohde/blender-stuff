@@ -493,8 +493,9 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         row.label(text=obj_name)
         row.operator("object.wfc_reset_constraints")
 
-        box.label(text="Mirror Symmetry")
         newbox = box.box()
+        newbox.row().label(text="Mirror Symmetry")
+
         newbox.row().prop(props, "sym_mirror_axes")
         if props.edit_type == 'objects':
             self._add_prop(newbox, props, "sym_mirror_axes_x", text="X Partner", active = props.sym_mirror_axes[0])
@@ -505,8 +506,8 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
             self._add_prop(newbox, props, "sym_mirror_axes_yz", text="YZ Partner", active = props.sym_mirror_axes[1] and props.sym_mirror_axes[2])
             self._add_prop(newbox, props, "sym_mirror_axes_xyz", text="XYZ Partner", active = props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2])
 
-        newbox.row().label(text="Flip Mirror Partner")
         fmpbox = newbox.box()
+        fmpbox.row().label(text="Flip Mirror Partner")
         row = fmpbox.column_flow(columns=4, align=True)
         self._add_prop(row, props, "sym_mirror_flip_x", active=props.sym_mirror_axes[0])
         self._add_prop(row, props, "sym_mirror_flip_y", active=props.sym_mirror_axes[1])
@@ -531,8 +532,8 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         self._add_prop(newbox.row(), props, "sym_mirror_trans", active=any_sym_mirror_enabled)
 
 
-        box.label(text="Rotational Symmetry")
         newbox = box.box()
+        newbox.row().label(text="Rotational Symmetry")
         self._draw_preset_prop(newbox.row(), props, "sym_rotate_axis")
         self._draw_preset_prop(newbox, props, "sym_rotate_n")
 
