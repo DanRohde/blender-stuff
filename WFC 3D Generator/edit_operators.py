@@ -414,7 +414,24 @@ class OBJECT_OT_SetProps2Default(bpy.types.Operator):
             if prop_name in PROP_DEFAULTS:
                 if prop_name != "": setattr(props, prop_name, PROP_DEFAULTS[prop_name])
         return {'FINISHED'}
+class OBJECT_OT_SelectAllBoolProps(bpy.types.Operator):
+    bl_label = ""
+    bl_idname = "object.wfc_select_all_bool_props"
+    prop_names : bpy.props.StringProperty()
+    select_all : bpy.props.BoolProperty(default=True)
+    @classmethod
+    def description(self, context, properties):
+        if properties.select_all:
+            return "Select all properties."
+        return "Deselect all properties."
+
+    def execute(self, context):
+        props = context.scene.wfc_props
+        for prop_name in self.prop_names.split(","):
+            if prop_name != "": setattr(props, prop_name, self.select_all)
+        return {'FINISHED'}
 operators = [
+    OBJECT_OT_SelectAllBoolProps,
     OBJECT_OT_SetProps2Default,
     OBJECT_OT_CopyConstraintsFromObject,
     OBJECT_OT_SaveActiveConstraints,
