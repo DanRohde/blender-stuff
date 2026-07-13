@@ -83,7 +83,7 @@ class VIEW3D_UL_ObjFreqList(bpy.types.UIList, WFC3DULGenericFilter):
         col = row.column(align=True)
         row = col.row()
         row.column(align=True).prop(item, "selected")
-        row.column(align=True).prop(item, "objfreq_obj")
+        row.column(align=True).prop(item, "objfreq_obj", text=f"{index}. Object")
         box = col.box()
         row = box.row()
         row.prop(item, "objfreq_neighbor")
@@ -487,6 +487,14 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         else:
             col.prop(props, propname)
 
+    def _draw_de_select_all_operator(self, col, props, prop_names):
+        select_all = not all(getattr(props, name) is True for name in prop_names.split(","))
+        op = col.operator("object.wfc_select_all_bool_props", emboss=True,
+                          icon="CHECKBOX_DEHLT" if select_all else "CHECKBOX_HLT")
+        op.prop_names = prop_names
+        op.select_all = select_all
+        col.enabled = any(props.sym_mirror_axes)
+
     def draw_symmetry_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
         row = box.row()
@@ -507,7 +515,10 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
             self._add_prop(newbox, props, "sym_mirror_axes_xyz", text="XYZ Partner", active = props.sym_mirror_axes[0] and props.sym_mirror_axes[1] and props.sym_mirror_axes[2])
 
         fmpbox = newbox.box()
-        fmpbox.row().label(text="Flip Mirror Partner")
+        row = fmpbox.row()
+        row.label(text="Flip Mirror Partner")
+        self._draw_de_select_all_operator(row.column(), props, "sym_mirror_flip_x,sym_mirror_flip_y,sym_mirror_flip_z,sym_mirror_flip_xy,sym_mirror_flip_xz,sym_mirror_flip_yz,sym_mirror_flip_xyz")
+
         row = fmpbox.column_flow(columns=4, align=True)
         self._add_prop(row, props, "sym_mirror_flip_x", active=props.sym_mirror_axes[0])
         self._add_prop(row, props, "sym_mirror_flip_y", active=props.sym_mirror_axes[1])
@@ -519,13 +530,6 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
 
         any_sym_mirror_enabled = any(props.sym_mirror_axes)
 
-        col = row.column()
-        prop_names = "sym_mirror_flip_x,sym_mirror_flip_y,sym_mirror_flip_z,sym_mirror_flip_xy,sym_mirror_flip_xz,sym_mirror_flip_yz,sym_mirror_flip_xyz"
-        select_all = not all(getattr(props, name) is True for name in prop_names.split(","))
-        op = col.operator("object.wfc_select_all_bool_props", icon = "CHECKBOX_HLT" if select_all else "CHECKBOX_DEHLT")
-        op.prop_names = prop_names
-        op.select_all = select_all
-        col.enabled = any(props.sym_mirror_axes)
 
         flip = any_sym_mirror_enabled and any([props['sym_mirror_flip_' + k] for k in ['x', 'y', 'z', 'xy', 'xz', 'yz', 'xyz']])
         self._add_prop(fmpbox.row(), props, "sym_mirror_flip_transl", active=flip)
