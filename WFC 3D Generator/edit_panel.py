@@ -487,13 +487,13 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         else:
             col.prop(props, propname)
 
-    def _draw_de_select_all_operator(self, col, props, prop_names):
+    def _draw_de_select_all_operator(self, col, props, prop_names, enabled):
         select_all = not all(getattr(props, name) is True for name in prop_names.split(","))
         op = col.operator("object.wfc_select_all_bool_props", emboss=True,
                           icon="CHECKBOX_DEHLT" if select_all else "CHECKBOX_HLT")
         op.prop_names = prop_names
         op.select_all = select_all
-        col.enabled = any(props.sym_mirror_axes)
+        col.enabled = enabled
 
     def draw_symmetry_panel(self, props, layout, _obj, obj_name):
         box = layout.box()
@@ -517,7 +517,7 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
         fmpbox = newbox.box()
         row = fmpbox.row()
         row.label(text="Flip Mirror Partner")
-        self._draw_de_select_all_operator(row.column(), props, "sym_mirror_flip_x,sym_mirror_flip_y,sym_mirror_flip_z,sym_mirror_flip_xy,sym_mirror_flip_xz,sym_mirror_flip_yz,sym_mirror_flip_xyz")
+        self._draw_de_select_all_operator(row.column(), props, "sym_mirror_flip_x,sym_mirror_flip_y,sym_mirror_flip_z,sym_mirror_flip_xy,sym_mirror_flip_xz,sym_mirror_flip_yz,sym_mirror_flip_xyz", any(props.sym_mirror_axes))
 
         row = fmpbox.column_flow(columns=4, align=True)
         self._add_prop(row, props, "sym_mirror_flip_x", active=props.sym_mirror_axes[0])
