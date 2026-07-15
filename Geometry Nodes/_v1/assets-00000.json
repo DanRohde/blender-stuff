@@ -1,0 +1,224 @@
+{
+  "asset_count": 8,
+  "file_count": 4,
+  "assets": [
+    {
+      "name": "Icicle Mat",
+      "id_type": "MATERIAL",
+      "files": [
+        "icicles.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "icicles_thumbnails/Material/icicle-mat.webp",
+        "hash": "SHA256:b44537c6329f800946c87b7b57f0915735e69afe3b7784fd57df7ced90bcecc2"
+      }
+    },
+    {
+      "name": "Icicle Mat 4 EEVEE",
+      "id_type": "MATERIAL",
+      "files": [
+        "icicles.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "icicles_thumbnails/Material/icicle-mat-4-eevee.webp",
+        "hash": "SHA256:8ec43fa717464488ffbf47e465429037b878a135c2e7496adead2fddbf2000e2"
+      }
+    },
+    {
+      "name": "Stalagmite",
+      "id_type": "MATERIAL",
+      "files": [
+        "icicles.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "icicles_thumbnails/Material/stalagmite.webp",
+        "hash": "SHA256:eda828d028d9e1c3d891b8f2f7855bdfc2ba278ad5105d062875363e233d68a3"
+      }
+    },
+    {
+      "name": "Icicles",
+      "id_type": "NODETREE",
+      "files": [
+        "icicles.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "icicles_thumbnails/Nodetree/icicles.webp",
+        "hash": "SHA256:d4dbf4942079c3e4244efce5701d2276fcf2987dfb229ef0663eebbd0b2cf4f6"
+      },
+      "meta": {
+        "catalog_id": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.icicles"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Sierpinski Triangle",
+      "id_type": "NODETREE",
+      "files": [
+        "sierpinski_triangle.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "sierpinski_triangle_thumbnails/Nodetree/sierpinski-triangle.webp",
+        "hash": "SHA256:e1593723d2a8ca8c442a1ea20fed340b8b6355b78c11eb3a372229d8d19aed95"
+      },
+      "meta": {
+        "catalog_id": "3934253d-7ef6-43d0-a2cd-507be2c4369d",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.sierpinski_triangle"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Snow Mat",
+      "id_type": "MATERIAL",
+      "files": [
+        "snow.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "snow_thumbnails/Material/snow-mat.webp",
+        "hash": "SHA256:72421f289c38c4c4257ada90d9a1d3931e56db2a5ecaf06318bbbbaa47adfd49"
+      }
+    },
+    {
+      "name": "Snow",
+      "id_type": "NODETREE",
+      "files": [
+        "snow.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "snow_thumbnails/Nodetree/snow.webp",
+        "hash": "SHA256:ce258a0cc8cd0814b66f1c62c76c9c40f43b2e716cbdd70fc003d92d0fb62f15"
+      },
+      "meta": {
+        "catalog_id": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.snow"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Step Pyramid",
+      "id_type": "NODETREE",
+      "files": [
+        "steppyramid.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "steppyramid_thumbnails/Nodetree/step-pyramid.webp",
+        "hash": "SHA256:2bff104c51107f697d82b1e14caf384ca0ec0bcd8da1111cc33059fcbb346e3c"
+      },
+      "meta": {
+        "catalog_id": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.step_pyramid"
+          }
+        ]
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "icicles.blend",
+      "size_in_bytes": 1593665,
+      "hash": "SHA256:c3c0029e4de74e62422e2543f0d81117ce7f531422e27c5f979cd18386a88df1",
+      "blender_version": "4.5.90"
+    },
+    {
+      "path": "sierpinski_triangle.blend",
+      "size_in_bytes": 865226,
+      "hash": "SHA256:f35e300c3c30a76663f77800f97d6f0d77250855c71a73b9cb88b743385074f6",
+      "blender_version": "4.5.90"
+    },
+    {
+      "path": "snow.blend",
+      "size_in_bytes": 1101717,
+      "hash": "SHA256:6eac02eda32dc0cfc1c0dc02153698e3db145d34ac2bf84dd3c37e64397857a1",
+      "blender_version": "4.5.90"
+    },
+    {
+      "path": "steppyramid.blend",
+      "size_in_bytes": 824949,
+      "hash": "SHA256:7c76b39bed365305192c87f19ed7425b51364d223a488d35a46061595080c3cb",
+      "blender_version": "4.5.90"
+    }
+  ]
+}
