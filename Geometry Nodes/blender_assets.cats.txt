@@ -1,0 +1,12 @@
+# This is an Asset Catalog Definition file for Blender.
+#
+# Empty lines and lines starting with # will be ignored.
+# Each line should contain a UUID, a colon, and the catalog path.
+#
+# For more information, see https://docs.blender.org/manual/en/latest/files/asset_libraries/catalogs.html
+
+VERSION 1
+
+00000000-0000-0000-0000-000000000000:Blender 5.2.0 LTS Beta (hash 8274461c1294 built 2026-06-07 02:22:38):Blender 5.2.0 LTS Beta (hash 8274461c1294 built 2026-06-07 02:22:38)
+3934253d-7ef6-43d0-a2cd-507be2c4369d:Blender 5.2.0 LTS Beta (hash 8274461c1294 built 2026-06-07 02:22:38):Blender 5.2.0 LTS Beta (hash 8274461c1294 built 2026-06-07 02:22:38)
+7543a56c-1f58-4bbe-8d0d-5608eaabba71:Blender 5.2.0 LTS Beta (hash 8274461c1294 built 2026-06-07 02:22:38):Blender 5.2.0 LTS Beta (hash 8274461c1294 built 2026-06-07 02:22:38)
