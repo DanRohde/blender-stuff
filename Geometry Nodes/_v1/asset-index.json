@@ -9,15 +9,5 @@
       "hash": "SHA256:7a66060969ec48d496be80be38d87bd0f32d0ce8b931a652dcb9988a7ad173a9"
     }
   ],
-  "catalogs": [
-    {
-      "path": "Blender 5.2.0 LTS Beta (hash 8274461c1294 built 2026-06-07 02",
-      "uuids": [
-        "00000000-0000-0000-0000-000000000000",
-        "3934253d-7ef6-43d0-a2cd-507be2c4369d",
-        "7543a56c-1f58-4bbe-8d0d-5608eaabba71"
-      ],
-      "simple_name": "22:38):Blender 5.2.0 LTS Beta (hash 8274461c1294 built 2026-06-07 02:22:38)"
-    }
-  ]
+  "catalogs": []
 }
