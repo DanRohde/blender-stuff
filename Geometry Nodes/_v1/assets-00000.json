@@ -61,7 +61,7 @@
       },
       "thumbnail": {
         "url": "crystalizer_thumbnails/Nodetree/crystalizer.webp",
-        "hash": "SHA256:094877135dc60214c02ce1e046a9ced540543f9f44395f79b39ded17b5868334"
+        "hash": "SHA256:b4c271952c91acf0dc99d3a728717380460c37eed3dec40372b67aa81b98c40d"
       },
       "meta": {
         "catalog_id": "ea48ad9b-1eb7-419e-9e40-ef03575ef3aa",
@@ -286,8 +286,8 @@
     },
     {
       "path": "crystalizer.blend",
-      "size_in_bytes": 1153893,
-      "hash": "SHA256:5bbead57280103a44725c147fe0b061d3b9efed6c2ff950699a2c748b172b8c5",
+      "size_in_bytes": 1126374,
+      "hash": "SHA256:2078dcd8b8bb18d5fcc9b24831850b27368c3af70bd45fb96dbf1adaa06f8285",
       "blender_version": "5.2.44"
     },
     {
