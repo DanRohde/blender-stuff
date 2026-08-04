@@ -1,7 +1,55 @@
 {
-  "asset_count": 8,
-  "file_count": 4,
+  "asset_count": 10,
+  "file_count": 5,
   "assets": [
+    {
+      "name": "Crystal",
+      "id_type": "MATERIAL",
+      "files": [
+        "crystalizer.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "crystalizer_thumbnails/Material/crystal.webp",
+        "hash": "SHA256:6510517b99d85af59c8036d9dfe7c73fc6253252f8a16968d160277562482f4c"
+      }
+    },
+    {
+      "name": "Crystalizer",
+      "id_type": "NODETREE",
+      "files": [
+        "crystalizer.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "crystalizer_thumbnails/Nodetree/crystalizer.webp",
+        "hash": "SHA256:094877135dc60214c02ce1e046a9ced540543f9f44395f79b39ded17b5868334"
+      },
+      "meta": {
+        "catalog_id": "ea48ad9b-1eb7-419e-9e40-ef03575ef3aa",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.crystalizer"
+          }
+        ]
+      }
+    },
     {
       "name": "Icicle Mat",
       "id_type": "MATERIAL",
@@ -196,6 +244,12 @@
     }
   ],
   "files": [
+    {
+      "path": "crystalizer.blend",
+      "size_in_bytes": 1153893,
+      "hash": "SHA256:5bbead57280103a44725c147fe0b061d3b9efed6c2ff950699a2c748b172b8c5",
+      "blender_version": "5.2.44"
+    },
     {
       "path": "icicles.blend",
       "size_in_bytes": 1593665,
