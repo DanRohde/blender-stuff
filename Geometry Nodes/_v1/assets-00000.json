@@ -1,5 +1,5 @@
 {
-  "asset_count": 19,
+  "asset_count": 18,
   "file_count": 7,
   "assets": [
     {
@@ -312,34 +312,6 @@
       }
     },
     {
-      "name": "Simple City",
-      "id_type": "OBJECT",
-      "files": [
-        "simple_city_generator.blend"
-      ],
-      "bl_versions": {
-        "min": "5.2"
-      },
-      "thumbnail": {
-        "url": "simple_city_generator_thumbnails/Object/simple-city.webp",
-        "hash": "SHA256:a6f6496ac353c7a82a4791889fc6abbd52141acd33753549569c5de42af5e969"
-      },
-      "meta": {
-        "properties": [
-          {
-            "name": "dimensions",
-            "type": "IDP_ARRAY",
-            "value": [
-              1500.0,
-              1500.0,
-              0.0
-            ],
-            "itemtype": "IDP_FLOAT"
-          }
-        ]
-      }
-    },
-    {
       "name": "Snow Mat",
       "id_type": "MATERIAL",
       "files": [
@@ -449,8 +421,8 @@
     },
     {
       "path": "simple_city_generator.blend",
-      "size_in_bytes": 3040145,
-      "hash": "SHA256:f9421e90e289e6c10b4446628eb0da570b74aa4ef8f77bc96a3195976c140734",
+      "size_in_bytes": 3235842,
+      "hash": "SHA256:c0cd6038a1076b102c96c7dddf55c82141a3e4f6301dd4339e00cc4a9121e4dd",
       "blender_version": "5.2.44"
     },
     {
