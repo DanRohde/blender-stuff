@@ -1,6 +1,6 @@
 {
-  "asset_count": 12,
-  "file_count": 6,
+  "asset_count": 18,
+  "file_count": 7,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -209,6 +209,109 @@
       }
     },
     {
+      "name": "Parks",
+      "id_type": "COLLECTION",
+      "files": [
+        "simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "simple_city_generator_thumbnails/Collection/parks.webp",
+        "hash": "SHA256:d82d21c496eb03ceb7ba75dea41047707c816a7e4cd1d840b5da40f67848a728"
+      }
+    },
+    {
+      "name": "Roof tops",
+      "id_type": "COLLECTION",
+      "files": [
+        "simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "simple_city_generator_thumbnails/Collection/roof-tops.webp",
+        "hash": "SHA256:97beddbbc5dbaecc293363a0f25d7517c01c9fb50bbff35cf1561b1316b6b05d"
+      }
+    },
+    {
+      "name": "Buildings",
+      "id_type": "MATERIAL",
+      "files": [
+        "simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "simple_city_generator_thumbnails/Material/buildings.webp",
+        "hash": "SHA256:0511635eb10f4ce3b6cba111c974166e25c957403316819a8ce25b4a319c714a"
+      }
+    },
+    {
+      "name": "Roof tops 1",
+      "id_type": "MATERIAL",
+      "files": [
+        "simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "simple_city_generator_thumbnails/Material/roof-tops-1.webp",
+        "hash": "SHA256:3a73e2ae183f84fd35f4b35f971c34a45c8fa0f0b4f403e787bf11b35772dd8e"
+      }
+    },
+    {
+      "name": "Streets",
+      "id_type": "MATERIAL",
+      "files": [
+        "simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "simple_city_generator_thumbnails/Material/streets.webp",
+        "hash": "SHA256:c11a94b9efa6f3a19ebc753ff6f56bd0ae4ab3d6d85ffd3d4ea09277c3b7c80a"
+      }
+    },
+    {
+      "name": "Simple City Generator",
+      "id_type": "NODETREE",
+      "files": [
+        "simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "simple_city_generator_thumbnails/Nodetree/simple-city-generator.webp",
+        "hash": "SHA256:0d01a4be6d56bc04917678a28cb1a33cdeacbca2be6df45888da9a85262364eb"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.geometry_nodes"
+          }
+        ]
+      }
+    },
+    {
       "name": "Snow Mat",
       "id_type": "MATERIAL",
       "files": [
@@ -315,6 +418,12 @@
       "size_in_bytes": 865226,
       "hash": "SHA256:f35e300c3c30a76663f77800f97d6f0d77250855c71a73b9cb88b743385074f6",
       "blender_version": "4.5.90"
+    },
+    {
+      "path": "simple_city_generator.blend",
+      "size_in_bytes": 3013725,
+      "hash": "SHA256:b413b324b4e3508a22faa3c5e749ef6103d80de3468cd390773373a2b837c4f1",
+      "blender_version": "5.2.44"
     },
     {
       "path": "snow.blend",
