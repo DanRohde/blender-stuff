@@ -1,7 +1,21 @@
 {
-  "asset_count": 11,
+  "asset_count": 12,
   "file_count": 6,
   "assets": [
+    {
+      "name": "4D Rotation Mat",
+      "id_type": "MATERIAL",
+      "files": [
+        "4D_rotation.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "4D_rotation_thumbnails/Material/4d-rotation-mat.webp",
+        "hash": "SHA256:54e4ccc41708a86f11e0b2e26e26966915e14b72a96129ed4999f1543f7a993c"
+      }
+    },
     {
       "name": "4D Rotation",
       "id_type": "NODETREE",
@@ -9,11 +23,11 @@
         "4D_rotation.blend"
       ],
       "bl_versions": {
-        "min": "4.5"
+        "min": "5.2"
       },
       "thumbnail": {
         "url": "4D_rotation_thumbnails/Nodetree/4d-rotation.webp",
-        "hash": "SHA256:9d3c8d7f71b41aa17ec1b58201012b8f5ebddf1f2fd0c5bb01e8dbc56417ffe7"
+        "hash": "SHA256:a5d9ea55b35e0d0adeafe17546f91e8299f3ba403a6a6ae55c21661eba2c1fca"
       },
       "meta": {
         "catalog_id": "ea48ad9b-1eb7-419e-9e40-ef03575ef3aa",
@@ -280,9 +294,9 @@
   "files": [
     {
       "path": "4D_rotation.blend",
-      "size_in_bytes": 989169,
-      "hash": "SHA256:db09b73d5ea399d8b249d41e89e215f51cff3ec745f622a0940318c9d3bb9831",
-      "blender_version": "4.5.90"
+      "size_in_bytes": 1146089,
+      "hash": "SHA256:27e18431cd79c32de7d427424b1262e4609b3af575678cca0309f24e8655bbda",
+      "blender_version": "5.2.44"
     },
     {
       "path": "crystalizer.blend",
