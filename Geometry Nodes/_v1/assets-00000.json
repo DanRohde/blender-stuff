@@ -1,7 +1,41 @@
 {
-  "asset_count": 10,
-  "file_count": 5,
+  "asset_count": 11,
+  "file_count": 6,
   "assets": [
+    {
+      "name": "4D Rotation",
+      "id_type": "NODETREE",
+      "files": [
+        "4D_rotation.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "4D_rotation_thumbnails/Nodetree/4d-rotation.webp",
+        "hash": "SHA256:9d3c8d7f71b41aa17ec1b58201012b8f5ebddf1f2fd0c5bb01e8dbc56417ffe7"
+      },
+      "meta": {
+        "catalog_id": "ea48ad9b-1eb7-419e-9e40-ef03575ef3aa",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.4d_rotation"
+          }
+        ]
+      }
+    },
     {
       "name": "Crystal",
       "id_type": "MATERIAL",
@@ -244,6 +278,12 @@
     }
   ],
   "files": [
+    {
+      "path": "4D_rotation.blend",
+      "size_in_bytes": 989169,
+      "hash": "SHA256:db09b73d5ea399d8b249d41e89e215f51cff3ec745f622a0940318c9d3bb9831",
+      "blender_version": "4.5.90"
+    },
     {
       "path": "crystalizer.blend",
       "size_in_bytes": 1153893,
