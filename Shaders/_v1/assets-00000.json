@@ -1,7 +1,21 @@
 {
-  "asset_count": 3,
-  "file_count": 3,
+  "asset_count": 4,
+  "file_count": 4,
   "assets": [
+    {
+      "name": "Electronic Circuit",
+      "id_type": "MATERIAL",
+      "files": [
+        "electronic_circuit.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "electronic_circuit_thumbnails/Material/electronic-circuit.webp",
+        "hash": "SHA256:bb9f9c6f3e72b77f5c53a773efd79454b0a8bc32ec6821d8db2bf65d0e1e62ab"
+      }
+    },
     {
       "name": "SciFi Greeble 1",
       "id_type": "MATERIAL",
@@ -46,6 +60,12 @@
     }
   ],
   "files": [
+    {
+      "path": "electronic_circuit.blend",
+      "size_in_bytes": 193905,
+      "hash": "SHA256:cfc32909f88c2ecb5777d7849acf3913e3ee6cec03eb60bf4b3423f52b1cafc5",
+      "blender_version": "5.2.44"
+    },
     {
       "path": "scifi_greeble_1.blend",
       "size_in_bytes": 131668,
