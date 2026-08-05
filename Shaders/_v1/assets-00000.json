@@ -1,0 +1,28 @@
+{
+  "asset_count": 1,
+  "file_count": 1,
+  "assets": [
+    {
+      "name": "Stars and Nebulars",
+      "id_type": "WORLD",
+      "files": [
+        "world_scifi_stars_and_clouds.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "world_scifi_stars_and_clouds_thumbnails/World/stars-and-nebulars.webp",
+        "hash": "SHA256:b4b91f78c7ea238718b71d903a6affa1c35984cee4948bf71abeca2678a0438a"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "world_scifi_stars_and_clouds.blend",
+      "size_in_bytes": 649001,
+      "hash": "SHA256:a2782bbcaf3b1b474efc8b06fc394c20ab238110630bff2c56b1dc0611954ceb",
+      "blender_version": "5.2.44"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "api_versions": {
+    "v1": {
+      "url": "_v1/asset-index.json",
+      "hash": "SHA256:568b372992c62edf9d9f05835d9044b3468d79753cc194d8bbc1cff7f90d41a8"
+    }
+  },
+  "name": "Your Asset Library",
+  "contact": {
+    "name": "Your Name",
+    "url": "https://example.org/",
+    "email": "example@example.org"
+  }
+}
