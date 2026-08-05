@@ -79,11 +79,11 @@ class VIEW3D_UL_RegFreqList(bpy.types.UIList, WFC3DULGenericFilter):
 
 class VIEW3D_UL_ObjFreqList(bpy.types.UIList, WFC3DULGenericFilter):
     def draw_item(self, _context, layout, _data, item, _icon, _active_data, _active_propname, index):
-        row = layout.row(align=True)
-        col = row.column(align=True)
+        row = layout.row()
+        col = row.column()
         row = col.row()
-        row.column(align=True).prop(item, "selected")
-        row.column(align=True).prop(item, "objfreq_obj", text=f"{index}. Object")
+        row.column().prop(item, "selected")
+        row.column().prop(item, "objfreq_obj", text=f"{index}.")
         box = col.box()
         row = box.row()
         row.prop(item, "objfreq_neighbor")
