@@ -1,6 +1,6 @@
 {
-  "asset_count": 2,
-  "file_count": 2,
+  "asset_count": 3,
+  "file_count": 3,
   "assets": [
     {
       "name": "SciFi Greeble 1",
@@ -14,6 +14,20 @@
       "thumbnail": {
         "url": "scifi_greeble_1_thumbnails/Material/scifi-greeble-1.webp",
         "hash": "SHA256:bbd5f8f438a3058e270938e89cb99a3e652058810058d765908a01ae0a0344db"
+      }
+    },
+    {
+      "name": "Solar Panel",
+      "id_type": "MATERIAL",
+      "files": [
+        "solar_panel.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "solar_panel_thumbnails/Material/solar-panel.webp",
+        "hash": "SHA256:53d7d5ddb09d644a25fc812564696ed5111a5241d099614c1a9982b209723071"
       }
     },
     {
@@ -36,6 +50,12 @@
       "path": "scifi_greeble_1.blend",
       "size_in_bytes": 131668,
       "hash": "SHA256:8bcba116a85cb605a9dd6826936c3adad718243a634d909c688eb5d01c3b2367",
+      "blender_version": "5.2.44"
+    },
+    {
+      "path": "solar_panel.blend",
+      "size_in_bytes": 175046,
+      "hash": "SHA256:2dc9f6107c7d93cb4ca2bfc94bb4c3d135a224ba730a7db167e96aa65aa8e943",
       "blender_version": "5.2.44"
     },
     {
