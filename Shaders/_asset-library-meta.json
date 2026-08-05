@@ -2,13 +2,13 @@
   "api_versions": {
     "v1": {
       "url": "_v1/asset-index.json",
-      "hash": "SHA256:7f58d59831b09927b4219b5ed385cd6792cbdcdc1a6086aaa3a10f2a89901d27"
+      "hash": "SHA256:a3b813d624d963090dbfba8ae791e24726c4a6cfe4ef9ee075930ae949ceefed"
     }
   },
-  "name": "Your Asset Library",
+  "name": "DanRohde's Blender Remote Asset Library",
   "contact": {
-    "name": "Your Name",
-    "url": "https://example.org/",
-    "email": "example@example.org"
+    "name": "DanRohde",
+    "url": "https://github.com/DanRohde/blender-stuff",
+    "email": "d.rohde@web.de"
   }
 }

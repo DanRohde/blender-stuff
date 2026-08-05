@@ -1,6 +1,6 @@
 {
-  "asset_count": 4,
-  "file_count": 4,
+  "asset_count": 5,
+  "file_count": 5,
   "assets": [
     {
       "name": "Electronic Circuit",
@@ -28,6 +28,23 @@
       "thumbnail": {
         "url": "scifi_greeble_1_thumbnails/Material/scifi-greeble-1.webp",
         "hash": "SHA256:bbd5f8f438a3058e270938e89cb99a3e652058810058d765908a01ae0a0344db"
+      }
+    },
+    {
+      "name": "SciFi Metal Plate",
+      "id_type": "MATERIAL",
+      "files": [
+        "scifi_metal_plating.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "scifi_metal_plating_thumbnails/Material/scifi-metal-plate.webp",
+        "hash": "SHA256:11caab82e093e6698c5107b6b9235a6d45fb702ab3b16e607c69f825b8beb582"
+      },
+      "meta": {
+        "catalog_id": "8f72b363-5dcb-4df7-8700-fca6fb84240b"
       }
     },
     {
@@ -70,6 +87,12 @@
       "path": "scifi_greeble_1.blend",
       "size_in_bytes": 131668,
       "hash": "SHA256:8bcba116a85cb605a9dd6826936c3adad718243a634d909c688eb5d01c3b2367",
+      "blender_version": "5.2.44"
+    },
+    {
+      "path": "scifi_metal_plating.blend",
+      "size_in_bytes": 27408401,
+      "hash": "SHA256:c99bd1b5b1fd951becf194270f481133cb5157743807f838b639d5a502948179",
       "blender_version": "5.2.44"
     },
     {
