@@ -15,3 +15,7 @@ Available Blender add-ons:
   * https://raw.githubusercontent.com/DanRohde/blender-stuff/refs/heads/main/Geometry%20Nodes/
 * Look at my [Youtube channel](https://www.youtube.com/@jonnybegood8230)
 
+## Shaders
+* Some [blend files](./Shaders/) - Since Blender 5.2 you can add the following URL as Remote Asset Library:
+  * https://raw.githubusercontent.com/DanRohde/blender-stuff/refs/heads/main/Shaders/
+
