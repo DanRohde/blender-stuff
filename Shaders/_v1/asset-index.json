@@ -1,13 +1,35 @@
 {
   "schema_version": "1.0.0",
-  "asset_size_bytes": 28558021,
+  "asset_size_bytes": 28537139,
   "asset_count": 5,
   "file_count": 5,
   "pages": [
     {
       "url": "_v1/assets-00000.json",
-      "hash": "SHA256:242c9fb421cc1ff44870e3c1676850fe3db013c37b12b2689b479690ffa9d0fc"
+      "hash": "SHA256:4f2217a7e50d280d4a96161d81a66d90177cc26af13b756ab74959d0865490a5"
     }
   ],
-  "catalogs": []
+  "catalogs": [
+    {
+      "path": "Shading",
+      "uuids": [
+        "f5c88f70-99e2-4dc0-a73f-2573704c085b"
+      ],
+      "simple_name": "Shading"
+    },
+    {
+      "path": "Shading/SciFi",
+      "uuids": [
+        "cd96ea69-8488-4e34-8daa-b9b27df02d49"
+      ],
+      "simple_name": "Shading-SciFi"
+    },
+    {
+      "path": "Worlds",
+      "uuids": [
+        "996bdeeb-a137-437b-9caf-3e3db3dce83e"
+      ],
+      "simple_name": "Worlds"
+    }
+  ]
 }

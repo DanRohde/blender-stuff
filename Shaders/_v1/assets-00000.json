@@ -28,6 +28,9 @@
       "thumbnail": {
         "url": "scifi_greeble_1_thumbnails/Material/scifi-greeble-1.webp",
         "hash": "SHA256:bbd5f8f438a3058e270938e89cb99a3e652058810058d765908a01ae0a0344db"
+      },
+      "meta": {
+        "catalog_id": "cd96ea69-8488-4e34-8daa-b9b27df02d49"
       }
     },
     {
@@ -44,7 +47,7 @@
         "hash": "SHA256:11caab82e093e6698c5107b6b9235a6d45fb702ab3b16e607c69f825b8beb582"
       },
       "meta": {
-        "catalog_id": "8f72b363-5dcb-4df7-8700-fca6fb84240b"
+        "catalog_id": "cd96ea69-8488-4e34-8daa-b9b27df02d49"
       }
     },
     {
@@ -59,6 +62,9 @@
       "thumbnail": {
         "url": "solar_panel_thumbnails/Material/solar-panel.webp",
         "hash": "SHA256:53d7d5ddb09d644a25fc812564696ed5111a5241d099614c1a9982b209723071"
+      },
+      "meta": {
+        "catalog_id": "f5c88f70-99e2-4dc0-a73f-2573704c085b"
       }
     },
     {
@@ -73,6 +79,11 @@
       "thumbnail": {
         "url": "world_scifi_stars_and_clouds_thumbnails/World/stars-and-nebulars.webp",
         "hash": "SHA256:b4b91f78c7ea238718b71d903a6affa1c35984cee4948bf71abeca2678a0438a"
+      },
+      "meta": {
+        "catalog_id": "996bdeeb-a137-437b-9caf-3e3db3dce83e",
+        "author": "Dan Rohde",
+        "license": "GPLv3"
       }
     }
   ],
@@ -85,26 +96,26 @@
     },
     {
       "path": "scifi_greeble_1.blend",
-      "size_in_bytes": 131668,
-      "hash": "SHA256:8bcba116a85cb605a9dd6826936c3adad718243a634d909c688eb5d01c3b2367",
+      "size_in_bytes": 122065,
+      "hash": "SHA256:902354e9eb262b9c08e55cc8595e3ae701e50add6bc80b4ec1007e718a582f18",
       "blender_version": "5.2.44"
     },
     {
       "path": "scifi_metal_plating.blend",
-      "size_in_bytes": 27408401,
-      "hash": "SHA256:c99bd1b5b1fd951becf194270f481133cb5157743807f838b639d5a502948179",
+      "size_in_bytes": 27404410,
+      "hash": "SHA256:bfc415ea378fcba2086a132a794b2d97e258e1da17d67c335946353ec0bc7eb7",
       "blender_version": "5.2.44"
     },
     {
       "path": "solar_panel.blend",
-      "size_in_bytes": 175046,
-      "hash": "SHA256:2dc9f6107c7d93cb4ca2bfc94bb4c3d135a224ba730a7db167e96aa65aa8e943",
+      "size_in_bytes": 169862,
+      "hash": "SHA256:0a928cab7cc9b34507d47b5aa92728b5886a0294288525773d1bf205f5c3091f",
       "blender_version": "5.2.44"
     },
     {
       "path": "world_scifi_stars_and_clouds.blend",
-      "size_in_bytes": 649001,
-      "hash": "SHA256:a2782bbcaf3b1b474efc8b06fc394c20ab238110630bff2c56b1dc0611954ceb",
+      "size_in_bytes": 646897,
+      "hash": "SHA256:dfedac31374d752ba715c641a1aa2bb9fadfa2dd20f0cfc5379248d02f5aa042",
       "blender_version": "5.2.44"
     }
   ]
