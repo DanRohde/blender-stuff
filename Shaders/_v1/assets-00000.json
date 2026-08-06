@@ -14,6 +14,9 @@
       "thumbnail": {
         "url": "electronic_circuit_thumbnails/Material/electronic-circuit.webp",
         "hash": "SHA256:bb9f9c6f3e72b77f5c53a773efd79454b0a8bc32ec6821d8db2bf65d0e1e62ab"
+      },
+      "meta": {
+        "catalog_id": "f5c88f70-99e2-4dc0-a73f-2573704c085b"
       }
     },
     {
@@ -90,8 +93,8 @@
   "files": [
     {
       "path": "electronic_circuit.blend",
-      "size_in_bytes": 193905,
-      "hash": "SHA256:cfc32909f88c2ecb5777d7849acf3913e3ee6cec03eb60bf4b3423f52b1cafc5",
+      "size_in_bytes": 191194,
+      "hash": "SHA256:f530e0c1a95c855bf251cfb83d541c991f6afff296e9a6763a4ef17fe32b486d",
       "blender_version": "5.2.44"
     },
     {
