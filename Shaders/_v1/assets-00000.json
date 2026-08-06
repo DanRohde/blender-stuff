@@ -1,7 +1,82 @@
 {
-  "asset_count": 5,
-  "file_count": 5,
+  "asset_count": 10,
+  "file_count": 7,
   "assets": [
+    {
+      "name": "Brilliant",
+      "id_type": "MATERIAL",
+      "files": [
+        "brilliant_and_diamond.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "brilliant_and_diamond_thumbnails/Material/brilliant.webp",
+        "hash": "SHA256:ab72920be3e8c32089de8af9f2fb9e290750fd1aac867f1be18f77aa795b082f"
+      },
+      "meta": {
+        "catalog_id": "434bd7c6-e799-429c-8baf-de951e407cf6"
+      }
+    },
+    {
+      "name": "Brilliant",
+      "id_type": "OBJECT",
+      "files": [
+        "brilliant_and_diamond.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "brilliant_and_diamond_thumbnails/Object/brilliant.webp",
+        "hash": "SHA256:22c5f7236ede7e7d4779a974a8ae862ecba0984c0c9bd7f17818c8efce206bd0"
+      },
+      "meta": {
+        "catalog_id": "434bd7c6-e799-429c-8baf-de951e407cf6",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              2.0,
+              2.0,
+              1.2200000286102295
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Diamond",
+      "id_type": "OBJECT",
+      "files": [
+        "brilliant_and_diamond.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "brilliant_and_diamond_thumbnails/Object/diamond.webp",
+        "hash": "SHA256:22c5f7236ede7e7d4779a974a8ae862ecba0984c0c9bd7f17818c8efce206bd0"
+      },
+      "meta": {
+        "catalog_id": "434bd7c6-e799-429c-8baf-de951e407cf6",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              2.0,
+              2.0,
+              1.1500000953674316
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
     {
       "name": "Electronic Circuit",
       "id_type": "MATERIAL",
@@ -17,6 +92,39 @@
       },
       "meta": {
         "catalog_id": "f5c88f70-99e2-4dc0-a73f-2573704c085b"
+      }
+    },
+    {
+      "name": "Musgrave Texture",
+      "id_type": "MATERIAL",
+      "files": [
+        "musgrave-texture.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "musgrave-texture_thumbnails/Material/musgrave-texture.webp",
+        "hash": "SHA256:e2f16ada43531c8a1b7bc2cc1788d8f9f817b3fb67fc3c906dfbd56f3b7b9e04"
+      }
+    },
+    {
+      "name": "Musgrave Texture",
+      "id_type": "NODETREE",
+      "files": [
+        "musgrave-texture.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
       }
     },
     {
@@ -92,10 +200,22 @@
   ],
   "files": [
     {
+      "path": "brilliant_and_diamond.blend",
+      "size_in_bytes": 1130012,
+      "hash": "SHA256:4fe15005e45e737ee655e2ab19398c40b1a7c5d3211a30c4788a5dc39d886dfc",
+      "blender_version": "5.2.44"
+    },
+    {
       "path": "electronic_circuit.blend",
       "size_in_bytes": 191262,
       "hash": "SHA256:13af63833602a1558e96707a3d26200e7616a17013d952f293638b4995f7a76e",
       "blender_version": "5.2.44"
+    },
+    {
+      "path": "musgrave-texture.blend",
+      "size_in_bytes": 641704,
+      "hash": "SHA256:9dc8acb5affa19f22428b1d504169af48fbaefc4023fa93791d6f09db75a87a8",
+      "blender_version": "4.5.90"
     },
     {
       "path": "scifi_greeble_1.blend",
