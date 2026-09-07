@@ -226,10 +226,9 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
             c.operator("object.wfc_select_dropdown_object", icon='RESTRICT_SELECT_OFF').list_name="obj_list"
             c.enabled = sel_count > 0
             draw_list_selection_actions(props, nc, "obj_list")
-
-        
             selected =get_selected_items(props.obj_list)
             if len(selected) == 0 and props.edit_type == 'objects':
+                box.row().label(text="Please select one or more object(s).", icon=get_info_icon())
                 return
 
         obj = None
@@ -249,11 +248,15 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
             obj = get_default_empty_object(props.collection_obj)
             obj_name = 'Collection Defaults'
 
-        row = box.box().row(align=True)
+        nbox = box.box()
+        row = nbox.row(align=True)
         row.operator('object.wfc_info_toggle',icon=get_info_icon(), depress = props.info_toggle)
         row.prop(props,"edit_constraints",icon="SETTINGS")
         row.operator("object.wfc_open_web_link", icon="URL", text="").url = HELP["constraints"]["url"] + "#" + HELP["constraints"]["anchormap"][props.edit_constraints]
         row.operator('object.wfc_auto_save_toggle',icon='IMPORT',depress = props.auto_save)
+
+        if props.edit_constraints == '_none_':
+            nbox.row().label(text="Please select a constrains type.", icon=get_info_icon())
 
         if hasattr(self, f"draw_{props.edit_constraints}_panel") and callable(getattr(self, f"draw_{props.edit_constraints}_panel")):
             if props.edit_constraints not in get_active_constraints():
@@ -264,12 +267,14 @@ class VIEW3D_PT_EditPanel(bpy.types.Panel):
             draw_method(props, box, obj, obj_name)
 
         if props.info_toggle: self.draw_info_panel(layout, props, obj)
-        row = layout.box().row()
+        nbox = layout.box()
+        row = nbox.row()
         row.alignment = "LEFT"
         if props.edit_constraints != '_none_':
             row.prop(props, "copy_constraints")
         else:
             row.label(text="Copy all constraints from")
+        row = nbox.row()
         row.prop(props, "copy_from")
         row.prop(props, "copy_overwrite")
         col = row.column()
