@@ -1,6 +1,6 @@
 {
-  "asset_count": 18,
-  "file_count": 7,
+  "asset_count": 22,
+  "file_count": 10,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -99,6 +99,30 @@
       }
     },
     {
+      "name": "Cubifier [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "cubifier.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
       "name": "Icicle Mat",
       "id_type": "MATERIAL",
       "files": [
@@ -170,6 +194,68 @@
             "name": "node_tool_idname",
             "type": "IDP_STRING",
             "value": "geometry.icicles"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Lego Plastic [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "lego-brick-generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "lego-brick-generator_thumbnails/Material/lego-plastic-jb75.webp",
+        "hash": "SHA256:3138262d9bb8b1d99035893625ef1e5e8e01c4665995a2072ea25ed99f5024de"
+      }
+    },
+    {
+      "name": "Lego Brick Generator [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "lego-brick-generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Legofier [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "legofier.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
           }
         ]
       }
@@ -408,10 +494,28 @@
       "blender_version": "5.2.44"
     },
     {
+      "path": "cubifier.blend",
+      "size_in_bytes": 162971,
+      "hash": "SHA256:303e9f5fc6e1cf1d762bc692258245f9a080b3b32deb80837822ba9be5d638ff",
+      "blender_version": "5.2.44"
+    },
+    {
       "path": "icicles.blend",
       "size_in_bytes": 1593665,
       "hash": "SHA256:c3c0029e4de74e62422e2543f0d81117ce7f531422e27c5f979cd18386a88df1",
       "blender_version": "4.5.90"
+    },
+    {
+      "path": "lego-brick-generator.blend",
+      "size_in_bytes": 160889,
+      "hash": "SHA256:1f86a4f5dc138111abcfdbac1c91f7ce91b09c61fd31832e5c2fcaba6c26f215",
+      "blender_version": "5.2.44"
+    },
+    {
+      "path": "legofier.blend",
+      "size_in_bytes": 194802,
+      "hash": "SHA256:64c9e9c51cfba5044d144f64d62affc98dfec55b7cdcd473642b331ee05325ee",
+      "blender_version": "5.2.44"
     },
     {
       "path": "sierpinski_triangle.blend",
