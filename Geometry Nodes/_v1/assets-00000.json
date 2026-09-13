@@ -107,6 +107,10 @@
       "bl_versions": {
         "min": "5.2"
       },
+      "thumbnail": {
+        "url": "cubifier_thumbnails/Nodetree/cubifier-jb75.webp",
+        "hash": "SHA256:462a9b147394bbc097747c5f4dbb5ad7743314a360312e15b558c6595dcaa2ad"
+      },
       "meta": {
         "properties": [
           {
@@ -221,6 +225,10 @@
       "bl_versions": {
         "min": "5.2"
       },
+      "thumbnail": {
+        "url": "lego-brick-generator_thumbnails/Nodetree/lego-brick-generator-jb75.webp",
+        "hash": "SHA256:47fa73aac83003a36df085a4267dcad3551613922f5f807c119a8ad8e93141a1"
+      },
       "meta": {
         "properties": [
           {
@@ -244,6 +252,10 @@
       ],
       "bl_versions": {
         "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "legofier_thumbnails/Nodetree/legofier-jb75.webp",
+        "hash": "SHA256:7e826de7628623223df42fe1a584af87051f57123fbc63ee8db9ae396d5b8456"
       },
       "meta": {
         "properties": [
@@ -495,8 +507,8 @@
     },
     {
       "path": "cubifier.blend",
-      "size_in_bytes": 162971,
-      "hash": "SHA256:303e9f5fc6e1cf1d762bc692258245f9a080b3b32deb80837822ba9be5d638ff",
+      "size_in_bytes": 178603,
+      "hash": "SHA256:ecd6f7740c179e54bdd96b55485547448402ab689ec9e4b2b22c73eab1a01fe4",
       "blender_version": "5.2.44"
     },
     {
@@ -507,14 +519,14 @@
     },
     {
       "path": "lego-brick-generator.blend",
-      "size_in_bytes": 160889,
-      "hash": "SHA256:1f86a4f5dc138111abcfdbac1c91f7ce91b09c61fd31832e5c2fcaba6c26f215",
+      "size_in_bytes": 165860,
+      "hash": "SHA256:4d0627111c2d8c9c1a88660cbc51994d76156515abb945a990665e40f50ad634",
       "blender_version": "5.2.44"
     },
     {
       "path": "legofier.blend",
-      "size_in_bytes": 194802,
-      "hash": "SHA256:64c9e9c51cfba5044d144f64d62affc98dfec55b7cdcd473642b331ee05325ee",
+      "size_in_bytes": 204068,
+      "hash": "SHA256:afb94a65aad312f5849f4669ba20071dff6c3edada0556854fbd85ffcf76ca09",
       "blender_version": "5.2.44"
     },
     {
