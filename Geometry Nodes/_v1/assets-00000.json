@@ -1,6 +1,6 @@
 {
-  "asset_count": 22,
-  "file_count": 10,
+  "asset_count": 23,
+  "file_count": 11,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -273,6 +273,34 @@
       }
     },
     {
+      "name": "Self-Similar Reconstruction [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "self-similar-reconstruction.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "self-similar-reconstruction_thumbnails/Nodetree/self-similar-reconstruction-jb75.webp",
+        "hash": "SHA256:eef0c43f50fd58d970ca6553439a50bb85ebb26c1d528ee08bcb4fa1872bab50"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
       "name": "Sierpinski Triangle",
       "id_type": "NODETREE",
       "files": [
@@ -527,6 +555,12 @@
       "path": "legofier.blend",
       "size_in_bytes": 204068,
       "hash": "SHA256:afb94a65aad312f5849f4669ba20071dff6c3edada0556854fbd85ffcf76ca09",
+      "blender_version": "5.2.44"
+    },
+    {
+      "path": "self-similar-reconstruction.blend",
+      "size_in_bytes": 894958,
+      "hash": "SHA256:51665cd752ba930c760ddd0ebbf47e45aaacca031e4c9827657cd4612cdfdda6",
       "blender_version": "5.2.44"
     },
     {
