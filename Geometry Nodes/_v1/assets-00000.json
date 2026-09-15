@@ -1,6 +1,6 @@
 {
-  "asset_count": 23,
-  "file_count": 11,
+  "asset_count": 25,
+  "file_count": 12,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -46,6 +46,48 @@
             "name": "node_tool_idname",
             "type": "IDP_STRING",
             "value": "geometry.4d_rotation"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Cheese [JB#75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "cheesemaker.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "cheesemaker_thumbnails/Material/cheese-jb75.webp",
+        "hash": "SHA256:59cb8d99467a40bba7b8168b99f23f3f2d4beb2be1f6780106050eb544e8735b"
+      }
+    },
+    {
+      "name": "Cheesemaker [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "cheesemaker.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "cheesemaker_thumbnails/Nodetree/cheesemaker-jb75.webp",
+        "hash": "SHA256:4c062813ffe36961290a220425d962500425143e8eb40abd65d12b3de29678e0"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
           }
         ]
       }
@@ -525,6 +567,12 @@
       "path": "4D_rotation.blend",
       "size_in_bytes": 1146089,
       "hash": "SHA256:27e18431cd79c32de7d427424b1262e4609b3af575678cca0309f24e8655bbda",
+      "blender_version": "5.2.44"
+    },
+    {
+      "path": "cheesemaker.blend",
+      "size_in_bytes": 209682,
+      "hash": "SHA256:fa5e0aa3c3164f8acdea6abc670bfc2d832a1be1b1e2ff897f9a454ed7ce4454",
       "blender_version": "5.2.44"
     },
     {
