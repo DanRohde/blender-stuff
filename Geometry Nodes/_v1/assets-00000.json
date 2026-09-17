@@ -1,6 +1,6 @@
 {
-  "asset_count": 25,
-  "file_count": 12,
+  "asset_count": 27,
+  "file_count": 13,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -560,6 +560,48 @@
           }
         ]
       }
+    },
+    {
+      "name": "Rainbow Cable Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "twisted-cables.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "twisted-cables_thumbnails/Material/rainbow-cable-mat-jb75.webp",
+        "hash": "SHA256:2c1f6226841169c6c48a079cba566a3662d96b03cf3992f0e3033ad745e7df0e"
+      }
+    },
+    {
+      "name": "Twisted Cable [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "twisted-cables.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "twisted-cables_thumbnails/Nodetree/twisted-cable-jb75.webp",
+        "hash": "SHA256:f285c3f33ca91171b5d6eacdaa04dfbcddd13b1f2a993be22285085717d22516"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
     }
   ],
   "files": [
@@ -634,6 +676,12 @@
       "size_in_bytes": 824949,
       "hash": "SHA256:7c76b39bed365305192c87f19ed7425b51364d223a488d35a46061595080c3cb",
       "blender_version": "4.5.90"
+    },
+    {
+      "path": "twisted-cables.blend",
+      "size_in_bytes": 191729,
+      "hash": "SHA256:d550f79976b319a7cb7c335c26f647a992f20e6b8c13e95c0d8abcd622847dd4",
+      "blender_version": "5.2.45"
     }
   ]
 }
