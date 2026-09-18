@@ -1,6 +1,6 @@
 {
-  "asset_count": 27,
-  "file_count": 13,
+  "asset_count": 29,
+  "file_count": 14,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -78,6 +78,49 @@
         "hash": "SHA256:4c062813ffe36961290a220425d962500425143e8eb40abd65d12b3de29678e0"
       },
       "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Cobblestone [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "cobblestone.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "cobblestone_thumbnails/Material/cobblestone-jb75.webp",
+        "hash": "SHA256:d097241bac37b81c6a51a57b5413b577cc7efca1adb23c6a7f023d94a4b6f24c"
+      }
+    },
+    {
+      "name": "Cobblestone [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "cobblestone.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "cobblestone_thumbnails/Nodetree/cobblestone-jb75.webp",
+        "hash": "SHA256:e035f9e501fe2383e2279952620b9fe82fd746c347902641df0b20177d57cc87"
+      },
+      "meta": {
+        "catalog_id": "3934253d-7ef6-43d0-a2cd-507be2c4369d",
         "properties": [
           {
             "name": "type",
@@ -616,6 +659,12 @@
       "size_in_bytes": 218347,
       "hash": "SHA256:c49e438990d96eeca2888689b06b4d45f13457f9fbe5186789d128bb08b6fac3",
       "blender_version": "5.2.45"
+    },
+    {
+      "path": "cobblestone.blend",
+      "size_in_bytes": 256816,
+      "hash": "SHA256:fc01c4681cbfb37b915ea7415af23046ed528f9fff4a1bb60235033a9d11a342",
+      "blender_version": "5.2.44"
     },
     {
       "path": "crystalizer.blend",
