@@ -1,6 +1,6 @@
 {
-  "asset_count": 29,
-  "file_count": 14,
+  "asset_count": 32,
+  "file_count": 15,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -358,6 +358,62 @@
       }
     },
     {
+      "name": "Petrify Mat - Mortar [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "petrify.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "petrify_thumbnails/Material/petrify-mat-mortar-jb75.webp",
+        "hash": "SHA256:ea8681a77931a56e66131ca484320c9f7642606d2e3f00c282720034ca9a4608"
+      }
+    },
+    {
+      "name": "Petrify Mat - Stone [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "petrify.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "petrify_thumbnails/Material/petrify-mat-stone-jb75.webp",
+        "hash": "SHA256:703516184b828bc5433d94946a56a08e56e962bca9d5b9cb3514b61a5874871b"
+      }
+    },
+    {
+      "name": "Petrify Everything [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "petrify.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "petrify_thumbnails/Nodetree/petrify-everything-jb75.webp",
+        "hash": "SHA256:d6be991704b84927cd950fb87495e18b9b6ebd5f859c0e90586d06bd8380b3b6"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
       "name": "Self-Similar Reconstruction [#JB75]",
       "id_type": "NODETREE",
       "files": [
@@ -662,9 +718,9 @@
     },
     {
       "path": "cobblestone.blend",
-      "size_in_bytes": 256816,
-      "hash": "SHA256:fc01c4681cbfb37b915ea7415af23046ed528f9fff4a1bb60235033a9d11a342",
-      "blender_version": "5.2.44"
+      "size_in_bytes": 229601,
+      "hash": "SHA256:4dfc8299a949b42f96c3460068cee7316f35b3ff4514d9efda6e1e0cc44b350c",
+      "blender_version": "5.2.45"
     },
     {
       "path": "crystalizer.blend",
@@ -695,6 +751,12 @@
       "size_in_bytes": 204068,
       "hash": "SHA256:afb94a65aad312f5849f4669ba20071dff6c3edada0556854fbd85ffcf76ca09",
       "blender_version": "5.2.44"
+    },
+    {
+      "path": "petrify.blend",
+      "size_in_bytes": 223138,
+      "hash": "SHA256:14885d5969b7e3099913e86c2decba3e2353062b6dee4f1c1bea30a8ab1609fb",
+      "blender_version": "5.2.45"
     },
     {
       "path": "self-similar-reconstruction.blend",
