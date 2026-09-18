@@ -754,8 +754,8 @@
     },
     {
       "path": "petrify.blend",
-      "size_in_bytes": 223138,
-      "hash": "SHA256:14885d5969b7e3099913e86c2decba3e2353062b6dee4f1c1bea30a8ab1609fb",
+      "size_in_bytes": 225077,
+      "hash": "SHA256:f275fb04264493dc4bcb19944c2e9a8eb6a86f5ae60575843c7421a23ab68649",
       "blender_version": "5.2.45"
     },
     {
