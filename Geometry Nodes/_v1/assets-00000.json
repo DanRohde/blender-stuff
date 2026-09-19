@@ -790,8 +790,8 @@
     },
     {
       "path": "twisted-cables.blend",
-      "size_in_bytes": 191729,
-      "hash": "SHA256:d550f79976b319a7cb7c335c26f647a992f20e6b8c13e95c0d8abcd622847dd4",
+      "size_in_bytes": 194508,
+      "hash": "SHA256:17b807c51f2dec89baf8e9c17897aa29889fa486cf6628bca7ae305fcc907c7f",
       "blender_version": "5.2.45"
     }
   ]
