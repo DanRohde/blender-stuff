@@ -1,6 +1,6 @@
 {
-  "asset_count": 35,
-  "file_count": 16,
+  "asset_count": 36,
+  "file_count": 17,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -456,6 +456,34 @@
       }
     },
     {
+      "name": "Rock Wall [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "rockwall.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "rockwall_thumbnails/Nodetree/rock-wall-jb75.webp",
+        "hash": "SHA256:640e272c717ea4c1546c43ca75e060368341ccee793bca364bf1edf4896ed50c"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
       "name": "Self-Similar Reconstruction [#JB75]",
       "id_type": "NODETREE",
       "files": [
@@ -818,6 +846,12 @@
       "path": "petrify.blend",
       "size_in_bytes": 225077,
       "hash": "SHA256:f275fb04264493dc4bcb19944c2e9a8eb6a86f5ae60575843c7421a23ab68649",
+      "blender_version": "5.2.45"
+    },
+    {
+      "path": "rockwall.blend",
+      "size_in_bytes": 149978,
+      "hash": "SHA256:febe109781557f6d679b1fa12b6323b3f8e06869d2797b876e0b889db1230551",
       "blender_version": "5.2.45"
     },
     {
