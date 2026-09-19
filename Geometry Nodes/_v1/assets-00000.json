@@ -1,5 +1,5 @@
 {
-  "asset_count": 32,
+  "asset_count": 33,
   "file_count": 15,
   "assets": [
     {
@@ -661,6 +661,20 @@
       }
     },
     {
+      "name": "Copper Cable Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "twisted-cables.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "twisted-cables_thumbnails/Material/copper-cable-mat-jb75.webp",
+        "hash": "SHA256:350cfc8895ffb0c4e69254008254e12af5fa28bebc7f70f2248df6c05ebb8646"
+      }
+    },
+    {
       "name": "Rainbow Cable Mat [#JB75]",
       "id_type": "MATERIAL",
       "files": [
@@ -790,8 +804,8 @@
     },
     {
       "path": "twisted-cables.blend",
-      "size_in_bytes": 194508,
-      "hash": "SHA256:17b807c51f2dec89baf8e9c17897aa29889fa486cf6628bca7ae305fcc907c7f",
+      "size_in_bytes": 218528,
+      "hash": "SHA256:ee3ce4dcb53cebc5150ffd656b4e2758892283e14a78fe7e32271b610f42b329",
       "blender_version": "5.2.45"
     }
   ]
