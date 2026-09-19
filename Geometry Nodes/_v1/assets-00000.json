@@ -1,6 +1,6 @@
 {
-  "asset_count": 33,
-  "file_count": 15,
+  "asset_count": 35,
+  "file_count": 16,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -76,6 +76,48 @@
       "thumbnail": {
         "url": "cheesemaker_thumbnails/Nodetree/cheesemaker-jb75.webp",
         "hash": "SHA256:4c062813ffe36961290a220425d962500425143e8eb40abd65d12b3de29678e0"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Cliff Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "cliffs.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "cliffs_thumbnails/Material/cliff-mat-jb75.webp",
+        "hash": "SHA256:c4a5ac3b66c8dfdbb6f93cc2f8328325497c6e53673540c01885d1e684ca23bf"
+      }
+    },
+    {
+      "name": "Cliffs [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "cliffs.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "cliffs_thumbnails/Nodetree/cliffs-jb75.webp",
+        "hash": "SHA256:8477e2d2f6605068f5cbf9aad38083ffbe9305f4c1755d572cc88242f5af11cc"
       },
       "meta": {
         "properties": [
@@ -728,6 +770,12 @@
       "path": "cheesemaker.blend",
       "size_in_bytes": 218347,
       "hash": "SHA256:c49e438990d96eeca2888689b06b4d45f13457f9fbe5186789d128bb08b6fac3",
+      "blender_version": "5.2.45"
+    },
+    {
+      "path": "cliffs.blend",
+      "size_in_bytes": 10339341,
+      "hash": "SHA256:c066d25963dd1ef8aa2b23af35349cf6bef81658f189b1b0c8ed24bc02e30854",
       "blender_version": "5.2.45"
     },
     {
