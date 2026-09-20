@@ -1,6 +1,6 @@
 {
-  "asset_count": 36,
-  "file_count": 17,
+  "asset_count": 39,
+  "file_count": 18,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -46,6 +46,62 @@
             "name": "node_tool_idname",
             "type": "IDP_STRING",
             "value": "geometry.4d_rotation"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Brick Wall Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "brickwall.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "brickwall_thumbnails/Material/brick-wall-mat-jb75.webp",
+        "hash": "SHA256:6bb68944ba8ee550c2e7bf898501edc3fcaef3375e997262561492f732a8be1b"
+      }
+    },
+    {
+      "name": "Brick Wall Mortar Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "brickwall.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "brickwall_thumbnails/Material/brick-wall-mortar-mat-jb75.webp",
+        "hash": "SHA256:73e21e7c62eb23a180a1bfce030f0ae9b349426f7c35cabba2af1f9f303e1408"
+      }
+    },
+    {
+      "name": "Brick Wall [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "brickwall.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "brickwall_thumbnails/Nodetree/brick-wall-jb75.webp",
+        "hash": "SHA256:07b46c089f2b28ce91870745ce0062b5936a20643494cd293eef9a1ea7a2bd5a"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
           }
         ]
       }
@@ -793,6 +849,12 @@
       "size_in_bytes": 1146089,
       "hash": "SHA256:27e18431cd79c32de7d427424b1262e4609b3af575678cca0309f24e8655bbda",
       "blender_version": "5.2.44"
+    },
+    {
+      "path": "brickwall.blend",
+      "size_in_bytes": 279141,
+      "hash": "SHA256:0b8f80bd594d7387b91e541fde96d39f87a5c705c905978c932523b9782227ba",
+      "blender_version": "5.2.45"
     },
     {
       "path": "cheesemaker.blend",
