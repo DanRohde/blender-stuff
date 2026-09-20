@@ -852,8 +852,8 @@
     },
     {
       "path": "brickwall.blend",
-      "size_in_bytes": 279141,
-      "hash": "SHA256:0b8f80bd594d7387b91e541fde96d39f87a5c705c905978c932523b9782227ba",
+      "size_in_bytes": 258446,
+      "hash": "SHA256:ccd2ea2edd54aa16690231f0e6a64903aa15508e49703d3dc469b409b05ac206",
       "blender_version": "5.2.45"
     },
     {
