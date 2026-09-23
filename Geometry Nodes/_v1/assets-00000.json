@@ -89,7 +89,7 @@
       },
       "thumbnail": {
         "url": "brickwall_thumbnails/Nodetree/brick-wall-jb75.webp",
-        "hash": "SHA256:9a65acd06fcc9d44117746a875d2299f8fadbcee3c09224e2b904e81c38cadfe"
+        "hash": "SHA256:bf44ac022dfa40e570e233e0a50076b03be6391ac405aec577b6b471f3b23787"
       },
       "meta": {
         "properties": [
@@ -522,7 +522,7 @@
       },
       "thumbnail": {
         "url": "rockwall_thumbnails/Nodetree/rock-wall-jb75.webp",
-        "hash": "SHA256:640e272c717ea4c1546c43ca75e060368341ccee793bca364bf1edf4896ed50c"
+        "hash": "SHA256:2f4d830592ece881012e13b4e8f906dfc4a93e37660216dadd6b40da6d90d631"
       },
       "meta": {
         "properties": [
@@ -852,8 +852,8 @@
     },
     {
       "path": "brickwall.blend",
-      "size_in_bytes": 2510800,
-      "hash": "SHA256:2d76c1e4a6b76b396e8dc83e8f6f2a3e99014a3002c5796a9c8bd3c0cefeaa2a",
+      "size_in_bytes": 2528082,
+      "hash": "SHA256:ce4a07db4dad31b072799c70032e9c173f056bafd835c72715e71065cf5f20fb",
       "blender_version": "5.2.45"
     },
     {
@@ -912,8 +912,8 @@
     },
     {
       "path": "rockwall.blend",
-      "size_in_bytes": 149978,
-      "hash": "SHA256:febe109781557f6d679b1fa12b6323b3f8e06869d2797b876e0b889db1230551",
+      "size_in_bytes": 822810,
+      "hash": "SHA256:56e5ad3ec223916211290772f51160e66f73974ac01418145ed758cd180428b8",
       "blender_version": "5.2.45"
     },
     {
