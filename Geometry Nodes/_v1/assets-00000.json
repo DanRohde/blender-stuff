@@ -89,7 +89,7 @@
       },
       "thumbnail": {
         "url": "brickwall_thumbnails/Nodetree/brick-wall-jb75.webp",
-        "hash": "SHA256:07b46c089f2b28ce91870745ce0062b5936a20643494cd293eef9a1ea7a2bd5a"
+        "hash": "SHA256:9a65acd06fcc9d44117746a875d2299f8fadbcee3c09224e2b904e81c38cadfe"
       },
       "meta": {
         "properties": [
@@ -852,8 +852,8 @@
     },
     {
       "path": "brickwall.blend",
-      "size_in_bytes": 279426,
-      "hash": "SHA256:05ce7e5387dca1bab508c7aec6dde17113e1b71888996830e2c2e63dfaa32222",
+      "size_in_bytes": 2510800,
+      "hash": "SHA256:2d76c1e4a6b76b396e8dc83e8f6f2a3e99014a3002c5796a9c8bd3c0cefeaa2a",
       "blender_version": "5.2.45"
     },
     {
