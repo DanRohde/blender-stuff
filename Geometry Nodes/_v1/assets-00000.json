@@ -1,5 +1,5 @@
 {
-  "asset_count": 39,
+  "asset_count": 40,
   "file_count": 18,
   "assets": [
     {
@@ -89,7 +89,7 @@
       },
       "thumbnail": {
         "url": "brickwall_thumbnails/Nodetree/brick-wall-jb75.webp",
-        "hash": "SHA256:bf44ac022dfa40e570e233e0a50076b03be6391ac405aec577b6b471f3b23787"
+        "hash": "SHA256:a700ca4d089c2c94903e6de261ae740dd954d7d3585348030bd343119c6b93ac"
       },
       "meta": {
         "properties": [
@@ -102,6 +102,34 @@
             "name": "geometry_node_asset_traits_flag",
             "type": "IDP_INT",
             "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Brick Wall Example Pillar [#JB75]",
+      "id_type": "OBJECT",
+      "files": [
+        "brickwall.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "brickwall_thumbnails/Object/brick-wall-example-pillar-jb75.webp",
+        "hash": "SHA256:353feb9c97627ddb6d6833ca59547431184e4eee2898ab3f9f1670d58de398de"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              5.997905731201172,
+              5.997905731201172,
+              17.862167358398438
+            ],
+            "itemtype": "IDP_FLOAT"
           }
         ]
       }
@@ -852,8 +880,8 @@
     },
     {
       "path": "brickwall.blend",
-      "size_in_bytes": 2528082,
-      "hash": "SHA256:ce4a07db4dad31b072799c70032e9c173f056bafd835c72715e71065cf5f20fb",
+      "size_in_bytes": 10501600,
+      "hash": "SHA256:8ae6ebdd190fd4bb3a4e9404d698522a44701dc7707b0d38896f636a4d40e98e",
       "blender_version": "5.2.45"
     },
     {
