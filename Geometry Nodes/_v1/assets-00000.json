@@ -243,7 +243,7 @@
       },
       "thumbnail": {
         "url": "cobblestone_thumbnails/Nodetree/cobblestone-jb75.webp",
-        "hash": "SHA256:68fc47fcabe63612da19a10a1f5d57ef028e7566df7f40bb085d13514d9cd532"
+        "hash": "SHA256:93dac9ea1d428dc3cffc7c74d65a22ab5ca755c3e02e2c1a71075c73e8861dbf"
       },
       "meta": {
         "catalog_id": "3934253d-7ef6-43d0-a2cd-507be2c4369d",
@@ -272,9 +272,10 @@
       },
       "thumbnail": {
         "url": "cobblestone_thumbnails/Nodetree/shrinkwrap-curve-jb75.webp",
-        "hash": "SHA256:68fc47fcabe63612da19a10a1f5d57ef028e7566df7f40bb085d13514d9cd532"
+        "hash": "SHA256:93dac9ea1d428dc3cffc7c74d65a22ab5ca755c3e02e2c1a71075c73e8861dbf"
       },
       "meta": {
+        "description": "Shrinkwrap a curve to a mesh surface with optional tilt adjustment",
         "properties": [
           {
             "name": "type",
@@ -926,8 +927,8 @@
     },
     {
       "path": "cobblestone.blend",
-      "size_in_bytes": 2572763,
-      "hash": "SHA256:ada16edd663704832227c6b00c00f7a42c7163f1f470c00b746ea9442e71a254",
+      "size_in_bytes": 2540565,
+      "hash": "SHA256:612fd4ba72cc6814e5331f964f11569198c252cebe6f45fee61c9a9f7588ed57",
       "blender_version": "5.2.45"
     },
     {
