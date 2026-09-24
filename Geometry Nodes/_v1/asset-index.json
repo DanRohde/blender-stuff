@@ -1,13 +1,42 @@
 {
   "schema_version": "1.0.0",
-  "asset_size_bytes": 61640549,
+  "asset_size_bytes": 61868277,
   "asset_count": 41,
   "file_count": 18,
   "pages": [
     {
       "url": "_v1/assets-00000.json",
-      "hash": "SHA256:d3a3bced076377621b4bb81a20ec32f67f440a360fe658bde89036c2fdceb92b"
+      "hash": "SHA256:be29474de606fd18d7fa8f35916ffd1344c007e648ca7bac795cb9d3da67ca18"
     }
   ],
-  "catalogs": []
+  "catalogs": [
+    {
+      "path": "Collections",
+      "uuids": [
+        "4a240c80-00c2-426c-aed8-811a4001280d"
+      ],
+      "simple_name": "Collections"
+    },
+    {
+      "path": "GNs",
+      "uuids": [
+        "def1c867-6eb5-465d-b201-508314f31dbd"
+      ],
+      "simple_name": "GNs"
+    },
+    {
+      "path": "Mat",
+      "uuids": [
+        "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      ],
+      "simple_name": "Mat"
+    },
+    {
+      "path": "Models",
+      "uuids": [
+        "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a"
+      ],
+      "simple_name": "Models"
+    }
+  ]
 }

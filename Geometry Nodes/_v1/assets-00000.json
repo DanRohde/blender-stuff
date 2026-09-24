@@ -62,6 +62,9 @@
       "thumbnail": {
         "url": "brickwall_thumbnails/Material/brick-wall-mat-jb75.webp",
         "hash": "SHA256:6bb68944ba8ee550c2e7bf898501edc3fcaef3375e997262561492f732a8be1b"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -76,6 +79,9 @@
       "thumbnail": {
         "url": "brickwall_thumbnails/Material/brick-wall-mortar-mat-jb75.webp",
         "hash": "SHA256:73e21e7c62eb23a180a1bfce030f0ae9b349426f7c35cabba2af1f9f303e1408"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -92,6 +98,7 @@
         "hash": "SHA256:a700ca4d089c2c94903e6de261ae740dd954d7d3585348030bd343119c6b93ac"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -120,6 +127,7 @@
         "hash": "SHA256:353feb9c97627ddb6d6833ca59547431184e4eee2898ab3f9f1670d58de398de"
       },
       "meta": {
+        "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
         "properties": [
           {
             "name": "dimensions",
@@ -146,6 +154,9 @@
       "thumbnail": {
         "url": "cheesemaker_thumbnails/Material/cheese-jb75.webp",
         "hash": "SHA256:59cb8d99467a40bba7b8168b99f23f3f2d4beb2be1f6780106050eb544e8735b"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -162,6 +173,7 @@
         "hash": "SHA256:4c062813ffe36961290a220425d962500425143e8eb40abd65d12b3de29678e0"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -188,6 +200,9 @@
       "thumbnail": {
         "url": "cliffs_thumbnails/Material/cliff-mat-jb75.webp",
         "hash": "SHA256:c4a5ac3b66c8dfdbb6f93cc2f8328325497c6e53673540c01885d1e684ca23bf"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -204,6 +219,7 @@
         "hash": "SHA256:8477e2d2f6605068f5cbf9aad38083ffbe9305f4c1755d572cc88242f5af11cc"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -230,6 +246,9 @@
       "thumbnail": {
         "url": "cobblestone_thumbnails/Material/cobblestone-jb75.webp",
         "hash": "SHA256:d097241bac37b81c6a51a57b5413b577cc7efca1adb23c6a7f023d94a4b6f24c"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -246,7 +265,7 @@
         "hash": "SHA256:93dac9ea1d428dc3cffc7c74d65a22ab5ca755c3e02e2c1a71075c73e8861dbf"
       },
       "meta": {
-        "catalog_id": "3934253d-7ef6-43d0-a2cd-507be2c4369d",
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -275,6 +294,7 @@
         "hash": "SHA256:93dac9ea1d428dc3cffc7c74d65a22ab5ca755c3e02e2c1a71075c73e8861dbf"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "description": "Shrinkwrap a curve to a mesh surface with optional tilt adjustment",
         "properties": [
           {
@@ -302,6 +322,9 @@
       "thumbnail": {
         "url": "crystalizer_thumbnails/Material/crystal.webp",
         "hash": "SHA256:6510517b99d85af59c8036d9dfe7c73fc6253252f8a16968d160277562482f4c"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -318,7 +341,7 @@
         "hash": "SHA256:b4c271952c91acf0dc99d3a728717380460c37eed3dec40372b67aa81b98c40d"
       },
       "meta": {
-        "catalog_id": "ea48ad9b-1eb7-419e-9e40-ef03575ef3aa",
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -352,6 +375,7 @@
         "hash": "SHA256:462a9b147394bbc097747c5f4dbb5ad7743314a360312e15b558c6595dcaa2ad"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -373,11 +397,14 @@
         "icicles.blend"
       ],
       "bl_versions": {
-        "min": "4.5"
+        "min": "5.2"
       },
       "thumbnail": {
         "url": "icicles_thumbnails/Material/icicle-mat.webp",
         "hash": "SHA256:b44537c6329f800946c87b7b57f0915735e69afe3b7784fd57df7ced90bcecc2"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -387,11 +414,14 @@
         "icicles.blend"
       ],
       "bl_versions": {
-        "min": "4.5"
+        "min": "5.2"
       },
       "thumbnail": {
         "url": "icicles_thumbnails/Material/icicle-mat-4-eevee.webp",
         "hash": "SHA256:8ec43fa717464488ffbf47e465429037b878a135c2e7496adead2fddbf2000e2"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -401,11 +431,14 @@
         "icicles.blend"
       ],
       "bl_versions": {
-        "min": "4.5"
+        "min": "5.2"
       },
       "thumbnail": {
         "url": "icicles_thumbnails/Material/stalagmite.webp",
         "hash": "SHA256:eda828d028d9e1c3d891b8f2f7855bdfc2ba278ad5105d062875363e233d68a3"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -415,14 +448,14 @@
         "icicles.blend"
       ],
       "bl_versions": {
-        "min": "4.5"
+        "min": "5.2"
       },
       "thumbnail": {
         "url": "icicles_thumbnails/Nodetree/icicles.webp",
         "hash": "SHA256:d4dbf4942079c3e4244efce5701d2276fcf2987dfb229ef0663eebbd0b2cf4f6"
       },
       "meta": {
-        "catalog_id": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -454,6 +487,9 @@
       "thumbnail": {
         "url": "lego-brick-generator_thumbnails/Material/lego-plastic-jb75.webp",
         "hash": "SHA256:3138262d9bb8b1d99035893625ef1e5e8e01c4665995a2072ea25ed99f5024de"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -470,6 +506,7 @@
         "hash": "SHA256:47fa73aac83003a36df085a4267dcad3551613922f5f807c119a8ad8e93141a1"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -498,6 +535,7 @@
         "hash": "SHA256:7e826de7628623223df42fe1a584af87051f57123fbc63ee8db9ae396d5b8456"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -524,6 +562,9 @@
       "thumbnail": {
         "url": "petrify_thumbnails/Material/petrify-mat-mortar-jb75.webp",
         "hash": "SHA256:ea8681a77931a56e66131ca484320c9f7642606d2e3f00c282720034ca9a4608"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -538,6 +579,9 @@
       "thumbnail": {
         "url": "petrify_thumbnails/Material/petrify-mat-stone-jb75.webp",
         "hash": "SHA256:703516184b828bc5433d94946a56a08e56e962bca9d5b9cb3514b61a5874871b"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -554,6 +598,7 @@
         "hash": "SHA256:d6be991704b84927cd950fb87495e18b9b6ebd5f859c0e90586d06bd8380b3b6"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -582,6 +627,7 @@
         "hash": "SHA256:2f4d830592ece881012e13b4e8f906dfc4a93e37660216dadd6b40da6d90d631"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -610,6 +656,7 @@
         "hash": "SHA256:eef0c43f50fd58d970ca6553439a50bb85ebb26c1d528ee08bcb4fa1872bab50"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -631,14 +678,14 @@
         "sierpinski_triangle.blend"
       ],
       "bl_versions": {
-        "min": "4.5"
+        "min": "5.2"
       },
       "thumbnail": {
         "url": "sierpinski_triangle_thumbnails/Nodetree/sierpinski-triangle.webp",
         "hash": "SHA256:e1593723d2a8ca8c442a1ea20fed340b8b6355b78c11eb3a372229d8d19aed95"
       },
       "meta": {
-        "catalog_id": "3934253d-7ef6-43d0-a2cd-507be2c4369d",
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -670,6 +717,9 @@
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Collection/parks.webp",
         "hash": "SHA256:d82d21c496eb03ceb7ba75dea41047707c816a7e4cd1d840b5da40f67848a728"
+      },
+      "meta": {
+        "catalog_id": "4a240c80-00c2-426c-aed8-811a4001280d"
       }
     },
     {
@@ -684,6 +734,9 @@
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Collection/roof-tops.webp",
         "hash": "SHA256:97beddbbc5dbaecc293363a0f25d7517c01c9fb50bbff35cf1561b1316b6b05d"
+      },
+      "meta": {
+        "catalog_id": "4a240c80-00c2-426c-aed8-811a4001280d"
       }
     },
     {
@@ -698,6 +751,9 @@
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Material/buildings.webp",
         "hash": "SHA256:0511635eb10f4ce3b6cba111c974166e25c957403316819a8ce25b4a319c714a"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -712,6 +768,9 @@
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Material/roof-tops-1.webp",
         "hash": "SHA256:3a73e2ae183f84fd35f4b35f971c34a45c8fa0f0b4f403e787bf11b35772dd8e"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -726,6 +785,9 @@
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Material/streets.webp",
         "hash": "SHA256:c11a94b9efa6f3a19ebc753ff6f56bd0ae4ab3d6d85ffd3d4ea09277c3b7c80a"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -742,6 +804,7 @@
         "hash": "SHA256:0d01a4be6d56bc04917678a28cb1a33cdeacbca2be6df45888da9a85262364eb"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -768,11 +831,14 @@
         "snow.blend"
       ],
       "bl_versions": {
-        "min": "4.5"
+        "min": "5.2"
       },
       "thumbnail": {
         "url": "snow_thumbnails/Material/snow-mat.webp",
         "hash": "SHA256:72421f289c38c4c4257ada90d9a1d3931e56db2a5ecaf06318bbbbaa47adfd49"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -782,14 +848,14 @@
         "snow.blend"
       ],
       "bl_versions": {
-        "min": "4.5"
+        "min": "5.2"
       },
       "thumbnail": {
         "url": "snow_thumbnails/Nodetree/snow.webp",
         "hash": "SHA256:ce258a0cc8cd0814b66f1c62c76c9c40f43b2e716cbdd70fc003d92d0fb62f15"
       },
       "meta": {
-        "catalog_id": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -816,14 +882,14 @@
         "steppyramid.blend"
       ],
       "bl_versions": {
-        "min": "4.5"
+        "min": "5.2"
       },
       "thumbnail": {
         "url": "steppyramid_thumbnails/Nodetree/step-pyramid.webp",
         "hash": "SHA256:2bff104c51107f697d82b1e14caf384ca0ec0bcd8da1111cc33059fcbb346e3c"
       },
       "meta": {
-        "catalog_id": "7543a56c-1f58-4bbe-8d0d-5608eaabba71",
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -855,6 +921,9 @@
       "thumbnail": {
         "url": "twisted-cables_thumbnails/Material/copper-cable-mat-jb75.webp",
         "hash": "SHA256:350cfc8895ffb0c4e69254008254e12af5fa28bebc7f70f2248df6c05ebb8646"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -869,6 +938,9 @@
       "thumbnail": {
         "url": "twisted-cables_thumbnails/Material/rainbow-cable-mat-jb75.webp",
         "hash": "SHA256:2c1f6226841169c6c48a079cba566a3662d96b03cf3992f0e3033ad745e7df0e"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -885,6 +957,7 @@
         "hash": "SHA256:f285c3f33ca91171b5d6eacdaa04dfbcddd13b1f2a993be22285085717d22516"
       },
       "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -909,104 +982,104 @@
     },
     {
       "path": "brickwall.blend",
-      "size_in_bytes": 10499836,
-      "hash": "SHA256:b18bb3db4af3472ee2609c4bb823c57b5b8efdb302b9e90c14729075e19d3ffe",
+      "size_in_bytes": 10495438,
+      "hash": "SHA256:b40537cb1e4c32ef8d010787e4ffa68ac7f778420d5f0825c5c631b367fc1efb",
       "blender_version": "5.2.45"
     },
     {
       "path": "cheesemaker.blend",
-      "size_in_bytes": 218347,
-      "hash": "SHA256:c49e438990d96eeca2888689b06b4d45f13457f9fbe5186789d128bb08b6fac3",
+      "size_in_bytes": 205001,
+      "hash": "SHA256:7bdd320ddb47a9638849c7ff08d2e9647fcff3087960c380ccc84a0ff6a7e448",
       "blender_version": "5.2.45"
     },
     {
       "path": "cliffs.blend",
-      "size_in_bytes": 10339341,
-      "hash": "SHA256:c066d25963dd1ef8aa2b23af35349cf6bef81658f189b1b0c8ed24bc02e30854",
+      "size_in_bytes": 10340138,
+      "hash": "SHA256:3def1fa807b832624a596918ea92e1c70da94b8dfb4ae49f19a70be0798c743b",
       "blender_version": "5.2.45"
     },
     {
       "path": "cobblestone.blend",
-      "size_in_bytes": 2540565,
-      "hash": "SHA256:612fd4ba72cc6814e5331f964f11569198c252cebe6f45fee61c9a9f7588ed57",
+      "size_in_bytes": 2540341,
+      "hash": "SHA256:0bb1d84c33017c77ce94fb2e8d7b08460bcbb5d409eb257563069f3b16171f0f",
       "blender_version": "5.2.45"
     },
     {
       "path": "crystalizer.blend",
-      "size_in_bytes": 1126374,
-      "hash": "SHA256:2078dcd8b8bb18d5fcc9b24831850b27368c3af70bd45fb96dbf1adaa06f8285",
-      "blender_version": "5.2.44"
+      "size_in_bytes": 1131146,
+      "hash": "SHA256:e41ad99027adc112ebaa2129d73a17c2a30c162efb5accd00e1732af912cfb7e",
+      "blender_version": "5.2.45"
     },
     {
       "path": "cubifier.blend",
-      "size_in_bytes": 178603,
-      "hash": "SHA256:ecd6f7740c179e54bdd96b55485547448402ab689ec9e4b2b22c73eab1a01fe4",
-      "blender_version": "5.2.44"
+      "size_in_bytes": 178897,
+      "hash": "SHA256:47b16f900e3dc9e0cd98da9c93df6d56a076afa154b083e6d98e457e59badf51",
+      "blender_version": "5.2.45"
     },
     {
       "path": "icicles.blend",
-      "size_in_bytes": 1593665,
-      "hash": "SHA256:c3c0029e4de74e62422e2543f0d81117ce7f531422e27c5f979cd18386a88df1",
-      "blender_version": "4.5.90"
+      "size_in_bytes": 1690454,
+      "hash": "SHA256:205d2c7079fe3054d5adc064d569b73ffa20f7caa27f91498092cdf81c90b3d3",
+      "blender_version": "5.2.45"
     },
     {
       "path": "lego-brick-generator.blend",
-      "size_in_bytes": 168282,
-      "hash": "SHA256:1856d85058c18f36c6a456db1e9359a9fa2d80812a2a49c33f66072eab55c314",
-      "blender_version": "5.2.44"
+      "size_in_bytes": 165851,
+      "hash": "SHA256:efa1fdb2d81590cd10e582570090d5652dd0394e9578f2584388a3c435a76c0b",
+      "blender_version": "5.2.45"
     },
     {
       "path": "legofier.blend",
-      "size_in_bytes": 204068,
-      "hash": "SHA256:afb94a65aad312f5849f4669ba20071dff6c3edada0556854fbd85ffcf76ca09",
-      "blender_version": "5.2.44"
+      "size_in_bytes": 204364,
+      "hash": "SHA256:bd2a77fcf2a3b390f64535dacaf09148eb800ccd7e7c99f2cbe6308a4e4639f4",
+      "blender_version": "5.2.45"
     },
     {
       "path": "petrify.blend",
-      "size_in_bytes": 225077,
-      "hash": "SHA256:f275fb04264493dc4bcb19944c2e9a8eb6a86f5ae60575843c7421a23ab68649",
+      "size_in_bytes": 224906,
+      "hash": "SHA256:f4f3d1a88c8f3daaa8956f923e726985af65c572b3e2a6f6d286e1f7a1a65a25",
       "blender_version": "5.2.45"
     },
     {
       "path": "rockwall.blend",
-      "size_in_bytes": 822810,
-      "hash": "SHA256:56e5ad3ec223916211290772f51160e66f73974ac01418145ed758cd180428b8",
+      "size_in_bytes": 819634,
+      "hash": "SHA256:586a45df404728cf1d41678e0e205d73f7c586da29d8bbe0adb49fe45d9c195d",
       "blender_version": "5.2.45"
     },
     {
       "path": "self-similar-reconstruction.blend",
-      "size_in_bytes": 894958,
-      "hash": "SHA256:51665cd752ba930c760ddd0ebbf47e45aaacca031e4c9827657cd4612cdfdda6",
-      "blender_version": "5.2.44"
+      "size_in_bytes": 880555,
+      "hash": "SHA256:443237c50b9e40e32a16612c046c8e067dd7bce72e3e4a5dc61c0d0c82823a11",
+      "blender_version": "5.2.45"
     },
     {
       "path": "sierpinski_triangle.blend",
-      "size_in_bytes": 865226,
-      "hash": "SHA256:f35e300c3c30a76663f77800f97d6f0d77250855c71a73b9cb88b743385074f6",
-      "blender_version": "4.5.90"
+      "size_in_bytes": 899171,
+      "hash": "SHA256:9b97ad943b746efd86cdc23a6f9e23e60857751688359e9037d9f427f75593c3",
+      "blender_version": "5.2.45"
     },
     {
       "path": "simple_city_generator.blend",
-      "size_in_bytes": 28672114,
-      "hash": "SHA256:235a8571662dde8a2617d143cd46d1dcd0a87d36f68698198bb1b184c5bc186c",
-      "blender_version": "5.2.44"
+      "size_in_bytes": 28686310,
+      "hash": "SHA256:8303ca0a9802f889e4099400e9f5864d4663fbe9b6f8400ab72307161073df92",
+      "blender_version": "5.2.45"
     },
     {
       "path": "snow.blend",
-      "size_in_bytes": 1101717,
-      "hash": "SHA256:6eac02eda32dc0cfc1c0dc02153698e3db145d34ac2bf84dd3c37e64397857a1",
-      "blender_version": "4.5.90"
+      "size_in_bytes": 1173072,
+      "hash": "SHA256:afb2fd4a9bbb32e5c39be5d130535a22539ecd0c61a55c11c741a83e110e63b3",
+      "blender_version": "5.2.45"
     },
     {
       "path": "steppyramid.blend",
-      "size_in_bytes": 824949,
-      "hash": "SHA256:7c76b39bed365305192c87f19ed7425b51364d223a488d35a46061595080c3cb",
-      "blender_version": "4.5.90"
+      "size_in_bytes": 882914,
+      "hash": "SHA256:5a32b324904f6fa443b387139920f963fdc93c12e668642d06f02341b7fc3255",
+      "blender_version": "5.2.45"
     },
     {
       "path": "twisted-cables.blend",
-      "size_in_bytes": 218528,
-      "hash": "SHA256:ee3ce4dcb53cebc5150ffd656b4e2758892283e14a78fe7e32271b610f42b329",
+      "size_in_bytes": 203996,
+      "hash": "SHA256:d1ab1f3c8bd7634a60e92655c34199c0988c439cf2f8d06c2efd248f426fa6cc",
       "blender_version": "5.2.45"
     }
   ]
