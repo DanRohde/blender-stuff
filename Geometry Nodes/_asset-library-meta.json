@@ -2,7 +2,7 @@
   "api_versions": {
     "v1": {
       "url": "_v1/asset-index.json",
-      "hash": "SHA256:333967c34a9ff8b2ec592ee90f08525e560e35b2e50a4d00e8b75528b93b3ec8"
+      "hash": "SHA256:d8cfd979b4184efd257f0333ae340af0b79b33979fe3d95905805e335f72af00"
     }
   },
   "name": "DanRohde's Blender Remote Asset Library",

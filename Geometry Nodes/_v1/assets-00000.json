@@ -1,5 +1,5 @@
 {
-  "asset_count": 40,
+  "asset_count": 41,
   "file_count": 18,
   "assets": [
     {
@@ -247,6 +247,34 @@
       },
       "meta": {
         "catalog_id": "3934253d-7ef6-43d0-a2cd-507be2c4369d",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Shrinkwrap Curve [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "cobblestone.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "cobblestone_thumbnails/Nodetree/shrinkwrap-curve-jb75.webp",
+        "hash": "SHA256:68fc47fcabe63612da19a10a1f5d57ef028e7566df7f40bb085d13514d9cd532"
+      },
+      "meta": {
         "properties": [
           {
             "name": "type",
@@ -898,8 +926,8 @@
     },
     {
       "path": "cobblestone.blend",
-      "size_in_bytes": 2500208,
-      "hash": "SHA256:8f5c35cf1e47e22eceecfec77a340c6960ac25f45411468cf269821471ef9019",
+      "size_in_bytes": 2572763,
+      "hash": "SHA256:ada16edd663704832227c6b00c00f7a42c7163f1f470c00b746ea9442e71a254",
       "blender_version": "5.2.45"
     },
     {
