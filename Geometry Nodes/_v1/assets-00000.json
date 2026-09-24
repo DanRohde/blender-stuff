@@ -243,7 +243,7 @@
       },
       "thumbnail": {
         "url": "cobblestone_thumbnails/Nodetree/cobblestone-jb75.webp",
-        "hash": "SHA256:c01a20d06267f3790b8d8350f8aed69486fd7307e333f9dcc361c13669867e79"
+        "hash": "SHA256:68fc47fcabe63612da19a10a1f5d57ef028e7566df7f40bb085d13514d9cd532"
       },
       "meta": {
         "catalog_id": "3934253d-7ef6-43d0-a2cd-507be2c4369d",
@@ -898,8 +898,8 @@
     },
     {
       "path": "cobblestone.blend",
-      "size_in_bytes": 2501014,
-      "hash": "SHA256:39300942701d58459e2a24f3135e25da8ee3df7f5744c1404b32072cb5c054dc",
+      "size_in_bytes": 2500208,
+      "hash": "SHA256:8f5c35cf1e47e22eceecfec77a340c6960ac25f45411468cf269821471ef9019",
       "blender_version": "5.2.45"
     },
     {
