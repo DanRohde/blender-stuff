@@ -1,6 +1,6 @@
 {
-  "asset_count": 43,
-  "file_count": 19,
+  "asset_count": 46,
+  "file_count": 20,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -930,6 +930,74 @@
       }
     },
     {
+      "name": "Galaxy Cloud Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "spiralgalaxy.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "spiralgalaxy_thumbnails/Material/galaxy-cloud-mat-jb75.webp",
+        "hash": "SHA256:68a26337fe74e891a7137c50616a841aff605a1e20fb8e226f2be5cb339d24c4"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Galaxy Stars Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "spiralgalaxy.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "spiralgalaxy_thumbnails/Material/galaxy-stars-mat-jb75.webp",
+        "hash": "SHA256:5d1d5fe2dd90026765ade6bd5ed53499b8d27edcaed6f9c4692edeabda53ae3b"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Spiral Galaxy [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "spiralgalaxy.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "spiralgalaxy_thumbnails/Nodetree/spiral-galaxy-jb75.webp",
+        "hash": "SHA256:5f9ba7ada01534b1b6bf311665c0b458a1e94dbe12895f47b58f5bb93b4107b1"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.spiral_galaxy"
+          }
+        ]
+      }
+    },
+    {
       "name": "Step Pyramid",
       "id_type": "NODETREE",
       "files": [
@@ -1128,6 +1196,12 @@
       "path": "snow.blend",
       "size_in_bytes": 1173072,
       "hash": "SHA256:afb2fd4a9bbb32e5c39be5d130535a22539ecd0c61a55c11c741a83e110e63b3",
+      "blender_version": "5.2.45"
+    },
+    {
+      "path": "spiralgalaxy.blend",
+      "size_in_bytes": 1118002,
+      "hash": "SHA256:95cdcab72887f4cbcacecb2c0b88d77db23d70148d01e83bed3de18046bf61ed",
       "blender_version": "5.2.45"
     },
     {
