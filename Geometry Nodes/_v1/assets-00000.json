@@ -1,6 +1,6 @@
 {
-  "asset_count": 41,
-  "file_count": 18,
+  "asset_count": 43,
+  "file_count": 19,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -46,6 +46,57 @@
             "name": "node_tool_idname",
             "type": "IDP_STRING",
             "value": "geometry.4d_rotation"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Asteroid Mat",
+      "id_type": "MATERIAL",
+      "files": [
+        "asteroids.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "asteroids_thumbnails/Material/asteroid-mat.webp",
+        "hash": "SHA256:5b33119428ff86cbab3511f1f3e48980a702d8205c3ea120c81848045e836db8"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Asteroid Field",
+      "id_type": "NODETREE",
+      "files": [
+        "asteroids.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "asteroids_thumbnails/Nodetree/asteroid-field.webp",
+        "hash": "SHA256:fa654aa8c7b324d8949578967d5389e3f547df46190f7b602ec5d83ac4e2eccc"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.asteroid_field"
           }
         ]
       }
@@ -979,6 +1030,12 @@
       "size_in_bytes": 1146089,
       "hash": "SHA256:27e18431cd79c32de7d427424b1262e4609b3af575678cca0309f24e8655bbda",
       "blender_version": "5.2.44"
+    },
+    {
+      "path": "asteroids.blend",
+      "size_in_bytes": 1298625,
+      "hash": "SHA256:4573db6663b65a79d012b22b17013922a34f8e5cb8f380fe1bfbe745be0a5379",
+      "blender_version": "5.2.45"
     },
     {
       "path": "brickwall.blend",
