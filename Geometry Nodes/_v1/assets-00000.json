@@ -14,6 +14,9 @@
       "thumbnail": {
         "url": "4D_rotation_thumbnails/Material/4d-rotation-mat.webp",
         "hash": "SHA256:54e4ccc41708a86f11e0b2e26e26966915e14b72a96129ed4999f1543f7a993c"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -30,7 +33,7 @@
         "hash": "SHA256:a5d9ea55b35e0d0adeafe17546f91e8299f3ba403a6a6ae55c21661eba2c1fca"
       },
       "meta": {
-        "catalog_id": "ea48ad9b-1eb7-419e-9e40-ef03575ef3aa",
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
           {
             "name": "type",
@@ -1027,9 +1030,9 @@
   "files": [
     {
       "path": "4D_rotation.blend",
-      "size_in_bytes": 1146089,
-      "hash": "SHA256:27e18431cd79c32de7d427424b1262e4609b3af575678cca0309f24e8655bbda",
-      "blender_version": "5.2.44"
+      "size_in_bytes": 1146317,
+      "hash": "SHA256:383aa75fad7a264be208236b0d889520bd26973c6d51ef9e1a718a8897ab31d4",
+      "blender_version": "5.2.45"
     },
     {
       "path": "asteroids.blend",
