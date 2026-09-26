@@ -605,7 +605,7 @@
       }
     },
     {
-      "name": "Crator Moon",
+      "name": "Crator Moon [#JB75]",
       "id_type": "MATERIAL",
       "files": [
         "moongenerator.blend"
@@ -614,7 +614,7 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "moongenerator_thumbnails/Material/crator-moon.webp",
+        "url": "moongenerator_thumbnails/Material/crator-moon-jb75.webp",
         "hash": "SHA256:75d00051d83973a48ca91bfe6ba084f8747b6855e36d5fcb73326b3a00b0adb6"
       },
       "meta": {
@@ -622,7 +622,7 @@
       }
     },
     {
-      "name": "Ice Moon",
+      "name": "Ice Moon [#JB75]",
       "id_type": "MATERIAL",
       "files": [
         "moongenerator.blend"
@@ -631,7 +631,7 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "moongenerator_thumbnails/Material/ice-moon.webp",
+        "url": "moongenerator_thumbnails/Material/ice-moon-jb75.webp",
         "hash": "SHA256:f5082c45b569511ca1761da7ca19382c7f811b7a7eaf950bd5ff459029e2acb5"
       },
       "meta": {
@@ -639,7 +639,7 @@
       }
     },
     {
-      "name": "Lava Moon",
+      "name": "Lava Moon [#JB75]",
       "id_type": "MATERIAL",
       "files": [
         "moongenerator.blend"
@@ -648,7 +648,7 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "moongenerator_thumbnails/Material/lava-moon.webp",
+        "url": "moongenerator_thumbnails/Material/lava-moon-jb75.webp",
         "hash": "SHA256:b285f76c7d229d2d0e2d56d1c16ea4ab1734b6df2f4bf1537c373656b816c111"
       },
       "meta": {
@@ -656,7 +656,7 @@
       }
     },
     {
-      "name": "Stone Moon",
+      "name": "Stone Moon [#JB75]",
       "id_type": "MATERIAL",
       "files": [
         "moongenerator.blend"
@@ -665,7 +665,7 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "moongenerator_thumbnails/Material/stone-moon.webp",
+        "url": "moongenerator_thumbnails/Material/stone-moon-jb75.webp",
         "hash": "SHA256:5e4ec3ab8594a34f76971b3a7ae41a619c59039bef8c9a2be7dc5d588e34c854"
       },
       "meta": {
@@ -673,7 +673,7 @@
       }
     },
     {
-      "name": "Water Moon",
+      "name": "Water Moon [#JB75]",
       "id_type": "MATERIAL",
       "files": [
         "moongenerator.blend"
@@ -682,7 +682,7 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "moongenerator_thumbnails/Material/water-moon.webp",
+        "url": "moongenerator_thumbnails/Material/water-moon-jb75.webp",
         "hash": "SHA256:33ca4ea4ac3c731082029aae5113e7e83ada7ba8415e06d1ef1d8b37b1fe8389"
       },
       "meta": {
@@ -690,7 +690,7 @@
       }
     },
     {
-      "name": "Moon Generator",
+      "name": "Moon Generator [#JB75]",
       "id_type": "NODETREE",
       "files": [
         "moongenerator.blend"
@@ -699,7 +699,7 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "moongenerator_thumbnails/Nodetree/moon-generator.webp",
+        "url": "moongenerator_thumbnails/Nodetree/moon-generator-jb75.webp",
         "hash": "SHA256:dfef169c736b273fa94674d1775c0d857965ac828ba4515764e3e93241a00ac9"
       },
       "meta": {
@@ -1283,8 +1283,8 @@
     },
     {
       "path": "moongenerator.blend",
-      "size_in_bytes": 1984038,
-      "hash": "SHA256:6dcf2c69afd95e0c10b4e9e7b19e60a2bb7e6b02871c01287b176d98c53ab708",
+      "size_in_bytes": 2008966,
+      "hash": "SHA256:130e615297e0bdcf91633f04989996be0e6d3e1c2d0296eb04fc17dc6fc9c342",
       "blender_version": "5.2.45"
     },
     {
