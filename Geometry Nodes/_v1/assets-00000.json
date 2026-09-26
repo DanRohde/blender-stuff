@@ -71,7 +71,7 @@
       }
     },
     {
-      "name": "Asteroid Field",
+      "name": "Asteroid Field [#JB75]",
       "id_type": "NODETREE",
       "files": [
         "asteroids.blend"
@@ -80,7 +80,7 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "asteroids_thumbnails/Nodetree/asteroid-field.webp",
+        "url": "asteroids_thumbnails/Nodetree/asteroid-field-jb75.webp",
         "hash": "SHA256:fa654aa8c7b324d8949578967d5389e3f547df46190f7b602ec5d83ac4e2eccc"
       },
       "meta": {
@@ -1036,8 +1036,8 @@
     },
     {
       "path": "asteroids.blend",
-      "size_in_bytes": 1298625,
-      "hash": "SHA256:4573db6663b65a79d012b22b17013922a34f8e5cb8f380fe1bfbe745be0a5379",
+      "size_in_bytes": 1301177,
+      "hash": "SHA256:15a3b11a2fdbc52cc6b7e789285ccd6a98aa6e1ef0c9acbe0e841f167f7b0427",
       "blender_version": "5.2.45"
     },
     {
