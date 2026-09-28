@@ -913,7 +913,7 @@
       }
     },
     {
-      "name": "Buildings",
+      "name": "Simple City Buildings Mat [#JB75]",
       "id_type": "MATERIAL",
       "files": [
         "simple_city_generator.blend"
@@ -922,15 +922,15 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "simple_city_generator_thumbnails/Material/buildings.webp",
-        "hash": "SHA256:0511635eb10f4ce3b6cba111c974166e25c957403316819a8ce25b4a319c714a"
+        "url": "simple_city_generator_thumbnails/Material/simple-city-buildings-mat-jb75.webp",
+        "hash": "SHA256:23c3ceb6c97ff475afc90eacd243c4821797915fca97fb3b7f77f21a40e4a5fd"
       },
       "meta": {
         "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
-      "name": "Roof tops 1",
+      "name": "Simple City Roof Top Mat [#JB75]",
       "id_type": "MATERIAL",
       "files": [
         "simple_city_generator.blend"
@@ -939,7 +939,7 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "simple_city_generator_thumbnails/Material/roof-tops-1.webp",
+        "url": "simple_city_generator_thumbnails/Material/simple-city-roof-top-mat-jb75.webp",
         "hash": "SHA256:3a73e2ae183f84fd35f4b35f971c34a45c8fa0f0b4f403e787bf11b35772dd8e"
       },
       "meta": {
@@ -964,7 +964,7 @@
       }
     },
     {
-      "name": "Simple City Generator",
+      "name": "Simple City Generator [#JB75]",
       "id_type": "NODETREE",
       "files": [
         "simple_city_generator.blend"
@@ -973,8 +973,8 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "simple_city_generator_thumbnails/Nodetree/simple-city-generator.webp",
-        "hash": "SHA256:0d01a4be6d56bc04917678a28cb1a33cdeacbca2be6df45888da9a85262364eb"
+        "url": "simple_city_generator_thumbnails/Nodetree/simple-city-generator-jb75.webp",
+        "hash": "SHA256:f48c91e9776361dfce72152e88a9fe2bccaeafc004fb329515b2cc79e8f55aeb"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -1313,8 +1313,8 @@
     },
     {
       "path": "simple_city_generator.blend",
-      "size_in_bytes": 28686310,
-      "hash": "SHA256:8303ca0a9802f889e4099400e9f5864d4663fbe9b6f8400ab72307161073df92",
+      "size_in_bytes": 77304414,
+      "hash": "SHA256:acf16736a2e67bf1d317ab2902c6610c7e3d909ece00c79bbf85f5f36789ef61",
       "blender_version": "5.2.45"
     },
     {
