@@ -958,6 +958,9 @@
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Material/simple-city-top-blink-light-mat-jb75.webp",
         "hash": "SHA256:32a5a5703ffeecc655cee390078b8d12c6a2e7ef6b9f2dd559bc78d4234ab5da"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
       }
     },
     {
@@ -1327,8 +1330,8 @@
     },
     {
       "path": "simple_city_generator.blend",
-      "size_in_bytes": 3813502,
-      "hash": "SHA256:59c71dc17a76b727a58ff7c654cf67074f5b8284827b34ca11269e0022e6db5d",
+      "size_in_bytes": 3813534,
+      "hash": "SHA256:f9823e5ae8ae10ec348378d86eddc7932d7e2e5e63208565960a945668dfb426",
       "blender_version": "5.2.45"
     },
     {
