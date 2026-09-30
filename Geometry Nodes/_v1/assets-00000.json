@@ -896,7 +896,7 @@
       }
     },
     {
-      "name": "Roof tops",
+      "name": "Roof Tops",
       "id_type": "COLLECTION",
       "files": [
         "simple_city_generator.blend"
@@ -906,7 +906,7 @@
       },
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Collection/roof-tops.webp",
-        "hash": "SHA256:97beddbbc5dbaecc293363a0f25d7517c01c9fb50bbff35cf1561b1316b6b05d"
+        "hash": "SHA256:5195c87c87902205cce96f2b0cd27ceccd6ed310fe767fd71e8384b244d4db31"
       },
       "meta": {
         "catalog_id": "4a240c80-00c2-426c-aed8-811a4001280d"
@@ -923,7 +923,7 @@
       },
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Material/simple-city-buildings-mat-jb75.webp",
-        "hash": "SHA256:23c3ceb6c97ff475afc90eacd243c4821797915fca97fb3b7f77f21a40e4a5fd"
+        "hash": "SHA256:646fd9aa06578b43fef71362298c2c26fd4b4bfe56acbcab1371c4092c42f09c"
       },
       "meta": {
         "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
@@ -991,7 +991,7 @@
       },
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Nodetree/simple-city-generator-jb75.webp",
-        "hash": "SHA256:f48c91e9776361dfce72152e88a9fe2bccaeafc004fb329515b2cc79e8f55aeb"
+        "hash": "SHA256:646fd9aa06578b43fef71362298c2c26fd4b4bfe56acbcab1371c4092c42f09c"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -1330,8 +1330,8 @@
     },
     {
       "path": "simple_city_generator.blend",
-      "size_in_bytes": 3945126,
-      "hash": "SHA256:a8767b0b50064333af6b7af141e4cff7b8c04e1ad0e5bdf65ca81258660c48c3",
+      "size_in_bytes": 4068509,
+      "hash": "SHA256:9587e8c1615668dba1f1d596cf501b08efc27b702aef95ce50d55e37bb92c6f7",
       "blender_version": "5.2.45"
     },
     {
