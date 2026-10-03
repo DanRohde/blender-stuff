@@ -1534,8 +1534,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 285435,
-      "hash": "SHA256:8740023f1889d67105f2be5d63cbc6c25801459cb0783946e7cd6eebb15ac89f",
+      "size_in_bytes": 285780,
+      "hash": "SHA256:bf17c07ec7f3c8557d2031520c8d9c137a4ca9d64d56d916f58afdfb832abb96",
       "blender_version": "5.2.45"
     },
     {
