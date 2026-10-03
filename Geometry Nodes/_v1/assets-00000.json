@@ -1,5 +1,5 @@
 {
-  "asset_count": 61,
+  "asset_count": 63,
   "file_count": 22,
   "assets": [
     {
@@ -1256,7 +1256,7 @@
       }
     },
     {
-      "name": "Manhole Cover Mat [#JB75]",
+      "name": "Manhole Cover Mat 1 [#JB75]",
       "id_type": "MATERIAL",
       "files": [
         "streets.blend"
@@ -1265,8 +1265,42 @@
         "min": "5.2"
       },
       "thumbnail": {
-        "url": "streets_thumbnails/Material/manhole-cover-mat-jb75.webp",
-        "hash": "SHA256:5b809e81e59e0237845d2a2a45ef5242dfdaf93f9d581f41fe7d8068d2d3e617"
+        "url": "streets_thumbnails/Material/manhole-cover-mat-1-jb75.webp",
+        "hash": "SHA256:db552bed45725acde2125079bff5992b8d15c041f0bbe4d59594fb054f034013"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Manhole Cover Mat 2 [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Material/manhole-cover-mat-2-jb75.webp",
+        "hash": "SHA256:5240c31d927ffad4de7f7a334e9b93af4c7e3c7e50dadaa621d508f66d5ea1b3"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Sidewalk Mat 1 [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Material/sidewalk-mat-1-jb75.webp",
+        "hash": "SHA256:104a9f55f769e49ff62fa7f7db08c4e923b6ab67c47d48c82122013a5451f603"
       },
       "meta": {
         "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
@@ -1332,7 +1366,7 @@
         "hash": "SHA256:a180f8463be96803ceb4e8f080cef11dcb44de79f07254cab267262cc57006b1"
       },
       "meta": {
-        "catalog_id": "4a240c80-00c2-426c-aed8-811a4001280d",
+        "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
         "properties": [
           {
             "name": "dimensions",
@@ -1534,8 +1568,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 285780,
-      "hash": "SHA256:bf17c07ec7f3c8557d2031520c8d9c137a4ca9d64d56d916f58afdfb832abb96",
+      "size_in_bytes": 346411,
+      "hash": "SHA256:9ebf473e3eed626569ad0320892486735029fc114b4c105d8ea1a841c3baa15c",
       "blender_version": "5.2.45"
     },
     {
