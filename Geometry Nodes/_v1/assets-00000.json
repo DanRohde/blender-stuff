@@ -1363,7 +1363,7 @@
       },
       "thumbnail": {
         "url": "streets_thumbnails/Object/delineator-1-jb75.webp",
-        "hash": "SHA256:4095ab1473f288088ffb9c173b82342320e707858c745c2a28ad8e315e365f51"
+        "hash": "SHA256:d15b14271c766c947ffe7f25991e3758c12fa6006d26c4830b39e52c92e48b63"
       },
       "meta": {
         "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
@@ -1573,8 +1573,8 @@
     },
     {
       "path": "simple_city_generator.blend",
-      "size_in_bytes": 4676972,
-      "hash": "SHA256:fdc23743fc58ebaaaa3c9111b39ad9e1e83f486a44ede7551c074e5957a83d78",
+      "size_in_bytes": 4699935,
+      "hash": "SHA256:2a22ac985556750660b793b0ebe64312d3888a22b95498c0c3d285cb05288e24",
       "blender_version": "5.2.45"
     },
     {
@@ -1597,8 +1597,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 2201947,
-      "hash": "SHA256:633e01025b7b5da4521d3a16d43c2895b8d103efd3e623ec9cbdaaf70a2ce27a",
+      "size_in_bytes": 2223080,
+      "hash": "SHA256:7b2d9c50e4b576f37c65fe80f087eb0fa2c0d7de3e88c57ba3b16ed62d4f62af",
       "blender_version": "5.2.45"
     },
     {
