@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0.0",
-  "asset_size_bytes": 44473425,
-  "asset_count": 63,
+  "asset_size_bytes": 44489259,
+  "asset_count": 64,
   "file_count": 22,
   "pages": [
     {
       "url": "_v1/assets-00000.json",
-      "hash": "SHA256:136eabb9fe2aa4c3d93502e41d62452fdf638a419e0e60f85ac9a85332e3d5a0"
+      "hash": "SHA256:b75a9cf6220a567b2d38d61e26cf8e8b64fa38e5bb7a8fbb5ed4a54449b3f205"
     }
   ],
   "catalogs": [
@@ -25,18 +25,18 @@
       "simple_name": "GNs"
     },
     {
-      "path": "Mat",
-      "uuids": [
-        "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
-      ],
-      "simple_name": "Mat"
-    },
-    {
       "path": "Models",
       "uuids": [
         "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a"
       ],
       "simple_name": "Models"
+    },
+    {
+      "path": "Models/Mat",
+      "uuids": [
+        "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      ],
+      "simple_name": "Models-Mat"
     }
   ]
 }

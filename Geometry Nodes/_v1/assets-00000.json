@@ -1,5 +1,5 @@
 {
-  "asset_count": 63,
+  "asset_count": 64,
   "file_count": 22,
   "assets": [
     {
@@ -1353,6 +1353,35 @@
       }
     },
     {
+      "name": "Delineator 1 [#JB75]",
+      "id_type": "OBJECT",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Object/delineator-1-jb75.webp",
+        "hash": "SHA256:4095ab1473f288088ffb9c173b82342320e707858c745c2a28ad8e315e365f51"
+      },
+      "meta": {
+        "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              0.11999999731779099,
+              0.12994009256362915,
+              1.0
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
+    {
       "name": "Simple City Streetlight #2",
       "id_type": "OBJECT",
       "files": [
@@ -1568,8 +1597,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 2186113,
-      "hash": "SHA256:c100a63405baf4dfdbdb0f1a19797f89314125ce2dace660fcf4090c7c9f9787",
+      "size_in_bytes": 2201947,
+      "hash": "SHA256:633e01025b7b5da4521d3a16d43c2895b8d103efd3e623ec9cbdaaf70a2ce27a",
       "blender_version": "5.2.45"
     },
     {
