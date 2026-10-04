@@ -940,7 +940,7 @@
       },
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Material/simple-city-buildings-mat-jb75.webp",
-        "hash": "SHA256:10ec52faf61a0efb1c4ae869ba7d7dfdc82047f321b8c1e55aaf1867945805a3"
+        "hash": "SHA256:b67512959392f37621dbfe056588b35427983cb50dd28c6cdd276e193b871964"
       },
       "meta": {
         "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
@@ -1006,6 +1006,10 @@
       "bl_versions": {
         "min": "5.2"
       },
+      "thumbnail": {
+        "url": "simple_city_generator_thumbnails/Nodetree/simple-city-generator-streets-jb75.webp",
+        "hash": "SHA256:0c5fc33929d4544dd7730923386e625ef1f9f36e8c5b36163c459dbd48a364b6"
+      },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
         "properties": [
@@ -1033,7 +1037,7 @@
       },
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Nodetree/simple-city-generator-jb75.webp",
-        "hash": "SHA256:10ec52faf61a0efb1c4ae869ba7d7dfdc82047f321b8c1e55aaf1867945805a3"
+        "hash": "SHA256:b67512959392f37621dbfe056588b35427983cb50dd28c6cdd276e193b871964"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -1573,8 +1577,8 @@
     },
     {
       "path": "simple_city_generator.blend",
-      "size_in_bytes": 5000101,
-      "hash": "SHA256:4ed1075ffca61cb8e5e7efb858f41761c97ac8e0899b2c5e45159d251fb835aa",
+      "size_in_bytes": 5139134,
+      "hash": "SHA256:49e2456a88b304529b995b6af9f56f9cf10f36508640ec92f615b40bbda8d3aa",
       "blender_version": "5.2.45"
     },
     {
