@@ -940,7 +940,7 @@
       },
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Material/simple-city-buildings-mat-jb75.webp",
-        "hash": "SHA256:b67512959392f37621dbfe056588b35427983cb50dd28c6cdd276e193b871964"
+        "hash": "SHA256:c26b6fae5b97926dc9b7a6d79ad8dfc3df148cfe30b6aa7a8e16f95a425e4116"
       },
       "meta": {
         "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
@@ -1037,7 +1037,7 @@
       },
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Nodetree/simple-city-generator-jb75.webp",
-        "hash": "SHA256:b67512959392f37621dbfe056588b35427983cb50dd28c6cdd276e193b871964"
+        "hash": "SHA256:c26b6fae5b97926dc9b7a6d79ad8dfc3df148cfe30b6aa7a8e16f95a425e4116"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -1577,8 +1577,8 @@
     },
     {
       "path": "simple_city_generator.blend",
-      "size_in_bytes": 5140998,
-      "hash": "SHA256:90fd04a88af4032f434ae17ad612f8e310c653d4e7e96c5b412621eddbdc97bb",
+      "size_in_bytes": 5777800,
+      "hash": "SHA256:15ed8115432ee71944fd7cd3c48f513c5d3ac736af564518ca52fe82c1f28edb",
       "blender_version": "5.2.45"
     },
     {
