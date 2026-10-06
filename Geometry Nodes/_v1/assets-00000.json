@@ -1376,7 +1376,7 @@
             "name": "dimensions",
             "type": "IDP_ARRAY",
             "value": [
-              0.11999999731779099,
+              0.12000000476837158,
               0.12994009256362915,
               1.0
             ],
@@ -1577,8 +1577,8 @@
     },
     {
       "path": "simple_city_generator.blend",
-      "size_in_bytes": 5138958,
-      "hash": "SHA256:86143e27e4d236b91e86b0a795214c596154edbf11569be3dc548d4a2ebf85e2",
+      "size_in_bytes": 5140998,
+      "hash": "SHA256:90fd04a88af4032f434ae17ad612f8e310c653d4e7e96c5b412621eddbdc97bb",
       "blender_version": "5.2.45"
     },
     {
@@ -1601,8 +1601,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 2223080,
-      "hash": "SHA256:7b2d9c50e4b576f37c65fe80f087eb0fa2c0d7de3e88c57ba3b16ed62d4f62af",
+      "size_in_bytes": 2218539,
+      "hash": "SHA256:de1938dbe421f38ed918cb1d7618861d495506043b3f0da074746c88470cf131",
       "blender_version": "5.2.45"
     },
     {
