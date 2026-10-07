@@ -19,3 +19,5 @@ Available Blender add-ons:
 * Some [blend files](./Shaders/) - Since Blender 5.2 you can add the following URL as Remote Asset Library:
   * https://raw.githubusercontent.com/DanRohde/blender-stuff/refs/heads/main/Shaders/
 
+## Contact & Support
+* Discord: https://discord.gg/VMq9G5Z2AB
