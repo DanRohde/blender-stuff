@@ -1535,14 +1535,14 @@
     },
     {
       "path": "lego-brick-generator.blend",
-      "size_in_bytes": 165851,
-      "hash": "SHA256:efa1fdb2d81590cd10e582570090d5652dd0394e9578f2584388a3c435a76c0b",
+      "size_in_bytes": 166195,
+      "hash": "SHA256:8db011c25db1f9cd2caaf7e58f196a10dd2b1ad11e9182c6c21e0b3cf21a1196",
       "blender_version": "5.2.45"
     },
     {
       "path": "legofier.blend",
-      "size_in_bytes": 204364,
-      "hash": "SHA256:bd2a77fcf2a3b390f64535dacaf09148eb800ccd7e7c99f2cbe6308a4e4639f4",
+      "size_in_bytes": 155051,
+      "hash": "SHA256:cafde957112a984b7a0d8821f9b2db5321fdb5637dafaf684a79ee6c1cc5d766",
       "blender_version": "5.2.45"
     },
     {
