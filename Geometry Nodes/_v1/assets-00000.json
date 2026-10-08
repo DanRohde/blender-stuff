@@ -1,6 +1,6 @@
 {
-  "asset_count": 64,
-  "file_count": 22,
+  "asset_count": 65,
+  "file_count": 23,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -100,6 +100,35 @@
             "name": "node_tool_idname",
             "type": "IDP_STRING",
             "value": "geometry.asteroid_field"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Backrooms Gen [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "backrooms.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "backrooms_thumbnails/Nodetree/backrooms-gen-jb75.webp",
+        "hash": "SHA256:c076085873131dfc1b4fd44ecbfdb51ad58b0568405f53243cf4e0f2df2fedd7"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
           }
         ]
       }
@@ -1489,6 +1518,12 @@
       "path": "asteroids.blend",
       "size_in_bytes": 1301177,
       "hash": "SHA256:15a3b11a2fdbc52cc6b7e789285ccd6a98aa6e1ef0c9acbe0e841f167f7b0427",
+      "blender_version": "5.2.45"
+    },
+    {
+      "path": "backrooms.blend",
+      "size_in_bytes": 661403,
+      "hash": "SHA256:4e9eb8ec1439488b9509294bd6218de261464d734763829e2d6d41de613937ea",
       "blender_version": "5.2.45"
     },
     {
