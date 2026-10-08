@@ -1522,8 +1522,8 @@
     },
     {
       "path": "backrooms.blend",
-      "size_in_bytes": 654038,
-      "hash": "SHA256:36bd261427ce9f8b0026c2fdb0199904025995cdde9a08e53c70e86a620bd14c",
+      "size_in_bytes": 653125,
+      "hash": "SHA256:dc0735de163929c0438301b645ad8bc073506c3ce9f159faaafd86aba1e919b8",
       "blender_version": "5.2.45"
     },
     {
