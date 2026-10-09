@@ -1,6 +1,6 @@
 {
-  "asset_count": 65,
-  "file_count": 23,
+  "asset_count": 74,
+  "file_count": 24,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -1289,6 +1289,23 @@
       }
     },
     {
+      "name": "Guardrails Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Material/guardrails-mat-jb75.webp",
+        "hash": "SHA256:ed7d5cb278460d7446be8f780c1deaa4855f9df0f926dd7478bae1bc404387bb"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
       "name": "Manhole Cover Mat 1 [#JB75]",
       "id_type": "MATERIAL",
       "files": [
@@ -1367,7 +1384,7 @@
       },
       "thumbnail": {
         "url": "streets_thumbnails/Nodetree/street-with-stuff-jb75.webp",
-        "hash": "SHA256:a3061b28676b0a1722aa9b44de535996ab6fbeaf628e33480228eaa01cc2a93d"
+        "hash": "SHA256:4eb1e4ed9501ec6ab301583bee02081848b28463db3da6e134c09feaf37f1d4f"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -1425,6 +1442,178 @@
       },
       "thumbnail": {
         "url": "streets_thumbnails/Object/simple-city-streetlight-2.webp",
+        "hash": "SHA256:a180f8463be96803ceb4e8f080cef11dcb44de79f07254cab267262cc57006b1"
+      },
+      "meta": {
+        "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              1.3462531566619873,
+              0.6627023220062256,
+              7.897372722625732
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Curbs Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "streets1.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets1_thumbnails/Material/curbs-mat-jb75.webp",
+        "hash": "SHA256:bb5c55bb0549597b7dbac4c81c2d396ec7ee5d1feff0cd5d95078ffd54e15187"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Manhole Cover Mat 1 [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "streets1.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets1_thumbnails/Material/manhole-cover-mat-1-jb75.webp",
+        "hash": "SHA256:db552bed45725acde2125079bff5992b8d15c041f0bbe4d59594fb054f034013"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Manhole Cover Mat 2 [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "streets1.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets1_thumbnails/Material/manhole-cover-mat-2-jb75.webp",
+        "hash": "SHA256:5240c31d927ffad4de7f7a334e9b93af4c7e3c7e50dadaa621d508f66d5ea1b3"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Sidewalk Mat 1 [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "streets1.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets1_thumbnails/Material/sidewalk-mat-1-jb75.webp",
+        "hash": "SHA256:104a9f55f769e49ff62fa7f7db08c4e923b6ab67c47d48c82122013a5451f603"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Street Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "streets1.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets1_thumbnails/Material/street-mat-jb75.webp",
+        "hash": "SHA256:a2655792d9f3b51e62405c30cf6d990aef724a1cf24d84eca32e9dfeda643fe5"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Street with Stuff [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "streets1.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets1_thumbnails/Nodetree/street-with-stuff-jb75.webp",
+        "hash": "SHA256:a3061b28676b0a1722aa9b44de535996ab6fbeaf628e33480228eaa01cc2a93d"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Delineator 1 [#JB75]",
+      "id_type": "OBJECT",
+      "files": [
+        "streets1.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets1_thumbnails/Object/delineator-1-jb75.webp",
+        "hash": "SHA256:d15b14271c766c947ffe7f25991e3758c12fa6006d26c4830b39e52c92e48b63"
+      },
+      "meta": {
+        "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              0.12000000476837158,
+              0.12994009256362915,
+              1.0
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Simple City Streetlight #2",
+      "id_type": "OBJECT",
+      "files": [
+        "streets1.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets1_thumbnails/Object/simple-city-streetlight-2.webp",
         "hash": "SHA256:a180f8463be96803ceb4e8f080cef11dcb44de79f07254cab267262cc57006b1"
       },
       "meta": {
@@ -1636,8 +1825,14 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 2218539,
-      "hash": "SHA256:de1938dbe421f38ed918cb1d7618861d495506043b3f0da074746c88470cf131",
+      "size_in_bytes": 2503833,
+      "hash": "SHA256:5d6563dace1f64f7ce2376617ae74bff1fc1e634e6e227ebe3887277b5d81e35",
+      "blender_version": "5.2.45"
+    },
+    {
+      "path": "streets1.blend",
+      "size_in_bytes": 2226826,
+      "hash": "SHA256:03481775d699d1d0d4d7c755faa23e5d8b01597d947866c958d27b0f4781ab60",
       "blender_version": "5.2.45"
     },
     {
