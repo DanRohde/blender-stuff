@@ -1384,7 +1384,7 @@
       },
       "thumbnail": {
         "url": "streets_thumbnails/Nodetree/street-with-stuff-jb75.webp",
-        "hash": "SHA256:acf9b0a4a2bf5e985a9984e6e0eac301fef11e19658a71d6a39639feb079a00e"
+        "hash": "SHA256:887ad30c003b526759d8089ca9cc4a21d4ab337cb89be023648a215066aeb854"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -1413,7 +1413,7 @@
       },
       "thumbnail": {
         "url": "streets_thumbnails/Object/delineator-1-jb75.webp",
-        "hash": "SHA256:d15b14271c766c947ffe7f25991e3758c12fa6006d26c4830b39e52c92e48b63"
+        "hash": "SHA256:8efe3727cd331cb95a581fd43a86f94f0c4f146a187fb36ac82c9147880b9dda"
       },
       "meta": {
         "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
@@ -1653,8 +1653,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 2286306,
-      "hash": "SHA256:d13cdb22f21655c5f4b95853ed11dc8557102e4ec79b3a38632c059f851e45bd",
+      "size_in_bytes": 2283948,
+      "hash": "SHA256:ff5ce05a5d16760fb4d6e09008d53a7d6fd683120e1e75753d18af8fb5961a56",
       "blender_version": "5.2.45"
     },
     {
