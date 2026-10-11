@@ -969,7 +969,7 @@
       },
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Material/simple-city-buildings-mat-jb75.webp",
-        "hash": "SHA256:b1af64147b19f408161a9cf3c24feedaaf2648ab8d57ba4f339c3841f0c2ea38"
+        "hash": "SHA256:a9bbe9d009971243d6d3ed19e464de84b6a2874338efc75a8e29df744af85d0a"
       },
       "meta": {
         "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
@@ -1066,7 +1066,7 @@
       },
       "thumbnail": {
         "url": "simple_city_generator_thumbnails/Nodetree/simple-city-generator-jb75.webp",
-        "hash": "SHA256:b1af64147b19f408161a9cf3c24feedaaf2648ab8d57ba4f339c3841f0c2ea38"
+        "hash": "SHA256:a9bbe9d009971243d6d3ed19e464de84b6a2874338efc75a8e29df744af85d0a"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -1109,9 +1109,9 @@
             "name": "dimensions",
             "type": "IDP_ARRAY",
             "value": [
+              2.066864013671875,
               2.066892623901367,
-              2.066892623901367,
-              4.0098557472229
+              4.017605781555176
             ],
             "itemtype": "IDP_FLOAT"
           }
@@ -1629,8 +1629,8 @@
     },
     {
       "path": "simple_city_generator.blend",
-      "size_in_bytes": 6528893,
-      "hash": "SHA256:00f1564624e245698c66d587e63f9d6956d63f59fc51f2c6bccb0113eedb0969",
+      "size_in_bytes": 6588478,
+      "hash": "SHA256:a03b69c7cdcf45f7309443061f8081df962da542d3b1dfaffb7bf22cca317bfe",
       "blender_version": "5.2.45"
     },
     {
@@ -1653,8 +1653,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 2295718,
-      "hash": "SHA256:e1921d44b46c2d41eb3fd3b51ce596b8d4ad47b0b4b0551d370badf57e232dbc",
+      "size_in_bytes": 2295415,
+      "hash": "SHA256:cf9630e4147a9f52a6711fa5cbde7f37dbadb602f4731e19c41afddf070f8fd6",
       "blender_version": "5.2.45"
     },
     {
