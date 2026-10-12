@@ -1384,7 +1384,7 @@
       },
       "thumbnail": {
         "url": "streets_thumbnails/Nodetree/street-with-stuff-jb75.webp",
-        "hash": "SHA256:eff4f55a3d734a4796b88c06fed83a071c1df535b4afcc8401f0c06aa0d1b747"
+        "hash": "SHA256:6949aa3f4bbb236fc3cf5b959cd5afebc2fc876bad5edf46b0e75142a9c183d1"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -1653,8 +1653,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 1047665,
-      "hash": "SHA256:c16f6901e625d7df3514246314cfd624cbb7b32250e62885fc09da82b61c96b4",
+      "size_in_bytes": 1038886,
+      "hash": "SHA256:0ee8845f529cdaaa3b6f5128900c876887e96ccbab9dd0d8597ea7c10a1e8e23",
       "blender_version": "5.2.45"
     },
     {
