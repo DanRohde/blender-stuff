@@ -1,5 +1,5 @@
 {
-  "asset_count": 70,
+  "asset_count": 72,
   "file_count": 23,
   "assets": [
     {
@@ -1398,6 +1398,30 @@
       }
     },
     {
+      "name": "Crosswalk Mat [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Nodetree/crosswalk-mat-jb75.webp",
+        "hash": "SHA256:ea546ecbcddd346330903e5907e59e4b0cb4b64dfb85f66f915576adf8cb8a39"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
       "name": "Puddles Mat [#JB75]",
       "id_type": "NODETREE",
       "files": [
@@ -1457,6 +1481,30 @@
       "thumbnail": {
         "url": "streets_thumbnails/Nodetree/roundabout-intersection-shader-jb75.webp",
         "hash": "SHA256:ce6c45b7063bad86aacdd5d3420510d95caa657526e6559099903d7c7778e202"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Street Mat [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Nodetree/street-mat-jb75.webp",
+        "hash": "SHA256:842df2c70d8734a4c93085695f89a42939b35c1dc8ca107e922f93ac1d68b38b"
       },
       "meta": {
         "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
@@ -1749,8 +1797,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 1528792,
-      "hash": "SHA256:360f8ac3dcbc8f7920f3fcb9890cc9a6925918d4c431501bf5c1cfab8cab227a",
+      "size_in_bytes": 1751843,
+      "hash": "SHA256:51c0faa470b94d92fe459e5c07ed8f13bc660682bd1eda2c79e2572f59cf38f2",
       "blender_version": "5.2.45"
     },
     {
