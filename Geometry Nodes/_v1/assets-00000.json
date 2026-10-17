@@ -1,5 +1,5 @@
 {
-  "asset_count": 66,
+  "asset_count": 70,
   "file_count": 23,
   "assets": [
     {
@@ -1374,6 +1374,102 @@
       }
     },
     {
+      "name": "Asphalt Mat [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Nodetree/asphalt-mat-jb75.webp",
+        "hash": "SHA256:41e07e3781ef7db14f9efe651a09532750c5b9aa895ccbd16c6a42220c23ebae"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Puddles Mat [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Nodetree/puddles-mat-jb75.webp",
+        "hash": "SHA256:29f05dad224515786f5a3044548f1ac386568c8fe52406ad5d23d20b46717c31"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Rings Mat [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Nodetree/rings-mat-jb75.webp",
+        "hash": "SHA256:e563426d53d25cf13c8cdbaf664d80983bd178491093095f4fa4643daa907d01"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Roundabout Intersection Shader [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Nodetree/roundabout-intersection-shader-jb75.webp",
+        "hash": "SHA256:ce6c45b7063bad86aacdd5d3420510d95caa657526e6559099903d7c7778e202"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
       "name": "Street with Stuff [#JB75]",
       "id_type": "NODETREE",
       "files": [
@@ -1653,8 +1749,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 1054394,
-      "hash": "SHA256:d7f5d01e256dc511cec5d204c32557f748d6cf0b3bc198bdf00b315c3a36e476",
+      "size_in_bytes": 1528792,
+      "hash": "SHA256:360f8ac3dcbc8f7920f3fcb9890cc9a6925918d4c431501bf5c1cfab8cab227a",
       "blender_version": "5.2.45"
     },
     {
