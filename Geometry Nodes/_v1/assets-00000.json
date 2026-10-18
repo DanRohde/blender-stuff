@@ -1,5 +1,5 @@
 {
-  "asset_count": 72,
+  "asset_count": 74,
   "file_count": 23,
   "assets": [
     {
@@ -1306,6 +1306,23 @@
       }
     },
     {
+      "name": "Main Street Intersection 1  [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Material/main-street-intersection-1-jb75.webp",
+        "hash": "SHA256:5f424e5905bdb31828b5d79a73d6456ebfb175663cda7029e2188904330883cd"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
       "name": "Manhole Cover Mat 1 [#JB75]",
       "id_type": "MATERIAL",
       "files": [
@@ -1409,6 +1426,30 @@
       "thumbnail": {
         "url": "streets_thumbnails/Nodetree/crosswalk-mat-jb75.webp",
         "hash": "SHA256:ea546ecbcddd346330903e5907e59e4b0cb4b64dfb85f66f915576adf8cb8a39"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Main Stree Intersection 1 Shader  [#JB71]",
+      "id_type": "NODETREE",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Nodetree/main-stree-intersection-1-shader-jb71.webp",
+        "hash": "SHA256:d5bad42f8b48bd9397670085a6f42b8726d1ef29c84d26669fc8c149efe3c080"
       },
       "meta": {
         "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
@@ -1797,8 +1838,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 1751843,
-      "hash": "SHA256:51c0faa470b94d92fe459e5c07ed8f13bc660682bd1eda2c79e2572f59cf38f2",
+      "size_in_bytes": 2046531,
+      "hash": "SHA256:667bda51e51b4dea8a29fc2e3519f91c4ccdea513e40f8624820d99722bb832b",
       "blender_version": "5.2.45"
     },
     {
