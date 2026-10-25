@@ -1,5 +1,5 @@
 {
-  "asset_count": 74,
+  "asset_count": 75,
   "file_count": 23,
   "assets": [
     {
@@ -1272,6 +1272,23 @@
       }
     },
     {
+      "name": "Cars",
+      "id_type": "COLLECTION",
+      "files": [
+        "streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "streets_thumbnails/Collection/cars.webp",
+        "hash": "SHA256:8bde96c2a7164206fdc67ee662d8999d1d7c17e405b1f2e8a4660be7b6370824"
+      },
+      "meta": {
+        "catalog_id": "4a240c80-00c2-426c-aed8-811a4001280d"
+      }
+    },
+    {
       "name": "Curbs Mat [#JB75]",
       "id_type": "MATERIAL",
       "files": [
@@ -1838,8 +1855,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 2135209,
-      "hash": "SHA256:1fa2f13f892cd7c0d264edaffd4d3477b993346f3a2dde0eeeee7d858cb700c6",
+      "size_in_bytes": 2143856,
+      "hash": "SHA256:d99f9e99c3f18d9d423e496f22e0d57b855ea77de3fc3d4e9f06a28f2741ca1c",
       "blender_version": "5.2.45"
     },
     {
