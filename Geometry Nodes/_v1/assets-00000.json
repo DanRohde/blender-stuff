@@ -826,7 +826,7 @@
       },
       "thumbnail": {
         "url": "pipeswithjoints_thumbnails/Nodetree/pipes-with-joints-jb75.webp",
-        "hash": "SHA256:3790467d787a0e9c636666ae587d9765272656f3c539641af8ae92a61943836b"
+        "hash": "SHA256:ebaa66ae00b294dbdc5d7f35a1db49959a481629f33e5a2604eb8df01306f5f2"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -1842,8 +1842,8 @@
     },
     {
       "path": "pipeswithjoints.blend",
-      "size_in_bytes": 175321,
-      "hash": "SHA256:857812063a5ff0c3d4b11de6d02d8aba4720908179e83e26981f9cc055d34a72",
+      "size_in_bytes": 183439,
+      "hash": "SHA256:05576399318b8f989e6027682598f8b2856b6e5df64a0910758b6329311bf884",
       "blender_version": "5.2.45"
     },
     {
