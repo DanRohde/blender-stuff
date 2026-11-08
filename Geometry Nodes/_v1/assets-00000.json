@@ -1793,8 +1793,8 @@
     },
     {
       "path": "archbridge.blend",
-      "size_in_bytes": 366398,
-      "hash": "SHA256:50ca1501a0b04b84d0d277b8f4e2ec346cc3e1fba465a0abddf68c560000b590",
+      "size_in_bytes": 366779,
+      "hash": "SHA256:775a61cd7f340999a4ac54d448c53ca56526b495a18d11e8f9297c1a581c8fc8",
       "blender_version": "5.2.45"
     },
     {
