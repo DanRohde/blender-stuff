@@ -1,6 +1,6 @@
 {
-  "asset_count": 76,
-  "file_count": 24,
+  "asset_count": 77,
+  "file_count": 25,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -49,6 +49,35 @@
             "name": "node_tool_idname",
             "type": "IDP_STRING",
             "value": "geometry.4d_rotation"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Arch Bridge [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "archbridge.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "archbridge_thumbnails/Nodetree/arch-bridge-jb75.webp",
+        "hash": "SHA256:c8747d29ec0ed22975db037456ef93bc9f4c250132ed3a160d633bfb009bed20"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
           }
         ]
       }
@@ -1760,6 +1789,12 @@
       "path": "4D_rotation.blend",
       "size_in_bytes": 1146317,
       "hash": "SHA256:383aa75fad7a264be208236b0d889520bd26973c6d51ef9e1a718a8897ab31d4",
+      "blender_version": "5.2.45"
+    },
+    {
+      "path": "archbridge.blend",
+      "size_in_bytes": 366398,
+      "hash": "SHA256:50ca1501a0b04b84d0d277b8f4e2ec346cc3e1fba465a0abddf68c560000b590",
       "blender_version": "5.2.45"
     },
     {
