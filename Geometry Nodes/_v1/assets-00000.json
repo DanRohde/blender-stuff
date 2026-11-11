@@ -1846,8 +1846,8 @@
     },
     {
       "path": "chain-link_fence.blend",
-      "size_in_bytes": 252521,
-      "hash": "SHA256:52c5988798e30f8a5ceebdd8d0d5746ef41962deff9bb0d7d0fbc7882669de5a",
+      "size_in_bytes": 251014,
+      "hash": "SHA256:6ba37cb80834af5b664366236926c55654eb5ff1e0be586c2572e5cd402b44a8",
       "blender_version": "5.2.45"
     },
     {
