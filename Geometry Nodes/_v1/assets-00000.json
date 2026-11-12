@@ -1,6 +1,6 @@
 {
-  "asset_count": 80,
-  "file_count": 28,
+  "asset_count": 78,
+  "file_count": 26,
   "assets": [
     {
       "name": "4D Rotation Mat",
@@ -265,64 +265,6 @@
       },
       "thumbnail": {
         "url": "chain-link_fence_thumbnails/Nodetree/chain-link-fence-jb75.webp",
-        "hash": "SHA256:ac6b698a9e7851faf51b1c6f33491199493650070b8b24eb7bdc544028eaee36"
-      },
-      "meta": {
-        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
-        "properties": [
-          {
-            "name": "type",
-            "type": "IDP_INT",
-            "value": 3
-          },
-          {
-            "name": "geometry_node_asset_traits_flag",
-            "type": "IDP_INT",
-            "value": 64
-          }
-        ]
-      }
-    },
-    {
-      "name": "Chain-link Fence [#JB75]",
-      "id_type": "NODETREE",
-      "files": [
-        "chain-link_fence1.blend"
-      ],
-      "bl_versions": {
-        "min": "5.2"
-      },
-      "thumbnail": {
-        "url": "chain-link_fence1_thumbnails/Nodetree/chain-link-fence-jb75.webp",
-        "hash": "SHA256:ac6b698a9e7851faf51b1c6f33491199493650070b8b24eb7bdc544028eaee36"
-      },
-      "meta": {
-        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
-        "properties": [
-          {
-            "name": "type",
-            "type": "IDP_INT",
-            "value": 3
-          },
-          {
-            "name": "geometry_node_asset_traits_flag",
-            "type": "IDP_INT",
-            "value": 64
-          }
-        ]
-      }
-    },
-    {
-      "name": "Chain-link Fence [#JB75]",
-      "id_type": "NODETREE",
-      "files": [
-        "chain-link_fence2.blend"
-      ],
-      "bl_versions": {
-        "min": "5.2"
-      },
-      "thumbnail": {
-        "url": "chain-link_fence2_thumbnails/Nodetree/chain-link-fence-jb75.webp",
         "hash": "SHA256:ac6b698a9e7851faf51b1c6f33491199493650070b8b24eb7bdc544028eaee36"
       },
       "meta": {
@@ -1909,18 +1851,6 @@
       "blender_version": "5.2.45"
     },
     {
-      "path": "chain-link_fence1.blend",
-      "size_in_bytes": 262025,
-      "hash": "SHA256:8b874b79aabf7412e1e9fa18203f030742616b91d1766383a5f7ce496670c1df",
-      "blender_version": "5.2.45"
-    },
-    {
-      "path": "chain-link_fence2.blend",
-      "size_in_bytes": 262264,
-      "hash": "SHA256:dea72956ff7f5bbff030c5b3e389d695f715216bbd5c1404ed4aedf00ce6ae16",
-      "blender_version": "5.2.45"
-    },
-    {
       "path": "cheesemaker.blend",
       "size_in_bytes": 205001,
       "hash": "SHA256:7bdd320ddb47a9638849c7ff08d2e9647fcff3087960c380ccc84a0ff6a7e448",
@@ -2030,8 +1960,8 @@
     },
     {
       "path": "streets.blend",
-      "size_in_bytes": 2199315,
-      "hash": "SHA256:4165dddaf68d74606273875e5af003239d63321bb652b40b03a4b1316d79c993",
+      "size_in_bytes": 2203291,
+      "hash": "SHA256:1fe19bb33caf8705da0e7389b50b3623a77b1fc7384163f6696d44fe6b008ccc",
       "blender_version": "5.2.45"
     },
     {
