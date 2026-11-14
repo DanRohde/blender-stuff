@@ -12,7 +12,7 @@ Available Blender add-ons:
 
 ## Assets
 * Since Blender 5.3 you can drag and drop following URL to a Blender window:
-    * [https://danrohde.github.io/blender-stuff/addons/asset_library_jbs_strange_assets-1.0.0.zip](https://danrohde.github.io/blender-stuff/addons/asset_library_jbs_strange_assets-1.0.0.zip)
+    * [https://danrohde.github.io/blender-stuff/addons/asset_library_jbs_strange_assets-1.0.1.zip](https://danrohde.github.io/blender-stuff/addons/asset_library_jbs_strange_assets-1.0.1.zip)
 * Since Blender 5.2 you can add the following URL as a Remote Asset Library: 
     * https://danrohde.github.io/blender-stuff/Assets/
 * Some [Geometry Nodes](./Assets/Geometry%20Nodes/) 
