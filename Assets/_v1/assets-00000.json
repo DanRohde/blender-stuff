@@ -1,0 +1,2237 @@
+{
+  "asset_count": 88,
+  "file_count": 33,
+  "assets": [
+    {
+      "name": "4D Rotation Mat",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/4D_rotation.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/4D_rotation_thumbnails/Material/4d-rotation-mat.webp",
+        "hash": "SHA256:54e4ccc41708a86f11e0b2e26e26966915e14b72a96129ed4999f1543f7a993c"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "4D Rotation",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/4D_rotation.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/4D_rotation_thumbnails/Nodetree/4d-rotation.webp",
+        "hash": "SHA256:a5d9ea55b35e0d0adeafe17546f91e8299f3ba403a6a6ae55c21661eba2c1fca"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.4d_rotation"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Arch Bridge [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/archbridge.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/archbridge_thumbnails/Nodetree/arch-bridge-jb75.webp",
+        "hash": "SHA256:c8747d29ec0ed22975db037456ef93bc9f4c250132ed3a160d633bfb009bed20"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Asteroid Mat",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/asteroids.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/asteroids_thumbnails/Material/asteroid-mat.webp",
+        "hash": "SHA256:5b33119428ff86cbab3511f1f3e48980a702d8205c3ea120c81848045e836db8"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Asteroid Field [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/asteroids.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/asteroids_thumbnails/Nodetree/asteroid-field-jb75.webp",
+        "hash": "SHA256:fa654aa8c7b324d8949578967d5389e3f547df46190f7b602ec5d83ac4e2eccc"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.asteroid_field"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Backrooms Gen [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/backrooms.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/backrooms_thumbnails/Nodetree/backrooms-gen-jb75.webp",
+        "hash": "SHA256:c076085873131dfc1b4fd44ecbfdb51ad58b0568405f53243cf4e0f2df2fedd7"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Brick Wall Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/brickwall.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/brickwall_thumbnails/Material/brick-wall-mat-jb75.webp",
+        "hash": "SHA256:6bb68944ba8ee550c2e7bf898501edc3fcaef3375e997262561492f732a8be1b"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Brick Wall Mortar Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/brickwall.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/brickwall_thumbnails/Material/brick-wall-mortar-mat-jb75.webp",
+        "hash": "SHA256:73e21e7c62eb23a180a1bfce030f0ae9b349426f7c35cabba2af1f9f303e1408"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Brick Wall [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/brickwall.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/brickwall_thumbnails/Nodetree/brick-wall-jb75.webp",
+        "hash": "SHA256:a700ca4d089c2c94903e6de261ae740dd954d7d3585348030bd343119c6b93ac"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Brick Wall Example Pillar [#JB75]",
+      "id_type": "OBJECT",
+      "files": [
+        "Geometry Nodes/brickwall.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/brickwall_thumbnails/Object/brick-wall-example-pillar-jb75.webp",
+        "hash": "SHA256:353feb9c97627ddb6d6833ca59547431184e4eee2898ab3f9f1670d58de398de"
+      },
+      "meta": {
+        "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              5.997905731201172,
+              5.997905731201172,
+              17.862167358398438
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Chain-link Fence [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/chain-link_fence.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/chain-link_fence_thumbnails/Nodetree/chain-link-fence-jb75.webp",
+        "hash": "SHA256:ac6b698a9e7851faf51b1c6f33491199493650070b8b24eb7bdc544028eaee36"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Cheese [JB#75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/cheesemaker.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/cheesemaker_thumbnails/Material/cheese-jb75.webp",
+        "hash": "SHA256:59cb8d99467a40bba7b8168b99f23f3f2d4beb2be1f6780106050eb544e8735b"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Cheesemaker [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/cheesemaker.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/cheesemaker_thumbnails/Nodetree/cheesemaker-jb75.webp",
+        "hash": "SHA256:4c062813ffe36961290a220425d962500425143e8eb40abd65d12b3de29678e0"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Cliff Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/cliffs.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/cliffs_thumbnails/Material/cliff-mat-jb75.webp",
+        "hash": "SHA256:c4a5ac3b66c8dfdbb6f93cc2f8328325497c6e53673540c01885d1e684ca23bf"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Cliffs [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/cliffs.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/cliffs_thumbnails/Nodetree/cliffs-jb75.webp",
+        "hash": "SHA256:8477e2d2f6605068f5cbf9aad38083ffbe9305f4c1755d572cc88242f5af11cc"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Cobblestone [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/cobblestone.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/cobblestone_thumbnails/Material/cobblestone-jb75.webp",
+        "hash": "SHA256:d097241bac37b81c6a51a57b5413b577cc7efca1adb23c6a7f023d94a4b6f24c"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Cobblestone [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/cobblestone.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/cobblestone_thumbnails/Nodetree/cobblestone-jb75.webp",
+        "hash": "SHA256:93dac9ea1d428dc3cffc7c74d65a22ab5ca755c3e02e2c1a71075c73e8861dbf"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Shrinkwrap Curve [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/cobblestone.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/cobblestone_thumbnails/Nodetree/shrinkwrap-curve-jb75.webp",
+        "hash": "SHA256:93dac9ea1d428dc3cffc7c74d65a22ab5ca755c3e02e2c1a71075c73e8861dbf"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "description": "Shrinkwrap a curve to a mesh surface with optional tilt adjustment",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Crystal",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/crystalizer.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/crystalizer_thumbnails/Material/crystal.webp",
+        "hash": "SHA256:6510517b99d85af59c8036d9dfe7c73fc6253252f8a16968d160277562482f4c"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Crystalizer",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/crystalizer.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/crystalizer_thumbnails/Nodetree/crystalizer.webp",
+        "hash": "SHA256:b4c271952c91acf0dc99d3a728717380460c37eed3dec40372b67aa81b98c40d"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.crystalizer"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Cubifier [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/cubifier.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/cubifier_thumbnails/Nodetree/cubifier-jb75.webp",
+        "hash": "SHA256:462a9b147394bbc097747c5f4dbb5ad7743314a360312e15b558c6595dcaa2ad"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Icicle Mat",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/icicles.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/icicles_thumbnails/Material/icicle-mat.webp",
+        "hash": "SHA256:b44537c6329f800946c87b7b57f0915735e69afe3b7784fd57df7ced90bcecc2"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Icicle Mat 4 EEVEE",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/icicles.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/icicles_thumbnails/Material/icicle-mat-4-eevee.webp",
+        "hash": "SHA256:8ec43fa717464488ffbf47e465429037b878a135c2e7496adead2fddbf2000e2"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Stalagmite",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/icicles.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/icicles_thumbnails/Material/stalagmite.webp",
+        "hash": "SHA256:eda828d028d9e1c3d891b8f2f7855bdfc2ba278ad5105d062875363e233d68a3"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Icicles",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/icicles.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/icicles_thumbnails/Nodetree/icicles.webp",
+        "hash": "SHA256:d4dbf4942079c3e4244efce5701d2276fcf2987dfb229ef0663eebbd0b2cf4f6"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.icicles"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Lego Plastic [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/lego-brick-generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/lego-brick-generator_thumbnails/Material/lego-plastic-jb75.webp",
+        "hash": "SHA256:3138262d9bb8b1d99035893625ef1e5e8e01c4665995a2072ea25ed99f5024de"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Lego Brick Generator [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/lego-brick-generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/lego-brick-generator_thumbnails/Nodetree/lego-brick-generator-jb75.webp",
+        "hash": "SHA256:47fa73aac83003a36df085a4267dcad3551613922f5f807c119a8ad8e93141a1"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Legofier [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/legofier.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/legofier_thumbnails/Nodetree/legofier-jb75.webp",
+        "hash": "SHA256:7e826de7628623223df42fe1a584af87051f57123fbc63ee8db9ae396d5b8456"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Crator Moon [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/moongenerator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/moongenerator_thumbnails/Material/crator-moon-jb75.webp",
+        "hash": "SHA256:75d00051d83973a48ca91bfe6ba084f8747b6855e36d5fcb73326b3a00b0adb6"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Ice Moon [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/moongenerator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/moongenerator_thumbnails/Material/ice-moon-jb75.webp",
+        "hash": "SHA256:f5082c45b569511ca1761da7ca19382c7f811b7a7eaf950bd5ff459029e2acb5"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Lava Moon [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/moongenerator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/moongenerator_thumbnails/Material/lava-moon-jb75.webp",
+        "hash": "SHA256:b285f76c7d229d2d0e2d56d1c16ea4ab1734b6df2f4bf1537c373656b816c111"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Stone Moon [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/moongenerator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/moongenerator_thumbnails/Material/stone-moon-jb75.webp",
+        "hash": "SHA256:5e4ec3ab8594a34f76971b3a7ae41a619c59039bef8c9a2be7dc5d588e34c854"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Water Moon [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/moongenerator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/moongenerator_thumbnails/Material/water-moon-jb75.webp",
+        "hash": "SHA256:33ca4ea4ac3c731082029aae5113e7e83ada7ba8415e06d1ef1d8b37b1fe8389"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Moon Generator [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/moongenerator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/moongenerator_thumbnails/Nodetree/moon-generator-jb75.webp",
+        "hash": "SHA256:dfef169c736b273fa94674d1775c0d857965ac828ba4515764e3e93241a00ac9"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.moon_generator"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Petrify Mat - Mortar [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/petrify.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/petrify_thumbnails/Material/petrify-mat-mortar-jb75.webp",
+        "hash": "SHA256:ea8681a77931a56e66131ca484320c9f7642606d2e3f00c282720034ca9a4608"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Petrify Mat - Stone [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/petrify.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/petrify_thumbnails/Material/petrify-mat-stone-jb75.webp",
+        "hash": "SHA256:703516184b828bc5433d94946a56a08e56e962bca9d5b9cb3514b61a5874871b"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Petrify Everything [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/petrify.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/petrify_thumbnails/Nodetree/petrify-everything-jb75.webp",
+        "hash": "SHA256:d6be991704b84927cd950fb87495e18b9b6ebd5f859c0e90586d06bd8380b3b6"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Pipes with Joints [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/pipeswithjoints.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/pipeswithjoints_thumbnails/Nodetree/pipes-with-joints-jb75.webp",
+        "hash": "SHA256:ebaa66ae00b294dbdc5d7f35a1db49959a481629f33e5a2604eb8df01306f5f2"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Rock Wall [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/rockwall.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/rockwall_thumbnails/Nodetree/rock-wall-jb75.webp",
+        "hash": "SHA256:2f4d830592ece881012e13b4e8f906dfc4a93e37660216dadd6b40da6d90d631"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Self-Similar Reconstruction [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/self-similar-reconstruction.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/self-similar-reconstruction_thumbnails/Nodetree/self-similar-reconstruction-jb75.webp",
+        "hash": "SHA256:eef0c43f50fd58d970ca6553439a50bb85ebb26c1d528ee08bcb4fa1872bab50"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Sierpinski Triangle",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/sierpinski_triangle.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/sierpinski_triangle_thumbnails/Nodetree/sierpinski-triangle.webp",
+        "hash": "SHA256:e1593723d2a8ca8c442a1ea20fed340b8b6355b78c11eb3a372229d8d19aed95"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.sierpinski_triangle"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Parks",
+      "id_type": "COLLECTION",
+      "files": [
+        "Geometry Nodes/simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/simple_city_generator_thumbnails/Collection/parks.webp",
+        "hash": "SHA256:d82d21c496eb03ceb7ba75dea41047707c816a7e4cd1d840b5da40f67848a728"
+      },
+      "meta": {
+        "catalog_id": "4a240c80-00c2-426c-aed8-811a4001280d"
+      }
+    },
+    {
+      "name": "Roof Tops",
+      "id_type": "COLLECTION",
+      "files": [
+        "Geometry Nodes/simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/simple_city_generator_thumbnails/Collection/roof-tops.webp",
+        "hash": "SHA256:5195c87c87902205cce96f2b0cd27ceccd6ed310fe767fd71e8384b244d4db31"
+      },
+      "meta": {
+        "catalog_id": "4a240c80-00c2-426c-aed8-811a4001280d"
+      }
+    },
+    {
+      "name": "Street Lights",
+      "id_type": "COLLECTION",
+      "files": [
+        "Geometry Nodes/simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/simple_city_generator_thumbnails/Collection/street-lights.webp",
+        "hash": "SHA256:b45d67dbaa3deb2b943899b10e6447cc8d80d6d083471ddf6f2c14dc67ab0ec3"
+      },
+      "meta": {
+        "catalog_id": "4a240c80-00c2-426c-aed8-811a4001280d"
+      }
+    },
+    {
+      "name": "Simple City Buildings Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/simple_city_generator_thumbnails/Material/simple-city-buildings-mat-jb75.webp",
+        "hash": "SHA256:a9bbe9d009971243d6d3ed19e464de84b6a2874338efc75a8e29df744af85d0a"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Simple City Roof Top Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/simple_city_generator_thumbnails/Material/simple-city-roof-top-mat-jb75.webp",
+        "hash": "SHA256:3a73e2ae183f84fd35f4b35f971c34a45c8fa0f0b4f403e787bf11b35772dd8e"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Simple City Top Blink Light Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/simple_city_generator_thumbnails/Material/simple-city-top-blink-light-mat-jb75.webp",
+        "hash": "SHA256:32a5a5703ffeecc655cee390078b8d12c6a2e7ef6b9f2dd559bc78d4234ab5da"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Streets",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/simple_city_generator_thumbnails/Material/streets.webp",
+        "hash": "SHA256:c11a94b9efa6f3a19ebc753ff6f56bd0ae4ab3d6d85ffd3d4ea09277c3b7c80a"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Simple City Generator - Streets [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/simple_city_generator_thumbnails/Nodetree/simple-city-generator-streets-jb75.webp",
+        "hash": "SHA256:0c5fc33929d4544dd7730923386e625ef1f9f36e8c5b36163c459dbd48a364b6"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Simple City Generator [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/simple_city_generator_thumbnails/Nodetree/simple-city-generator-jb75.webp",
+        "hash": "SHA256:a9bbe9d009971243d6d3ed19e464de84b6a2874338efc75a8e29df744af85d0a"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.geometry_nodes"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Simple City Streetlight 1",
+      "id_type": "OBJECT",
+      "files": [
+        "Geometry Nodes/simple_city_generator.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/simple_city_generator_thumbnails/Object/simple-city-streetlight-1.webp",
+        "hash": "SHA256:b45d67dbaa3deb2b943899b10e6447cc8d80d6d083471ddf6f2c14dc67ab0ec3"
+      },
+      "meta": {
+        "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              2.066864013671875,
+              2.066892623901367,
+              4.017605781555176
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Snow Mat",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/snow.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/snow_thumbnails/Material/snow-mat.webp",
+        "hash": "SHA256:72421f289c38c4c4257ada90d9a1d3931e56db2a5ecaf06318bbbbaa47adfd49"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Snow",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/snow.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/snow_thumbnails/Nodetree/snow.webp",
+        "hash": "SHA256:ce258a0cc8cd0814b66f1c62c76c9c40f43b2e716cbdd70fc003d92d0fb62f15"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.snow"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Galaxy Cloud Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/spiralgalaxy.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/spiralgalaxy_thumbnails/Material/galaxy-cloud-mat-jb75.webp",
+        "hash": "SHA256:68a26337fe74e891a7137c50616a841aff605a1e20fb8e226f2be5cb339d24c4"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Galaxy Stars Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/spiralgalaxy.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/spiralgalaxy_thumbnails/Material/galaxy-stars-mat-jb75.webp",
+        "hash": "SHA256:5d1d5fe2dd90026765ade6bd5ed53499b8d27edcaed6f9c4692edeabda53ae3b"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Spiral Galaxy [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/spiralgalaxy.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/spiralgalaxy_thumbnails/Nodetree/spiral-galaxy-jb75.webp",
+        "hash": "SHA256:5f9ba7ada01534b1b6bf311665c0b458a1e94dbe12895f47b58f5bb93b4107b1"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.spiral_galaxy"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Step Pyramid",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/steppyramid.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/steppyramid_thumbnails/Nodetree/step-pyramid.webp",
+        "hash": "SHA256:2bff104c51107f697d82b1e14caf384ca0ec0bcd8da1111cc33059fcbb346e3c"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          },
+          {
+            "name": "node_tool_idname",
+            "type": "IDP_STRING",
+            "value": "geometry.step_pyramid"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Cars",
+      "id_type": "COLLECTION",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Collection/cars.webp",
+        "hash": "SHA256:8bde96c2a7164206fdc67ee662d8999d1d7c17e405b1f2e8a4660be7b6370824"
+      },
+      "meta": {
+        "catalog_id": "4a240c80-00c2-426c-aed8-811a4001280d"
+      }
+    },
+    {
+      "name": "Curbs Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Material/curbs-mat-jb75.webp",
+        "hash": "SHA256:bb5c55bb0549597b7dbac4c81c2d396ec7ee5d1feff0cd5d95078ffd54e15187"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Guardrails Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Material/guardrails-mat-jb75.webp",
+        "hash": "SHA256:ed7d5cb278460d7446be8f780c1deaa4855f9df0f926dd7478bae1bc404387bb"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Main Street Intersection 1  [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Material/main-street-intersection-1-jb75.webp",
+        "hash": "SHA256:5f424e5905bdb31828b5d79a73d6456ebfb175663cda7029e2188904330883cd"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Manhole Cover Mat 1 [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Material/manhole-cover-mat-1-jb75.webp",
+        "hash": "SHA256:db552bed45725acde2125079bff5992b8d15c041f0bbe4d59594fb054f034013"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Manhole Cover Mat 2 [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Material/manhole-cover-mat-2-jb75.webp",
+        "hash": "SHA256:5240c31d927ffad4de7f7a334e9b93af4c7e3c7e50dadaa621d508f66d5ea1b3"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Sidewalk Mat 1 [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Material/sidewalk-mat-1-jb75.webp",
+        "hash": "SHA256:104a9f55f769e49ff62fa7f7db08c4e923b6ab67c47d48c82122013a5451f603"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Street Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Material/street-mat-jb75.webp",
+        "hash": "SHA256:a2655792d9f3b51e62405c30cf6d990aef724a1cf24d84eca32e9dfeda643fe5"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Asphalt Mat [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Nodetree/asphalt-mat-jb75.webp",
+        "hash": "SHA256:41e07e3781ef7db14f9efe651a09532750c5b9aa895ccbd16c6a42220c23ebae"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Crosswalk Mat [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Nodetree/crosswalk-mat-jb75.webp",
+        "hash": "SHA256:ea546ecbcddd346330903e5907e59e4b0cb4b64dfb85f66f915576adf8cb8a39"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Main Stree Intersection 1 Shader  [#JB71]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Nodetree/main-stree-intersection-1-shader-jb71.webp",
+        "hash": "SHA256:d5bad42f8b48bd9397670085a6f42b8726d1ef29c84d26669fc8c149efe3c080"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Puddles Mat [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Nodetree/puddles-mat-jb75.webp",
+        "hash": "SHA256:29f05dad224515786f5a3044548f1ac386568c8fe52406ad5d23d20b46717c31"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Rings Mat [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Nodetree/rings-mat-jb75.webp",
+        "hash": "SHA256:e563426d53d25cf13c8cdbaf664d80983bd178491093095f4fa4643daa907d01"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Roundabout Intersection Shader [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Nodetree/roundabout-intersection-shader-jb75.webp",
+        "hash": "SHA256:ce6c45b7063bad86aacdd5d3420510d95caa657526e6559099903d7c7778e202"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Street Mat [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Nodetree/street-mat-jb75.webp",
+        "hash": "SHA256:842df2c70d8734a4c93085695f89a42939b35c1dc8ca107e922f93ac1d68b38b"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "Street with Stuff [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Nodetree/street-with-stuff-jb75.webp",
+        "hash": "SHA256:6949aa3f4bbb236fc3cf5b959cd5afebc2fc876bad5edf46b0e75142a9c183d1"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Delineator 1 [#JB75]",
+      "id_type": "OBJECT",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Object/delineator-1-jb75.webp",
+        "hash": "SHA256:8efe3727cd331cb95a581fd43a86f94f0c4f146a187fb36ac82c9147880b9dda"
+      },
+      "meta": {
+        "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              0.12000000476837158,
+              0.12994009256362915,
+              1.0
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Simple City Streetlight #2",
+      "id_type": "OBJECT",
+      "files": [
+        "Geometry Nodes/streets.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/streets_thumbnails/Object/simple-city-streetlight-2.webp",
+        "hash": "SHA256:a180f8463be96803ceb4e8f080cef11dcb44de79f07254cab267262cc57006b1"
+      },
+      "meta": {
+        "catalog_id": "82dbc7f2-f0fa-4e87-8433-92e7d5ab468a",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              1.3462531566619873,
+              0.6627023220062256,
+              7.897372722625732
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Copper Cable Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/twisted-cables.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/twisted-cables_thumbnails/Material/copper-cable-mat-jb75.webp",
+        "hash": "SHA256:350cfc8895ffb0c4e69254008254e12af5fa28bebc7f70f2248df6c05ebb8646"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Rainbow Cable Mat [#JB75]",
+      "id_type": "MATERIAL",
+      "files": [
+        "Geometry Nodes/twisted-cables.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/twisted-cables_thumbnails/Material/rainbow-cable-mat-jb75.webp",
+        "hash": "SHA256:2c1f6226841169c6c48a079cba566a3662d96b03cf3992f0e3033ad745e7df0e"
+      },
+      "meta": {
+        "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
+      }
+    },
+    {
+      "name": "Twisted Cable [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/twisted-cables.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/twisted-cables_thumbnails/Nodetree/twisted-cable-jb75.webp",
+        "hash": "SHA256:f285c3f33ca91171b5d6eacdaa04dfbcddd13b1f2a993be22285085717d22516"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Brilliant",
+      "id_type": "MATERIAL",
+      "files": [
+        "Shaders/brilliant_and_diamond.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Shaders/brilliant_and_diamond_thumbnails/Material/brilliant.webp",
+        "hash": "SHA256:ab72920be3e8c32089de8af9f2fb9e290750fd1aac867f1be18f77aa795b082f"
+      },
+      "meta": {
+        "catalog_id": "434bd7c6-e799-429c-8baf-de951e407cf6"
+      }
+    },
+    {
+      "name": "Brilliant",
+      "id_type": "OBJECT",
+      "files": [
+        "Shaders/brilliant_and_diamond.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Shaders/brilliant_and_diamond_thumbnails/Object/brilliant.webp",
+        "hash": "SHA256:22c5f7236ede7e7d4779a974a8ae862ecba0984c0c9bd7f17818c8efce206bd0"
+      },
+      "meta": {
+        "catalog_id": "434bd7c6-e799-429c-8baf-de951e407cf6",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              2.0,
+              2.0,
+              1.2200000286102295
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Diamond",
+      "id_type": "OBJECT",
+      "files": [
+        "Shaders/brilliant_and_diamond.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Shaders/brilliant_and_diamond_thumbnails/Object/diamond.webp",
+        "hash": "SHA256:22c5f7236ede7e7d4779a974a8ae862ecba0984c0c9bd7f17818c8efce206bd0"
+      },
+      "meta": {
+        "catalog_id": "434bd7c6-e799-429c-8baf-de951e407cf6",
+        "properties": [
+          {
+            "name": "dimensions",
+            "type": "IDP_ARRAY",
+            "value": [
+              2.0,
+              2.0,
+              1.1500000953674316
+            ],
+            "itemtype": "IDP_FLOAT"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Electronic Circuit",
+      "id_type": "MATERIAL",
+      "files": [
+        "Shaders/electronic_circuit.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Shaders/electronic_circuit_thumbnails/Material/electronic-circuit.webp",
+        "hash": "SHA256:bb9f9c6f3e72b77f5c53a773efd79454b0a8bc32ec6821d8db2bf65d0e1e62ab"
+      },
+      "meta": {
+        "catalog_id": "f5c88f70-99e2-4dc0-a73f-2573704c085b"
+      }
+    },
+    {
+      "name": "Musgrave Texture",
+      "id_type": "MATERIAL",
+      "files": [
+        "Shaders/musgrave-texture.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "thumbnail": {
+        "url": "Shaders/musgrave-texture_thumbnails/Material/musgrave-texture.webp",
+        "hash": "SHA256:e2f16ada43531c8a1b7bc2cc1788d8f9f817b3fb67fc3c906dfbd56f3b7b9e04"
+      }
+    },
+    {
+      "name": "Musgrave Texture",
+      "id_type": "NODETREE",
+      "files": [
+        "Shaders/musgrave-texture.blend"
+      ],
+      "bl_versions": {
+        "min": "4.5"
+      },
+      "meta": {
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "SciFi Greeble 1",
+      "id_type": "MATERIAL",
+      "files": [
+        "Shaders/scifi_greeble_1.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Shaders/scifi_greeble_1_thumbnails/Material/scifi-greeble-1.webp",
+        "hash": "SHA256:bbd5f8f438a3058e270938e89cb99a3e652058810058d765908a01ae0a0344db"
+      },
+      "meta": {
+        "catalog_id": "cd96ea69-8488-4e34-8daa-b9b27df02d49"
+      }
+    },
+    {
+      "name": "SciFi Metal Plate",
+      "id_type": "MATERIAL",
+      "files": [
+        "Shaders/scifi_metal_plating.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Shaders/scifi_metal_plating_thumbnails/Material/scifi-metal-plate.webp",
+        "hash": "SHA256:11caab82e093e6698c5107b6b9235a6d45fb702ab3b16e607c69f825b8beb582"
+      },
+      "meta": {
+        "catalog_id": "cd96ea69-8488-4e34-8daa-b9b27df02d49"
+      }
+    },
+    {
+      "name": "Solar Panel",
+      "id_type": "MATERIAL",
+      "files": [
+        "Shaders/solar_panel.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Shaders/solar_panel_thumbnails/Material/solar-panel.webp",
+        "hash": "SHA256:53d7d5ddb09d644a25fc812564696ed5111a5241d099614c1a9982b209723071"
+      },
+      "meta": {
+        "catalog_id": "f5c88f70-99e2-4dc0-a73f-2573704c085b"
+      }
+    },
+    {
+      "name": "Stars and Nebulars",
+      "id_type": "WORLD",
+      "files": [
+        "Shaders/world_scifi_stars_and_clouds.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Shaders/world_scifi_stars_and_clouds_thumbnails/World/stars-and-nebulars.webp",
+        "hash": "SHA256:b4b91f78c7ea238718b71d903a6affa1c35984cee4948bf71abeca2678a0438a"
+      },
+      "meta": {
+        "catalog_id": "996bdeeb-a137-437b-9caf-3e3db3dce83e",
+        "author": "Dan Rohde",
+        "license": "GPLv3"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "Geometry Nodes/4D_rotation.blend",
+      "size_in_bytes": 1146317,
+      "hash": "SHA256:383aa75fad7a264be208236b0d889520bd26973c6d51ef9e1a718a8897ab31d4",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/4D_rotation.blend"
+    },
+    {
+      "path": "Geometry Nodes/archbridge.blend",
+      "size_in_bytes": 366779,
+      "hash": "SHA256:775a61cd7f340999a4ac54d448c53ca56526b495a18d11e8f9297c1a581c8fc8",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/archbridge.blend"
+    },
+    {
+      "path": "Geometry Nodes/asteroids.blend",
+      "size_in_bytes": 1301177,
+      "hash": "SHA256:15a3b11a2fdbc52cc6b7e789285ccd6a98aa6e1ef0c9acbe0e841f167f7b0427",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/asteroids.blend"
+    },
+    {
+      "path": "Geometry Nodes/backrooms.blend",
+      "size_in_bytes": 657455,
+      "hash": "SHA256:c6ffb7221e97b237b5929b47de6b4071b7141fd0bb12d1171c3ab2be522b3615",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/backrooms.blend"
+    },
+    {
+      "path": "Geometry Nodes/brickwall.blend",
+      "size_in_bytes": 10495438,
+      "hash": "SHA256:b40537cb1e4c32ef8d010787e4ffa68ac7f778420d5f0825c5c631b367fc1efb",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/brickwall.blend"
+    },
+    {
+      "path": "Geometry Nodes/chain-link_fence.blend",
+      "size_in_bytes": 268731,
+      "hash": "SHA256:1bbf17308bb300d7034c2bb5b34e58f1347b339e20d9d6d0802211d1f795968e",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/chain-link_fence.blend"
+    },
+    {
+      "path": "Geometry Nodes/cheesemaker.blend",
+      "size_in_bytes": 205001,
+      "hash": "SHA256:7bdd320ddb47a9638849c7ff08d2e9647fcff3087960c380ccc84a0ff6a7e448",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/cheesemaker.blend"
+    },
+    {
+      "path": "Geometry Nodes/cliffs.blend",
+      "size_in_bytes": 10340138,
+      "hash": "SHA256:3def1fa807b832624a596918ea92e1c70da94b8dfb4ae49f19a70be0798c743b",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/cliffs.blend"
+    },
+    {
+      "path": "Geometry Nodes/cobblestone.blend",
+      "size_in_bytes": 2540341,
+      "hash": "SHA256:0bb1d84c33017c77ce94fb2e8d7b08460bcbb5d409eb257563069f3b16171f0f",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/cobblestone.blend"
+    },
+    {
+      "path": "Geometry Nodes/crystalizer.blend",
+      "size_in_bytes": 1131146,
+      "hash": "SHA256:e41ad99027adc112ebaa2129d73a17c2a30c162efb5accd00e1732af912cfb7e",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/crystalizer.blend"
+    },
+    {
+      "path": "Geometry Nodes/cubifier.blend",
+      "size_in_bytes": 178897,
+      "hash": "SHA256:47b16f900e3dc9e0cd98da9c93df6d56a076afa154b083e6d98e457e59badf51",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/cubifier.blend"
+    },
+    {
+      "path": "Geometry Nodes/icicles.blend",
+      "size_in_bytes": 1690454,
+      "hash": "SHA256:205d2c7079fe3054d5adc064d569b73ffa20f7caa27f91498092cdf81c90b3d3",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/icicles.blend"
+    },
+    {
+      "path": "Geometry Nodes/lego-brick-generator.blend",
+      "size_in_bytes": 166195,
+      "hash": "SHA256:8db011c25db1f9cd2caaf7e58f196a10dd2b1ad11e9182c6c21e0b3cf21a1196",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/lego-brick-generator.blend"
+    },
+    {
+      "path": "Geometry Nodes/legofier.blend",
+      "size_in_bytes": 155051,
+      "hash": "SHA256:cafde957112a984b7a0d8821f9b2db5321fdb5637dafaf684a79ee6c1cc5d766",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/legofier.blend"
+    },
+    {
+      "path": "Geometry Nodes/moongenerator.blend",
+      "size_in_bytes": 2008966,
+      "hash": "SHA256:130e615297e0bdcf91633f04989996be0e6d3e1c2d0296eb04fc17dc6fc9c342",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/moongenerator.blend"
+    },
+    {
+      "path": "Geometry Nodes/petrify.blend",
+      "size_in_bytes": 224906,
+      "hash": "SHA256:f4f3d1a88c8f3daaa8956f923e726985af65c572b3e2a6f6d286e1f7a1a65a25",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/petrify.blend"
+    },
+    {
+      "path": "Geometry Nodes/pipeswithjoints.blend",
+      "size_in_bytes": 185798,
+      "hash": "SHA256:3b3f59f926685eab1f651c7e7ed9c38eeee0b5f88876cd0d72ee86a275506ca1",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/pipeswithjoints.blend"
+    },
+    {
+      "path": "Geometry Nodes/rockwall.blend",
+      "size_in_bytes": 819634,
+      "hash": "SHA256:586a45df404728cf1d41678e0e205d73f7c586da29d8bbe0adb49fe45d9c195d",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/rockwall.blend"
+    },
+    {
+      "path": "Geometry Nodes/self-similar-reconstruction.blend",
+      "size_in_bytes": 880555,
+      "hash": "SHA256:443237c50b9e40e32a16612c046c8e067dd7bce72e3e4a5dc61c0d0c82823a11",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/self-similar-reconstruction.blend"
+    },
+    {
+      "path": "Geometry Nodes/sierpinski_triangle.blend",
+      "size_in_bytes": 899171,
+      "hash": "SHA256:9b97ad943b746efd86cdc23a6f9e23e60857751688359e9037d9f427f75593c3",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/sierpinski_triangle.blend"
+    },
+    {
+      "path": "Geometry Nodes/simple_city_generator.blend",
+      "size_in_bytes": 7301707,
+      "hash": "SHA256:3fe09814aa669b01333cb7c0699e004fd526bacdd72938577673ff3ef02870cc",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/simple_city_generator.blend"
+    },
+    {
+      "path": "Geometry Nodes/snow.blend",
+      "size_in_bytes": 1173072,
+      "hash": "SHA256:afb2fd4a9bbb32e5c39be5d130535a22539ecd0c61a55c11c741a83e110e63b3",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/snow.blend"
+    },
+    {
+      "path": "Geometry Nodes/spiralgalaxy.blend",
+      "size_in_bytes": 1118002,
+      "hash": "SHA256:95cdcab72887f4cbcacecb2c0b88d77db23d70148d01e83bed3de18046bf61ed",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/spiralgalaxy.blend"
+    },
+    {
+      "path": "Geometry Nodes/steppyramid.blend",
+      "size_in_bytes": 882914,
+      "hash": "SHA256:5a32b324904f6fa443b387139920f963fdc93c12e668642d06f02341b7fc3255",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/steppyramid.blend"
+    },
+    {
+      "path": "Geometry Nodes/streets.blend",
+      "size_in_bytes": 2204905,
+      "hash": "SHA256:41fc906b4cd3e6521005ba594b9694ba2d5f9d1be530020a340b3f067d4c0360",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/streets.blend"
+    },
+    {
+      "path": "Geometry Nodes/twisted-cables.blend",
+      "size_in_bytes": 203996,
+      "hash": "SHA256:d1ab1f3c8bd7634a60e92655c34199c0988c439cf2f8d06c2efd248f426fa6cc",
+      "blender_version": "5.2.45",
+      "url": "Geometry%20Nodes/twisted-cables.blend"
+    },
+    {
+      "path": "Shaders/brilliant_and_diamond.blend",
+      "size_in_bytes": 1130012,
+      "hash": "SHA256:4fe15005e45e737ee655e2ab19398c40b1a7c5d3211a30c4788a5dc39d886dfc",
+      "blender_version": "5.2.44"
+    },
+    {
+      "path": "Shaders/electronic_circuit.blend",
+      "size_in_bytes": 191262,
+      "hash": "SHA256:13af63833602a1558e96707a3d26200e7616a17013d952f293638b4995f7a76e",
+      "blender_version": "5.2.44"
+    },
+    {
+      "path": "Shaders/musgrave-texture.blend",
+      "size_in_bytes": 641704,
+      "hash": "SHA256:9dc8acb5affa19f22428b1d504169af48fbaefc4023fa93791d6f09db75a87a8",
+      "blender_version": "4.5.90"
+    },
+    {
+      "path": "Shaders/scifi_greeble_1.blend",
+      "size_in_bytes": 122065,
+      "hash": "SHA256:902354e9eb262b9c08e55cc8595e3ae701e50add6bc80b4ec1007e718a582f18",
+      "blender_version": "5.2.44"
+    },
+    {
+      "path": "Shaders/scifi_metal_plating.blend",
+      "size_in_bytes": 27404410,
+      "hash": "SHA256:bfc415ea378fcba2086a132a794b2d97e258e1da17d67c335946353ec0bc7eb7",
+      "blender_version": "5.2.44"
+    },
+    {
+      "path": "Shaders/solar_panel.blend",
+      "size_in_bytes": 169862,
+      "hash": "SHA256:0a928cab7cc9b34507d47b5aa92728b5886a0294288525773d1bf205f5c3091f",
+      "blender_version": "5.2.44"
+    },
+    {
+      "path": "Shaders/world_scifi_stars_and_clouds.blend",
+      "size_in_bytes": 646897,
+      "hash": "SHA256:dfedac31374d752ba715c641a1aa2bb9fadfa2dd20f0cfc5379248d02f5aa042",
+      "blender_version": "5.2.44"
+    }
+  ]
+}

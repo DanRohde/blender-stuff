@@ -10,14 +10,14 @@ Available Blender add-ons:
     https://danrohde.github.io/blender-stuff/addons/index.json
 - OR visit  https://danrohde.github.io/blender-stuff/addons/ and drag and drop the filename into your running Blender window
 
-## Geometry Nodes
-* Some [blend files](./Geometry%20Nodes/) - Since Blender 5.2 you can add the following URL as a Remote Asset Library: 
-  * https://raw.githubusercontent.com/DanRohde/blender-stuff/refs/heads/main/Geometry%20Nodes/
+## Assets
+* Some [blend files](./Assets/Geometry%20Nodes/) - Since Blender 5.2 you can add the following URL as a Remote Asset Library: 
+  * https://raw.githubusercontent.com/DanRohde/blender-stuff/refs/heads/main/Assets/
 * Look at my [Youtube channel](https://www.youtube.com/@jonnybegood8230)
 
-## Shaders
-* Some [blend files](./Shaders/) - Since Blender 5.2 you can add the following URL as Remote Asset Library:
-  * https://raw.githubusercontent.com/DanRohde/blender-stuff/refs/heads/main/Shaders/
+### Shaders
+* Some [blend files](./Assets/Shaders/) - Since Blender 5.2 you can add the following URL as Remote Asset Library:
+  * https://raw.githubusercontent.com/DanRohde/blender-stuff/refs/heads/main/Assets/
 
 ## Contact & Support
 * Discord: https://discord.gg/VMq9G5Z2AB
