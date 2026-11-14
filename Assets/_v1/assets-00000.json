@@ -2117,8 +2117,8 @@
     },
     {
       "path": "Geometry Nodes/fraction.blend",
-      "size_in_bytes": 139555,
-      "hash": "SHA256:23c3ecce3a481a07a42a0efde8a32218a913fc4eda6997994e321057bb897f6d",
+      "size_in_bytes": 138212,
+      "hash": "SHA256:44f7167c16cd36cc9ce775b84687e1fb9e029d3ccf07670a9591fbbcccb5ad24",
       "blender_version": "5.2.45",
       "url": "Geometry%20Nodes/fraction.blend"
     },
