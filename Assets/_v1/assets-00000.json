@@ -542,7 +542,7 @@
       },
       "thumbnail": {
         "url": "Geometry%20Nodes/fraction_thumbnails/Nodetree/fraction-tool-jb75.webp",
-        "hash": "SHA256:3d2d903d80be0acaf519c4fc721a108ea738d44716046d6bd8bbd2ab7c66232e"
+        "hash": "SHA256:b74c2fb4a271352258bf88f27dce69abd55472e50a5c6df785faeecf34c729b0"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -2117,8 +2117,8 @@
     },
     {
       "path": "Geometry Nodes/fraction.blend",
-      "size_in_bytes": 138212,
-      "hash": "SHA256:44f7167c16cd36cc9ce775b84687e1fb9e029d3ccf07670a9591fbbcccb5ad24",
+      "size_in_bytes": 138769,
+      "hash": "SHA256:82c8b0ced39625dd194986ddd0b18b8a3129b5b444aedc66ac0b09c91242794e",
       "blender_version": "5.2.45",
       "url": "Geometry%20Nodes/fraction.blend"
     },
