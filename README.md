@@ -14,7 +14,7 @@ Available Blender add-ons:
 * Since Blender 5.3 you can drag and drop following URL to a Blender window:
     * [https://danrohde.github.io/blender-stuff/addons/asset_library_jbs_strange_assets-1.0.0.zip](https://danrohde.github.io/blender-stuff/addons/asset_library_jbs_strange_assets-1.0.0.zip)
 * Since Blender 5.2 you can add the following URL as a Remote Asset Library: 
-    * https://raw.githubusercontent.com/DanRohde/blender-stuff/refs/heads/main/Assets/
+    * https://danrohde.github.io/blender-stuff/Assets/
 * Some [Geometry Nodes](./Assets/Geometry%20Nodes/) 
 * Some [Shaders](./Assets/Shaders/) 
 * Look at my [Youtube channel](https://www.youtube.com/@jonnybegood8230)

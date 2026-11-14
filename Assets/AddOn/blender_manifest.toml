@@ -3,7 +3,7 @@ schema_version = "1.0.0"
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "asset_library_jbs_strange_assets"
-version = "1.0.0"
+version = "1.0.1"
 name = "JBs Strange Asset Library"
 tagline = "Some strange Blender assets"
 maintainer = "Dan Rohde <d.rohde@web.de>"
@@ -49,7 +49,7 @@ license = [
 # # Asset library extensions need `blender_version_min = "5.3.0"` or newer.
 # # The URL is the base address of the remote asset library server.
 [asset_library]
-remote_url = "https://raw.githubusercontent.com/DanRohde/blender-stuff/refs/heads/main/Assets/"
+remote_url = "https://danrohde.github.io/blender-stuff/Assets/"
 #
 # # Optional: declare that the asset library supports authentication.
 # # When this table is omitted, authentication is not supported.
