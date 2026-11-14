@@ -1,6 +1,7 @@
 {
   "version": "v1",
   "blocklist": [],
+  "assetlib_auth_method": "PER_LIBRARY",
   "data": [
     {
       "schema_version": "1.0.0",
@@ -67,6 +68,22 @@
       "archive_url": "./simple_todo-1.0.9.zip",
       "archive_size": 7770,
       "archive_hash": "sha256:66bf8a7e50ea3db4e3c92afbc710b74719122fd963c5c7b4fd97af9783969e55"
+    },
+    {
+      "schema_version": "1.0.0",
+      "id": "asset_library_jbs_strange_assets",
+      "name": "JBs Strange Asset Library",
+      "tagline": "Some strange Blender assets",
+      "version": "1.0.1",
+      "type": "asset-library",
+      "maintainer": "Dan Rohde <d.rohde@web.de>",
+      "license": [
+        "SPDX:CC0-1.0"
+      ],
+      "blender_version_min": "5.3.0",
+      "archive_url": "./asset_library_jbs_strange_assets-1.0.1.zip",
+      "archive_size": 1775,
+      "archive_hash": "sha256:1b08b3d63e7b47cbe3161242c225e7050ab125108c159d447d2560151bbc6560"
     }
   ]
 }
