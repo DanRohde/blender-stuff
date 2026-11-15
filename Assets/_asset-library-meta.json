@@ -2,7 +2,7 @@
   "api_versions": {
     "v1": {
       "url": "_v1/asset-index.json",
-      "hash": "SHA256:6585f003b16a92e6fee0361d6f61fc3c7c62d6b9cd5f27a6e1ac56c6d16587d1"
+      "hash": "SHA256:acb177bd8ae44ee4fecbe082c5c5f498ac7b28cc71678b7948c2291450a77080"
     }
   },
   "name": "JB's Strange Remote Asset Library",
