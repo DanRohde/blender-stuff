@@ -1,5 +1,5 @@
 {
-  "asset_count": 91,
+  "asset_count": 94,
   "file_count": 34,
   "assets": [
     {
@@ -435,7 +435,7 @@
         "hash": "SHA256:93dac9ea1d428dc3cffc7c74d65a22ab5ca755c3e02e2c1a71075c73e8861dbf"
       },
       "meta": {
-        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "catalog_id": "126f9328-c3f0-4ebc-a9f0-c8c5d85b2273",
         "description": "Shrinkwrap a curve to a mesh surface with optional tilt adjustment",
         "properties": [
           {
@@ -571,6 +571,76 @@
       },
       "meta": {
         "catalog_id": "126f9328-c3f0-4ebc-a9f0-c8c5d85b2273",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          }
+        ]
+      }
+    },
+    {
+      "name": "Smooth Tool [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/fraction.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "meta": {
+        "catalog_id": "126f9328-c3f0-4ebc-a9f0-c8c5d85b2273",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          }
+        ]
+      }
+    },
+    {
+      "name": "Surface Fraction Tool [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/fraction.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "thumbnail": {
+        "url": "Geometry%20Nodes/fraction_thumbnails/Nodetree/surface-fraction-tool-jb75.webp",
+        "hash": "SHA256:b0090ac99d6d0d92a619f625b599a5b6708c2138de380bc1d2086a7365e950a0"
+      },
+      "meta": {
+        "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          },
+          {
+            "name": "geometry_node_asset_traits_flag",
+            "type": "IDP_INT",
+            "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Transfer Mesh Islands [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/fraction.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "meta": {
+        "catalog_id": "126f9328-c3f0-4ebc-a9f0-c8c5d85b2273",
+        "description": "stores mesh island index and count for shader",
         "properties": [
           {
             "name": "type",
@@ -2145,8 +2215,8 @@
     },
     {
       "path": "Geometry Nodes/cobblestone.blend",
-      "size_in_bytes": 2540341,
-      "hash": "SHA256:0bb1d84c33017c77ce94fb2e8d7b08460bcbb5d409eb257563069f3b16171f0f",
+      "size_in_bytes": 2540955,
+      "hash": "SHA256:8574edbf0287ef63064326ee236e2cb74ea640cd023ad78c6f657ac3aa1a2c7a",
       "blender_version": "5.2.45",
       "url": "Geometry%20Nodes/cobblestone.blend"
     },
@@ -2166,8 +2236,8 @@
     },
     {
       "path": "Geometry Nodes/fraction.blend",
-      "size_in_bytes": 185540,
-      "hash": "SHA256:e56f400bff52682fc0a11692757f65250fe7788a0bd75075dfb91fd789148767",
+      "size_in_bytes": 256665,
+      "hash": "SHA256:48b54d72a70ef0e439cfd64bfe46eee693d4442a9a8d01c4bda9931d873db4b3",
       "blender_version": "5.2.45",
       "url": "Geometry%20Nodes/fraction.blend"
     },
@@ -2215,8 +2285,8 @@
     },
     {
       "path": "Geometry Nodes/rockwall.blend",
-      "size_in_bytes": 819634,
-      "hash": "SHA256:586a45df404728cf1d41678e0e205d73f7c586da29d8bbe0adb49fe45d9c195d",
+      "size_in_bytes": 820058,
+      "hash": "SHA256:ada84f5e00832540ce308377fa50d040ce10b4ba9911865e545bdcc6c917a62f",
       "blender_version": "5.2.45",
       "url": "Geometry%20Nodes/rockwall.blend"
     },
