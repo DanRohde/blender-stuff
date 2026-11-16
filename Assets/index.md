@@ -1,1 +1,1 @@
-* see [blender-stuff](../README.md) for more inforamation
+* see [blender-stuff](../README.md) for more information
