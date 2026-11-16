@@ -1,5 +1,5 @@
 {
-  "asset_count": 94,
+  "asset_count": 96,
   "file_count": 34,
   "assets": [
     {
@@ -581,6 +581,26 @@
       }
     },
     {
+      "name": "Noise along the Normals [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/fraction.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "meta": {
+        "catalog_id": "126f9328-c3f0-4ebc-a9f0-c8c5d85b2273",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
+          }
+        ]
+      }
+    },
+    {
       "name": "Smooth Tool [#JB75]",
       "id_type": "NODETREE",
       "files": [
@@ -675,6 +695,26 @@
             "name": "geometry_node_asset_traits_flag",
             "type": "IDP_INT",
             "value": 64
+          }
+        ]
+      }
+    },
+    {
+      "name": "Voronoi Noise along the Normals [#JB75]",
+      "id_type": "NODETREE",
+      "files": [
+        "Geometry Nodes/fraction.blend"
+      ],
+      "bl_versions": {
+        "min": "5.2"
+      },
+      "meta": {
+        "catalog_id": "126f9328-c3f0-4ebc-a9f0-c8c5d85b2273",
+        "properties": [
+          {
+            "name": "type",
+            "type": "IDP_INT",
+            "value": 3
           }
         ]
       }
@@ -2236,8 +2276,8 @@
     },
     {
       "path": "Geometry Nodes/fraction.blend",
-      "size_in_bytes": 256665,
-      "hash": "SHA256:48b54d72a70ef0e439cfd64bfe46eee693d4442a9a8d01c4bda9931d873db4b3",
+      "size_in_bytes": 271538,
+      "hash": "SHA256:e072153ac9a9f22497907e2b4731a0d1db44f7fde2a7cb75f58a5338a200ce6f",
       "blender_version": "5.2.45",
       "url": "Geometry%20Nodes/fraction.blend"
     },
