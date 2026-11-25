@@ -5169,11 +5169,11 @@
         "Geometry Nodes/cheesemaker.blend"
       ],
       "bl_versions": {
-        "min": "5.2"
+        "min": "5.3"
       },
       "thumbnail": {
         "url": "Geometry%20Nodes/cheesemaker_thumbnails/Material/cheese-jb75.webp",
-        "hash": "SHA256:59cb8d99467a40bba7b8168b99f23f3f2d4beb2be1f6780106050eb544e8735b"
+        "hash": "SHA256:2ee4790a98823d4daaac40b4daffe23c4281a0ab5450651d92cc1cccc09878b6"
       },
       "meta": {
         "catalog_id": "ef2dfa3d-9fdc-4f51-9a64-8d2a5c25ed4c"
@@ -5186,11 +5186,11 @@
         "Geometry Nodes/cheesemaker.blend"
       ],
       "bl_versions": {
-        "min": "5.2"
+        "min": "5.3"
       },
       "thumbnail": {
         "url": "Geometry%20Nodes/cheesemaker_thumbnails/Nodetree/cheesemaker-jb75.webp",
-        "hash": "SHA256:4c062813ffe36961290a220425d962500425143e8eb40abd65d12b3de29678e0"
+        "hash": "SHA256:e07b4136f06bcb422138cf6b4908d9d62f621690db8282a137085563495966fd"
       },
       "meta": {
         "catalog_id": "def1c867-6eb5-465d-b201-508314f31dbd",
@@ -5441,7 +5441,7 @@
                       {
                         "name": "name",
                         "type": "IDP_STRING",
-                        "value": "Position Factor"
+                        "value": "Position"
                       },
                       {
                         "name": "type",
@@ -5461,20 +5461,20 @@
                       {
                         "name": "min",
                         "type": "IDP_FLOAT",
-                        "value": -10000.0
+                        "value": -1000000.0
                       },
                       {
                         "name": "max",
                         "type": "IDP_FLOAT",
-                        "value": 10000.0
+                        "value": 1000000.0
                       },
                       {
                         "name": "default_value",
                         "type": "IDP_ARRAY",
                         "value": [
-                          1.0,
-                          1.0,
-                          1.0
+                          0.0,
+                          0.0,
+                          0.0
                         ],
                         "itemtype": "IDP_FLOAT"
                       }
@@ -5518,6 +5518,32 @@
                         "name": "default_value",
                         "type": "IDP_INT",
                         "value": 9
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Socket_10",
+                    "type": "IDP_GROUP",
+                    "value": [
+                      {
+                        "name": "name",
+                        "type": "IDP_STRING",
+                        "value": "Shade Smooth"
+                      },
+                      {
+                        "name": "type",
+                        "type": "IDP_INT",
+                        "value": 4
+                      },
+                      {
+                        "name": "description",
+                        "type": "IDP_STRING",
+                        "value": ""
+                      },
+                      {
+                        "name": "default_value",
+                        "type": "IDP_BOOL",
+                        "value": true
                       }
                     ]
                   },
@@ -30754,9 +30780,9 @@
     },
     {
       "path": "Geometry Nodes/cheesemaker.blend",
-      "size_in_bytes": 205001,
-      "hash": "SHA256:7bdd320ddb47a9638849c7ff08d2e9647fcff3087960c380ccc84a0ff6a7e448",
-      "blender_version": "5.2.45",
+      "size_in_bytes": 206725,
+      "hash": "SHA256:8d96ac0c58a7219a37a79200a246fb2c8e17940cff9b1c526b835d47abba77c7",
+      "blender_version": "5.3.31",
       "url": "Geometry%20Nodes/cheesemaker.blend"
     },
     {
